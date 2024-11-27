@@ -34,9 +34,12 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.ITUIExtension;
+import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuikit.timcommon.component.LineControllerView;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.ChatInputMoreListener;
+
+import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.Collections;
@@ -47,12 +50,21 @@ import java.util.Map;
 public class ConferenceServiceInitializer extends ServiceInitializer implements ITUIExtension {
     private static final String TAG = "RoomServiceInitializer";
 
+    private static final String CONFERENCE_INVITATION = "conference_invitation";
+
+    private String mGetInvitationListCursor = "";
+
+    private static final int SINGLE_FETCH_COUNT = 20;
+
+    private final TUIRoomDefine.RoomInfo mInvitationRoomInfo = new TUIRoomDefine.RoomInfo();
+
     @Override
     public void init(Context context) {
         initExtension();
         initRoomMessage();
         initSignalingListener();
-        initConferenceInvitationObserver();
+        registerInvitationNotifyEvent();
+        registerLoginEvent();
     }
 
     private void initExtension() {
@@ -125,7 +137,7 @@ public class ConferenceServiceInitializer extends ServiceInitializer implements 
         return false;
     }
 
-    private void initConferenceInvitationObserver() {
+    private void observerOnlineConferenceInvitation() {
         TUIConferenceInvitationManager invitationManager = (TUIConferenceInvitationManager) TUIRoomEngine.sharedInstance().getExtension(TUICommonDefine.ExtensionType.CONFERENCE_INVITATION_MANAGER);
         invitationManager.addObserver(new TUIConferenceInvitationManager.Observer() {
             @Override
@@ -139,14 +151,117 @@ public class ConferenceServiceInitializer extends ServiceInitializer implements 
                     return;
                 }
 
-                Bundle bundle = new Bundle();
-                bundle.putString("roomId", roomInfo.roomId);
-                bundle.putString("conferenceName", roomInfo.name);
-                bundle.putString("ownerName", roomInfo.ownerName);
-                bundle.putString("inviterName", invitation.inviter.userName);
-                bundle.putString("inviterAvatarUrl", roomInfo.ownerAvatarUrl);
-                bundle.putInt("memberCount", roomInfo.memberCount);
-                TUICore.startActivity("InvitationReceivedActivity", bundle);
+                startInvitationReceivedActivity(roomInfo.roomId, roomInfo.name, roomInfo.ownerName, invitation.inviter.userName,
+                        invitation.inviter.avatarUrl, roomInfo.memberCount);
+            }
+        });
+    }
+
+    private void startInvitationReceivedActivity(String roomId, String conferenceName, String ownerName, String inviterName, String inviterAvatarUrl, int memberCount) {
+        Bundle bundle = new Bundle();
+        bundle.putString("roomId", roomId);
+        bundle.putString("conferenceName", conferenceName);
+        bundle.putString("ownerName", ownerName);
+        bundle.putString("inviterName", inviterName);
+        bundle.putString("inviterAvatarUrl", inviterAvatarUrl);
+        bundle.putInt("memberCount", memberCount);
+        TUICore.startActivity("InvitationReceivedActivity", bundle);
+    }
+
+    private void registerInvitationNotifyEvent() {
+        TUICore.registerEvent(TUIConstants.TIMPush.EVENT_NOTIFY, TUIConstants.TIMPush.EVENT_NOTIFY_NOTIFICATION, new ITUINotification() {
+            @Override
+            public void onNotifyEvent(String key, String subKey, Map<String, Object> param) {
+                if (!(TUIConstants.TIMPush.EVENT_NOTIFY.equals(key) && TUIConstants.TIMPush.EVENT_NOTIFY_NOTIFICATION.equals(subKey))) {
+                    return;
+                }
+                if (param == null) {
+                    return;
+                }
+                if (!TextUtils.isEmpty(mInvitationRoomInfo.roomId)) {
+                    return;
+                }
+                String extString = (String) param.get(TUIConstants.TIMPush.NOTIFICATION_EXT_KEY);
+                try {
+                    JSONObject roomObject = new JSONObject(extString);
+                    String notificationType = roomObject.getString("NotificationType");
+                    if (!CONFERENCE_INVITATION.equals(notificationType)) {
+                        return;
+                    }
+                    String roomId = roomObject.getString("RoomId");
+                    if (TextUtils.isEmpty(roomId)) {
+                        return;
+                    }
+                    mInvitationRoomInfo.roomId = roomId;
+                    mInvitationRoomInfo.name = roomObject.getString("RoomName");
+                    mInvitationRoomInfo.ownerName = roomObject.getString("OwnerName");
+                    mInvitationRoomInfo.memberCount = roomObject.getInt("MemberCount");
+                } catch (Exception e) {
+                    Log.e(TAG, "get param from event error key = " + key + "subKey = " + subKey + "error =" + e.getMessage());
+                }
+            }
+        });
+    }
+
+    private void registerLoginEvent() {
+        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, new ITUINotification() {
+            @Override
+            public void onNotifyEvent(String key, String subKey, Map<String, Object> param) {
+                Log.i(TAG, "onNotifyEvent key = " + key + "subKey = " + subKey);
+                if (!TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED.equals(key) || !TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS.equals(subKey)) {
+                    return;
+                }
+                observerOnlineConferenceInvitation();
+                getOfflineConferenceInvitation();
+            }
+        });
+    }
+
+    private void getOfflineConferenceInvitation() {
+        if (TextUtils.isEmpty(mInvitationRoomInfo.roomId)) {
+            return;
+        }
+        TUIRoomEngine.login(TUILogin.getAppContext(), TUILogin.getSdkAppId(), TUILogin.getUserId(), TUILogin.getUserSig(), new TUIRoomDefine.ActionCallback() {
+            @Override
+            public void onSuccess() {
+                Log.i(TAG, "TUIRoomEngine.login success");
+                getInvitationList(mInvitationRoomInfo.roomId);
+            }
+
+            @Override
+            public void onError(TUICommonDefine.Error error, String s) {
+                Log.e(TAG, "TUIRoomEngine.login error =" + error + " message =" + s);
+            }
+        });
+    }
+
+    private void getInvitationList(String roomId) {
+        Log.d(TAG, "getInvitationList");
+        TUIConferenceInvitationManager invitationManager = (TUIConferenceInvitationManager) TUIRoomEngine.sharedInstance().getExtension(TUICommonDefine.ExtensionType.CONFERENCE_INVITATION_MANAGER);
+        invitationManager.getInvitationList(roomId, mGetInvitationListCursor, SINGLE_FETCH_COUNT, new TUIConferenceInvitationManager.GetInvitationListCallback() {
+            @Override
+            public void onSuccess(TUIConferenceInvitationManager.InvitationListResult invitationListResult) {
+                Log.d(TAG, "getInvitationList");
+                for (TUIConferenceInvitationManager.Invitation invitation : invitationListResult.invitationList) {
+                    if (!invitation.invitee.userId.equals(TUILogin.getUserId())) {
+                        continue;
+                    }
+                    if (TUIConferenceInvitationManager.InvitationStatus.PENDING.equals(invitation.status)) {
+                        startInvitationReceivedActivity(mInvitationRoomInfo.roomId, mInvitationRoomInfo.name, mInvitationRoomInfo.ownerName,
+                                invitation.inviter.userName, invitation.inviter.avatarUrl, mInvitationRoomInfo.memberCount);
+                        mInvitationRoomInfo.roomId = "";
+                        return;
+                    }
+                }
+                mGetInvitationListCursor = invitationListResult.cursor;
+                if (!"".equals(mGetInvitationListCursor)) {
+                    getInvitationList(roomId);
+                }
+            }
+
+            @Override
+            public void onError(TUICommonDefine.Error error, String message) {
+                Log.d(TAG, "getInvitationList onError error=" + error + " message=" + message);
             }
         });
     }

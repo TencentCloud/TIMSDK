@@ -1,9 +1,9 @@
 package com.tencent.cloud.tuikit.roomkit.model.data;
 
-import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListData;
 import com.tencent.cloud.tuikit.roomkit.model.entity.Request;
 import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.trtc.tuikit.common.livedata.LiveData;
+import com.trtc.tuikit.common.livedata.LiveListData;
 
 public class ViewState {
     public LiveListData<String> pendingTakeSeatRequests = new LiveListData<>();
@@ -16,7 +16,8 @@ public class ViewState {
     public LiveData<RoomProcess> roomProcess           = new LiveData<>(RoomProcess.NONE);
     public LiveData<Long>        enterRoomTimeFromBoot = new LiveData<>(0L);
 
-    public LiveData<Boolean> isInvitationPending = new LiveData<>(false);
+    public LiveData<Boolean> isInvitationPending           = new LiveData<>(false);
+    public LiveData<Boolean> isSpeechToTextSubTitleShowing = new LiveData<>(false);
 
     public void addPendingTakeSeatRequest(String requestId) {
         pendingTakeSeatRequests.add(requestId);

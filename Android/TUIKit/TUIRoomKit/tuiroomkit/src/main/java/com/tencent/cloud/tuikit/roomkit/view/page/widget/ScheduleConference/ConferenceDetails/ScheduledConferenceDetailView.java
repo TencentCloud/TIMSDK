@@ -73,8 +73,9 @@ public class ScheduledConferenceDetailView extends FrameLayout {
     private String                   mRoomId;
     private ScheduleInviteMemberView mInviteMemberView;
 
-    private final ScheduledConferenceDetailStateHolder       mStateHolder = new ScheduledConferenceDetailStateHolder();
-    private final Observer<ScheduledConferenceDetailUiState> mObserver    = this::updateView;
+    private final ScheduledConferenceDetailStateHolder       mStateHolder                = new ScheduledConferenceDetailStateHolder();
+    private final Observer<ScheduledConferenceDetailUiState> mObserver                   = this::updateView;
+    private final Observer<Boolean>                          mConferenceCanceledObserver = this::dismissView;
 
     public ScheduledConferenceDetailView(Context context, String roomId) {
         super(context);
@@ -87,12 +88,14 @@ public class ScheduledConferenceDetailView extends FrameLayout {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         mStateHolder.observer(mObserver, mRoomId);
+        mStateHolder.mConferenceCanceled.observe(mConferenceCanceledObserver);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mStateHolder.removeObserver(mObserver);
+        mStateHolder.mConferenceCanceled.removeObserver(mConferenceCanceledObserver);
     }
 
     private void updateView(ScheduledConferenceDetailUiState uiState) {
@@ -133,6 +136,13 @@ public class ScheduledConferenceDetailView extends FrameLayout {
         roomInfo.put(KEY_INVITE_ROOM_TIME, uiState.conferenceTime);
         roomInfo.put(KEY_INVITE_ROOM_ID, mTvRoomId.getText().toString());
         mInviteMemberView = new ScheduleInviteMemberView(mContext, roomInfo);
+    }
+
+    private void dismissView(boolean dismiss) {
+        if (dismiss) {
+            RoomToast.toastLongMessageCenter(mContext.getString(R.string.tuiroomkit_conference_canceled));
+            finishActivity();
+        }
     }
 
 

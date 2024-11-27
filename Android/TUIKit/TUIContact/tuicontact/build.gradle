@@ -15,6 +15,11 @@ android {
     buildFeatures {
         buildConfig = false
     }
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false

@@ -19,11 +19,6 @@ public class MediaController extends Controller {
     public void destroy() {
     }
 
-    public void setLocalVideoView(TUIVideoView videoView) {
-        Log.d(TAG, "setLocalVideoView videoView=" + videoView);
-        mRoomEngine.setLocalVideoView(videoView);
-    }
-
     public void startPlayRemoteVideo(String userId, TUIRoomDefine.VideoStreamType videoStreamType,
                                      TUIVideoView videoView) {
         mRoomEngine.setRemoteVideoView(userId, videoStreamType, videoView);

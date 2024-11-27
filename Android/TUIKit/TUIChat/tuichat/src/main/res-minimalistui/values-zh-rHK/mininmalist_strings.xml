@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="camera">相機</string>
+    <string name="left_cancle_send">鬆開手指發送，左滑取消發送</string>
+    <string name="chat_forward_checked_num">已選擇 %d 個</string>
+    <string name="chat_minimalist_pop_more">更多</string>
+    <string name="chat_contact_profile_message">發送消息</string>
+</resources>

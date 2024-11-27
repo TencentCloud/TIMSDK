@@ -121,6 +121,11 @@
     <string name="tuiroomkit_manager_remove">Remove administrator</string>
     <string name="tuiroomkit_mute_user">Disable chat</string>
     <string name="tuiroomkit_kick_out_of_room">Remove</string>
+    <string name="tuiroomkit_ai_tool">AI</string>
+    <string name="tuiroomkit_ai_speech_to_text_record">AI real-time meeting recording</string>
+    <string name="tuiroomkit_ai_open_live_subtitle">Open AI real-time subtitles</string>
+    <string name="tuiroomkit_ai_close_live_subtitle">Close AI real-time subtitles</string>
+    <string name="tuiroomkit_ai_cat_live_record">View AI Live Meeting Recording</string>
     <string name="tuiroomkit_settings">Settings</string>
     <string name="tuiroomkit_advanced_settings">AdvancedSettings</string>
     <string name="tuiroomkit_beauty">Beauty</string>
@@ -215,22 +220,18 @@
     <string name="tuiroomkit_open_mic_reject">%s unmute request denied</string>
     <string name="tuiroomkit_open_camera_agree">%s agreed to the request to turn on the camera</string>
     <string name="tuiroomkit_open_camera_reject">%s rejected the request to turn on the camera</string>
-
     <string name="tuiroomkit_video_resolution_smooth">Smooth</string>
     <string name="tuiroomkit_video_resolution_sd">Standard Definition</string>
     <string name="tuiroomkit_video_resolution_hd">High Definition</string>
     <string name="tuiroomkit_video_resolution_uhd">Full High Definition</string>
-
     <string name="tuiroomkit_toast_conference_id_not_exist">This conference does not exist, please join again</string>
     <string name="tuiroomkit_toast_conference_id_invalid">The current conference number is invalid, please check your input</string>
     <string name="tuiroomkit_toast_conference_id_occupied">The conference already exists, please use another conference number</string>
     <string name="tuiroomkit_toast_conference_name_invalid">The current conference name is invalid, please check your input</string>
-
     <string name="tuiroomkit_float_chat_warning_not_empty">"input can't be empty!"</string>
     <string name="tuiroomkit_float_chat_hint">Say something</string>
     <string name="tuiroomkit_float_chat_btn_send">Send</string>
     <string name="tuiroomkit_float_chat_enable">Floating Chat</string>
-
     <string name="tuiroomkit_temporary_conference_name">%s\'s temporary room</string>
     <string name="tuiroomkit_schedule_room_btn">Schedule</string>
     <string name="tuiroomkit_scheduled_room_image_tag">No scheduled room</string>
@@ -283,7 +284,6 @@
     <string name="tuiroomkit_today">Today</string>
     <string name="tuiroomkit_add">Add</string>
     <string name="tuiroomkit_format_add_attendee">%d/300</string>
-
     <string name="tuiroomkit_minimum_duration_is_fifteen_minutes">The minimum room duration is 15 minutes.</string>
     <string name="tuiroomkit_conference_name_empty">Conference name cannot be empty!</string>
     <string name="tuiroomkit_conference_name_exceeds_max_length">Room name exceeds maximum length!</string>
@@ -291,13 +291,12 @@
     <string name="tuiroomkit_conference_already_started_and_cannot_be_cancel">Conference has already started, and it cannot be cancelled!</string>
     <string name="tuiroomkit_no_participants_yet">No participants yet</string>
     <string name="tuiroomkit_enter_conference_password_title">Conference Password</string>
-    <string name="tuiroomkit_please_input_conference_password">Please enter the conference password</string>
+    <string name="tuiroomkit_please_input_conference_password">Please enter the password</string>
     <string name="tuiroomkit_join">Join</string>
     <string name="tuiroomkit_password_is_empty">Password is empty</string>
     <string name="tuiroomkit_room_password_title">Room Password</string>
     <string name="tuiroomkit_room_password_format_error">Your room password format is incorrect, please check it</string>
-    <string name="tuiroomkit_room_password_error">Wrong password, please re-enter</string>
-
+    <string name="tuiroomkit_room_password_error">Wrong password</string>
     <string name="tuiroomkit_tip_creating_room_id">Generating conference number, please try again later</string>
     <string name="tuiroomkit_turn_on_audio">Mic</string>
     <string name="tuiroomkit_turn_on_speaker">Speaker</string>
@@ -309,9 +308,10 @@
     <string name="tuiroomkit_repeat_start_room_dialog_title">Currently in the room</string>
     <string name="tuiroomkit_repeat_start_room_dialog_content">Please exit before joining a new room</string>
     <string name="tuiroomkit_i_see">I see</string>
-
     <string name="tuiroomkit_invite_yout_to_join_conference">%s invite you to join the conference</string>
     <string name="tuiroomkit_conference_host">Host:</string>
+    <string name="tuiroomkit_disable_general_share">Screen sharing for host/admin only</string>
+    <string name="tuiroomkit_all_users_enable_share">All members can share screen</string>
     <string name="tuiroomkit_participant">Participant:</string>
     <string name="tuiroomkit_join_now">Join now</string>
     <string name="tuiroomkit_do_not_enter_for_now">Do not enter for now</string>
@@ -339,8 +339,18 @@
     <string name="tuiroomkit_please_enter_six_digit_password">Enter 6-digit password</string>
     <string name="tuiroomkit_invitation_has_been_sent">Invitation has been sent, waiting for users to join</string>
     <string name="tuiroomkit_conference_modify_success">Modification successful</string>
-
     <string name="tuiroomkit_default_water_mark_text">%s(%s)</string>
-    <string name="tuiroomkit_password_digits">0123456789</string>
     <string name="tuiroomkit_confirm_dialog_count_down_text">(%s)</string>
+    <string name="tuiroomkit_modify_name">Modify name</string>
+    <string name="tuiroomkit_disable_general_share_dialog_title">Is it turned on that the host/admin can share the screen?</string>
+    <string name="tuiroomkit_disable_general_share_dialog_hint">Other member is sharing the screen now, the member\'s sharing will be terminated after you turning on</string>
+    <string name="tuiroomkit_disable_general_share_by_admin_dialog_hint">host/admin has stopped your screen sharing. Currently, only the host or admin can share the screen</string>
+    <string name="tuiroomkit_share_screen_stopped">Screen sharing stopped</string>
+    <string name="tuiroomkit_share_fail_cause_of_admin_disable">Failed to initiate screen sharing, currently only host/admin can share screen</string>
+    <string name="tuiroomkit_modify_name_success">Name changed successfully</string>
+    <string name="tuiroomkit_room_not_exit">The room does not exit, please confirm the room number or create a room!</string>
+    <string name="tuiroomkit_conference_canceled">You have been removed from the conference participants</string>
+    <string name="tuiroomkit_local_user_disable_send_message">You have been banned from text chat</string>
+    <string name="tuiroomkit_local_user_enable_send_message">You are allowed to text chat</string>
+
 </resources>

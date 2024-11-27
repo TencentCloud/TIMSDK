@@ -6,6 +6,7 @@ import android.view.View;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageContentHolder;
+import com.tencent.qcloud.tuikit.timcommon.util.TextUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
@@ -40,6 +41,7 @@ public class TextMessageHolder extends MessageContentHolder {
         } else {
             FaceManager.handlerEmojiText(timeInLineTextLayout.getTextView(), TUIChatService.getAppContext().getString(R.string.no_support_msg), false);
         }
+        TextUtil.linkifyUrls(timeInLineTextLayout.getTextView());
     }
 
     protected void applyCustomConfig() {

@@ -14,4 +14,5 @@ public class AppConfig {
     public static int DEMO_TEST_ENVIRONMENT = 0;
     // logined appid
     public static int DEMO_SDK_APPID = 0;
+    public static final String RT_CUBE_PACKAGE_NAME = "com.tencent.trtc";
 }

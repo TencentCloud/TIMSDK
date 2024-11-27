@@ -13,7 +13,7 @@ import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomK
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_APPLY_LIST;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_EXIT_ROOM_VIEW;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_INVITE_PANEL;
-import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_INVITE_PANEL_SECOND;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_MORE_FUNCTION_PANEL;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_MEDIA_SETTING_PANEL;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_MEETING_INFO;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_OWNER_EXIT_ROOM_PANEL;
@@ -24,7 +24,7 @@ import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomK
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_APPLY_LIST;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_EXIT_ROOM_VIEW;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_INVITE_PANEL;
-import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_INVITE_PANEL_SECOND;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_MORE_FUNCTION_PANEL;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_MEDIA_SETTING_PANEL;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_OWNER_EXIT_ROOM_PANEL;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_QRCODE_VIEW;
@@ -101,8 +101,8 @@ public class RoomMainViewModel implements ConferenceEventCenter.RoomKitUIEventRe
         eventCenter.subscribeUIEvent(DISMISS_OWNER_EXIT_ROOM_PANEL, this);
         eventCenter.subscribeUIEvent(SHOW_INVITE_PANEL, this);
         eventCenter.subscribeUIEvent(DISMISS_INVITE_PANEL, this);
-        eventCenter.subscribeUIEvent(SHOW_INVITE_PANEL_SECOND, this);
-        eventCenter.subscribeUIEvent(DISMISS_INVITE_PANEL_SECOND, this);
+        eventCenter.subscribeUIEvent(SHOW_MORE_FUNCTION_PANEL, this);
+        eventCenter.subscribeUIEvent(DISMISS_MORE_FUNCTION_PANEL, this);
         eventCenter.subscribeUIEvent(SHOW_SHARE_ROOM_PANEL, this);
         eventCenter.subscribeUIEvent(DISMISS_SHARE_ROOM_PANEL, this);
         eventCenter.subscribeUIEvent(SHOW_SELECT_USER_TO_CALL_VIEW, this);
@@ -126,6 +126,7 @@ public class RoomMainViewModel implements ConferenceEventCenter.RoomKitUIEventRe
         eventCenter.subscribeEngine(ConferenceEventCenter.RoomEngineEvent.USER_ROLE_CHANGED, this);
         eventCenter.subscribeEngine(LOCAL_SCREEN_STATE_CHANGED, this);
         eventCenter.subscribeEngine(KICKED_OFF_SEAT, this);
+        eventCenter.subscribeEngine(ConferenceEventCenter.RoomEngineEvent.LOCAL_SHARE_STOPPED_BY_ADMIN, this);
     }
 
     public void destroy() {
@@ -151,8 +152,8 @@ public class RoomMainViewModel implements ConferenceEventCenter.RoomKitUIEventRe
         eventCenter.unsubscribeUIEvent(DISMISS_OWNER_EXIT_ROOM_PANEL, this);
         eventCenter.unsubscribeUIEvent(SHOW_INVITE_PANEL, this);
         eventCenter.unsubscribeUIEvent(DISMISS_INVITE_PANEL, this);
-        eventCenter.unsubscribeUIEvent(SHOW_INVITE_PANEL_SECOND, this);
-        eventCenter.unsubscribeUIEvent(DISMISS_INVITE_PANEL_SECOND, this);
+        eventCenter.unsubscribeUIEvent(SHOW_MORE_FUNCTION_PANEL, this);
+        eventCenter.unsubscribeUIEvent(DISMISS_MORE_FUNCTION_PANEL, this);
         eventCenter.unsubscribeUIEvent(SHOW_SHARE_ROOM_PANEL, this);
         eventCenter.unsubscribeUIEvent(DISMISS_SHARE_ROOM_PANEL, this);
         eventCenter.unsubscribeUIEvent(BAR_SHOW_TIME_RECOUNT, this);
@@ -176,6 +177,7 @@ public class RoomMainViewModel implements ConferenceEventCenter.RoomKitUIEventRe
         eventCenter.unsubscribeEngine(ConferenceEventCenter.RoomEngineEvent.USER_ROLE_CHANGED, this);
         eventCenter.unsubscribeEngine(LOCAL_SCREEN_STATE_CHANGED, this);
         eventCenter.unsubscribeEngine(KICKED_OFF_SEAT, this);
+        eventCenter.unsubscribeEngine(ConferenceEventCenter.RoomEngineEvent.LOCAL_SHARE_STOPPED_BY_ADMIN, this);
     }
 
     public boolean isOwner() {
@@ -199,8 +201,23 @@ public class RoomMainViewModel implements ConferenceEventCenter.RoomKitUIEventRe
         return mConferenceState.userModel;
     }
 
+    public void showLocalDisabledSendMessageToast(String userId, boolean isDisable) {
+        if (TextUtils.equals(userId, mConferenceState.userModel.userId)) {
+            RoomToast.toastShortMessageCenter(mContext.getString(isDisable ? R.string.tuiroomkit_local_user_disable_send_message : R.string.tuiroomkit_local_user_enable_send_message));
+        }
+    }
+
     public String getRoomId() {
         return mConferenceState.roomInfo.roomId;
+    }
+
+    public String getUserNameCard(String userId) {
+        for (UserEntity user : mConferenceState.allUserList) {
+            if (TextUtils.equals(user.getUserId(), userId)) {
+                return user.getNameCard() == null ? user.getUserName() : user.getNameCard();
+            }
+        }
+        return "";
     }
 
     public boolean isFloatChatEnable() {
@@ -234,7 +251,7 @@ public class RoomMainViewModel implements ConferenceEventCenter.RoomKitUIEventRe
         handleEventOfUserExitRoom(key);
         handleEventOfApplyList(key);
         handleEventOfInvite(key);
-        handleEventOfInviteSecond(key);
+        handleEventOfMoreFunction(key);
         handleEventOfShareRoom(key);
         handleEventOfShowSelectAttendeeView(key);
         handleEventOfEnableFloatChat(key, params);
@@ -330,16 +347,16 @@ public class RoomMainViewModel implements ConferenceEventCenter.RoomKitUIEventRe
         }
     }
 
-    private void handleEventOfInviteSecond(String key) {
-        if (TextUtils.equals(key, DISMISS_INVITE_PANEL_SECOND)) {
+    private void handleEventOfMoreFunction(String key) {
+        if (TextUtils.equals(key, DISMISS_MORE_FUNCTION_PANEL)) {
             mIsSecondPanelShowed = false;
             return;
         }
         if (mIsSecondPanelShowed) {
             return;
         }
-        if (TextUtils.equals(key, SHOW_INVITE_PANEL_SECOND)) {
-            mRoomMainView.showMemberInvitePanel();
+        if (TextUtils.equals(key, SHOW_MORE_FUNCTION_PANEL)) {
+            mRoomMainView.showMoreFunctionPanel();
             mIsSecondPanelShowed = true;
         }
     }
@@ -437,6 +454,10 @@ public class RoomMainViewModel implements ConferenceEventCenter.RoomKitUIEventRe
 
             case GET_USER_LIST_COMPLETED_FOR_ENTER_ROOM:
                 mRoomMainView.showAlertUserLiveTips();
+                break;
+
+            case LOCAL_SHARE_STOPPED_BY_ADMIN:
+                mRoomMainView.showShareStoppedByAdminDialog();
                 break;
 
             default:

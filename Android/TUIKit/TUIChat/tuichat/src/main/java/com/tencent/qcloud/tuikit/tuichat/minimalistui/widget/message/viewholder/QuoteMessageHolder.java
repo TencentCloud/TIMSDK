@@ -15,6 +15,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.TextUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
@@ -119,13 +120,10 @@ public class QuoteMessageHolder extends TextMessageHolder {
                 }
             }
         });
+        TextUtil.linkifyUrls(timeInLineTextLayout.getTextView());
         if (isForwardMode || isMessageDetailMode) {
             return;
         }
-        if (!TextUtils.isEmpty(replyContent)) {
-            FaceManager.handlerEmojiText(timeInLineTextLayout.getTextView(), replyContent, false);
-        }
-
         if (floatMode) {
             quoteContentFrameLayout.setVisibility(View.GONE);
         }

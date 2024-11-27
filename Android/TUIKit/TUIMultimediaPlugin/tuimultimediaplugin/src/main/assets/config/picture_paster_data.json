@@ -1,0 +1,30 @@
+{
+  "paster_type_list": [
+    {
+      "type_name": "",
+      "type_icon_path": "@drawable/emoji_48",
+      "paster_item_list": [
+        {
+          "item_icon_path": "@drawable/multimedia_plugin_edit_paster_file_selector",
+          "item_is_file_selector": true
+        },
+        {
+          "item_icon_path": "@drawable/emoji_31",
+          "item_image_path": "@drawable/emoji_31"
+        },
+        {
+          "item_icon_path": "@drawable/emoji_4",
+          "item_image_path": "@drawable/emoji_4"
+        },
+        {
+          "item_icon_path": "@drawable/emoji_10",
+          "item_image_path": "@drawable/emoji_10"
+        },
+        {
+          "item_icon_path": "@drawable/emoji_35",
+          "item_image_path": "@drawable/emoji_35"
+        }
+      ]
+    }
+  ]
+}

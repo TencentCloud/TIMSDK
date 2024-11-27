@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
+import com.tencent.cloud.tuikit.roomkit.model.data.ASRState;
 import com.tencent.cloud.tuikit.roomkit.model.data.MediaState;
 import com.tencent.cloud.tuikit.roomkit.model.data.InvitationState;
 import com.tencent.cloud.tuikit.roomkit.model.data.RoomState;
@@ -40,6 +41,7 @@ public class ConferenceState {
     public UserState       userState       = new UserState();
     public MediaState      mediaState      = new MediaState();
     public InvitationState invitationState = new InvitationState();
+    public ASRState        asrState        = new ASRState();
 
     public TUIRoomDefine.RoomInfo roomInfo;
     public UserModel              userModel;
@@ -108,8 +110,9 @@ public class ConferenceState {
     }
 
     public void addTakeSeatRequest(TUIRoomDefine.Request request) {
+        String name = TextUtils.isEmpty(request.nameCard) ? request.userName : request.nameCard;
         TakeSeatRequestEntity takeSeatRequestEntity =
-                new TakeSeatRequestEntity(request.userId, request.userName, request.avatarUrl, request);
+                new TakeSeatRequestEntity(request.userId, name, request.avatarUrl, request);
         takeSeatRequestList.add(takeSeatRequestEntity);
 
         Map<String, Object> map = new HashMap<>();
@@ -517,6 +520,30 @@ public class ConferenceState {
             }
         }
         return null;
+    }
+
+    public void setUserNameCard(String userId, String nameCard) {
+        if (allUserList.isEmpty() || TextUtils.isEmpty(userId) || TextUtils.isEmpty(nameCard)) {
+            return;
+        }
+        for (UserEntity user : allUserList) {
+            if (TextUtils.equals(user.getUserId(), userId)) {
+                user.setNameCard(nameCard);
+                break;
+            }
+        }
+    }
+
+    public void updateTakeSeatRequestUserName(String userId, String userName) {
+        if (takeSeatRequestList.isEmpty() || TextUtils.isEmpty(userId) || TextUtils.isEmpty(userName)) {
+            return;
+        }
+        for (TakeSeatRequestEntity request : takeSeatRequestList) {
+            if (TextUtils.equals(request.getUserId(), userId)) {
+                request.setUserName(userName);
+                break;
+            }
+        }
     }
 
     public void setEnableFloatChat(boolean enable) {

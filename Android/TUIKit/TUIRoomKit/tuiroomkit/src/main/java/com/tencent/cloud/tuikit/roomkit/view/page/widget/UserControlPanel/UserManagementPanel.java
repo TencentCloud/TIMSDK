@@ -3,6 +3,7 @@ package com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_USER_MANAGEMENT;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,12 +19,15 @@ import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.common.utils.ImageLoader;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.view.component.BaseBottomDialog;
 import com.tencent.cloud.tuikit.roomkit.view.component.BaseDialogFragment;
 import com.tencent.cloud.tuikit.roomkit.view.component.ConfirmDialog;
 import com.tencent.cloud.tuikit.roomkit.view.component.TipToast;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.UserManagementViewModel;
+import com.trtc.tuikit.common.livedata.LiveListObserver;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -35,6 +39,7 @@ public class UserManagementPanel extends BaseBottomDialog {
     private TextView                mTextMessageDisable;
     private TextView                mTextCloseMic;
     private TextView                mTextCloseCamera;
+    private TextView                mTextUserName;
     private ImageView               mImageMic;
     private ImageView               mImageCamera;
     private ImageView               mImageMessageDisable;
@@ -43,7 +48,16 @@ public class UserManagementPanel extends BaseBottomDialog {
     private RelativeLayout          mLayoutCamera;
     private RelativeLayout          mLayoutKickoffStage;
     private RelativeLayout          mLayoutInviteToStage;
+    private RelativeLayout          mLayoutModifyName;
     private UserManagementViewModel mViewModel;
+    private ModifyNameKeyboard      mKeyBoard;
+
+    private LiveListObserver<UserState.UserInfo> mAllUserObserver = new LiveListObserver<UserState.UserInfo>() {
+        @Override
+        public void onItemChanged(int position, UserState.UserInfo item) {
+            onUserNameCardChanged(item.userId, item.userName);
+        }
+    };
 
     public UserManagementPanel(@NonNull Context context, UserEntity user) {
         super(context);
@@ -56,6 +70,7 @@ public class UserManagementPanel extends BaseBottomDialog {
     public void dismiss() {
         super.dismiss();
         ConferenceEventCenter.getInstance().notifyUIEvent(DISMISS_USER_MANAGEMENT, null);
+        ConferenceController.sharedInstance().getUserState().allUsers.removeObserver(mAllUserObserver);
         mViewModel.destroy();
     }
 
@@ -77,6 +92,8 @@ public class UserManagementPanel extends BaseBottomDialog {
         initTransferOwnerView();
         initManagerAddView();
         initManagerRemoveView();
+        initModifyNameView();
+        ConferenceController.sharedInstance().getUserState().allUsers.observe(mAllUserObserver);
     }
 
     public void showTransferRoomSuccessDialog() {
@@ -159,12 +176,12 @@ public class UserManagementPanel extends BaseBottomDialog {
 
     private void initUserInfoView() {
         mImageHead = findViewById(R.id.image_head);
-        TextView textUserName = findViewById(R.id.tv_user_name);
-        String userName = mUser.getUserName();
+        mTextUserName = findViewById(R.id.tv_user_name);
+        String userName = TextUtils.isEmpty(mUser.getNameCard()) ? mUser.getUserName() : mUser.getNameCard();
         if (mViewModel.isSelf()) {
             userName = userName + getContext().getString(R.string.tuiroomkit_me);
         }
-        textUserName.setText(userName);
+        mTextUserName.setText(userName);
         ImageLoader.loadImage(mContext, mImageHead, mUser.getAvatarUrl(), R.drawable.tuiroomkit_head);
     }
 
@@ -244,10 +261,10 @@ public class UserManagementPanel extends BaseBottomDialog {
                 mViewModel.switchManagerRole(new TUIRoomDefine.ActionCallback() {
                     @Override
                     public void onSuccess() {
+                        String name = TextUtils.isEmpty(mUser.getNameCard()) ? mUser.getUserName() : mUser.getNameCard();
                         TipToast.build()
                                 .setDuration(Toast.LENGTH_LONG)
-                                .setMessage(mContext.getString(R.string.tuiroomkit_make_user_as_manager,
-                                        mUser.getUserName()))
+                                .setMessage(mContext.getString(R.string.tuiroomkit_make_user_as_manager, name))
                                 .show(mContext);
                     }
 
@@ -256,6 +273,19 @@ public class UserManagementPanel extends BaseBottomDialog {
                         Log.e(TAG, "onError error=" + error + " message=" + message);
                     }
                 });
+                dismiss();
+            }
+        });
+    }
+
+    private void initModifyNameView() {
+        mLayoutModifyName = findViewById(R.id.tuiroomkit_rl_modify_name);
+        String name = TextUtils.isEmpty(mUser.getNameCard()) ? mUser.getUserName() : mUser.getNameCard();
+        mKeyBoard = new ModifyNameKeyboard(mContext, mUser.getUserId(), name);
+        mLayoutModifyName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mKeyBoard.show();
                 dismiss();
             }
         });
@@ -274,11 +304,14 @@ public class UserManagementPanel extends BaseBottomDialog {
                 mViewModel.switchManagerRole(new TUIRoomDefine.ActionCallback() {
                     @Override
                     public void onSuccess() {
+                        String name = TextUtils.isEmpty(mUser.getNameCard()) ? mUser.getUserName() : mUser.getNameCard();
                         TipToast.build()
                                 .setDuration(Toast.LENGTH_LONG)
-                                .setMessage(mContext.getString(R.string.tuiroomkit_make_user_as_general,
-                                        mUser.getUserName()))
+                                .setMessage(mContext.getString(R.string.tuiroomkit_make_user_as_general, name))
                                 .show(mContext);
+                        if (mViewModel.isDisableScreenShare()) {
+                            mViewModel.stopScreenShareAfterManagerRemove();
+                        }
                     }
 
                     @Override
@@ -300,7 +333,7 @@ public class UserManagementPanel extends BaseBottomDialog {
         layoutKickOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showKickDialog(mUser.getUserId(), mUser.getUserName());
+                showKickDialog(mUser.getUserId(), TextUtils.isEmpty(mUser.getNameCard()) ? mUser.getUserName() : mUser.getNameCard());
                 dismiss();
             }
         });
@@ -346,8 +379,9 @@ public class UserManagementPanel extends BaseBottomDialog {
         if (activity == null) {
             return;
         }
+        String name = TextUtils.isEmpty(mUser.getNameCard()) ? mUser.getUserName() : mUser.getNameCard();
         BaseDialogFragment.build()
-                .setTitle(mContext.getString(R.string.tuiroomkit_dialog_transfer_owner_title, mUser.getUserName()))
+                .setTitle(mContext.getString(R.string.tuiroomkit_dialog_transfer_owner_title, name))
                 .setContent(mContext.getString(R.string.tuiroomkit_dialog_transfer_owner_content))
                 .setNegativeName(mContext.getString(R.string.tuiroomkit_cancel))
                 .setPositiveName(mContext.getString(R.string.tuiroomkit_dialog_transfer_owner_confirm))
@@ -358,8 +392,10 @@ public class UserManagementPanel extends BaseBottomDialog {
                             @Override
                             public void onSuccess() {
                                 TipToast.build().setDuration(Toast.LENGTH_LONG).setMessage(
-                                        mContext.getString(R.string.tuiroomkit_toast_transfer_owner_success,
-                                                mUser.getUserName())).show(mContext);
+                                        mContext.getString(R.string.tuiroomkit_toast_transfer_owner_success, name)).show(mContext);
+                                if (mViewModel.isDisableScreenShare()) {
+                                    mViewModel.stopScreenShareAfterTransferOwner();
+                                }
                             }
 
                             @Override
@@ -371,4 +407,15 @@ public class UserManagementPanel extends BaseBottomDialog {
                 })
                 .showDialog(activity, "showTransferOwnerDialog");
     }
+
+    public void onUserNameCardChanged(String userId, String userName) {
+        if (!TextUtils.equals(mUser.getUserId(), userId) || TextUtils.isEmpty(userName)) {
+            return;
+        }
+        if (TextUtils.equals(userId, ConferenceController.sharedInstance().getUserState().selfInfo.get().userId)) {
+            userName += getContext().getString(R.string.tuiroomkit_me);
+        }
+        mTextUserName.setText(userName);
+    }
+
 }

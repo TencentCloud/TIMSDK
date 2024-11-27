@@ -2,6 +2,7 @@ package com.tencent.cloud.tuikit.roomkit.videoseat.ui.view;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,8 +20,11 @@ import com.tencent.cloud.tuikit.engine.common.TUIVideoView;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.common.utils.ImageLoader;
+import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.videoseat.viewmodel.UserEntity;
 import com.tencent.qcloud.tuicore.util.ScreenUtil;
+import com.trtc.tuikit.common.livedata.LiveListObserver;
 
 public class UserDisplayView extends FrameLayout {
     public static final int MARGIN_PX = ScreenUtil.dip2px(5);
@@ -42,13 +46,20 @@ public class UserDisplayView extends FrameLayout {
     private int mWidth;
     private int mHeight;
 
-    private float mTouchDownPointX;
-    private float mTouchDownPointY;
-    private int   mLeftWhenTouchDown;
-    private int   mTopWhenTouchDown;
+    private float   mTouchDownPointX;
+    private float   mTouchDownPointY;
+    private int     mLeftWhenTouchDown;
+    private int     mTopWhenTouchDown;
     private boolean mIsActionDrag;
 
     private OnClickListener mOnClickListener;
+
+    private LiveListObserver<UserState.UserInfo> mAllUserObserver = new LiveListObserver<UserState.UserInfo>() {
+        @Override
+        public void onItemChanged(int position, UserState.UserInfo item) {
+            onUserNameCardChanged(item.userId, item.userName);
+        }
+    };
 
     public UserDisplayView(Context context) {
         this(context, null);
@@ -309,5 +320,26 @@ public class UserDisplayView extends FrameLayout {
             left = MARGIN_PX;
         }
         relayoutInRelativeLayout(left, getTop());
+    }
+
+    public void onUserNameCardChanged(String userId, String nameCard) {
+        if (mMemberEntity == null) {
+            return;
+        }
+        if (TextUtils.equals(userId, mMemberEntity.getUserId())) {
+            mUserNameTv.setText(nameCard);
+        }
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        ConferenceController.sharedInstance().getUserState().allUsers.observe(mAllUserObserver);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        ConferenceController.sharedInstance().getUserState().allUsers.removeObserver(mAllUserObserver);
     }
 }

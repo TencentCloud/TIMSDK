@@ -39,7 +39,7 @@ import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
-import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.SelectTextHelper;
+import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.SelectionHelper;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView;
 import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
@@ -367,7 +367,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            SelectTextHelper.resetSelected();
+            SelectionHelper.resetSelected();
         }
         return super.dispatchTouchEvent(ev);
     }
@@ -418,7 +418,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
 
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                SelectTextHelper.resetSelected();
+                SelectionHelper.resetSelected();
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     if (scrollDirection == -1) {
                         if (!mMessageRecyclerView.canScrollVertically(-1)) {

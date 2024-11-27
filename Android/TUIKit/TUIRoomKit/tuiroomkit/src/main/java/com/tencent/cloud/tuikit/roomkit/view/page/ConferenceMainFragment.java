@@ -1,5 +1,6 @@
 package com.tencent.cloud.tuikit.roomkit.view.page;
 
+import static com.tencent.cloud.tuikit.engine.common.TUICommonDefine.Error.ROOM_ID_NOT_EXIST;
 import static com.tencent.cloud.tuikit.engine.common.TUICommonDefine.Error.SUCCESS;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_CONFERENCE;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_CONFERENCE_ERROR;
@@ -102,7 +103,7 @@ public class ConferenceMainFragment extends Fragment {
                     param.put(KEY_CONFERENCE_ERROR, error);
                     param.put(KEY_CONFERENCE_MESSAGE, message);
                     TUICore.notifyEvent(KEY_CONFERENCE, KEY_CONFERENCE_JOINED, param);
-                    RoomToast.toastLongMessageCenter(message);
+                    RoomToast.toastLongMessageCenter(error == ROOM_ID_NOT_EXIST ? getString(R.string.tuiroomkit_room_not_exit) : message);
                     onDismiss();
                 }
             }

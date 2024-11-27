@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceSessionImpl;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.SelectScheduleParticipant.SelectScheduleParticipantView;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
@@ -75,6 +77,8 @@ public class SetConferenceDetailView extends FrameLayout {
     public void disableSetConferenceType() {
         if (mLayoutConferenceType != null) {
             mLayoutConferenceType.setClickable(false);
+            ImageView icon = findViewById(R.id.image_conference_type_icon);
+            icon.setVisibility(GONE);
         }
     }
 
@@ -100,6 +104,7 @@ public class SetConferenceDetailView extends FrameLayout {
         initConferenceDurationView();
         initConferenceTimeZoneView();
         mSelectScheduleParticipantView = findViewById(R.id.tuiroomkit_select_schedule_participant);
+        mSelectScheduleParticipantView.setVisibility(ConferenceSessionImpl.sharedInstance().mContactsActivity == null ? GONE : VISIBLE);
     }
 
     public void initConferenceNameView() {

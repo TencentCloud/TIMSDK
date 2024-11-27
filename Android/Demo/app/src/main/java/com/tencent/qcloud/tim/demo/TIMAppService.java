@@ -139,6 +139,7 @@ public class TIMAppService implements TUIInitializer, ITUIService {
 
     public void startLoginActivity() {
         Intent intent = new Intent(mContext, LoginForDevActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
     }
 

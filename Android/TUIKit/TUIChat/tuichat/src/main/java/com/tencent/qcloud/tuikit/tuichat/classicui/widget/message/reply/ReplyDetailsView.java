@@ -17,6 +17,7 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.UserIconView;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.TextUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import java.util.ArrayList;
 import java.util.Date;
@@ -89,7 +90,8 @@ public class ReplyDetailsView extends RecyclerView {
             holder.userFaceView.setIconUrls(iconList);
             holder.userNameTv.setText(userName);
             FaceManager.handlerEmojiText(holder.messageText, messageText, false);
-
+            TextUtil.linkifyUrls(holder.messageText);
+            holder.messageText.setActivated(true);
             setBottomContent(messageBean, holder);
         }
 

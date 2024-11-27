@@ -262,7 +262,7 @@ public class FileUtil {
         String mimeType = context.getContentResolver().getType(uri);
         String filename = null;
 
-        if (mimeType == null && context != null) {
+        if (mimeType == null) {
             filename = getName(uri.toString());
         } else {
             Cursor returnCursor = context.getContentResolver().query(uri, null, null, null, null);

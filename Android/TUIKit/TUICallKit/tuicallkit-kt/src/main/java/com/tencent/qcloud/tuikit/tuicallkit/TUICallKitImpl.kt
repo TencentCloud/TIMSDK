@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import com.tencent.qcloud.tuicore.TUIConfig
 import com.tencent.qcloud.tuicore.TUIConstants
 import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuicore.TUILogin
@@ -331,8 +332,7 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit(), ITUIN
     }
 
     private fun isFCMDataNotification(): Boolean {
-        val pushBrandId =
-            TUICore.callService(TUIConstants.TIMPush.SERVICE_NAME, TUIConstants.TIMPush.METHOD_GET_PUSH_BRAND_ID, null)
+        val pushBrandId = TUIConfig.getCustomData("pushChannelId")
         return TUICore.getService(TUIConstants.TIMPush.SERVICE_NAME) != null
                 && pushBrandId == TUIConstants.DeviceInfo.BRAND_GOOGLE_ELSE
     }

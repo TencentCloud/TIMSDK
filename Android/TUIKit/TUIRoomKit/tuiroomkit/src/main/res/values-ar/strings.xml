@@ -121,6 +121,11 @@
     <string name="tuiroomkit_manager_remove">إزالة المسؤول</string>
     <string name="tuiroomkit_mute_user">تعطيل الدردشة</string>
     <string name="tuiroomkit_kick_out_of_room">يزيل</string>
+    <string name="tuiroomkit_ai_tool">الذكاء الاصطناعي</string>
+    <string name="tuiroomkit_ai_speech_to_text_record">تسجيل الاجتماعات في الوقت الفعلي باستخدام الذكاء الاصطناعي</string>
+    <string name="tuiroomkit_ai_open_live_subtitle">فتح ترجمات الذكاء الاصطناعي في الوقت الفعلي</string>
+    <string name="tuiroomkit_ai_close_live_subtitle">إغلاق ترجمات الذكاء الاصطناعي في الوقت الفعلي</string>
+    <string name="tuiroomkit_ai_cat_live_record">عرض تسجيلات الاجتماعات المباشرة باستخدام الذكاء الاصطناعي</string>
     <string name="tuiroomkit_settings">الإعدادات</string>
     <string name="tuiroomkit_advanced_settings">إعدادات متقدمة</string>
     <string name="tuiroomkit_beauty">الجمال</string>
@@ -215,22 +220,18 @@
     <string name="tuiroomkit_open_mic_reject">%s تم رفض طلب إلغاء كتم الصوت</string>
     <string name="tuiroomkit_open_camera_agree">%s وافق على طلب فتح الفيديو</string>
     <string name="tuiroomkit_open_camera_reject">%s رفض طلب فتح الفيديو</string>
-
     <string name="tuiroomkit_video_resolution_smooth">سلس</string>
     <string name="tuiroomkit_video_resolution_sd">الوضوح القياسي</string>
     <string name="tuiroomkit_video_resolution_hd">الوضوح العالي</string>
     <string name="tuiroomkit_video_resolution_uhd">الوضوح الفائق</string>
-
     <string name="tuiroomkit_toast_conference_id_not_exist">هذا المؤتمر غير موجود، يرجى الانضمام مرة أخرى</string>
     <string name="tuiroomkit_toast_conference_id_invalid">رقم المؤتمر الحالي غير صالح، يرجى التحقق من إدخالاتك</string>
     <string name="tuiroomkit_toast_conference_id_occupied">المؤتمر موجود بالفعل، يرجى استخدام رقم مؤتمر آخر</string>
     <string name="tuiroomkit_toast_conference_name_invalid">اسم المؤتمر الحالي غير صالح، يرجى التحقق من مدخلاتك</string>
-
     <string name="tuiroomkit_float_chat_warning_not_empty">لا يمكن أن يكون الإدخال فارغًا</string>
     <string name="tuiroomkit_float_chat_hint">قل شيئا</string>
     <string name="tuiroomkit_float_chat_btn_send">يرسل</string>
     <string name="tuiroomkit_float_chat_enable">الدردشة العائمة</string>
-
     <string name="tuiroomkit_temporary_conference_name">غرفة %s مؤقت</string>
     <string name="tuiroomkit_schedule_room_btn">حجز غرفة</string>
     <string name="tuiroomkit_scheduled_room_image_tag">لا توجد حجوزات للغرف حاليًا</string>
@@ -295,8 +296,7 @@
     <string name="tuiroomkit_password_is_empty">كلمة المرور فارغة</string>
     <string name="tuiroomkit_room_password_title">كلمة سر الغرفة</string>
     <string name="tuiroomkit_room_password_format_error">تنسيق كلمة مرور الغرفة غير صحيح ، يرجى التحقق من ذلك</string>
-    <string name="tuiroomkit_room_password_error">كلمة المرور خاطئة، يرجى إعادة إدخالها</string>
-
+    <string name="tuiroomkit_room_password_error">كلمة المرور غير صحيحة</string>
     <string name="tuiroomkit_tip_creating_room_id">جار إنشاء رقم الغرفة ، يرجى المحاولة مرة أخرى لاحقًا</string>
     <string name="tuiroomkit_turn_on_audio">افتح الصوت</string>
     <string name="tuiroomkit_turn_on_speaker">افتح مكبر الصوت</string>
@@ -308,12 +308,13 @@
     <string name="tuiroomkit_repeat_start_room_dialog_title">حاليا في الغرفة</string>
     <string name="tuiroomkit_repeat_start_room_dialog_content">خروج الإيجار قبل الانضمام إلى غرفة جديدة</string>
     <string name="tuiroomkit_i_see">أرى</string>
-
     <string name="tuiroomkit_invite_yout_to_join_conference">دعوتك للمشاركة في الاجتماع%s</string>
     <string name="tuiroomkit_participant">المشاركون في الاجتماع:</string>
     <string name="tuiroomkit_join_now">انضم الآن</string>
     <string name="tuiroomkit_do_not_enter_for_now">لن أدخل الآن</string>
     <string name="tuiroomkit_conference_host">يستضيف:</string>
+    <string name="tuiroomkit_disable_general_share">يمكن للمضيف / المسؤول فقط مشاركة الشاشة</string>
+    <string name="tuiroomkit_all_users_enable_share">يمكن لجميع الأعضاء مشاركة الشاشة</string>
     <string name="tuiroomkit_add_user">إضافة أعضاء</string>
     <string name="tuiroomkit_share_room">مشاركة الغرفة</string>
     <string name="tuiroomkit_not_entered">لم أدخل بعد(%s)</string>
@@ -338,8 +339,17 @@
     <string name="tuiroomkit_copy_room_invitation_link_success">نسخ رابط الدعوة بنجاح</string>
     <string name="tuiroomkit_please_enter_six_digit_password">أدخل 6 أرقام</string>
     <string name="tuiroomkit_conference_modify_success">تم التعديل بنجاح</string>
-
     <string name="tuiroomkit_default_water_mark_text">%s(%s)</string>
-    <string name="tuiroomkit_password_digits">0123456789</string>
     <string name="tuiroomkit_confirm_dialog_count_down_text">(%s)</string>
+    <string name="tuiroomkit_modify_name">تعديل الاسم</string>
+    <string name="tuiroomkit_disable_general_share_dialog_title">هل تريد تمكين ميزة مشاركة الشاشة للمالك والمسؤول فقط؟</string>
+    <string name="tuiroomkit_disable_general_share_dialog_hint">ترجمة إلى العربية: يوجد حاليًا عضو يشارك الشاشة، بعد التفعيل سيتم إنهاء مشاركة الشاشة لهذا العضو</string>
+    <string name="tuiroomkit_disable_general_share_by_admin_dialog_hint">تم إيقاف مشاركة الشاشة من قبل المضيف أو المشرف. حاليًا، يمكن للمضيف أو المشرف فقط مشاركة الشاشة</string>
+    <string name="tuiroomkit_share_screen_stopped">توقف مشاركة الشاشة</string>
+    <string name="tuiroomkit_share_fail_cause_of_admin_disable">فشل بدء مشاركة الشاشة، حاليًا يمكن للمالك/المسؤول فقط مشاركة الشاشة</string>
+    <string name="tuiroomkit_modify_name_success">تم تغيير الاسم بنجاح.</string>
+    <string name="tuiroomkit_room_not_exit">الغرفة غير موجودة، يرجى تأكيد رقم الغرفة أو إنشاء غرفة</string>
+    <string name="tuiroomkit_conference_canceled">لقد تم إزالتك من المشاركين في المؤتمر</string>
+    <string name="tuiroomkit_local_user_disable_send_message">لقد تم منعك من الدردشة النصية</string>
+    <string name="tuiroomkit_local_user_enable_send_message">مسموح لك بالدردشة النصية</string>
 </resources>

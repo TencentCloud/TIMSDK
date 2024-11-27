@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Android 12 or lower -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <!-- Android 13 or higher -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+
+    <!-- Android 14 or higher -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+
+    <application android:supportsRtl="true">
+        <activity
+                android:name="com.tencent.qcloud.tuikit.tuimultimediaplugin.record.TUIMultimediaRecordActivity"
+                android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+                android:screenOrientation="portrait" />
+
+        <activity
+                android:name="com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.TUIMultimediaEditActivity"
+                android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+                android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.tencent.qcloud.tuikit.tuimultimediaplugin.pick.ui.picker.AlbumPickerActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|screenLayout|uiMode|locale"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+
+    </application>
+</manifest>

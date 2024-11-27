@@ -2,7 +2,6 @@ package com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.Sel
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -13,11 +12,10 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.utils.widget.ImageFilterView;
 
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListObserver;
 import com.tencent.cloud.tuikit.roomkit.common.utils.ImageLoader;
 import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
-import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.view.ScheduleConferenceStateHolder;
+import com.trtc.tuikit.common.livedata.LiveListObserver;
 
 import java.util.ArrayList;
 import java.util.List;

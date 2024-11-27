@@ -70,6 +70,9 @@ public class CallUserView extends FrameLayout {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        mStateHolder.removeIsShowObserver(mIsShow);
+        mStateHolder.removeIsCallingObserver(mIsCalling);
+        mStateHolder.removeIsNotEnteredForNowShowObserver(mIsNotEnteredForNowShow);
     }
 
     public void setUserId(String userId) {

@@ -17,7 +17,7 @@ import java.io.File;
 import java.util.concurrent.ExecutionException;
 
 public class GlideEngine {
-    public static void loadCornerImageWithoutPlaceHolder(ImageView imageView, String filePath, RequestListener listener, float radius) {
+    public static void loadCornerImageWithoutPlaceHolder(ImageView imageView, Object uri, RequestListener listener, float radius) {
         RoundedCorners transform = null;
         if ((int) radius > 0) {
             transform = new RoundedCorners((int) radius);
@@ -27,7 +27,7 @@ public class GlideEngine {
         if (transform != null) {
             options = options.transform(transform);
         }
-        Glide.with(TUILogin.getAppContext()).load(filePath).apply(options).listener(listener).into(imageView);
+        Glide.with(TUILogin.getAppContext()).load(uri).apply(options).listener(listener).into(imageView);
     }
 
     public static void clear(ImageView imageView) {

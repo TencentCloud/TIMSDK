@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="contact_minimalist_contacts">聯繫人</string>
+    <string name="contact_new_application_title">%d 個新的好友申請</string>
+    <string name="contact_validation_message">校驗信息</string>
+    <string name="contact_friend_application_detail_title">詳情</string>
+    <string name="contact_not_found_info">無內容</string>
+
+</resources>

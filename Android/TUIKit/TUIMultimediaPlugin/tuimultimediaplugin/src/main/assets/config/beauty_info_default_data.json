@@ -1,0 +1,161 @@
+{
+  "beauty_type_list": [
+    {
+      "beauty_type_name": "@string/multimedia_plugin_setting_panel_beauty",
+      "beauty_item_list": [
+        {
+          "item_type": 0,
+          "item_name": "@string/multimedia_plugin_beauty_cancel",
+          "item_level": -1,
+          "item_icon_normal": "@drawable/multimedia_plugin_beauty_cancel",
+          "item_filter_bitmap": ""
+        },
+        {
+          "item_type": 13,
+          "item_name": "@string/multimedia_plugin_panel_white",
+          "item_level": 1,
+          "item_icon_normal": "@drawable/multimedia_plugin_beauty_white",
+          "item_filter_bitmap": ""
+        },
+        {
+          "item_type": 10,
+          "item_name": "@string/multimedia_plugin_panel_style_smooth",
+          "item_level": 4,
+          "item_icon_normal": "@drawable/multimedia_plugin_beauty_smooth",
+          "item_filter_bitmap": ""
+        },
+        {
+          "item_type": 14,
+          "item_name": "@string/multimedia_plugin_panel_ruddy",
+          "item_level": 0,
+          "item_icon_normal": "@drawable/multimedia_plugin_beauty_ruddy",
+          "item_filter_bitmap": ""
+        }
+      ]
+    },
+    {
+      "beauty_type_name": "@string/multimedia_plugin_setting_panel_filter",
+      "beauty_item_list": [
+        {
+          "item_type": 20,
+          "item_name": "@string/multimedia_plugin_beauty_cancel",
+          "item_level": -1,
+          "item_icon_normal": "@drawable/multimedia_plugin_filter_icon_cancel",
+          "item_filter_bitmap": ""
+        },
+        {
+          "item_type": 20,
+          "item_name": "@string/multimedia_plugin_panel_filter_standard",
+          "item_level": 4,
+          "item_icon_normal": "@drawable/multimedia_plugin_filter_icon_standard",
+          "item_filter_bitmap": "@drawable/multimedia_plugin_filter_biaozhun"
+        },
+        {
+          "item_type": 20,
+          "item_name": "@string/multimedia_plugin_panel_filter_cheery",
+          "item_level": 8,
+          "item_icon_normal": "@drawable/multimedia_plugin_filter_icon_cheery",
+          "item_filter_bitmap": "@drawable/multimedia_plugin_filter_yinghong"
+        },
+        {
+          "item_type": 20,
+          "item_name": "@string/multimedia_plugin_panel_filter_cloud",
+          "item_level": 8,
+          "item_icon_normal": "@drawable/multimedia_plugin_filter_icon_cloud",
+          "item_filter_bitmap": "@drawable/multimedia_plugin_filter_yunshang"
+        },
+        {
+          "item_type": 20,
+          "item_name": "@string/multimedia_plugin_panel_filter_pure",
+          "item_level": 8,
+          "item_icon_normal": "@drawable/multimedia_plugin_filter_icon_pure",
+          "item_filter_bitmap": "@drawable/multimedia_plugin_filter_chunzhen"
+        },
+        {
+          "item_type": 20,
+          "item_name": "@string/multimedia_plugin_panel_filter_orchid",
+          "item_level": 9,
+          "item_icon_normal": "@drawable/multimedia_plugin_filter_icon_orchid",
+          "item_filter_bitmap": "@drawable/multimedia_plugin_filter_bailan"
+        },
+        {
+          "item_type": 20,
+          "item_name": "@string/multimedia_plugin_panel_filter_vitality",
+          "item_level": 8,
+          "item_icon_normal": "@drawable/multimedia_plugin_filter_icon_vitality",
+          "item_filter_bitmap": "@drawable/multimedia_plugin_filter_yuanqi"
+        },
+        {
+          "item_type": 20,
+          "item_name": "@string/multimedia_plugin_panel_filter_super",
+          "item_level": 9,
+          "item_icon_normal": "@drawable/multimedia_plugin_filter_icon_super",
+          "item_filter_bitmap": "@drawable/multimedia_plugin_filter_chaotuo"
+        },
+        {
+          "item_type": 20,
+          "item_name": "@string/multimedia_plugin_panel_filter_fragrance",
+          "item_level": 5,
+          "item_icon_normal": "@drawable/multimedia_plugin_filter_icon_fragrance",
+          "item_filter_bitmap": "@drawable/multimedia_plugin_filter_xiangfen"
+        },
+        {
+          "item_type": 20,
+          "item_name": "@string/multimedia_plugin_panel_filter_romantic",
+          "item_level": 5,
+          "item_icon_normal": "@drawable/multimedia_plugin_filter_icon_romantic",
+          "item_filter_bitmap": "@drawable/multimedia_plugin_filter_langman"
+        },
+        {
+          "item_type": 20,
+          "item_name": "@string/multimedia_plugin_panel_filter_fresh",
+          "item_level": 5,
+          "item_icon_normal": "@drawable/multimedia_plugin_filter_icon_fresh",
+          "item_filter_bitmap": "@drawable/multimedia_plugin_filter_qingxin"
+        },
+        {
+          "item_type": 20,
+          "item_name": "@string/multimedia_plugin_panel_filter_beautiful",
+          "item_level": 5,
+          "item_icon_normal": "@drawable/multimedia_plugin_filter_icon_beautiful",
+          "item_filter_bitmap": "@drawable/multimedia_plugin_filter_weimei"
+        },
+        {
+          "item_type": 20,
+          "item_name": "@string/multimedia_plugin_panel_filter_pink",
+          "item_level": 5,
+          "item_icon_normal": "@drawable/multimedia_plugin_filter_icon_pink",
+          "item_filter_bitmap": "@drawable/multimedia_plugin_filter_fennen"
+        },
+        {
+          "item_type": 20,
+          "item_name": "@string/multimedia_plugin_panel_filter_reminiscence",
+          "item_level": 5,
+          "item_icon_normal": "@drawable/multimedia_plugin_filter_icon_reminiscence",
+          "item_filter_bitmap": "@drawable/multimedia_plugin_filter_huaijiu"
+        },
+        {
+          "item_type": 20,
+          "item_name": "@string/multimedia_plugin_panel_filter_blues",
+          "item_level": 5,
+          "item_icon_normal": "@drawable/multimedia_plugin_filter_icon_blues",
+          "item_filter_bitmap": "@drawable/multimedia_plugin_filter_landiao"
+        },
+        {
+          "item_type": 20,
+          "item_name": "@string/multimedia_plugin_panel_filter_cool",
+          "item_level": 5,
+          "item_icon_normal": "@drawable/multimedia_plugin_filter_icon_cool",
+          "item_filter_bitmap": "@drawable/multimedia_plugin_filter_qingliang"
+        },
+        {
+          "item_type": 20,
+          "item_name": "@string/multimedia_plugin_panel_filter_Japanese",
+          "item_level": 5,
+          "item_icon_normal": "@drawable/multimedia_plugin_filter_icon_japanese",
+          "item_filter_bitmap": "@drawable/multimedia_plugin_filter_rixi"
+        }
+      ]
+    }
+  ]
+}

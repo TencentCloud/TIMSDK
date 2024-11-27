@@ -204,7 +204,7 @@ public class RoomObserver extends TUIRoomObserver implements ConferenceEventCent
                 break;
 
             case LOCAL_USER_EXIT_ROOM:
-                handleLocalUserExitRoom(params);
+                handleLocalUserExitRoom();
                 break;
 
             case LOCAL_USER_DESTROY_ROOM:
@@ -244,11 +244,8 @@ public class RoomObserver extends TUIRoomObserver implements ConferenceEventCent
         mRoomCallback.onEnterRoom(mRoomMsgData.getRoomId(), result);
     }
 
-    private void handleLocalUserExitRoom(Map<String, Object> params) {
-        AccessRoomConstants.RoomResult result =
-                params.get(KEY_ERROR) == TUICommonDefine.Error.SUCCESS ? AccessRoomConstants.RoomResult.SUCCESS :
-                        AccessRoomConstants.RoomResult.FAILED;
-        Log.d(TAG, "handleLocalUserExitRoom result=" + result);
+    private void handleLocalUserExitRoom() {
+        Log.d(TAG, "handleLocalUserExitRoom");
         mRoomCallback.onExitRoom(mRoomMsgData.getRoomId());
     }
 

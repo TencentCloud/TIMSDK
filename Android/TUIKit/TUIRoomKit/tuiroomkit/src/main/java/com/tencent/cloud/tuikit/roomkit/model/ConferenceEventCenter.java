@@ -63,6 +63,8 @@ public class ConferenceEventCenter {
         LOCAL_USER_MANAGER_TO_GENERAL,
         LOCAL_USER_TO_OWNER,
         ON_STATISTICS,
+        LOCAL_SHARE_STOPPED_BY_ADMIN,
+        UPDATE_CONFERENCE_LIST,
     }
 
     public static class RoomKitUIEvent {
@@ -88,8 +90,8 @@ public class ConferenceEventCenter {
         public static final String DISMISS_MEDIA_SETTING_PANEL   = "DISMISS_MEDIA_SETTING_PANEL";
         public static final String SHOW_INVITE_PANEL             = "SHOW_INVITE_PANEL";
         public static final String DISMISS_INVITE_PANEL          = "DISMISS_INVITE_PANEL";
-        public static final String SHOW_INVITE_PANEL_SECOND      = "SHOW_INVITE_PANEL_SECOND";
-        public static final String DISMISS_INVITE_PANEL_SECOND   = "DISMISS_INVITE_PANEL_SECOND";
+        public static final String SHOW_MORE_FUNCTION_PANEL      = "SHOW_MORE_FUNCTION_PANEL";
+        public static final String DISMISS_MORE_FUNCTION_PANEL   = "DISMISS_INVITE_PANEL_SECOND";
         public static final String SHOW_SHARE_ROOM_PANEL         = "SHOW_SHARE_ROOM_PANEL";
         public static final String DISMISS_SHARE_ROOM_PANEL      = "DISMISS_SHARE_ROOM_PANEL";
         public static final String SHOW_SELECT_USER_TO_CALL_VIEW = "SHOW_SELECT_USER_TO_CALL_VIEW";
@@ -101,9 +103,9 @@ public class ConferenceEventCenter {
 
         public static final String SEND_IM_MSG_COMPLETE = "SEND_IM_MSG_COMPLETE";
 
-        public static final String BAR_SHOW_TIME_RECOUNT = "BAR_SHOW_TIME_RECOUNT";
-        public static final String DISMISS_MAIN_ACTIVITY = "DISMISS_MAIN_ACTIVITY";
-        public static final String ENABLE_FLOAT_CHAT     = "ENABLE_FLOAT_CHAT";
+        public static final String BAR_SHOW_TIME_RECOUNT        = "BAR_SHOW_TIME_RECOUNT";
+        public static final String DISMISS_MAIN_ACTIVITY        = "DISMISS_MAIN_ACTIVITY";
+        public static final String ENABLE_FLOAT_CHAT            = "ENABLE_FLOAT_CHAT";
         public static final String SCHEDULED_CONFERENCE_SUCCESS = "SCHEDULED_CONFERENCE_SUCCESS";
 
         public static final String DESTROY_INVITATION_RECEIVED_ACTIVITY = "DESTROY_INVITATION_RECEIVED_ACTIVITY";

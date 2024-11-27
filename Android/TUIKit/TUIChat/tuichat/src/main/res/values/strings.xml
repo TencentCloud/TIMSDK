@@ -295,4 +295,5 @@
     <string name="chat_quote_origin_message_revoked">Quoted content has been revoked</string>
     <string name="chat_reply_origin_message_revoked">Reply content has been revoked</string>
 
+    <string name="ugc_plugin_not_purchased">You do not have advanced video recording capabilities package, please open the free experience in the console or purchase the official package</string>
 </resources>

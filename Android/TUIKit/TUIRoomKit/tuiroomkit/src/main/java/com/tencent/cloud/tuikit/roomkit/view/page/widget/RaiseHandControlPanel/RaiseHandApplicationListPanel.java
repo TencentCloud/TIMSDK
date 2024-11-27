@@ -12,8 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
+import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.view.component.BaseBottomDialog;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.RaiseHandApplicationListViewModel;
+import com.trtc.tuikit.common.livedata.LiveListObserver;
 import com.trtc.tuikit.common.livedata.Observer;
 
 public class RaiseHandApplicationListPanel extends BaseBottomDialog implements View.OnClickListener {
@@ -29,6 +32,13 @@ public class RaiseHandApplicationListPanel extends BaseBottomDialog implements V
 
     private RaiseHandApplicationPanelStateHolder       mStateHolder   = new RaiseHandApplicationPanelStateHolder();
     private Observer<RaiseHandApplicationPanelUiState> mPanelObserver = this::updatePanel;
+
+    private LiveListObserver<UserState.UserInfo> mAllUserObserver = new LiveListObserver<UserState.UserInfo>() {
+        @Override
+        public void onItemChanged(int position, UserState.UserInfo item) {
+            updateRequestUserName(item);
+        }
+    };
 
     public RaiseHandApplicationListPanel(Context context) {
         super(context);
@@ -71,12 +81,14 @@ public class RaiseHandApplicationListPanel extends BaseBottomDialog implements V
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         mStateHolder.observe(mPanelObserver);
+        ConferenceController.sharedInstance().getUserState().allUsers.observe(mAllUserObserver);
     }
 
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mStateHolder.removeObserver(mPanelObserver);
+        ConferenceController.sharedInstance().getUserState().allUsers.removeObserver(mAllUserObserver);
     }
 
     public void notifyItemInserted(int position) {
@@ -101,6 +113,13 @@ public class RaiseHandApplicationListPanel extends BaseBottomDialog implements V
         mTextRejectAll.setEnabled(!uiState.isApplicationEmpty);
         mTextAgreeAll.setEnabled(!uiState.isApplicationEmpty);
         mTextAgreeAll.setAlpha(uiState.isApplicationEmpty ? 0.5f : 1.0f);
+    }
+
+    private void updateRequestUserName(UserState.UserInfo userInfo) {
+        if (mAdapter == null) {
+            return;
+        }
+        mAdapter.updateRequestUserNameCard(userInfo.userId, userInfo.userName);
     }
 }
 

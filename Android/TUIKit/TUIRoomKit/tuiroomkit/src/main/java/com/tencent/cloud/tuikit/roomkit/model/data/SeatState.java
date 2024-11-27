@@ -7,14 +7,14 @@ import android.text.TextUtils;
 import androidx.annotation.Nullable;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListData;
 import com.tencent.cloud.tuikit.roomkit.model.entity.Request;
+import com.trtc.tuikit.common.livedata.LiveListData;
 
 import java.util.List;
 
 public class SeatState {
     public LiveListData<Request> takeSeatRequests = new LiveListData<>();
-    public LiveListData<String>            seatedUsers         = new LiveListData<>();
+    public LiveListData<String>  seatedUsers      = new LiveListData<>();
 
     public void addTakeSeatRequest(TUIRoomDefine.Request engineRequest) {
         Request request = new Request(engineRequest);
@@ -49,6 +49,21 @@ public class SeatState {
             return;
         }
         takeSeatRequests.remove(position);
+    }
+
+    public void updateTakeSeatRequestUserName(String userId, String userName) {
+        List<Request> takeSeatRequestList = takeSeatRequests.getList();
+        int position = USER_NOT_FOUND;
+        for (int i = 0; i < takeSeatRequestList.size(); i++) {
+            if (TextUtils.equals(userId, takeSeatRequestList.get(i).userId)) {
+                position = i;
+                break;
+            }
+        }
+        if (position == USER_NOT_FOUND) {
+            return;
+        }
+        takeSeatRequests.get(position).userName = userName;
     }
 
     public void clearTakeSeatRequests() {

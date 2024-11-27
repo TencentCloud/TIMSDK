@@ -30,6 +30,7 @@
         android:layout_weight="1"
         android:textColor="@color/tuiroomkit_color_text_light_grey"
         android:textSize="16sp"
+        android:singleLine="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tuiroomkit_img_mic_state"
         app:layout_constraintStart_toEndOf="@+id/img_head"

@@ -109,6 +109,18 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <FrameLayout
+        android:id="@+id/tuiroomkit_speech_to_text_subtitle_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="64dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/tuiroomkit_video_seat_container"
+        app:layout_constraintEnd_toEndOf="@+id/tuiroomkit_video_seat_container"
+        app:layout_constraintBottom_toBottomOf="@id/tuiroomkit_video_seat_container" />
+
+    <FrameLayout
         android:id="@+id/tuiroomkit_bottom_view_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

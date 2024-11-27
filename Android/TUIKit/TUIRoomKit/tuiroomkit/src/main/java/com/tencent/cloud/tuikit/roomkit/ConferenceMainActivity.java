@@ -24,7 +24,6 @@ import java.io.Serializable;
 
 public class ConferenceMainActivity extends AppCompatActivity {
     private static final String TAG = "ConferenceMainAy";
-
     private static final int DEBOUNCE_TIME_MS = 1000;
 
     private final long mFirstStartTime = SystemClock.elapsedRealtime();

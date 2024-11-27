@@ -4,9 +4,7 @@ import android.text.TextUtils;
 
 import com.tencent.cloud.tuikit.engine.extension.TUIConferenceInvitationManager;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListData;
-import com.trtc.tuikit.common.livedata.LiveData;
-
+import com.trtc.tuikit.common.livedata.LiveListData;
 
 public class InvitationState {
     public LiveListData<Invitation> invitationList = new LiveListData<>();

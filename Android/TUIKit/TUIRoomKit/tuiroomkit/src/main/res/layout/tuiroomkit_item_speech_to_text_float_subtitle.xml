@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tuiroomkit_ll_speech_to_text_float_subtitle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="60dp"
+    android:background="@drawable/tuiroomkit_bg_speech_to_text_subtitle"
+    android:orientation="horizontal"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+
+    <TextView
+        android:id="@+id/tuiroomkit_tv_speech_to_text_float_subtitle_user"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginStart="6dp"
+        android:textColor="#C5CCDB"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/tuiroomkit_tv_speech_to_text_float_subtitle_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:textColor="#F2F5FC"
+        android:textSize="12sp" />
+
+</LinearLayout>

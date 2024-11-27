@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.tuigroup.util;
 
+import static com.tencent.qcloud.tuicore.TUIConstants.GroupType.TYPE_MEETING;
 import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX;
 import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATION_GROUP_PREFIX;
 
@@ -18,6 +19,8 @@ import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
+import com.tencent.qcloud.tuikit.tuigroup.config.TUIGroupConfig;
+
 import java.util.ArrayList;
 import java.util.List;
 

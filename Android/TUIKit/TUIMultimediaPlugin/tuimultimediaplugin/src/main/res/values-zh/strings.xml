@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="multimedia_plugin_empty">""</string>
+    <string name="multimedia_plugin_torch">闪光灯</string>
+    <string name="multimedia_plugin_record_aspect">屏比</string>
+    <string name="multimedia_plugin_beauty">美颜</string>
+
+    <string name="multimedia_plugin_confirm">确定</string>
+    <string name="multimedia_plugin_cancel">取消</string>
+    <string name="multimedia_plugin_close">关闭</string>
+    <string name="multimedia_plugin_strength">强度</string>
+    <string name="multimedia_plugin_setup">设置</string>
+    <string name="multimedia_plugin_common_none">无</string>
+
+    <string name="multimedia_plugin_setting_panel_beauty">美颜</string>
+    <string name="multimedia_plugin_setting_panel_filter">滤镜</string>
+
+    <string name="multimedia_plugin_beauty_cancel">关闭</string>
+    <string name="multimedia_plugin_panel_style_smooth">磨皮</string>
+    <string name="multimedia_plugin_panel_style_natural">美颜(自然)</string>
+    <string name="multimedia_plugin_panel_style_pitu">美颜(天天P图)</string>
+    <string name="multimedia_plugin_panel_white">美白</string>
+    <string name="multimedia_plugin_panel_ruddy">红润</string>
+
+    <string name="multimedia_plugin_panel_filter_standard">标准</string>
+    <string name="multimedia_plugin_panel_filter_baixi">白皙</string>
+    <string name="multimedia_plugin_panel_filter_ziran">自然</string>
+    <string name="multimedia_plugin_panel_filter_cheery">樱红</string>
+    <string name="multimedia_plugin_panel_filter_cloud">云裳</string>
+    <string name="multimedia_plugin_panel_filter_pure">纯真</string>
+    <string name="multimedia_plugin_panel_filter_orchid">白兰</string>
+    <string name="multimedia_plugin_panel_filter_vitality">元气</string>
+    <string name="multimedia_plugin_panel_filter_super">超脱</string>
+    <string name="multimedia_plugin_panel_filter_fragrance">香氛</string>
+    <string name="multimedia_plugin_panel_filter_white">美白</string>
+    <string name="multimedia_plugin_panel_filter_romantic">浪漫</string>
+    <string name="multimedia_plugin_panel_filter_fresh">清新</string>
+    <string name="multimedia_plugin_panel_filter_beautiful">唯美</string>
+    <string name="multimedia_plugin_panel_filter_pink">粉嫩</string>
+    <string name="multimedia_plugin_panel_filter_reminiscence">怀旧</string>
+    <string name="multimedia_plugin_panel_filter_blues">蓝调</string>
+    <string name="multimedia_plugin_panel_filter_cool">清凉</string>
+    <string name="multimedia_plugin_panel_filter_Japanese">日系</string>
+
+    <string name="multimedia_plugin_default_bgm_name">未知音乐名</string>
+    <string name="multimedia_plugin_default_time">00:00</string>
+    <string name="multimedia_plugin_bgm_music">配乐</string>
+    <string name="multimedia_plugin_origin_audio">视频原声</string>
+    <string name="multimedia_plugin_send">发送</string>
+    <string name="multimedia_plugin_done">完成</string>
+    <string name="multimedia_plugin_zero">0</string>
+    <string name="multimedia_plugin_zero_time">00:00</string>
+    <string name="multimedia_plugin_local">本地</string>
+    <string name="multimedia_plugin_default">默认</string>
+    <string name="multimedia_plugin_record_operation_tips">轻触拍照，长按录制</string>
+    <string name="multimedia_plugin_record_take_phone_operation_tips">点击拍照</string>
+    <string name="multimedia_plugin_bgm_type_name_default">默认</string>
+    <string name="multimedia_plugin_bgm_type_name_chosen">精选</string>
+    <string name="multimedia_plugin_bgm_item_bgm_name_default">未知歌名</string>
+    <string name="multimedia_plugin_bgm_item_bgm_author_default">未知歌手</string>
+
+    <string name="multimedia_plugin_picker_preview">预览</string>
+    <string name="multimedia_plugin_picker_full_image">原图</string>
+    <string name="multimedia_plugin_picker_send">发送</string>
+    <string name="multimedia_plugin_picker_edit">编辑</string>
+    <string name="multimedia_plugin_picker_select">选择</string>
+
+    <string name="multimedia_plugin_request_permission_storage_title">%s申请获取存储权限</string>
+    <string name="multimedia_plugin_request_permission_storage_reason">需要访问您的存储权限，开启后用于相册图片视频发送、聊天图片视频保存等功能</string>
+    <string name="multimedia_plugin_request_permission_storage_tip">在设置-应用-%s-权限中开启存储权限，以正常使用相册图片视频发送、聊天图片保存等功能</string>
+
+    <string name="multimedia_plugin_request_permission_media_title">%s申请访问照片与视频</string>
+    <string name="multimedia_plugin_request_permission_media_reason">需要访问照片与视频，开启后用于相册图片视频发送、聊天图片视频保存等功能</string>
+    <string name="multimedia_plugin_request_permission_media_tip">在设置-应用-%s-权限中开启照片与视频权限，以正常使用相册图片视频发送、聊天图片保存等功能</string>
+
+</resources>

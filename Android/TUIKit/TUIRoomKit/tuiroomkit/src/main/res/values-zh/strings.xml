@@ -121,6 +121,11 @@
     <string name="tuiroomkit_manager_remove">撤销管理员</string>
     <string name="tuiroomkit_mute_user">禁言</string>
     <string name="tuiroomkit_kick_out_of_room">踢出房间</string>
+    <string name="tuiroomkit_ai_tool">AI 助手</string>
+    <string name="tuiroomkit_ai_speech_to_text_record">AI 实时会议记录</string>
+    <string name="tuiroomkit_ai_open_live_subtitle">开启 AI 实时字幕</string>
+    <string name="tuiroomkit_ai_close_live_subtitle">关闭 AI 实时字幕</string>
+    <string name="tuiroomkit_ai_cat_live_record">查看 AI 实时会议记录</string>
     <string name="tuiroomkit_settings">设置</string>
     <string name="tuiroomkit_advanced_settings">高级设置</string>
     <string name="tuiroomkit_beauty">美颜</string>
@@ -215,22 +220,18 @@
     <string name="tuiroomkit_open_mic_reject">%s 拒绝了取消静音请求</string>
     <string name="tuiroomkit_open_camera_agree">%s 同意了打开视频请求</string>
     <string name="tuiroomkit_open_camera_reject">%s 拒绝了打开视频请求</string>
-
     <string name="tuiroomkit_video_resolution_smooth">流畅</string>
     <string name="tuiroomkit_video_resolution_sd">标清</string>
     <string name="tuiroomkit_video_resolution_hd">高清</string>
     <string name="tuiroomkit_video_resolution_uhd">超清</string>
-
     <string name="tuiroomkit_toast_conference_id_not_exist">不存在该会议，请重新加入</string>
     <string name="tuiroomkit_toast_conference_id_invalid">当前会议号无效，请检查输入</string>
     <string name="tuiroomkit_toast_conference_id_occupied">已存在该会议，请使用其它会议号</string>
     <string name="tuiroomkit_toast_conference_name_invalid">当前会议名称无效，请检查输入</string>
-
     <string name="tuiroomkit_float_chat_warning_not_empty">输入不能为空</string>
     <string name="tuiroomkit_float_chat_btn_send">发送</string>
     <string name="tuiroomkit_float_chat_hint">说点什么~</string>
     <string name="tuiroomkit_float_chat_enable">开启聊天弹幕</string>
-
     <string name="tuiroomkit_temporary_conference_name">%s的临时房间</string>
     <string name="tuiroomkit_schedule_room_btn">预定房间</string>
     <string name="tuiroomkit_scheduled_room_image_tag">暂无预定房间</string>
@@ -295,8 +296,7 @@
     <string name="tuiroomkit_password_is_empty">密码为空</string>
     <string name="tuiroomkit_room_password_title">房间密码</string>
     <string name="tuiroomkit_room_password_format_error">房间密码格式不正确，请检查</string>
-    <string name="tuiroomkit_room_password_error">密码错误，请重新输入</string>
-
+    <string name="tuiroomkit_room_password_error">密码错误</string>
     <string name="tuiroomkit_tip_creating_room_id">正在生成房间号，请稍后重试</string>
     <string name="tuiroomkit_turn_on_audio">打开音频</string>
     <string name="tuiroomkit_turn_on_speaker">打开扬声器</string>
@@ -308,12 +308,13 @@
     <string name="tuiroomkit_repeat_start_room_dialog_title">当前已在房间中</string>
     <string name="tuiroomkit_repeat_start_room_dialog_content">请先退出后再加入新的房间</string>
     <string name="tuiroomkit_i_see">我知道了</string>
-
     <string name="tuiroomkit_invite_yout_to_join_conference">%s邀请你加入会议</string>
     <string name="tuiroomkit_participant">参会人：</string>
     <string name="tuiroomkit_join_now">立即加入</string>
     <string name="tuiroomkit_do_not_enter_for_now">暂不进入</string>
     <string name="tuiroomkit_conference_host">主持人：</string>
+    <string name="tuiroomkit_disable_general_share">仅房主/管理员可共享屏幕</string>
+    <string name="tuiroomkit_all_users_enable_share">全体成员可共享屏幕</string>
     <string name="tuiroomkit_add_user">添加成员</string>
     <string name="tuiroomkit_share_room">分享房间</string>
     <string name="tuiroomkit_already_entered_room">已进房(%s)</string>
@@ -338,8 +339,18 @@
     <string name="tuiroomkit_copy_room_invitation_link_success">复制邀请链接成功</string>
     <string name="tuiroomkit_please_enter_six_digit_password">请输入6位进房密码</string>
     <string name="tuiroomkit_conference_modify_success">修改成功</string>
-
     <string name="tuiroomkit_default_water_mark_text">%s(%s)</string>
-    <string name="tuiroomkit_password_digits">0123456789</string>
     <string name="tuiroomkit_confirm_dialog_count_down_text">(%s)</string>
+    <string name="tuiroomkit_modify_name">修改名称</string>
+    <string name="tuiroomkit_disable_general_share_dialog_title">是否开启仅房主/管理员可共享屏幕</string>
+    <string name="tuiroomkit_disable_general_share_dialog_hint">当前有成员正在共享屏幕，开启后该成员的共享将会被终止</string>
+    <string name="tuiroomkit_disable_general_share_by_admin_dialog_hint">房主/管理员已停止您的共享，当前仅房主/管理员可以共享屏幕</string>
+    <string name="tuiroomkit_share_screen_stopped">共享屏幕停止</string>
+    <string name="tuiroomkit_share_fail_cause_of_admin_disable">发起共享失败，当前仅房主/管理员可以共享</string>
+    <string name="tuiroomkit_modify_name_success">修改名称成功</string>
+    <string name="tuiroomkit_room_not_exit">房间不存在，请确认房间号或创建房间!</string>
+    <string name="tuiroomkit_conference_canceled">您已被房主/管理员移出参会成员列表</string>
+    <string name="tuiroomkit_local_user_disable_send_message">您已被禁止文字聊天</string>
+    <string name="tuiroomkit_local_user_enable_send_message">您已被允许文字聊天</string>
+
 </resources>

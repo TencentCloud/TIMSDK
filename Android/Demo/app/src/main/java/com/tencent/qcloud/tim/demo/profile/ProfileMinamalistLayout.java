@@ -302,6 +302,7 @@ public class ProfileMinamalistLayout extends FrameLayout implements View.OnClick
         mClickListener = listener;
     }
 
+
     public void initUI() {
         if (TUIConfig.getTUIHostType() != TUIConfig.TUI_HOST_TYPE_RTCUBE) {
             homeView.setVisibility(GONE);
@@ -311,8 +312,6 @@ public class ProfileMinamalistLayout extends FrameLayout implements View.OnClick
             selfDetailArea.setVisibility(VISIBLE);
             aboutIM.setVisibility(VISIBLE);
             logoutButton.setVisibility(VISIBLE);
-            changeThemeView.setVisibility(GONE);
-            changeStyleView.setVisibility(GONE);
         } else {
             homeView.setVisibility(VISIBLE);
             titleView.setVisibility(GONE);
@@ -330,11 +329,13 @@ public class ProfileMinamalistLayout extends FrameLayout implements View.OnClick
                 }
             });
 
+            if (AppConfig.RT_CUBE_PACKAGE_NAME.equals(getContext().getPackageName())) {
+                changeStyleView.setVisibility(VISIBLE);
+            }
+
             selfDetailArea.setVisibility(GONE);
             aboutIM.setVisibility(GONE);
             logoutButton.setVisibility(GONE);
-            changeThemeView.setVisibility(GONE);
-            changeStyleView.setVisibility(GONE);
 
             int theme = TUIThemeManager.getInstance().getCurrentTheme();
             if (theme == TUIThemeManager.THEME_LIGHT) {

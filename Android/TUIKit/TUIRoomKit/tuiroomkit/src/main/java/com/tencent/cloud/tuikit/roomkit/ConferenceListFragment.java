@@ -3,6 +3,7 @@ package com.tencent.cloud.tuikit.roomkit;
 import static com.tencent.cloud.tuikit.engine.common.TUICommonDefine.Error.ROOM_ID_NOT_EXIST;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceConstant.KEY_ERROR;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_USER_ENTER_ROOM;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.UPDATE_CONFERENCE_LIST;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +31,7 @@ public class ConferenceListFragment extends Fragment implements ConferenceEventC
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
         ConferenceEventCenter.getInstance().subscribeEngine(LOCAL_USER_ENTER_ROOM, this);
+        ConferenceEventCenter.getInstance().subscribeEngine(UPDATE_CONFERENCE_LIST, this);
     }
 
     @Nullable
@@ -60,16 +62,28 @@ public class ConferenceListFragment extends Fragment implements ConferenceEventC
         Log.d(TAG, "onDestroy");
         ScheduleController.sharedInstance().clearRequiredConferences();
         ConferenceEventCenter.getInstance().unsubscribeEngine(LOCAL_USER_ENTER_ROOM, this);
+        ConferenceEventCenter.getInstance().unsubscribeEngine(UPDATE_CONFERENCE_LIST, this);
     }
 
     @Override
     public void onEngineEvent(ConferenceEventCenter.RoomEngineEvent event, Map<String, Object> params) {
+        handleLocalUserEnterRoom(event, params);
+        handleUpdateConferenceList(event);
+    }
+
+    private void handleLocalUserEnterRoom(ConferenceEventCenter.RoomEngineEvent event, Map<String, Object> params) {
         if (LOCAL_USER_ENTER_ROOM == event) {
             TUICommonDefine.Error error = (TUICommonDefine.Error) params.get(KEY_ERROR);
             Log.i(TAG, "onEngineEvent error=" + error);
             if (error != ROOM_ID_NOT_EXIST) {
                 return;
             }
+            ScheduleController.sharedInstance().refreshRequiredConferences(null);
+        }
+    }
+
+    private void handleUpdateConferenceList(ConferenceEventCenter.RoomEngineEvent event) {
+        if (UPDATE_CONFERENCE_LIST == event) {
             ScheduleController.sharedInstance().refreshRequiredConferences(null);
         }
     }

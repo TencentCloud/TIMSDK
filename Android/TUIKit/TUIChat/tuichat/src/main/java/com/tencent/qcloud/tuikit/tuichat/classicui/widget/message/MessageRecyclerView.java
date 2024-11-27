@@ -22,7 +22,7 @@ import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
-import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.SelectTextHelper;
+import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.SelectionHelper;
 import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
@@ -197,7 +197,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         mChatPopMenu.setEmptySpaceClickListener(new OnEmptySpaceClickListener() {
             @Override
             public void onClick() {
-                SelectTextHelper.resetSelected();
+                SelectionHelper.resetSelected();
             }
         });
         mChatPopMenu.show(view, location[1]);

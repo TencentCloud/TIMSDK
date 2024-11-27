@@ -74,3 +74,6 @@ project(':tuivoicetotextplugin').projectDir = new File(settingsDir, '../TUIKit/T
 
 include ':tuiemojiplugin'
 project(':tuiemojiplugin').projectDir = new File(settingsDir, '../TUIKit/TUIEmojiPlugin/tuiemojiplugin')
+
+include ':tuimultimediaplugin'
+project(':tuimultimediaplugin').projectDir = new File(settingsDir, '../TUIKit/TUIMultimediaPlugin/tuimultimediaplugin')

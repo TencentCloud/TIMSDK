@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/tuiroomkit_bg_main_color_black"
+    android:padding="12dp">
+
+    <Button
+        android:id="@+id/tuiroomkit_speech_to_text_back"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/tuiroomkit_back_face_left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tuiroomkit_speech_to_text_title"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        android:text="@string/tuiroomkit_ai_speech_to_text_record"
+        android:textColor="#D1D9EC"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/tuiroomkit_speech_to_text_back"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="12dp"/>
+
+    <com.tencent.cloud.tuikit.roomkit.view.page.widget.SpeechToText.SpeechToTextRecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tuiroomkit_speech_to_text_title"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <RelativeLayout
+            android:id="@+id/rl_beauty_filter_scroll_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    </RelativeLayout>
+
+    <RelativeLayout
+            android:id="@+id/rl_beauty_panel_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+    </RelativeLayout>
+
+    <LinearLayout
+            android:id="@+id/layout_setting_item"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:layout_marginRight="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical">
+
+<!--        <RelativeLayout-->
+<!--                android:id="@+id/rl_torch"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_marginBottom="24dp">-->
+
+<!--            <ImageView-->
+<!--                    android:id="@+id/iv_torch"-->
+<!--                    android:layout_width="27dp"-->
+<!--                    android:layout_height="27dp"-->
+<!--                    android:layout_centerHorizontal="true"-->
+<!--                    android:layout_gravity="center_horizontal"-->
+<!--                    android:layout_marginBottom="6dp"-->
+<!--                    android:src="@drawable/multimedia_plugin_record_torch_close"-->
+<!--                    android:contentDescription="@string/multimedia_plugin_empty" />-->
+
+<!--            <TextView-->
+<!--                    android:text="@string/multimedia_plugin_torch"-->
+<!--                    android:textColor="@color/multimedia_plugin_white"-->
+<!--                    android:textSize="11sp"-->
+<!--                    android:fontFamily="@string/multimedia_plugin_common_font"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_centerHorizontal="true"-->
+<!--                    android:layout_gravity="center_horizontal"-->
+<!--                    android:gravity="center_horizontal"-->
+<!--                    android:layout_below="@+id/iv_torch" />-->
+<!--        </RelativeLayout>-->
+
+<!--        <RelativeLayout-->
+<!--                android:id="@+id/rl_beauty"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_marginBottom="24dp">-->
+
+<!--            <ImageView-->
+<!--                    android:id="@+id/iv_beauty"-->
+<!--                    android:layout_width="27dp"-->
+<!--                    android:layout_height="27dp"-->
+<!--                    android:layout_centerHorizontal="true"-->
+<!--                    android:layout_gravity="center_horizontal"-->
+<!--                    android:layout_marginBottom="6dp"-->
+<!--                    android:src="@drawable/multimedia_plugin_record_beauty"-->
+<!--                    android:contentDescription="@string/multimedia_plugin_empty" />-->
+
+<!--            <TextView-->
+<!--                    android:text="@string/multimedia_plugin_beauty"-->
+<!--                    android:textColor="@color/multimedia_plugin_white"-->
+<!--                    android:textSize="11sp"-->
+<!--                    android:fontFamily="@string/multimedia_plugin_common_font"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_centerHorizontal="true"-->
+<!--                    android:layout_gravity="center_horizontal"-->
+<!--                    android:layout_below="@+id/iv_beauty"-->
+<!--                    android:gravity="center" />-->
+<!--        </RelativeLayout>-->
+
+<!--        <RelativeLayout-->
+<!--                android:id="@+id/rl_aspect_view_container"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_centerHorizontal="true"-->
+<!--                android:layout_gravity="center">-->
+
+<!--        </RelativeLayout>-->
+
+    </LinearLayout>
+</RelativeLayout>

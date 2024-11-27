@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:background="@color/multimedia_plugin_edit_function_view_background"
+        android:layout_height="50dp">
+
+    <com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIHorizontalScrollView
+            android:id="@+id/graffiti_paster_color_select_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="35dp"
+            android:layout_centerVertical="true"
+            android:paddingLeft="5dp"
+            android:layout_toLeftOf="@+id/graffiti_operation_back"
+            android:scrollbars="none">
+
+        <LinearLayout
+                android:id="@android:id/content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal" />
+    </com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIHorizontalScrollView>
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/graffiti_operation_back"
+            android:src="@drawable/multimedia_plugin_white_vertical_line"
+            android:contentDescription="@string/multimedia_plugin_empty" />
+
+    <ImageButton
+            android:id="@+id/graffiti_operation_back"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="25dp"
+            android:layout_toLeftOf="@+id/graffiti_operation_forward"
+            android:background="@drawable/multimedia_plugin_edit_graffiti_back"
+            app:backgroundTint="@drawable/multimedia_plugin_edit_function_button_tint_colors"
+            android:enabled="false" />
+
+    <ImageButton
+            android:id="@+id/graffiti_operation_forward"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/multimedia_plugin_edit_graffiti_back"
+            app:backgroundTint="@drawable/multimedia_plugin_edit_function_button_tint_colors"
+            android:scaleType="fitXY"
+            android:rotationY="180"
+            android:enabled="false" />
+
+    <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/multimedia_plugin_white_horizontal_line" />
+</RelativeLayout>

@@ -72,20 +72,11 @@ public class InvitationReceivedView extends RelativeLayout {
         mViewSlideToAccept.setListener(new SlideToAcceptView.AcceptListener() {
             @Override
             public void onAccept() {
-                ConferenceController.sharedInstance().getInvitationController().accept(mInviteRoomId, new TUIRoomDefine.ActionCallback() {
-                    @Override
-                    public void onSuccess() {
-                        ConferenceDefine.JoinConferenceParams params = new ConferenceDefine.JoinConferenceParams(mInviteRoomId);
-                        Intent intent = new Intent(mContext, ConferenceMainActivity.class);
-                        intent.putExtra(KEY_JOIN_CONFERENCE_PARAMS, params);
-                        mContext.startActivity(intent);
-                    }
-
-                    @Override
-                    public void onError(TUICommonDefine.Error error, String s) {
-
-                    }
-                });
+                ConferenceController.sharedInstance().getInvitationController().accept(mInviteRoomId, null);
+                ConferenceDefine.JoinConferenceParams params = new ConferenceDefine.JoinConferenceParams(mInviteRoomId);
+                Intent intent = new Intent(mContext, ConferenceMainActivity.class);
+                intent.putExtra(KEY_JOIN_CONFERENCE_PARAMS, params);
+                mContext.startActivity(intent);
                 ConferenceController.sharedInstance().getViewState().isInvitationPending.set(false);
             }
         });

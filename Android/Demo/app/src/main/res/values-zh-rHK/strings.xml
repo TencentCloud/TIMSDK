@@ -1,0 +1,220 @@
+<resources>
+    <string name="demo_app_name">騰訊雲IM</string>
+
+    <string name="test_custom_message">查看詳情>></string>
+    <string name="account">用戶名</string>
+    <string name="password">密碼</string>
+    <string name="demo_current_language">繁體中文</string>
+    <string name="demo_language_chinese">簡體中文</string>
+    <string name="demo_language_traditional_chinese">繁體中文</string>
+    <string name="demo_language_english">英語</string>
+    <string name="demo_language_arabic">阿拉伯語</string>
+    <string name="demo_login_country_or_region_label">國家/地區</string>
+    <string name="demo_area_code_title">選擇國家或地區</string>
+    <string name="demo_language_title">選擇語言</string>
+    <string name="demo_style_title">選擇風格</string>
+    <string name="demo_login_chinese_mainland">中國大陸</string>
+    <string name="demo_login_mobile_phone_number">手機號</string>
+    <string name="demo_login_verification_code_label">驗證碼</string>
+    <string name="demo_search">搜索</string>
+
+    <string name="login_title">騰訊雲即時通信IM</string>
+    <string name="login_sub_title">歡迎使用本 APP 體驗騰訊雲 IM 產品服務</string>
+    <string name="input_number">請輸入手機號</string>
+    <string name="input_verification">請輸入短信驗證碼</string>
+    <string name="verification_code">獲取驗證碼</string>
+    <string name="button_login">登錄</string>
+    <string name="password_login">密碼登錄</string>
+    <string name="official_website">訪問官網</string>
+    <string name="debug_mode_summary">IM 帳號直接登錄界面，此只在 Debug 模式下顯示</string>
+    <string name="account_hint">任意非空字符即可，請參考類註釋</string>
+
+    <string name="repeat_login_tip">您的帳號已在其它終端登錄</string>
+    <string name="expired_login_tip">帳號已過期，請重新登錄</string>
+    <string name="failed_login_tip">登錄失敗</string>
+
+    <string name="profile">我</string>
+    <string name="modify_user_icon">頭像</string>
+    <string name="modify_nick_name">昵稱</string>
+    <string name="add_rule">加我為好友時</string>
+    <string name="translation_target_language">將消息翻譯為</string>
+    <string name="allow_type_allow_any">允許任何人</string>
+    <string name="allow_type_deny_any">拒絕任何人</string>
+    <string name="allow_type_need_confirm">需要驗證</string>
+    <string name="exit">退出登錄</string>
+    <string name="about_im">關於騰訊雲·IM</string>
+    <string name="appkit_show_recent_calls">顯示通話記錄</string>
+    <string name="appkit_recent_calls_tab_name">通話記錄</string>
+    <string name="modify_birthday">生日</string>
+    <string name="modify_gender">性別</string>
+    <string name="modify_signature">個性簽名</string>
+    <string name="demo_no_status">暫無個性簽名</string>
+    <string name="modify_account">帳號</string>
+    <string name="demo_profile_user_id">帳號</string>
+    <string name="cancel_account">註銷帳號</string>
+    <string name="cancel_account_alert_tip">您確定要註銷帳號嗎？</string>
+    <string name="cancel_account_tip">註銷後，您將無法使用當前帳號，相關數據也將刪除無法找回。當前帳號 %s </string>
+    <string name="cancel_account_error_msg">註銷失敗，當前帳號未查到token或手機號，請使用手機號登錄。</string>
+    <string name="cancel_account_successful">註銷成功</string>
+
+    <string name="self_infomation_collection_list">個人信息收集清單</string>
+    <string name="third_part_shared_list">第三方信息共享清單</string>
+
+    <string name="modify_theme">切換皮膚</string>
+    <string name="light_theme">輕快</string>
+    <string name="lively_theme">明媚</string>
+    <string name="serious_theme">深沉</string>
+    <string name="modify_language">切換語言</string>
+    <string name="modify_style">切換風格</string>
+    <string name="style_classic">經典版</string>
+    <string name="style_minimalist">簡約版</string>
+
+    <string name="demo_language">繁體中文</string>
+    <string name="demo_theme_light">輕快</string>
+    <string name="demo_signature_tag">個性簽名：</string>
+    <string name="demo_account_tag">ID：</string>
+
+    <string name="demo_about_sdk_version">SDK版本</string>
+    <string name="demo_about_im">關於</string>
+    <string name="demo_contact_us">聯絡我們</string>
+
+    <string name="demo_self_detail_gender_male">男</string>
+    <string name="demo_self_detail_gender_female">女</string>
+    <string name="demo_self_detail_gender_unknown">未知</string>
+
+    <string name="demo_self_detail_modify_nickname">修改暱稱</string>
+    <string name="demo_self_detail_modify_signature">修改個性簽名</string>
+    <string name="demo_self_detail_modify_gender">修改性別</string>
+    <string name="demo_profile_edit">編輯</string>
+
+    <string name="demo_self_detail_modify_nickname_rule">僅限中文、字母、數字和下劃線</string>
+
+    <string name="conversation_title">騰訊雲·IM</string>
+    <string name="conversation_title_disconnected">騰訊雲·IM(未連接)</string>
+    <string name="conversation_title_connecting">連接中...</string>
+    <string name="conversation_title_loading">收取中...</string>
+    <string name="contact_title">通訊錄</string>
+    <string name="add_friend">添加好友</string>
+    <string name="add_group">添加群聊</string>
+    <string name="start_conversation">發起會話</string>
+    <string name="create_group_chat">創建群聊</string>
+    <string name="create_chat_room">創建聊天室</string>
+    <string name="create_community">創建社群</string>
+    <string name="create_private_group">創建討論組</string>
+
+    <string name="tab_contact_tab_text">通訊錄</string>
+    <string name="tab_conversation_tab_text">消息</string>
+    <string name="demo_tab_overseas_conversation_tab_text">聊天</string>
+    <string name="tab_profile_tab_text">我</string>
+    <string name="minimalist_tab_settings_tab_text">設置</string>
+    <string name="minimalist_tab_contacts_tab_text">聯絡人</string>
+    <string name="tab_community_tab_text">社群</string>
+
+    <string name="test_excluded_from_unread_count_action">不計入未讀數消息</string>
+    <string name="privacy_text">已同意《<a href="http://privacy.qq.com/">隱私政策</a>》</string>
+
+    <string name="no_support_msg">不支持的自訂消息</string>
+    <string name="live">的直播</string>
+    <string name="living">正在直播</string>
+    <string name="stop_live">結束直播</string>
+    <string name="http_error_invalid">用戶名必須以字母開頭、字母與數字組合3-23位</string>
+    <string name="http_error_user">用戶已存在</string>
+    <string name="http_error_server">伺服器錯誤</string>
+    <string name="http_error_no_user">用戶不存在</string>
+    <string name="http_error_password">密碼錯誤</string>
+    <string name="not_retry_more">不要頻繁獲取驗證碼</string>
+    <string name="input_phone">請填寫正確的手機號碼</string>
+    <string name="verify_code_fail">獲取驗證碼失敗:</string>
+    <string name="send_verify_code">驗證碼已發送</string>
+    <string name="input_phone_code">請輸入手機號碼和驗證碼</string>
+    <string name="login_fail_tip">登錄失敗:</string>
+    <string name="login_suc_tip">登錄成功</string>
+    <string name="second">秒</string>
+    <string name="get_verify_code">獲取驗證碼</string>
+    <string name="permission_tip">未全部授權，部分功能可能無法使用！</string>
+
+    <string name="logout_tip">您確定要退出登錄嗎？</string>
+    <string name="online_fail">請求網絡失敗</string>
+    <string name="online">在線</string>
+    <string name="unknow_error">未知錯誤</string>
+    <string name="you_app">您的應用</string>
+    <string name="low_version"> 版本太低，不支持打開該離線消息</string>
+    <string name="call_timeout">本次通話已超時</string>
+    <string name="call_notification">音視頻邀請消息通知</string>
+    <string name="background_tip">當程序處於背景時新的來電消息會通過通知欄提醒用戶</string>
+    <string name="new_msg_notification">新普通消息通知</string>
+    <string name="new_msg">收到一條新消息</string>
+    <string name="call_nos">通話失去響應</string>
+    <string name="login_password_tips">1~16個字符（字母+數字）</string>
+    <string name="login_user_tips">字母開頭，4~24個字母+數字</string>
+    <string name="login_agree_privacy_regulations">《隱私政策》</string>
+    <string name="login_agree_privacy_regulations_summary">《隱私政策摘要》</string>
+    <string name="login_agree_user_agreement">《用戶協議》</string>
+    <string name="login_agree_self_infomation_collection_list">《個人信息收集清單》</string>
+    <string name="login_agree_third_part_shared_list">《第三方信息共享清單》</string>
+
+    <string name="im_privacy">隱私政策</string>
+    <string name="im_statement">免責聲明</string>
+    <string name="im_user_agreement">用戶協議</string>
+    <string name="im_statement_content">騰訊雲IM APP（“本產品”）是由騰訊雲提供的一款測試產品，騰訊雲享有本產品的著作權和所有權。本產品僅用於功能體驗，不得用於任何商業用途。為配合相關部門監管要求，嚴禁在使用中有任何色情、辱罵、暴恐、涉政等違法內容傳播。</string>
+    <string name="im_privacy_tips">請先閱讀並同意協議</string>
+    <string name="demo_im_privacy_dialog_tips">歡迎使用騰訊雲即時通信 IM，為保護您的個人信息安全，我們更新了《隱私政策》，主要完善了收集用戶信息的具體內容和目的、增加了第三方SDK使用等方面的內容。\n\n請您點擊 《用戶協議》、《隱私政策摘要》、《隱私政策》、《個人信息收集清單》和《第三方信息共享清單》並仔細閱讀，如您同意以上內容，請點擊“同意並繼續”，開始使用我們的產品與服務！</string>
+    <string name="demo_im_privacy_agree">同意並繼續</string>
+    <string name="demo_im_privacy_refuse_and_exit">不同意，退出</string>
+    <string name="get_verify_code_error">獲取驗證碼錯誤，請刷新重試！(%d)</string>
+    <string name="modify_group_name">修改群名稱</string>
+    <string name="input_tip">沒有輸入暱稱，請重新填寫</string>
+    <string name="call_time_out"> 通話超時</string>
+
+    <string name="mark_all_message_as_read_succ">清空未讀成功</string>
+    <string name="mark_all_message_as_read_err_format">清空未讀失敗, %d, %s</string>
+    <string name="demo_profile_detail">詳細資料</string>
+    <string name="demo_profile_back">返回</string>
+    <string name="demo_message_read_switch_title">消息閱讀狀態</string>
+    <string name="demo_message_read_switch_open_tip">該功能為旗艦版功能</string>
+    <string name="demo_message_read_switch_open_text">關閉後，您收發的消息均不帶消息閱讀狀態，您將無法看到對方是否已讀，同時對方也無法看到你是否已讀。</string>
+    <string name="demo_message_read_switch_close_text">開啟後，您在群聊中收發的消息均帶有消息閱讀狀態，並且可以看到對方是否已讀。與您單聊的好友若也開啟了消息閱讀狀態，您與好友在單聊中收發的消息也將帶有消息閱讀狀態。</string>
+    <string name="demo_choose_avatar">選擇頭像</string>
+    <string name="demo_permission_mic_reason_title">%s申請獲取麥克風權限</string>
+    <string name="demo_permission_mic_reason">為方便您發送語音消息，進行攝像和音視頻通話、使用快速會議功能，請允許我們訪問麥克風。</string>
+    <string name="demo_permission_camera_reason_title">%s申請獲取相機權限</string>
+    <string name="demo_permission_camera_reason">為方便您拍攝照片或視頻以發送給朋友、進行視頻通話和使用快速會議功能，請允許我們訪問攝像頭。</string>
+    <string name="demo_permission_storage_reason_title">%s申請獲取存儲權限</string>
+    <string name="demo_permission_storage_reason">為方便您保存照片和視頻到設備，請允許我們寫入照片和視頻到設備。</string>
+    <string name="demo_permission_mic_dialog_alert">在設置-應用-%s-權限中開啟麥克風權限，以正常使用語音消息、攝像、音視頻通話和快速會議功能</string>
+    <string name="demo_permission_camera_dialog_alert">在設置-應用-%s-權限中開啟相機權限，以正常使用拍照、攝像、視頻通話和快速會議功能</string>
+    <string name="demo_permission_storage_dialog_alert">在設置-應用-%s-權限中開啟存儲權限，以正常使用保存照片和視頻功能</string>
+    <string name="upgrade_sure">立即升級</string>
+    <string name="demo_user_status_switch_title">顯示在線狀態</string>
+    <string name="demo_user_status_switch_on_text">關閉後，您將不可以在會話列表和通訊錄中看到好友在線或離線的狀態提示。</string>
+    <string name="demo_user_status_switch_off_text">開啟後，您將可以在會話列表和通訊錄中看到好友在線或離線的狀態提示。</string>
+    <string name="demo_user_status">在線狀態</string>
+    <string name="demo_i_know">我知道了</string>
+    <string name="demo_no_more_reminders">不再提醒</string>
+    <string name="demo_im_flagship">旗艦版</string>
+    <string name="demo_buying_guidelines">價格說明</string>
+    <string name="demo_im_flagship_edition_update_tip">%s功能為IM旗艦版功能，購買旗艦版套餐包後可使用，詳見價格說明。</string>
+    <string name="demo_buying_tips">該功能為旗艦版功能</string>
+    <string name="chat_security_warning">請勿輕信匯款、中獎等信息，謹慎對待陌生電話，避免上當受騙。遇到可疑情況請及時反饋。</string>
+    <string name="chat_security_warning_click_to_report">點此舉報</string>
+    <string name="chat_security_warning_report">舉報</string>
+
+    <string name="change_theme">更換皮膚</string>
+    <string name="change_style">選擇風格</string>
+    <string name="app_title">即時通信</string>
+    <string name="app_title_content">歡迎使用本 APP 體驗即時通信 IM 產品服務</string>
+    <string name="button_enter">進入 IM</string>
+    <string name="demo_style_sub_title">IM專屬風格切換</string>
+    <string name="demo_ui_title">選擇皮膚</string>
+    <string name="demo_ui_sub_title">IM專屬皮膚切換</string>
+    <string name="im_about_detail">歡迎使用本 APP 體驗即時通信 IM 產品服務，如發送文字/表情/富媒體消息、消息回覆、表情回應、消息閱讀狀態、好友關係鏈等功能。同時，我們為您默認提供了3個不會回覆的機器人好友，您可直接發起單聊、群聊會話，體驗群管理等功能。</string>
+    <string name="im_about_title_time">1分鐘</string>
+    <string name="im_about_subtitle_time">改2行代碼，1分鐘跑通 Demo</string>
+    <string name="im_about_title_custom">10000+</string>
+    <string name="im_about_subtitle_custom">每月服務客戶數超過10000家</string>
+    <string name="im_about_title_success">99.99%</string>
+    <string name="im_about_subtitle_success">消息收發成功率、服務可靠性高於99.99%</string>
+    <string name="im_about_title_mau">10億+</string>
+    <string name="im_about_subtitle_mau">每月活躍用戶數超過10億</string>
+    <string name="im_about_known">已了解</string>
+</resources>

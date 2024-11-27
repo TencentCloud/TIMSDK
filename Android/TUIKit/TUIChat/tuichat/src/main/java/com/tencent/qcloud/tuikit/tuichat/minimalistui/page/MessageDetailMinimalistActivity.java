@@ -208,6 +208,9 @@ public class MessageDetailMinimalistActivity extends BaseMinimalistLightActivity
     }
 
     private void setMsgAbstract() {
+        if (this.isDestroyed()) {
+            return;
+        }
         messageArea.removeAllViews();
         int type = MinimalistUIService.getInstance().getViewType(messageBean.getClass());
         RecyclerView.ViewHolder holder = MessageViewHolderFactory.getInstance(messageArea, null, type);

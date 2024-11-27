@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="38dp"
+        android:layout_height="38dp">
+
+    <ImageView
+            android:id="@+id/paster_type_icon_background"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:src="@drawable/multimedia_plugin_edit_picture_paster_selected"
+            android:scaleType="centerCrop"
+            android:visibility="invisible"
+            android:contentDescription="@string/multimedia_plugin_empty" />
+
+    <ImageView
+            android:id="@+id/paster_type_icon"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:src="@drawable/multimedia_plugin_ic_common_none"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/multimedia_plugin_empty" />
+</FrameLayout>

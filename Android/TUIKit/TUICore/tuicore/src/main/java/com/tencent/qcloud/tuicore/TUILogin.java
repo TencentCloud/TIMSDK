@@ -247,53 +247,72 @@ public class TUILogin {
         if (initSuccess) {
             this.userId = userId;
             this.userSig = userSig;
-            if (TextUtils.equals(userId, V2TIMManager.getInstance().getLoginUser()) && !TextUtils.isEmpty(userId)) {
-                Log.i(TAG, "internalLogin already login");
-                hasLoginSuccess = true;
-                getUserInfo(userId);
-                TUICallback.onSuccess(callback);
-                TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, null);
-                return;
-            }
-
-            if (config != null && config.isInitLocalStorageOnly()) {
-                V2TIMManager.getInstance().callExperimentalAPI("initLocalStorage", userId, new V2TIMValueCallback<Object>() {
-                    @Override
-                    public void onSuccess(Object o) {
-                        getUserInfo(userId);
-                        TUICallback.onSuccess(callback);
-                    }
-
-                    @Override
-                    public void onError(int code, String desc) {
-                        Log.e(TAG, "initLocalStorage error:" + code + ", desc:" + desc);
-                        TUICallback.onError(callback, code, ErrorMessageConverter.convertIMError(code, desc));
-                    }
-                });
-
-                return;
-            }
-
-            V2TIMManager.getInstance().login(userId, userSig, new V2TIMCallback() {
+            V2TIMManager.getInstance().callExperimentalAPI("getLoginAccountType", null,
+                    new V2TIMValueCallback<Object>() {
                 @Override
-                public void onSuccess() {
-                    Log.i(TAG, "internalLogin login onSuccess");
-                    hasLoginSuccess = true;
-                    getUserInfo(userId);
-                    TUICallback.onSuccess(callback);
-                    TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, null);
+                public void onSuccess(Object data) {
+                    int accountType = (int) data;
+                    internalLoginImpl(accountType, userId, userSig, config, callback);
                 }
 
                 @Override
                 public void onError(int code, String desc) {
-                    Log.i(TAG, "internalLogin login onError code=" + code + " desc=" + desc);
-                    TUICallback.onError(callback, code, ErrorMessageConverter.convertIMError(code, desc));
+                    Log.e(TAG, "getLoginAccountType error:" + code + ", desc:" + desc);
+                    internalLoginImpl(TUIConstants.TUILogin.ACCOUNT_TYPE_UNKOWN, userId, userSig, config, callback);
                 }
             });
         } else {
             Log.i(TAG, "internalLogin initSDK failed");
             TUICallback.onError(callback, -1, "init failed");
         }
+    }
+
+    private void internalLoginImpl(final int accountType, final String userId, final String userSig,
+                                   TUILoginConfig config, TUICallback callback) {
+        if (TextUtils.equals(userId, V2TIMManager.getInstance().getLoginUser())
+                && !TextUtils.isEmpty(userId) && accountType == TUIConstants.TUILogin.ACCOUNT_TYPE_IM) {
+            Log.i(TAG, "internalLogin already login");
+            hasLoginSuccess = true;
+            getUserInfo(userId);
+            TUICallback.onSuccess(callback);
+            TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, null);
+            return;
+        }
+
+        if (config != null && config.isInitLocalStorageOnly()) {
+            V2TIMManager.getInstance().callExperimentalAPI("initLocalStorage", userId, new V2TIMValueCallback<Object>() {
+                @Override
+                public void onSuccess(Object o) {
+                    getUserInfo(userId);
+                    TUICallback.onSuccess(callback);
+                }
+
+                @Override
+                public void onError(int code, String desc) {
+                    Log.e(TAG, "initLocalStorage error:" + code + ", desc:" + desc);
+                    TUICallback.onError(callback, code, ErrorMessageConverter.convertIMError(code, desc));
+                }
+            });
+
+            return;
+        }
+
+        V2TIMManager.getInstance().login(userId, userSig, new V2TIMCallback() {
+            @Override
+            public void onSuccess() {
+                Log.i(TAG, "internalLogin login onSuccess");
+                hasLoginSuccess = true;
+                getUserInfo(userId);
+                TUICallback.onSuccess(callback);
+                TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, null);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                Log.i(TAG, "internalLogin login onError code=" + code + " desc=" + desc);
+                TUICallback.onError(callback, code, ErrorMessageConverter.convertIMError(code, desc));
+            }
+        });
     }
 
     private void internalLogout(TUICallback callback) {

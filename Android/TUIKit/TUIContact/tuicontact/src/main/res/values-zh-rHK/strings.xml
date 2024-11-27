@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="new_friend">新的聯繫人</string>
+    <string name="group">我的群聊</string>
+    <string name="blacklist">黑名單</string>
+    <string name="contact_count">%d位聯繫人</string>
+    <string name="contact_title">通訊錄</string>
+
+    <string name="no_friend_apply">暫無好友申請</string>
+    <string name="at_all">所有人</string>
+
+    <string name="success">成功</string>
+    <string name="contact_add_failed">添加失敗</string>
+    <string name="contact_add_success">添加成功</string>
+    <string name="have_be_friend">對方已是您的好友</string>
+    <string name="friend_limit">您的好友數已達系統上限</string>
+    <string name="other_friend_limit">對方的好友數已達系統上限</string>
+    <string name="in_blacklist">被加好友在自己的黑名單中</string>
+    <string name="forbid_add_friend">對方已禁止加好友</string>
+    <string name="set_in_blacklist">您已被被對方設置為黑名單</string>
+    <string name="wait_agree_friend">等待好友審核同意</string>
+    <string name="send_request">加群請求已發送</string>
+    <string name="contact_add_more_send_request_text">發送</string>
+    <string name="contact_search">搜索</string>
+
+    <string name="add_group_permission_deny">禁止加群</string>
+    <string name="add_group_allready_member">已經是群成員</string>
+    <string name="add_group_not_found">群組不存在</string>
+    <string name="add_group_full_member">群已滿員</string>
+
+    <string name="request_agree">同意</string>
+    <string name="request_accepted">已接受</string>
+    <string name="request_waiting">等待驗證</string>
+    <string name="profile_detail">詳細資料</string>
+    <string name="profile_remark_edit">修改備註</string>
+    <string name="contact_friend_remark">備註</string>
+    <string name="contact_add_friend_remark">備註</string>
+    <string name="contact_friend_group">分組</string>
+    <string name="contact_set_add_wording">請填寫驗證信息</string>
+    <string name="contact_set_remark_and_group">請填寫備註</string>
+    <string name="contact_add_wording">驗證信息：</string>
+    <string name="contact_my_friend">我的朋友</string>
+    <string name="contact_modify_remark_rule">僅限中文、字母、數字和下劃線</string>
+    <string name="contact_profile_title_edit">編輯</string>
+    <string name="contact_add_more_info">詳情</string>
+
+    <string name="profile_id">賬號</string>
+    <string name="profile_add_wording">驗證消息</string>
+    <string name="profile_remark">備註名</string>
+    <string name="profile_black">加入黑名單</string>
+    <string name="profile_chat">發送消息</string>
+    <string name="profile_voice_chat">語音通話</string>
+    <string name="profile_video_chat">視頻通話</string>
+    <string name="profile_clear_message">清除聊天記錄</string>
+    <string name="profile_delete_friend">刪除好友</string>
+    <string name="profile_chat_background">設置當前聊天背景</string>
+    <string name="chat_background_title">更換背景</string>
+
+    <string name="contact_profile_message">發送消息</string>
+    <string name="contact_profile_audio_call">語音通話</string>
+    <string name="contact_profile_video_call">視頻通話</string>
+
+    <string name="contact_signature_tag">個性簽名：</string>
+    <string name="contact_no_status">暫無個性簽名</string>
+
+    <string name="contact_account_tag">ID：</string>
+    <string name="contact_group_type_tag">群類型：</string>
+
+    <string name="select_chat">請選擇聊天對象</string>
+
+    <string name="clear_msg_tip">確認清除聊天記錄？</string>
+    <string name="contact_delete_friend_tip">確認刪除聯繫人？</string>
+    <string name="tips_empty_group_member">請選擇群成員</string>
+    <string name="tips_empty_group_type">請選擇加群方式</string>
+
+    <string name="accept">同意</string>
+    <string name="refuse">拒絕</string>
+    <string name="accepted">已同意</string>
+    <string name="refused">已拒絕</string>
+
+    <string name="chat_to_top">置頂聊天</string>
+
+    <string name="add_friend">添加好友</string>
+    <string name="add_group">添加群聊</string>
+    <string name="start_conversation">發起會話</string>
+    <string name="create_group_chat">創建群聊</string>
+    <string name="create_chat_room">創建聊天室</string>
+    <string name="create_private_group">創建討論組</string>
+    <string name="create_community">創建社群</string>
+    <string name="hint_add_user_id">請輸入ID</string>
+    <string name="hint_search_user_id">搜索用戶ID</string>
+    <string name="hint_search_group_id">搜索群組ID</string>
+    <string name="hint_add_wording">請輸入驗證消息</string>
+    <string name="contact_add_friend_default_validation">我是%s</string>
+    <string name="contact_add">添加</string>
+    <string name="user_id">對方ID</string>
+    <string name="add_wording">驗證消息</string>
+    <string name="create_group">創建群組</string>
+    <string name="contact_create">創建</string>
+    <string name="contact_next_step">下一步</string>
+
+    <string name="modify_group_name">修改群名稱</string>
+    <string name="add_group_member">添加成員</string>
+    <string name="group_join_type">加群方式</string>
+    <string name="forbid_join">禁止加群</string>
+    <string name="manager_judge">管理員審批</string>
+    <string name="auto_judge">自動審批</string>
+    <string name="input_tip">沒有輸入昵稱，請重新填寫</string>
+    <string name="profile_msgrev_opt">消息免打擾</string>
+
+    <string name="contact_over_limit_tip">最多只能選擇%d個。</string>
+
+    <string name="contact_no_such_group">該群不存在</string>
+    <string name="contact_no_such_user">該用戶不存在</string>
+
+    <string name="contact_my_user_id">我的用戶ID：%s</string>
+
+    <string name="contact_community">社群</string>
+    <string name="contact_i_know">我知道了</string>
+    <string name="contact_no_more_reminders">不再提醒</string>
+    <string name="contact_im_flagship">旗艦版</string>
+    <string name="contact_buying_guidelines">價格說明</string>
+    <string name="contact_im_flagship_edition_update_tip">%s功能為IM旗艦版功能，購買旗艦版套餐包後可使用，詳見價格說明。</string>
+
+    <string name="contact_no_new_friend_application">暫無新的聯繫人請求</string>
+    <string name="contact_no_group">暫無群聊</string>
+    <string name="contact_no_block_list">暫無黑名單好友</string>
+    <string name="contact_selected_group_member">已選擇的群成員</string>
+
+    <string name="group_choose_avatar">選擇頭像</string>
+    <string name="group_avatar_text">群頭像</string>
+    <string name="group_name_text">群名稱</string>
+    <string name="modify_group_id">修改群 ID</string>
+    <string name="group_id_option">群ID (選填)</string>
+    <string name="group_type_text">群類型</string>
+    <string name="group_created">創建</string>
+    <string name="group_type_select_text">選擇群類型</string>
+    <string name="group_work_type">好友工作群(Work)</string>
+    <string name="group_work_content">好友工作群(Work）：類似普通微信群，創建後僅支持已在群內的好友邀請加群，且無需被邀請方同意或群主審批。</string>
+    <string name="group_public_type">陌生人社交群(Public)</string>
+    <string name="group_public_des">陌生人社交群(Public）：類似 QQ 群，創建後群主可以指定群管理員，用戶搜索群 ID 發起加群申請後，需要群主或管理員審批通過才能入群。</string>
+    <string name="group_meeting_type">臨時會議群(Meeting)</string>
+    <string name="group_meeting_des">臨時會議群(Meeting）：創建後可以隨意進出，且支持查看入群前消息；適用於音視頻會議場景、在線教育場景等與實時音視頻產品結合的場景。</string>
+    <string name="group_commnity_type">社群(Community)</string>
+    <string name="group_commnity_des">社群(Community)：創建後可以隨意進出，最多支持100000人，支持歷史消息存儲，用戶搜索群 ID 發起加群申請後，無需管理員審批即可進群。</string>
+
+    <string name="group_name_edit_null_tips">群組名稱不能為空!</string>
+    <string name="group_name_edit_exceed_tips">群組名稱最長 30 字節!</string>
+    <string name="group_id_edit_format_tips">群組 ID 前綴不能為 @TGS# !</string>
+    <string name="community_id_edit_format_tips">社群 ID 前綴必須為 @TGS#_ !</string>
+    <string name="group_id_edit_exceed_tips">群組 ID 最長 48 字節!</string>
+    <string name="group_type_content_title">詳見產品文檔</string>
+    <string name="group_type_content_url">產品文檔</string>
+    <string name="group_type_content_button">查看產品文檔</string>
+</resources>

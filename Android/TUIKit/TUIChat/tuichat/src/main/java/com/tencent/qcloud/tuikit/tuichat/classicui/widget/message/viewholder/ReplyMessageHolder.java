@@ -2,7 +2,6 @@ package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -13,6 +12,8 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageContentHolder;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.TUIReplyQuoteView;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.TextUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.ImageReplyQuoteBean;
@@ -43,9 +44,6 @@ public class ReplyMessageHolder extends MessageContentHolder {
         originMsgLayout = itemView.findViewById(R.id.origin_msg_abs_layout);
         quoteFrameLayout = itemView.findViewById(R.id.quote_frame_layout);
         line = itemView.findViewById(R.id.reply_line);
-
-        replyContentTv.setTextIsSelectable(true);
-        replyContentTv.setHighlightColor(itemView.getResources().getColor(com.tencent.qcloud.tuikit.timcommon.R.color.timcommon_text_highlight_color));
     }
 
     @Override
@@ -81,7 +79,8 @@ public class ReplyMessageHolder extends MessageContentHolder {
             quoteFrameLayout.setVisibility(View.GONE);
         }
         setThemeColor(msg);
-
+        replyContentTv.setActivated(true);
+        TextUtil.linkifyUrls(replyContentTv);
         if (isForwardMode || isReplyDetailMode) {
             return;
         }
@@ -89,7 +88,7 @@ public class ReplyMessageHolder extends MessageContentHolder {
         msgArea.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                selectableTextHelper.selectAll();
+                selectionHelper.selectAll();
                 return true;
             }
         });
@@ -97,19 +96,26 @@ public class ReplyMessageHolder extends MessageContentHolder {
         msgContentFrame.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                selectableTextHelper.selectAll();
+                selectionHelper.selectAll();
                 return true;
             }
         });
-
+        replyContentTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onMessageClick(v, msg);
+                }
+            }
+        });
         originMsgLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                selectableTextHelper.selectAll();
+                selectionHelper.selectAll();
                 return true;
             }
         });
-        setSelectableTextHelper(msg, replyContentTv, position);
+        setSelectionHelper(msg, replyContentTv, position);
     }
 
     @Override

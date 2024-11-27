@@ -20,6 +20,7 @@ import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo
 import com.tencent.qcloud.tuikit.TUICommonDefine
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallEngine
+import com.tencent.qcloud.tuikit.tuicallengine.impl.base.TUILog
 import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.TUICallKit
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.joiningroupcall.JoinInGroupCallView
@@ -447,13 +448,17 @@ class TUICallKitService private constructor(context: Context) : ITUINotification
             val userIDs = param[TUIConstants.TUICalling.PARAM_NAME_USERIDS] as Array<String>?
             val typeString = param[TUIConstants.TUICalling.PARAM_NAME_TYPE] as String?
             val groupID = param[TUIConstants.TUICalling.PARAM_NAME_GROUPID] as String?
-            val userIdList: List<String?>? = userIDs?.toList() ?: null
+            var userIdList: List<String?>? = userIDs?.toList() ?: null
+            TUILog.i(TAG, "onCall, groupID: $groupID, userIdList: $userIdList")
+            userIdList = userIdList?.filterNotNull()
+
             var mediaType = TUICallDefine.MediaType.Unknown
             if (TUIConstants.TUICalling.TYPE_AUDIO == typeString) {
                 mediaType = TUICallDefine.MediaType.Audio
             } else if (TUIConstants.TUICalling.TYPE_VIDEO == typeString) {
                 mediaType = TUICallDefine.MediaType.Video
             }
+
             if (!TextUtils.isEmpty(groupID)) {
                 TUICallKit.createInstance(appContext).groupCall(groupID!!, userIdList, mediaType)
             } else if (userIdList?.size == 1) {

@@ -49,6 +49,12 @@ android {
 }
 
 dependencies {
+    /*plugin-build-Begin
+
+    compileOnly fileTree(include: ['*.jar','*.aar'], dir: '../../../../tuikit/android/libs')
+
+    plugin-build-End*/
+
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'com.github.bumptech.glide:glide:4.12.0'

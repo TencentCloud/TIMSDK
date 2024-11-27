@@ -74,6 +74,7 @@
             android:ellipsize="end"/>
 
         <ImageView
+            android:id="@+id/image_conference_type_icon"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:src="@drawable/tuiroomkit_icon_arrows_down" />

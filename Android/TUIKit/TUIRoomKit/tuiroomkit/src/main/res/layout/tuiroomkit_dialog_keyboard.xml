@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rv_outside_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/ll_keyboard_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/tuiroomkit_bg_bottom_dialog"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ll_input_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/tuiroomkit_bg_bottom_dialog"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:scaleType="centerCrop">
+
+            <EditText
+                android:id="@+id/edit_input"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:inputType="text"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
+                android:background="@drawable/tuiroomkit_bg_modify_name_edit"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_modify_name"/>
+
+            <Button
+                android:id="@+id/btn_modify_name"
+                android:layout_width="60dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/tuiroomkit_float_chat_btn_send"
+                android:gravity="center"
+                android:text="@string/tuiroomkit_dialog_ok"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@id/edit_input"
+                app:layout_constraintTop_toTopOf="@id/edit_input"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_keyboard_bottom_placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        </FrameLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

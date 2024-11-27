@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="suggest">建議投訴</string>
+    <string name="session_end">會話結束</string>
+    <string name="session_timeout">會話超時</string>
+    <string name="invite_to_evaluation">感謝您使用我們的服務，請對此次服務進行評價</string>
+    <string name="submit_the_evaluation">提交評價</string>
+    <string name="satisfaction_evaluation">滿意度評價</string>
+    <string name="extension_satisfaction_evaluation">服務評價</string>
+    <string name="customer_service">客服號</string>
+    <string name="send_product_info">發送商品</string>
+    <string name="product_card_input_info">請填寫商品信息</string>
+    <string name="product_card_close">關閉</string>
+    <string name="product_card_name">名稱</string>
+    <string name="product_card_description">描述</string>
+    <string name="product_card_picture_url">圖片</string>
+    <string name="product_card_jump_url">跳轉</string>
+    <string name="product_card_confirm">提交商品信息</string>
+    <string name="product_info_input_empty">輸入不能為空</string>
+    <string name="common_phrases">常用語</string>
+    <string name="customer_service_unsupport_tips">客服插件是增值付費功能，當前處於內測階段，請點擊進入[騰訊雲即時通信 IM 群]申請開通試用</string>
+    <string name="customer_service_buying_guidelines">騰訊雲即時通信 IM 群</string>
+    <string name="customer_service_i_know">我知道了</string>
+
+    <string name="refresh_questions">換一換</string>
+    <string name="chat_bot">機器人</string>
+
+    <string name="chat_bot_unsupport_tips">機器人插件是增值付費功能，當前處於內測階段，請點擊進入[騰訊雲即時通信 IM 群]申請開通試用</string>
+    <string name="chat_bot_buying_guidelines">騰訊雲即時通信 IM 群</string>
+
+    <string-array name="common_phrases_list">
+        <item>是否有貨？</item>
+        <item>可以便宜一點嗎？</item>
+        <item>有什麼贈品？</item>
+        <item>什麼時候發貨？</item>
+        <item>發什麼快遞？</item>
+        <item>什麼時候到貨？</item>
+    </string-array>
+</resources>

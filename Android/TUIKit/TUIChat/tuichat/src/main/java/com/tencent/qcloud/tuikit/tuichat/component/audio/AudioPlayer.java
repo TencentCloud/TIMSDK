@@ -66,11 +66,6 @@ public class AudioPlayer {
         }
     }
 
-    public void resetSpeakerMode() {
-        AudioManager audioManager = (AudioManager) TUIChatService.getAppContext().getSystemService(Context.AUDIO_SERVICE);
-        audioManager.setMode(AudioManager.MODE_NORMAL);
-    }
-
     public void stopPlay() {
         stopInternalPlay();
         onPlayCompleted(false);
@@ -96,7 +91,6 @@ public class AudioPlayer {
         if (mPlayCallback != null) {
             mPlayCallback.onCompletion(success);
         }
-        resetSpeakerMode();
         mPlayer = null;
     }
 

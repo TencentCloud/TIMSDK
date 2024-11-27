@@ -155,19 +155,13 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
 
         private boolean hasAbilityToManageUser(UserState.UserInfo user) {
             UserState.UserInfo localUser = ConferenceController.sharedInstance().getUserState().selfInfo.get();
-            if (TextUtils.equals(localUser.userId, user.userId)) {
-                return false;
-            }
-            if (localUser.role.get() == TUIRoomDefine.Role.ROOM_OWNER) {
+            if (TextUtils.equals(localUser.userId, user.userId) || localUser.role.get() == TUIRoomDefine.Role.ROOM_OWNER) {
                 return true;
             }
-            if (localUser.role.get() == TUIRoomDefine.Role.GENERAL_USER) {
-                return TextUtils.equals(localUser.userId, user.userId);
+            if (localUser.role.get() == TUIRoomDefine.Role.MANAGER) {
+                return user.role.get() == TUIRoomDefine.Role.GENERAL_USER;
             }
-            if (TextUtils.equals(localUser.userId, user.userId)) {
-                return true;
-            }
-            return user.role.get() == TUIRoomDefine.Role.GENERAL_USER;
+            return false;
         }
     }
 }

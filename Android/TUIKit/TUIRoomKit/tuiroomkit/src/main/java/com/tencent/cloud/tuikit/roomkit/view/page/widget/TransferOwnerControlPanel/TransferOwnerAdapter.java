@@ -86,7 +86,8 @@ public class TransferOwnerAdapter extends RecyclerView.Adapter<TransferOwnerAdap
             int visibility = TextUtils.equals(user.getUserId(), mSelectedUserId) ? View.VISIBLE : View.GONE;
             imageSelected.setVisibility(visibility);
             ImageLoader.loadImage(mContext, imageHead, user.getAvatarUrl(), R.drawable.tuiroomkit_head);
-            String userName = TextUtils.isEmpty(user.getUserName()) ? user.getUserId() : user.getUserName();
+            String nameCard = TextUtils.isEmpty(user.getNameCard()) ? user.getUserName() : user.getNameCard();
+            String userName = TextUtils.isEmpty(nameCard) ? user.getUserId() : nameCard;
             textUserName.setText(userName);
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override

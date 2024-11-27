@@ -95,6 +95,11 @@
             android:configChanges="orientation|screenSize"
             android:launchMode="singleTask"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name="com.tencent.cloud.tuikit.roomkit.view.page.widget.SpeechToText.SpeechToTextActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <service
             android:name="com.tencent.cloud.tuikit.roomkit.common.KeepAliveService"
             android:enabled="true"

@@ -88,6 +88,8 @@ class GroupCallVideoLayout(context: Context) : GroupCallFlowLayout(context) {
                 } else {
                     EngineManager.instance.startRemoteView(user.id, videoView?.getVideoView(), null)
                 }
+            } else if (index != 0 && user.videoAvailable.get() == true) {
+                EngineManager.instance.startRemoteView(user.id, videoView?.getVideoView(), null)
             }
         }
     }

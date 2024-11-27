@@ -101,8 +101,8 @@ public class StreamTextHolder extends TextMessageHolder {
         msgArea.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (selectableTextHelper != null) {
-                    selectableTextHelper.selectAll();
+                if (selectionHelper != null) {
+                    selectionHelper.selectAll();
                 }
                 return true;
             }
@@ -117,6 +117,6 @@ public class StreamTextHolder extends TextMessageHolder {
         if (isForwardMode || isReplyDetailMode) {
             return;
         }
-        setSelectableTextHelper(msg, msgBodyText, position);
+        setSelectionHelper(msg, msgBodyText, position);
     }
 }

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
+
+    <LinearLayout
+            android:id="@+id/rl_beauty_strength_setting"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal">
+
+        <TextView
+                android:id="@+id/beauty_strength_name"
+                android:text="@string/multimedia_plugin_strength"
+                android:textSize="@dimen/multimedia_plugin_common_text_size"
+                android:textColor="@android:color/white"
+                android:fontFamily="@string/multimedia_plugin_common_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="35dp"
+                android:layout_marginLeft="16dp"
+                android:gravity="left" />
+
+        <com.tencent.qcloud.tuikit.tuimultimediaplugin.record.view.beauty.BeautyStrengthSeekBar
+                android:id="@+id/beauty_strength_seek_bar"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:indeterminate="false"
+                android:layout_weight="100"
+                android:max="90"
+                android:progress="0" />
+
+        <ImageView
+                android:id="@+id/beauty_strength_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_weight="1"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="16dp"
+                android:gravity="right"
+                android:src="@drawable/multimedia_plugin_record_beauty_filter_strength"
+                android:contentDescription="@string/multimedia_plugin_empty" />
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/rl_beauty_setting"
+            android:layout_width="match_parent"
+            android:layout_height="185dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:background="@color/multimedia_plugin_record_beauty_panel_view_background_color">
+
+        <com.google.android.material.tabs.TabLayout
+                android:id="@+id/beauty_type_tab_view"
+                android:layout_width="wrap_content"
+                android:layout_height="42dp"
+                android:gravity="center_vertical"
+                app:tabIndicator="@android:color/transparent" />
+
+        <ImageView
+                android:id="@+id/beauty_view_split_line"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/multimedia_plugin_record_beauty_setting_view_split_line"
+                android:gravity="center" />
+
+        <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/record_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="86dp"
+                android:gravity="center_vertical"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="45dp"
+                android:layout_marginLeft="12dp" />
+    </LinearLayout>
+</LinearLayout>

@@ -197,6 +197,14 @@ public class InvitationController extends Controller {
         }
 
         @Override
+        public void onInvitationRevokedByAdmin(TUIRoomDefine.RoomInfo roomInfo, TUIConferenceInvitationManager.Invitation invitation, TUIRoomDefine.UserInfo admin) {
+            Log.d(TAG, "onInvitationRevokedByAdmin roomId=" + roomInfo.roomId + " admin=" + admin.userId);
+            if (mViewState.isInvitationPending.get()) {
+                mViewState.isInvitationPending.set(false);
+            }
+        }
+
+        @Override
         public void onInvitationTimeout(TUIRoomDefine.RoomInfo roomInfo, TUIConferenceInvitationManager.Invitation invitation) {
             Log.d(TAG, "onInvitationTimeout roomId=" + roomInfo.roomId + " inviterId="
                     + invitation.inviter.userId + " inviteeId=" + invitation.invitee.userId);
@@ -228,7 +236,7 @@ public class InvitationController extends Controller {
             InvitationState.Invitation newInvitation = new InvitationState.Invitation(invitation);
             if (mInvitationState.invitationList.contains(newInvitation)) {
                 mInvitationState.invitationList.change(newInvitation);
-            } else {
+            } else if ((!mUserState.allUsers.contains(newInvitation.invitee))) {
                 mInvitationState.invitationList.insert(0, newInvitation);
             }
             if (invitation.invitee.userId.equals(mUserState.selfInfo.get().userId)) {

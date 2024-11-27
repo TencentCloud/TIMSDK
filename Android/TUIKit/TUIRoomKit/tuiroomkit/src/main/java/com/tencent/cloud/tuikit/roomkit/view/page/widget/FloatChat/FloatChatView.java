@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.service.IFindNameCardService;
 
 public class FloatChatView extends FrameLayout {
     private Context                 mContext;
@@ -36,17 +37,11 @@ public class FloatChatView extends FrameLayout {
         mBarrageDisplay.setVisibility(enable ? View.VISIBLE : View.INVISIBLE);
     }
 
+    public void setFindUserNameCardService(IFindNameCardService service) {
+        mBarrageDisplay.setFindNameCardService(service);
+    }
+
     public void destroy() {
-        mBarrageDisplay.destroyPresenter();
-    }
-
-    public void setViewClickListener(OnClickListener clickListener) {
-        mBarrageDisplay.setViewClickListener(clickListener);
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
         mBarrageDisplay.destroyPresenter();
     }
 }
