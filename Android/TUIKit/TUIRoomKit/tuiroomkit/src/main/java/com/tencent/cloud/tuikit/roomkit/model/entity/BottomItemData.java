@@ -3,7 +3,6 @@ package com.tencent.cloud.tuikit.roomkit.model.entity;
 import android.view.View;
 
 import androidx.annotation.DrawableRes;
-import androidx.annotation.StringRes;
 
 public class BottomItemData {
     private boolean enable;
@@ -140,6 +139,7 @@ public class BottomItemData {
         INVITE,
         MINIMIZE,
         RECORD,
+        AI,
         SETTING
     }
 }

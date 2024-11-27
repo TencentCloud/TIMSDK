@@ -2,12 +2,12 @@ package com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.vie
 
 import android.text.TextUtils;
 
-import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListData;
-import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListObserver;
 import com.tencent.cloud.tuikit.roomkit.model.controller.ScheduleController;
 import com.tencent.cloud.tuikit.roomkit.model.data.ConferenceListState;
 import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
 import com.trtc.tuikit.common.livedata.LiveData;
+import com.trtc.tuikit.common.livedata.LiveListData;
+import com.trtc.tuikit.common.livedata.LiveListObserver;
 import com.trtc.tuikit.common.livedata.Observer;
 
 import java.util.List;

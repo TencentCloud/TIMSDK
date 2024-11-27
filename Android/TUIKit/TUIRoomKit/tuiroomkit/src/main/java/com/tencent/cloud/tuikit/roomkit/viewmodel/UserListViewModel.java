@@ -197,14 +197,16 @@ public class UserListViewModel
                 .takeUserOnSeatByAdmin(SEAT_INDEX, userId, TIME_OUT_60_S, new TUIRoomDefine.RequestCallback() {
                     @Override
                     public void onAccepted(String requestId, String userId) {
+                        String name = TextUtils.isEmpty(userEntity.getNameCard()) ? userEntity.getUserName() : userEntity.getNameCard();
                         RoomToast.toastShortMessageCenter(
-                                mContext.getString(R.string.tuiroomkit_accept_invite, userEntity.getUserName()));
+                                mContext.getString(R.string.tuiroomkit_accept_invite, name));
                     }
 
                     @Override
                     public void onRejected(String requestId, String userId, String message) {
+                        String name = TextUtils.isEmpty(userEntity.getNameCard()) ? userEntity.getUserName() : userEntity.getNameCard();
                         RoomToast.toastShortMessageCenter(
-                                mContext.getString(R.string.tuiroomkit_reject_invite, userEntity.getUserName()));
+                                mContext.getString(R.string.tuiroomkit_reject_invite, name));
                     }
 
                     @Override
@@ -215,8 +217,9 @@ public class UserListViewModel
                     @Override
                     public void onTimeout(String requestId, String userId) {
                         Log.w(TAG, "takeUserOnSeatByAdmin onTimeout userId : " + userId);
+                        String name = TextUtils.isEmpty(userEntity.getNameCard()) ? userEntity.getUserName() : userEntity.getNameCard();
                         RoomToast.toastShortMessageCenter(
-                                mContext.getString(R.string.tuiroomkit_invite_take_seat_time_out, userEntity.getUserName()));
+                                mContext.getString(R.string.tuiroomkit_invite_take_seat_time_out, name));
                     }
 
                     @Override

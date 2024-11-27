@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_selected="true">
+        <layer-list>
+            <item>
+                <shape android:innerRadiusRatio="2.5" android:shape="ring" android:thicknessRatio="15" android:useLevel="false">
+                    <solid android:color="?attr/core_primary_color" />
+                    <size android:width="16dp" android:height="16dp" />
+                </shape>
+            </item>
+
+            <item android:bottom="3.3dp" android:left="3.3dp" android:right="3.3dp" android:top="3.3dp">
+                <shape android:shape="oval">
+                    <solid android:color="?attr/core_primary_color" />
+                </shape>
+            </item>
+
+        </layer-list>
+    </item>
+
+    <item android:state_selected="false">
+        <shape android:innerRadiusRatio="2.5" android:shape="ring" android:thicknessRatio="15" android:useLevel="false">
+            <solid android:color="@color/multimedia_plugin_picker_light_gray" />
+            <size android:width="16dp" android:height="16dp" />
+        </shape>
+    </item>
+
+    <item>
+        <shape android:innerRadiusRatio="2.5" android:shape="ring" android:thicknessRatio="15" android:useLevel="false">
+            <solid android:color="@color/multimedia_plugin_picker_light_gray" />
+            <size android:width="16dp" android:height="16dp" />
+        </shape>
+    </item>
+</selector>
+

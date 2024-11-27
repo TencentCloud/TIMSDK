@@ -5,9 +5,9 @@ import android.text.TextUtils;
 import androidx.annotation.Nullable;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListData;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.trtc.tuikit.common.livedata.LiveData;
+import com.trtc.tuikit.common.livedata.LiveListData;
 
 public class UserState {
     public LiveData<UserInfo> selfInfo = new LiveData<>(new UserInfo(TUILogin.getUserId()));
@@ -42,6 +42,11 @@ public class UserState {
         UserInfo user = new UserInfo(userInfo);
         allUsers.remove(user);
         disableMessageUsers.remove(userInfo.userId);
+    }
+
+    public void userNameCardChanged(TUIRoomDefine.UserInfo userInfo) {
+        UserInfo user = new UserInfo(userInfo);
+        allUsers.change(user);
     }
 
     public void handleUserRoleChanged(TUIRoomDefine.UserInfo userInfo) {
@@ -112,7 +117,7 @@ public class UserState {
 
         public void updateUserInfo(TUIRoomDefine.UserInfo userInfo) {
             this.userId = userInfo.userId;
-            this.userName = userInfo.userName;
+            this.userName = TextUtils.isEmpty(userInfo.nameCard) ? userInfo.userName : userInfo.nameCard;
             this.avatarUrl = userInfo.avatarUrl;
             this.role.set(userInfo.userRole);
         }

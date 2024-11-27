@@ -21,6 +21,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.TimeInLineTextLayout;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.TextUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import java.util.ArrayList;
 import java.util.Date;
@@ -93,7 +94,8 @@ public class ReplyDetailsView extends RecyclerView {
                 .apply(new RequestOptions().error(com.tencent.qcloud.tuikit.timcommon.R.drawable.core_default_user_icon_light))
                 .into(holder.userFaceView);
             FaceManager.handlerEmojiText(holder.timeInLineTextLayout.getTextView(), messageText, false);
-
+            holder.timeInLineTextLayout.getTextView().setActivated(true);
+            TextUtil.linkifyUrls(holder.timeInLineTextLayout.getTextView());
             setBottomContent(messageBean, holder);
 
             optimizeBackgroundAndAvatar(holder, replyBeanList, position);

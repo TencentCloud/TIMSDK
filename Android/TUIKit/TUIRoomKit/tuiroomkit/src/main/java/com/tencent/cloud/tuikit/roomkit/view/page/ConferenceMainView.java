@@ -45,27 +45,31 @@ import com.tencent.cloud.tuikit.roomkit.view.component.TipToast;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.BottomNavigationBar.BottomLayout;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.Dialog.ExitRoomDialog;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.Dialog.InviteDialog;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.Dialog.MoreFunctionDialog;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.Dialog.RoomInfoDialog;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.Dialog.ShareRoomDialog;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.FloatChatView;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.service.IFindNameCardService;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.LocalAudioIndicator.LocalAudioToggleView;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.MediaSettings.MediaSettingPanel;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.RaiseHandControlPanel.RaiseHandApplicationListPanel;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.SelectScheduleParticipant.ConferenceParticipants;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.SelectScheduleParticipant.ParticipantSelector;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.SelectScheduleParticipant.User;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.SpeechToText.SpeechToTextSubtitleView;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.TopNavigationBar.TopView;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.TransferOwnerControlPanel.TransferMasterPanel;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.UserListPanel;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.WaterMark.TextWaterMarkView;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.RoomMainViewModel;
+import com.trtc.tuikit.common.livedata.LiveListObserver;
 import com.trtc.tuikit.common.livedata.Observer;
 
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-public class ConferenceMainView extends RelativeLayout {
+public class ConferenceMainView extends RelativeLayout implements IFindNameCardService {
     private static final String TAG = "ConferenceMainView";
 
     private static final int CLICK_ACTION_MAX_MOVE_DISTANCE = 8;
@@ -74,19 +78,21 @@ public class ConferenceMainView extends RelativeLayout {
     private static final int ROOM_BARS_FIRST_SHOW_TIME_MS        = 6 * 1000;
     private static final int CONFIRM_DIALOG_AUTO_DISMISS_SECONDS = 5;
 
-    private Context           mContext;
-    private View              mFloatingWindow;
-    private TUIVideoSeatView  mVideoSeatView;
-    private FloatChatView     mFloatChatView;
-    private Button            mBtnStopScreenShare;
-    private FrameLayout       mLayoutTopView;
-    private FrameLayout       mLayoutVideoSeat;
-    private FrameLayout       mLayoutLocalAudio;
-    private FrameLayout       mLayoutFloatChatView;
-    private View              mLayoutScreenCaptureGroup;
-    private FrameLayout       mLayoutBottomView;
-    private BottomLayout      mBottomLayout;
-    private RoomMainViewModel mViewModel;
+    private Context                  mContext;
+    private View                     mFloatingWindow;
+    private TUIVideoSeatView         mVideoSeatView;
+    private FloatChatView            mFloatChatView;
+    private SpeechToTextSubtitleView mSpeechToTextSubtitleView;
+    private Button                   mBtnStopScreenShare;
+    private FrameLayout              mLayoutTopView;
+    private FrameLayout              mLayoutVideoSeat;
+    private FrameLayout              mLayoutLocalAudio;
+    private FrameLayout              mLayoutFloatChatView;
+    private FrameLayout              mLayoutSpeechToTextSubtitle;
+    private View                     mLayoutScreenCaptureGroup;
+    private FrameLayout              mLayoutBottomView;
+    private BottomLayout             mBottomLayout;
+    private RoomMainViewModel        mViewModel;
 
     private final ParticipantSelector mParticipantSelector = new ParticipantSelector();
 
@@ -101,7 +107,20 @@ public class ConferenceMainView extends RelativeLayout {
     private float           mTouchDownPointX;
     private float           mTouchDownPointY;
 
-    private final Observer<String> mRoomIdObserver = this::updateRoomId;
+    private final Observer<String>  mRoomIdObserver     = this::updateRoomId;
+    private final Observer<Boolean> mAISubtitleObserver = this::updateSubtitleView;
+
+    private final LiveListObserver<String> mDisableSendMessageObserver = new LiveListObserver<String>() {
+        @Override
+        public void onItemInserted(int position, String userId) {
+            mViewModel.showLocalDisabledSendMessageToast(userId, true);
+        }
+
+        @Override
+        public void onItemRemoved(int position, String userId) {
+            mViewModel.showLocalDisabledSendMessageToast(userId, false);
+        }
+    };
 
     public ConferenceMainView(Context context) {
         this(context, null);
@@ -243,6 +262,7 @@ public class ConferenceMainView extends RelativeLayout {
         mContext = context;
         mViewModel = new RoomMainViewModel(mContext, this);
         mVideoSeatView = new TUIVideoSeatView(mContext);
+        mSpeechToTextSubtitleView = new SpeechToTextSubtitleView(mContext);
         mVideoSeatView.setViewClickListener(this::onClick);
         initView();
     }
@@ -267,8 +287,10 @@ public class ConferenceMainView extends RelativeLayout {
             textWaterMarkView.setText(mViewModel.getWaterMakText());
             mLayoutVideoSeat.addView(textWaterMarkView);
         }
+        mLayoutFloatChatView = findViewById(R.id.tuiroomkit_float_chat_view_container);
         initScreenCaptureView();
         initFloatChatView();
+        initSpeechToTextSubtitleView();
 
         mBottomLayout = new BottomLayout(mContext);
         mBottomLayout.setExpandStateListener(this::onExpandStateChanged);
@@ -286,6 +308,7 @@ public class ConferenceMainView extends RelativeLayout {
         if (ConferenceController.sharedInstance().getConferenceState().videoModel.isScreenSharing()) {
             onScreenShareStarted();
         }
+        updateSubtitleView(ConferenceController.sharedInstance().getViewState().isSpeechToTextSubTitleShowing.get());
         showRoomBars();
         if (mIsBottomViewExpanded) {
             mBottomLayout.expandView();
@@ -340,6 +363,11 @@ public class ConferenceMainView extends RelativeLayout {
     public void showMemberInvitePanel() {
         InviteDialog inviteView = new InviteDialog(mContext);
         inviteView.show();
+    }
+
+    public void showMoreFunctionPanel() {
+        MoreFunctionDialog moreFunctionView = new MoreFunctionDialog(mContext);
+        moreFunctionView.show();
     }
 
     public void showShareRoomPanel() {
@@ -475,6 +503,8 @@ public class ConferenceMainView extends RelativeLayout {
         Configuration curConfig = mContext.getResources().getConfiguration();
         ConferenceController.sharedInstance().getViewController().updateScreenOrientation(curConfig);
         ConferenceController.sharedInstance().getRoomState().roomId.observe(mRoomIdObserver);
+        ConferenceController.sharedInstance().getViewState().isSpeechToTextSubTitleShowing.observe(mAISubtitleObserver);
+        ConferenceController.sharedInstance().getUserState().disableMessageUsers.observe(mDisableSendMessageObserver);
     }
 
     @Override
@@ -485,7 +515,12 @@ public class ConferenceMainView extends RelativeLayout {
         if (mVideoSeatView != null) {
             mVideoSeatView.destroy();
         }
+        if (mFloatChatView != null) {
+            mFloatChatView.destroy();
+        }
         ConferenceController.sharedInstance().getRoomState().roomId.removeObserver(mRoomIdObserver);
+        ConferenceController.sharedInstance().getViewState().isSpeechToTextSubTitleShowing.removeObserver(mAISubtitleObserver);
+        ConferenceController.sharedInstance().getUserState().disableMessageUsers.removeObserver(mDisableSendMessageObserver);
     }
 
     private void updateRoomId(String roomId) {
@@ -493,21 +528,42 @@ public class ConferenceMainView extends RelativeLayout {
             return;
         }
         mFloatChatView = new FloatChatView(mContext, roomId);
-        mFloatChatView.setViewClickListener(this::onClick);
         initFloatChatView();
+    }
+
+    private void updateSubtitleView(boolean isShowSubtitle) {
+        mLayoutFloatChatView.setVisibility(isShowSubtitle ? INVISIBLE : VISIBLE);
+        mLayoutSpeechToTextSubtitle.setVisibility(isShowSubtitle ? VISIBLE : INVISIBLE);
+    }
+
+    public void showShareStoppedByAdminDialog() {
+        BaseDialogFragment.build()
+                .setTitle(mContext.getString(R.string.tuiroomkit_share_screen_stopped))
+                .hideNegativeView().setPositiveName(mContext.getString(R.string.tuiroomkit_i_see))
+                .setContent(mContext.getString(R.string.tuiroomkit_disable_general_share_by_admin_dialog_hint))
+                .showDialog(mContext, null);
     }
 
     private void initFloatChatView() {
         if (mFloatChatView == null) {
             return;
         }
-        mLayoutFloatChatView = findViewById(R.id.tuiroomkit_float_chat_view_container);
         ViewParent floatChatViewParent = mFloatChatView.getParent();
         if (floatChatViewParent instanceof ViewGroup) {
             ((ViewGroup) floatChatViewParent).removeView(mFloatChatView);
         }
         mFloatChatView.isShow(mViewModel.isFloatChatEnable());
         mLayoutFloatChatView.addView(mFloatChatView);
+        mFloatChatView.setFindUserNameCardService(this);
+    }
+
+    private void initSpeechToTextSubtitleView() {
+        mLayoutSpeechToTextSubtitle = findViewById(R.id.tuiroomkit_speech_to_text_subtitle_container);
+        ViewParent parent = mSpeechToTextSubtitleView.getParent();
+        if (parent instanceof ViewGroup) {
+            ((ViewGroup) parent).removeView(mSpeechToTextSubtitleView);
+        }
+        mLayoutSpeechToTextSubtitle.addView(mSpeechToTextSubtitleView);
     }
 
     public void onScreenShareStarted() {
@@ -688,5 +744,10 @@ public class ConferenceMainView extends RelativeLayout {
         int viewWidth = view.getWidth();
         int viewHeight = view.getHeight();
         return x >= viewX && x <= (viewX + viewWidth) && y >= viewY && y <= (viewY + viewHeight);
+    }
+
+    @Override
+    public String findUserNameCard(String userId) {
+        return mViewModel.getUserNameCard(userId);
     }
 }

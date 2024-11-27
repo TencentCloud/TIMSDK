@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/multimedia_plugin_paster_panel_view_background">
+
+    <com.google.android.material.tabs.TabLayout
+            android:id="@+id/picture_paster_panel_tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            app:tabPaddingStart="16dp"
+            app:tabMinWidth="30dp"
+            app:tabMaxWidth="80dp"
+            app:tabIndicator="@android:color/transparent" />
+
+    <ImageView
+            android:id="@+id/beauty_view_split_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/multimedia_plugin_record_beauty_setting_view_split_line"
+            android:gravity="center"
+            android:contentDescription="@string/multimedia_plugin_empty" />
+
+    <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/picture_paster_panel_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp" />
+</LinearLayout>

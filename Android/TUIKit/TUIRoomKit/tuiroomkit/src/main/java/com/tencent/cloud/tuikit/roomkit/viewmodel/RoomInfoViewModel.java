@@ -53,7 +53,8 @@ public class RoomInfoViewModel implements ConferenceEventCenter.RoomKitUIEventRe
         mRoomEngine.getUserInfo(ownerId, new TUIRoomDefine.GetUserInfoCallback() {
             @Override
             public void onSuccess(TUIRoomDefine.UserInfo userInfo) {
-                String name = TextUtils.isEmpty(userInfo.userName) ? userInfo.userId : userInfo.userName;
+                String alternativeName = TextUtils.isEmpty(userInfo.userName) ? userInfo.userId : userInfo.userName;
+                String name = TextUtils.isEmpty(userInfo.nameCard) ? alternativeName : userInfo.nameCard;
                 mRoomInfoView.setMasterName(name);
             }
 

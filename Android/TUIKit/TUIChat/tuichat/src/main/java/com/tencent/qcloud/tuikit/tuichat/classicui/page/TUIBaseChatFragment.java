@@ -45,6 +45,7 @@ import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.DataStoreUtil;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -197,7 +198,7 @@ public abstract class TUIBaseChatFragment extends Fragment {
     }
 
     protected void onRecallClicked(TUIMessageBean messageInfo) {
-        if (messageInfo == null) {
+        if (messageInfo == null || TextUtils.isEmpty(messageInfo.getUserId())) {
             return;
         }
         CallingMessageBean callingMessageBean = (CallingMessageBean) messageInfo;

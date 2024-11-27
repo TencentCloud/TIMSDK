@@ -4,7 +4,7 @@ import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_USER_LIST;
-import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_INVITE_PANEL_SECOND;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_MORE_FUNCTION_PANEL;
 
 import android.app.Activity;
 import android.content.Context;
@@ -162,7 +162,7 @@ public class UserListPanel extends BaseBottomDialog implements View.OnClickListe
         } else if (v.getId() == R.id.btn_mute_video_all) {
             showDisableAllCameraDialog();
         } else if (v.getId() == R.id.btn_mute_more_options) {
-            ConferenceEventCenter.getInstance().notifyUIEvent(SHOW_INVITE_PANEL_SECOND, null);
+            ConferenceEventCenter.getInstance().notifyUIEvent(SHOW_MORE_FUNCTION_PANEL, null);
         } else if (v.getId() == R.id.btn_call_all_user) {
             InvitationController invitationController = ConferenceController.sharedInstance().getInvitationController();
             invitationController.inviteUsers(invitationController.getInviteeListFormInvitationList(

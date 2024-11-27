@@ -6,15 +6,15 @@ import androidx.annotation.Nullable;
 
 import com.tencent.cloud.tuikit.engine.extension.TUIConferenceListManager;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListData;
 import com.trtc.tuikit.common.livedata.LiveData;
+import com.trtc.tuikit.common.livedata.LiveListData;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConferenceListState {
-    public LiveListData<ConferenceInfo>       scheduledConferences            = new LiveListData<>();
-    public String                             fetchScheduledConferencesCursor = FETCH_CURSOR_OF_INIT;
+    public LiveListData<ConferenceInfo> scheduledConferences            = new LiveListData<>();
+    public String                       fetchScheduledConferencesCursor = FETCH_CURSOR_OF_INIT;
 
     public static final String FETCH_CURSOR_OF_INIT = "init";
     public static final String FETCH_CURSOR_OF_END  = "end";

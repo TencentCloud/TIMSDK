@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="multimedia_plugin_empty"></string>
+    <string name="multimedia_plugin_torch">الشعلة</string>
+    <string name="multimedia_plugin_record_aspect">النسبة</string>
+    <string name="multimedia_plugin_beauty">الجمال</string>
+
+    <string name="multimedia_plugin_confirm">تأكيد</string>
+    <string name="multimedia_plugin_cancel">إلغاء</string>
+    <string name="multimedia_plugin_close">إغلاق</string>
+    <string name="multimedia_plugin_strength">القوة</string>
+    <string name="multimedia_plugin_setup">إعداد</string>
+    <string name="multimedia_plugin_common_none">لا شيء</string>
+    <string name="multimedia_plugin_palm_out">كف اليد</string>
+
+    <string name="multimedia_plugin_setting_panel_style">الأسلوب</string>
+    <string name="multimedia_plugin_setting_panel_beauty">الجمال</string>
+    <string name="multimedia_plugin_setting_panel_filter">الفلتر</string>
+
+    <string name="multimedia_plugin_beauty_cancel">إلغاء</string>
+    <string name="multimedia_plugin_panel_style_smooth">ناعم</string>
+    <string name="multimedia_plugin_panel_style_natural">جمال طبيعي</string>
+    <string name="multimedia_plugin_panel_style_pitu">جمال (PS)</string>
+
+    <string name="multimedia_plugin_panel_white">أبيض</string>
+    <string name="multimedia_plugin_panel_ruddy">متورد</string>
+
+    <string name="multimedia_plugin_panel_filter_standard">قياسي</string>
+    <string name="multimedia_plugin_panel_filter_ziran">طبيعي</string>
+    <string name="multimedia_plugin_panel_filter_baixi">أشقر</string>
+    <string name="multimedia_plugin_panel_filter_cheery">مبهج</string>
+    <string name="multimedia_plugin_panel_filter_cloud">سحاب</string>
+    <string name="multimedia_plugin_panel_filter_pure">نقي</string>
+    <string name="multimedia_plugin_panel_filter_orchid">أوركيد</string>
+    <string name="multimedia_plugin_panel_filter_vitality">حيوية</string>
+    <string name="multimedia_plugin_panel_filter_super">سوبر</string>
+    <string name="multimedia_plugin_panel_filter_fragrance">عطر</string>
+    <string name="multimedia_plugin_panel_filter_white">أبيض</string>
+    <string name="multimedia_plugin_panel_filter_romantic">رومانسي</string>
+    <string name="multimedia_plugin_panel_filter_fresh">منعش</string>
+    <string name="multimedia_plugin_panel_filter_beautiful">جمالي</string>
+    <string name="multimedia_plugin_panel_filter_pink">وردي</string>
+    <string name="multimedia_plugin_panel_filter_reminiscence">حنين</string>
+    <string name="multimedia_plugin_panel_filter_blues">بلوز</string>
+    <string name="multimedia_plugin_panel_filter_cool">بارد</string>
+    <string name="multimedia_plugin_panel_filter_Japanese">حلو</string>
+
+    <string name="multimedia_plugin_default_bgm_name">اسم موسيقى غير معروف</string>
+    <string name="multimedia_plugin_default_time">00:00</string>
+    <string name="multimedia_plugin_bgm_music">موسيقى</string>
+    <string name="multimedia_plugin_origin_audio">الصوت الأصلي</string>
+    <string name="multimedia_plugin_send">إرسال</string>
+    <string name="multimedia_plugin_done">تم</string>
+    <string name="multimedia_plugin_zero">0</string>
+    <string name="multimedia_plugin_zero_time">00:00</string>
+    <string name="multimedia_plugin_local">محلي</string>
+    <string name="multimedia_plugin_default">افتراضي</string>
+
+    <string name="multimedia_plugin_record_operation_tips">اضغط لالتقاط صورة، اضغط مطولاً للتسجيل</string>
+    <string name="multimedia_plugin_record_take_phone_operation_tips">اضغط لالتقاط صورة</string>
+    <string name="multimedia_plugin_bgm_type_name_default">افتراضي</string>
+    <string name="multimedia_plugin_bgm_type_name_chosen">مختار</string>
+    <string name="multimedia_plugin_bgm_item_bgm_name_default">موسيقى مجهولة</string>
+    <string name="multimedia_plugin_bgm_item_bgm_author_default">مؤلف مجهول</string>
+
+    <string name="multimedia_plugin_picker_preview">معاينة</string>
+    <string name="multimedia_plugin_picker_full_image">الصورة كاملة</string>
+    <string name="multimedia_plugin_picker_send">إرسال</string>
+    <string name="multimedia_plugin_picker_edit">تعديل</string>
+    <string name="multimedia_plugin_picker_select">اختيار</string>
+
+    <string name="multimedia_plugin_request_permission_storage_title">%s يطلب الوصول إلى صلاحيات التخزين</string>
+    <string name="multimedia_plugin_request_permission_storage_reason">مطلوب الوصول إلى صلاحيات التخزين لإرسال الصور والفيديوهات من الألبوم وحفظ الصور والفيديوهات في الدردشة</string>
+    <string name="multimedia_plugin_request_permission_storage_tip">افتح صلاحيات التخزين في الإعدادات-التطبيقات-%s-الصلاحيات لاستخدام إرسال الصور والفيديوهات من الألبوم وحفظ الصور في الدردشة بشكل طبيعي</string>
+
+    <string name="multimedia_plugin_request_permission_media_title">%s يطلب الوصول إلى الصور والفيديوهات</string>
+    <string name="multimedia_plugin_request_permission_media_reason">مطلوب الوصول إلى الصور والفيديوهات لإرسال الصور والفيديوهات من الألبوم وحفظ الصور والفيديوهات في الدردشة</string>
+    <string name="multimedia_plugin_request_permission_media_tip">افتح صلاحيات الصور والفيديوهات في الإعدادات-التطبيقات-%s-الصلاحيات لاستخدام إرسال الصور والفيديوهات من الألبوم وحفظ الصور في الدردشة بشكل طبيعي</string>
+</resources>

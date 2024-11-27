@@ -1,0 +1,237 @@
+<resources>
+    <string name="demo_app_name">腾讯云IM</string>
+
+    <string name="test_custom_message">查看详情>></string>
+
+    <string name="account">用户名</string>
+    <string name="password">密码</string>
+
+    <string name="demo_current_language">简体中文</string>
+    <string name="demo_language_chinese">简体中文</string>
+    <string name="demo_language_traditional_chinese">繁体中文</string>
+    <string name="demo_language_english">英语</string>
+    <string name="demo_language_arabic">阿拉伯语</string>
+
+    <string name="demo_login_country_or_region_label">国家/地区</string>
+    <string name="demo_area_code_title">选择国家或地区</string>
+    <string name="demo_language_title">选择语言</string>
+    <string name="demo_style_title">选择风格</string>
+    <string name="demo_login_chinese_mainland">中国大陆</string>
+    <string name="demo_login_mobile_phone_number">手机号</string>
+    <string name="demo_login_verification_code_label">验证码</string>
+    <string name="demo_search">搜索</string>
+
+    <string name="login_title">腾讯云即时通信IM</string>
+    <string name="login_sub_title">欢迎使用本 APP 体验腾讯云 IM 产品服务</string>
+    <string name="input_number">请输入手机号</string>
+    <string name="input_verification">请输入短信验证码</string>
+    <string name="verification_code">获取验证码</string>
+    <string name="button_login">登录</string>
+    <string name="password_login">密码登录</string>
+    <string name="official_website">访问官网</string>
+    <string name="debug_mode_summary">IM 账号直接登录界面，此只在 Debug 模式下显示</string>
+    <string name="account_hint">任意非空字符即可，请参考类注释</string>
+
+    <string name="repeat_login_tip">您的账号已在其它终端登录</string>
+    <string name="expired_login_tip">账号已过期，请重新登录</string>
+    <string name="failed_login_tip">登录失败</string>
+
+    <string name="profile">我</string>
+    <string name="modify_user_icon">头像</string>
+    <string name="modify_nick_name">昵称</string>
+    <string name="add_rule">加我为好友时</string>
+    <string name="translation_target_language">将消息翻译为</string>
+    <string name="allow_type_allow_any">允许任何人</string>
+    <string name="allow_type_deny_any">拒绝任何人</string>
+    <string name="allow_type_need_confirm">需要验证</string>
+    <string name="exit">退出登录</string>
+    <string name="about_im">关于腾讯云·IM</string>
+    <string name="appkit_show_recent_calls">显示通话记录</string>
+    <string name="appkit_recent_calls_tab_name">通话记录</string>
+    <string name="modify_birthday">生日</string>
+    <string name="modify_gender">性别</string>
+    <string name="modify_signature">个性签名</string>
+    <string name="demo_no_status">暂无个性签名</string>
+    <string name="modify_account">账号</string>
+    <string name="demo_profile_user_id">账号</string>
+    <string name="cancel_account">注销账号</string>
+    <string name="cancel_account_alert_tip">您确定要注销账号吗？</string>
+    <string name="cancel_account_tip">注销后，您将无法使用当前账号，相关数据也将删除无法找回。当前账号 %s </string>
+    <string name="cancel_account_error_msg">注销失败,当前账号未查到token或手机号，请使用手机号登录。</string>
+    <string name="cancel_account_successful">注销成功</string>
+
+    <string name="self_infomation_collection_list">个人信息收集清单</string>
+    <string name="third_part_shared_list">第三方信息共享清单</string>
+
+
+    <string name="modify_theme">切换皮肤</string>
+    <string name="light_theme">轻快</string>
+    <string name="lively_theme">明媚</string>
+    <string name="serious_theme">深沉</string>
+    <string name="modify_language">切换语言</string>
+    <string name="modify_style">切换风格</string>
+    <string name="style_classic">经典版</string>
+    <string name="style_minimalist">简约版</string>
+
+    <string name="demo_language">简体中文</string>
+    <string name="demo_theme_light">轻快</string>
+    <string name="demo_signature_tag">个性签名：</string>
+    <string name="demo_account_tag">ID：</string>
+
+    <string name="demo_about_sdk_version">SDK版本</string>
+    <string name="demo_about_im">关于</string>
+    <string name="demo_contact_us">联系我们</string>
+
+    <string name="demo_self_detail_gender_male">男</string>
+    <string name="demo_self_detail_gender_female">女</string>
+    <string name="demo_self_detail_gender_unknown">未知</string>
+
+    <string name="demo_self_detail_modify_nickname">修改昵称</string>
+    <string name="demo_self_detail_modify_signature">修改个性签名</string>
+    <string name="demo_self_detail_modify_gender">修改性别</string>
+    <string name="demo_profile_edit">编辑</string>
+
+    <string name="demo_self_detail_modify_nickname_rule">仅限中文、字母、数字和下划线</string>
+
+    <string name="conversation_title">腾讯云·IM</string>
+    <string name="conversation_title_disconnected">腾讯云·IM(未连接)</string>
+    <string name="conversation_title_connecting">连接中...</string>
+    <string name="conversation_title_loading">收取中...</string>
+    <string name="contact_title">通讯录</string>
+    <string name="add_friend">添加好友</string>
+    <string name="add_group">添加群聊</string>
+    <string name="start_conversation">发起会话</string>
+    <string name="create_group_chat">创建群聊</string>
+    <string name="create_chat_room">创建聊天室</string>
+    <string name="create_community">创建社群</string>
+    <string name="create_private_group">创建讨论组</string>
+
+
+    <string name="tab_contact_tab_text">通讯录</string>
+    <string name="tab_conversation_tab_text">消息</string>
+    <string name="demo_tab_overseas_conversation_tab_text">聊天</string>
+    <string name="tab_profile_tab_text">我</string>
+    <string name="minimalist_tab_settings_tab_text">设置</string>
+    <string name="minimalist_tab_contacts_tab_text">联系人</string>
+    <string name="tab_community_tab_text">社群</string>
+
+    <string name="test_excluded_from_unread_count_action">不计入未读数消息</string>
+
+    <string name="privacy_text">已同意《<a href="http://privacy.qq.com/">隐私政策</a>》</string>
+
+    <string name="no_support_msg">不支持的自定义消息</string>
+    <string name="live">的直播</string>
+    <string name="living">正在直播</string>
+    <string name="stop_live">结束直播</string>
+    <string name="http_error_invalid">用户名必须以字母开头、字母与数字组合3-23位</string>
+    <string name="http_error_user">用户已存在</string>
+    <string name="http_error_server">服务器错误</string>
+    <string name="http_error_no_user">用户不存在</string>
+    <string name="http_error_password">密码错误</string>
+    <string name="not_retry_more">不要频繁获取验证码</string>
+    <string name="input_phone">请填写正确的手机号</string>
+    <string name="verify_code_fail">获取验证码失败:</string>
+    <string name="send_verify_code">验证码已发送</string>
+    <string name="input_phone_code">请输入手机号和验证码</string>
+    <string name="login_fail_tip">登录失败:</string>
+    <string name="login_suc_tip">登录成功</string>
+    <string name="second">秒</string>
+    <string name="get_verify_code">获取验证码</string>
+    <string name="permission_tip">未全部授权，部分功能可能无法使用！</string>
+
+    <string name="logout_tip">您确定要退出登录么？</string>
+
+    <string name="online_fail">请求网络失败</string>
+    <string name="online">在线</string>
+    <string name="unknow_error">未知错误</string>
+    <string name="you_app">您的应用</string>
+    <string name="low_version"> 版本太低，不支持打开该离线消息</string>
+    <string name="call_timeout">本次通话已超时</string>
+    <string name="call_notification">音视频邀请消息通知</string>
+    <string name="background_tip">当程序处于后台时新的来电消息会通过通知栏提醒用户</string>
+    <string name="new_msg_notification">新普通消息通知</string>
+    <string name="new_msg">收到一条新消息</string>
+    <string name="call_nos">通话失去响应</string>
+    <string name="login_password_tips">1~16个字符（字母+数字）</string>
+    <string name="login_user_tips">字母开头，4~24个字母+数字</string>
+
+    <string name="login_agree_privacy_regulations">《隐私政策》</string>
+    <string name="login_agree_privacy_regulations_summary">《隐私政策摘要》</string>
+    <string name="login_agree_user_agreement">《用户协议》</string>
+    <string name="login_agree_self_infomation_collection_list">《个人信息收集清单》</string>
+    <string name="login_agree_third_part_shared_list">《第三方信息共享清单》</string>
+
+    <string name="im_privacy">隐私政策</string>
+    <string name="im_statement">免责声明</string>
+    <string name="im_user_agreement">用户协议</string>
+    <string name="im_statement_content">腾讯云IM APP（“本产品”）是由腾讯云提供的一款测试产品，腾讯云享有本产品的著作权和所有权。本产品仅用于功能体验，不得用于任何商业用途。为配合相关部门监管要求，严禁在使用中有任何色情、辱骂、暴恐、涉政等违法内容传播。</string>
+    <string name="im_privacy_tips">请先阅读并同意协议</string>
+    <string name="demo_im_privacy_dialog_tips">欢迎使用腾讯云即时通信 IM，为保护您的个人信息安全，我们更新了《隐私政策》，主要完善了收集用户信息的具体内容和目的、增加了第三方SDK使用等方面的内容。\n\n请您点击 《用户协议》、《隐私政策摘要》、《隐私政策》、《个人信息收集清单》和《第三方信息共享清单》并仔细阅读，如您同意以上内容，请点击“同意并继续”，开始使用我们的产品与服务！</string>
+    <string name="demo_im_privacy_agree">同意并继续</string>
+    <string name="demo_im_privacy_refuse_and_exit">不同意，退出</string>
+
+    <string name="get_verify_code_error">获取验证码错误，请刷新重试！(%d)</string>
+
+    <string name="modify_group_name">修改群名称</string>
+    <string name="input_tip">没有输入昵称，请重新填写</string>
+    <string name="call_time_out"> 通话超时</string>
+    
+    <string name="mark_all_message_as_read_succ">清空未读成功</string>
+    <string name="mark_all_message_as_read_err_format">清空未读失败, %d, %s</string>
+
+    <string name="demo_profile_detail">详细资料</string>
+    <string name="demo_profile_back">返回</string>
+
+    <string name="demo_message_read_switch_title">消息阅读状态</string>
+    <string name="demo_message_read_switch_open_tip">该功能为旗舰版功能</string>
+    <string name="demo_message_read_switch_open_text">关闭后，您收发的消息均不带消息阅读状态，您将无法看到对方是否已读，同时对方也无法看到你是否已读。</string>
+    <string name="demo_message_read_switch_close_text">开启后，您在群聊中收发的消息均带有消息阅读状态，并且可以看到对方是否已读。与您单聊的好友若也开启了消息阅读状态，您与好友在单聊中收发的消息也将带有消息阅读状态。</string>
+
+    <string name="demo_choose_avatar">选择头像</string>
+
+    <string name="demo_permission_mic_reason_title">%s申请获取麦克风权限</string>
+    <string name="demo_permission_mic_reason">为方便您发送语音消息，进行摄像和音视频通话、使用快速会议功能，请允许我们访问麦克风。</string>
+    <string name="demo_permission_camera_reason_title">%s申请获取相机权限</string>
+    <string name="demo_permission_camera_reason">为方便您拍摄照片或视频以发送给朋友、进行视频通话和使用快速会议功能，请允许我们访问摄像头。</string>
+    <string name="demo_permission_storage_reason_title">%s申请获取存储权限</string>
+    <string name="demo_permission_storage_reason">为方便您保存照片和视频到设备，请允许我们写入照片和视频到设备。</string>
+    <string name="demo_permission_mic_dialog_alert">在设置-应用-%s-权限中开启麦克风权限，以正常使用语音消息、摄像、音视频通话和快速会议功能</string>
+    <string name="demo_permission_camera_dialog_alert">在设置-应用-%s-权限中开启相机权限，以正常使用拍照、摄像、视频通话和快速会议功能</string>
+    <string name="demo_permission_storage_dialog_alert">在设置-应用-%s-权限中开启存储权限，以正常使用保存照片和视频功能</string>
+
+    <string name="upgrade_sure">立即升级</string>
+    <string name="demo_user_status_switch_title">显示在线状态</string>
+    <string name="demo_user_status_switch_on_text">关闭后，您将不可以在会话列表和通讯录中看到好友在线或离线的状态提示。</string>
+    <string name="demo_user_status_switch_off_text">开启后，您将可以在会话列表和通讯录中看到好友在线或离线的状态提示。</string>
+    <string name="demo_user_status">在线状态</string>
+    <string name="demo_i_know">我知道了</string>
+    <string name="demo_no_more_reminders">不再提醒</string>
+    <string name="demo_im_flagship">旗舰版</string>
+    <string name="demo_buying_guidelines">价格说明</string>
+    <string name="demo_im_flagship_edition_update_tip">%s功能为IM旗舰版功能，购买旗舰版套餐包后可使用，详见价格说明。</string>
+    <string name="demo_buying_tips">该功能为旗舰版功能</string>
+
+    <string name="chat_security_warning">请勿轻信汇款、中奖等信息，谨慎对待陌生电话，避免上当受骗。遇到可疑情况请及时反馈。</string>
+    <string name="chat_security_warning_click_to_report">点此举报</string>
+    <string name="chat_security_warning_report">举报</string>
+
+
+    <string name="change_theme">更换皮肤</string>
+    <string name="change_style">选择风格</string>
+    <string name="app_title">即时通信</string>
+    <string name="app_title_content">欢迎使用本 APP 体验即时通信 IM 产品服务</string>
+    <string name="button_enter">进入 IM</string>
+    <string name="demo_style_sub_title">IM专属风格切换</string>
+    <string name="demo_ui_title">选择皮肤</string>
+    <string name="demo_ui_sub_title">IM专属皮肤切换</string>
+    <string name="im_about_detail">欢迎使用本 APP 体验即时通信 IM 产品服务，如发送文字/表情/富媒体消息、消息回复、表情回应、消息阅读状态、好友关系链等功能。同时，我们为您默认提供了3个不会回复的机器人好友，您可直接发起单聊、群聊会话，体验群管理等功能。</string>
+    <string name="im_about_title_time">1分钟</string>
+    <string name="im_about_subtitle_time">改2行代码，1分钟跑通 Demo</string>
+    <string name="im_about_title_custom">10000+</string>
+    <string name="im_about_subtitle_custom">每月服务客户数超过10000家</string>
+    <string name="im_about_title_success">99.99%</string>
+    <string name="im_about_subtitle_success">消息收发成功率、服务可靠性高于99.99%</string>
+    <string name="im_about_title_mau">10亿+</string>
+    <string name="im_about_subtitle_mau">每月活跃用户数超过10亿</string>
+    <string name="im_about_known">已了解</string>
+</resources>

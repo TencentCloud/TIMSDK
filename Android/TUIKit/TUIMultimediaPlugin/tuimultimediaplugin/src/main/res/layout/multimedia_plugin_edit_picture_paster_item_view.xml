@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:orientation="vertical">
+
+    <ImageView
+            android:id="@+id/paster_iv_icon"
+            android:layout_width="59dp"
+            android:layout_height="59dp"
+            android:layout_gravity="center"
+            android:src="@drawable/multimedia_plugin_ic_common_none"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/multimedia_plugin_empty" />
+</LinearLayout>

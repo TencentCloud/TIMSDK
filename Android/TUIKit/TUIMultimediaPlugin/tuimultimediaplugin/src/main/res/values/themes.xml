@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AlbumTransparentPopStyle" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+    </style>
+
+    <style name="AlbumBucketPopAnim">
+        <item name="android:windowExitAnimation">@anim/multimedia_plugin_picker_bucket_pop_exit</item>
+        <item name="android:windowEnterAnimation">@anim/multimedia_plugin_picker_bucket_pop_enter</item>
+    </style>
+</resources>

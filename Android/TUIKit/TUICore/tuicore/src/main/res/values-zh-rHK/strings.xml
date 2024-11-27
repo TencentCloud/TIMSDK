@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="open_file_tips">選擇要打開此文件的應用</string>
+
+    <string name="sure">確定</string>
+    <string name="cancel">取消</string>
+    <string name="core_permission_dialog_title">權限申請</string>
+    <string name="core_permission_dialog_positive_setting_text">去設置</string>
+    <string name="date_year_short">年</string>
+    <string name="date_month_short">月</string>
+    <string name="date_day_short">天</string>
+    <string name="date_hour_short">時</string>
+    <string name="date_minute_short">分</string>
+    <string name="date_second_short">秒</string>
+    <string name="date_yesterday">昨天</string>
+
+    <string name="core_float_permission_hint">請同時打開\"後台彈出界面\"和\"顯示懸浮窗\"權限</string>
+</resources>

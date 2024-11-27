@@ -121,12 +121,15 @@ public class LanguageSelectActivity extends BaseLightActivity {
         Pair<String, String> simplifiedChinese = Pair.create(getString(R.string.demo_language_chinese_key), getString(R.string.demo_language_chinese));
         Pair<String, String> english = Pair.create(getString(R.string.demo_language_english_key), getString(R.string.demo_language_english));
         Pair<String, String> arabic = Pair.create(getString(R.string.demo_language_arabic_key), getString(R.string.demo_language_arabic));
+        Pair<String, String> traditionalChinese = Pair.create(getString(R.string.demo_language_traditional_chinese_key), getString(R.string.demo_language_traditional_chinese));
         languageList.add(simplifiedChinese);
         languageMap.put(simplifiedChinese.first, TUIThemeManager.LANGUAGE_ZH_CN);
         languageList.add(english);
         languageMap.put(english.first, TUIThemeManager.LANGUAGE_EN);
         languageList.add(arabic);
         languageMap.put(arabic.first, TUIThemeManager.LANGUAGE_AR);
+        languageList.add(traditionalChinese);
+        languageMap.put(traditionalChinese.first, TUIThemeManager.LANGUAGE_ZH_HK);
         selectCurrentLanguage();
     }
 
@@ -137,6 +140,8 @@ public class LanguageSelectActivity extends BaseLightActivity {
             adapter.setSelectedItem(1);
         } else if (TextUtils.equals(currentLanguage, TUIThemeManager.LANGUAGE_AR)) {
             adapter.setSelectedItem(2);
+        } else if (TextUtils.equals(currentLanguage, TUIThemeManager.LANGUAGE_ZH_HK)) {
+            adapter.setSelectedItem(3);
         } else {
             adapter.setSelectedItem(1);
         }

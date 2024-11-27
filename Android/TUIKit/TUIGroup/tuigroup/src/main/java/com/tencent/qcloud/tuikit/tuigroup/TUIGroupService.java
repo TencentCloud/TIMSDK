@@ -70,9 +70,7 @@ public class TUIGroupService implements TUIInitializer, ITUIService {
                 }
                 param.put(TUIConstants.TUIGroup.GROUP_MEMBER_ID_LIST, userIds);
                 TUICore.notifyEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_JOIN_GROUP, param);
-                if (userIds.contains(TUILogin.getLoginUser())) {
-                    TUIGroupUtils.toastGroupEvent(TUIGroupUtils.GROUP_EVENT_TIP_JOINED, groupID);
-                }
+
                 List<GroupEventListener> groupEventListeners = getGroupEventListenerList();
                 for (GroupEventListener groupEventListener : groupEventListeners) {
                     groupEventListener.onGroupMemberCountChanged(groupID);
@@ -98,9 +96,7 @@ public class TUIGroupService implements TUIInitializer, ITUIService {
                 }
                 param.put(TUIConstants.TUIGroup.GROUP_MEMBER_ID_LIST, userIds);
                 TUICore.notifyEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_INVITED_GROUP, param);
-                if (userIds.contains(TUILogin.getLoginUser())) {
-                    TUIGroupUtils.toastGroupEvent(TUIGroupUtils.GROUP_EVENT_TIP_INVITED, groupID);
-                }
+
                 List<GroupEventListener> groupEventListeners = getGroupEventListenerList();
                 for (GroupEventListener groupEventListener : groupEventListeners) {
                     groupEventListener.onGroupMemberCountChanged(groupID);

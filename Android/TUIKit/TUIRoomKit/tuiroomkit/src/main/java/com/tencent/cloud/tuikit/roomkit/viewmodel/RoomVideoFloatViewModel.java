@@ -16,7 +16,6 @@ import android.util.Log;
 
 import com.tencent.cloud.tuikit.engine.common.TUIVideoView;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListObserver;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
@@ -24,6 +23,7 @@ import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatWindow.VideoPlaying.RoomVideoFloatView;
 import com.tencent.qcloud.tuicore.TUILogin;
+import com.trtc.tuikit.common.livedata.LiveListObserver;
 import com.trtc.tuikit.common.livedata.Observer;
 
 import java.util.List;
@@ -42,10 +42,15 @@ public class RoomVideoFloatViewModel implements ConferenceEventCenter.RoomEngine
 
     private       UserEntity                           mFloatUser;
     private final Observer<Map<String, Integer>>       mVolumeObserver = this::handleVolumeChanged;
-    private final LiveListObserver<UserState.UserInfo> mUserObserver = new LiveListObserver<UserState.UserInfo>() {
+    private final LiveListObserver<UserState.UserInfo> mUserObserver   = new LiveListObserver<UserState.UserInfo>() {
         @Override
         public void onItemRemoved(int position, UserState.UserInfo item) {
             handleUserLeave(item.userId);
+        }
+
+        @Override
+        public void onItemChanged(int position, UserState.UserInfo item) {
+                updateFloatUserNameCard(item.userId, item.userName);
         }
     };
     private final LiveListObserver<String>             mSeatObserver   = new LiveListObserver<String>() {
@@ -199,6 +204,16 @@ public class RoomVideoFloatViewModel implements ConferenceEventCenter.RoomEngine
         initUserInfo();
     }
 
+    private void updateFloatUserNameCard(String userId, String nameCard) {
+        if (mFloatUser == null) {
+            return;
+        }
+        if (TextUtils.equals(userId, mFloatUser.getUserId())) {
+            mFloatUser.setUserName(nameCard);
+            mRoomVideoFloatView.updateUserName(nameCard);
+        }
+    }
+
     private void handleVolumeChanged(Map<String, Integer> volumes) {
         if (mFloatUser == null) {
             return;
@@ -310,7 +325,7 @@ public class RoomVideoFloatViewModel implements ConferenceEventCenter.RoomEngine
     private void startVideoPlay(UserEntity userInfo) {
         if (TextUtils.equals(userInfo.getUserId(), TUILogin.getUserId())) {
             Log.d(TAG, "setLocalVideoView userId=" + userInfo.getUserId());
-            ConferenceController.sharedInstance().setLocalVideoView(CAMERA_STREAM, mVideoView);
+            ConferenceController.sharedInstance().setLocalVideoView(mVideoView);
             mRoomVideoFloatView.onNotifyVideoPlayStateChanged(true);
             return;
         }
@@ -327,7 +342,7 @@ public class RoomVideoFloatViewModel implements ConferenceEventCenter.RoomEngine
     private void stopVideoPlay(UserEntity userInfo) {
         mRoomVideoFloatView.onNotifyVideoPlayStateChanged(false);
         if (TextUtils.equals(userInfo.getUserId(), TUILogin.getUserId())) {
-            ConferenceController.sharedInstance().setLocalVideoView(CAMERA_STREAM, null);
+            ConferenceController.sharedInstance().setLocalVideoView(null);
             return;
         }
         Log.d(TAG, "stopPlayRemoteVideo userId=" + userInfo.getUserId() + " videoStreamType="

@@ -166,6 +166,7 @@ public class SettingsLinearView extends LinearLayout {
                 copyView.setVisibility(VISIBLE);
             }
         }
+        contentText.requestLayout();
     }
 
     public void setShowArrow(boolean isShowArrow) {

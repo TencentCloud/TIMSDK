@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/layout_compose_record_btn"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <com.tencent.qcloud.tuikit.tuimultimediaplugin.record.view.ProgressRingView
+            android:id="@+id/record_button_ring_progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_centerInParent="true" />
+
+    <ImageView
+            android:id="@+id/record_button_inner_circle"
+            android:layout_width="58dp"
+            android:layout_height="58dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/multimedia_plugin_white_circle"
+            android:contentDescription="@string/multimedia_plugin_empty" />
+</RelativeLayout>

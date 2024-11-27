@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="translation_target_language">將消息翻譯為</string>
+    <string name="translate_action">翻譯</string>
+    <string name="translation_support">由騰訊雲 IM 提供翻譯支持</string>
+    <string name="translation_fail">翻譯失敗</string>
+    <string name="translation_language_not_support">當前翻譯語言不支持，請切換至其他語言</string>
+    <string name="at_all">所有人</string>
+    <string name="copy_action">複製</string>
+    <string name="forward_action">轉發</string>
+    <string name="hide_action">隱藏</string>
+    <string name="copy_success_tip">複製成功</string>
+    <string name="translation_risk_content_failed_tip">涉及敏感內容，翻譯失敗</string>
+</resources>

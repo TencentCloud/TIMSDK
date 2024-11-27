@@ -1,10 +1,12 @@
 package com.tencent.qcloud.tuikit.tuichat.util;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
@@ -28,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class ChatMessageBuilder {
     public static final String TAG = ChatMessageBuilder.class.getSimpleName();
@@ -87,6 +90,84 @@ public class ChatMessageBuilder {
         messageBean.setImgWidth(size[0]);
         messageBean.setImgHeight(size[1]);
         return messageBean;
+    }
+
+    public static TUIMessageBean buildPlaceholderVideoMessage(Uri uri) {
+        VideoMessageBean messageBean = new VideoMessageBean();
+        messageBean.setId(UUID.randomUUID().toString());
+        messageBean.setProcessing(true);
+        messageBean.setProcessingThumbnail(uri);
+        android.media.MediaMetadataRetriever mmr = new android.media.MediaMetadataRetriever();
+        try {
+            mmr.setDataSource(ServiceInitializer.getAppContext(), uri);
+            Bitmap bitmap = mmr.getFrameAtTime(0, android.media.MediaMetadataRetriever.OPTION_NEXT_SYNC);
+
+            if (bitmap == null) {
+                TUIChatLog.e(TAG, "buildPlaceholderVideoMessage bitmap is null");
+                return null;
+            }
+
+            messageBean.setImgWidth(bitmap.getWidth());
+            messageBean.setImgHeight(bitmap.getHeight());
+        } catch (Exception ex) {
+            TUIChatLog.e(TAG, "MediaMetadataRetriever exception " + ex);
+        }
+        return messageBean;
+    }
+
+    public static TUIMessageBean buildPlaceholderImageMessage(Uri uri) {
+        ImageMessageBean messageBean = new ImageMessageBean();
+        messageBean.setId(UUID.randomUUID().toString());
+        messageBean.setProcessing(true);
+        messageBean.setProcessingThumbnail(uri);
+        android.media.MediaMetadataRetriever mmr = new android.media.MediaMetadataRetriever();
+        try {
+            mmr.setDataSource(ServiceInitializer.getAppContext(), uri);
+            Bitmap bitmap = mmr.getFrameAtTime(0, android.media.MediaMetadataRetriever.OPTION_NEXT_SYNC);
+
+            if (bitmap == null) {
+                TUIChatLog.e(TAG, "buildPlaceholderImageMessage bitmap is null");
+                return null;
+            }
+
+            messageBean.setImgWidth(bitmap.getWidth());
+            messageBean.setImgHeight(bitmap.getHeight());
+        } catch (Exception ex) {
+            TUIChatLog.e(TAG, "MediaMetadataRetriever exception " + ex);
+        }
+        return messageBean;
+    }
+
+    public static TUIMessageBean buildVideoMessage(String videoPath) {
+        android.media.MediaMetadataRetriever mmr = new android.media.MediaMetadataRetriever();
+        try {
+            mmr.setDataSource(videoPath);
+            String sDuration = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION);
+            Bitmap bitmap = mmr.getFrameAtTime(0, android.media.MediaMetadataRetriever.OPTION_NEXT_SYNC);
+
+            if (bitmap == null) {
+                TUIChatLog.e(TAG, "buildVideoMessage() bitmap is null");
+                return null;
+            }
+
+            String bitmapPath = FileUtil.generateImageFilePath();
+            boolean result = FileUtil.saveBitmap(bitmapPath, bitmap);
+            if (!result) {
+                TUIChatLog.e(TAG, "build video message, save bitmap failed.");
+                return null;
+            }
+            int imgWidth = bitmap.getWidth();
+            int imgHeight = bitmap.getHeight();
+            long duration = Long.parseLong(sDuration);
+
+            return ChatMessageBuilder.buildVideoMessage(bitmapPath, videoPath, imgWidth, imgHeight, duration);
+        } catch (Exception ex) {
+            TUIChatLog.e(TAG, "MediaMetadataRetriever exception " + ex);
+        } finally {
+            mmr.release();
+        }
+
+        return null;
     }
 
     /**

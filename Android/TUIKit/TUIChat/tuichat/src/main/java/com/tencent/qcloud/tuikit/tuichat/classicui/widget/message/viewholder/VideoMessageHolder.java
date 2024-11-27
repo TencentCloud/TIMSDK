@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -29,7 +28,6 @@ import com.tencent.qcloud.tuikit.tuichat.component.progress.ChatRingProgressBar;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ProgressPresenter;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatFileDownloadPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-
 import java.io.Serializable;
 
 public class VideoMessageHolder extends MessageContentHolder {
@@ -118,6 +116,23 @@ public class VideoMessageHolder extends MessageContentHolder {
         videoPlayBtn.setVisibility(View.VISIBLE);
         videoDurationText.setVisibility(View.VISIBLE);
 
+        progressListener = new ProgressPresenter.ProgressListener() {
+            @Override
+            public void onProgress(int progress) {
+                updateProgress(progress, msg);
+            }
+        };
+        ProgressPresenter.registerProgressListener(msg.getId(), progressListener);
+        if (!msg.isHasReaction()) {
+            setMessageBubbleBackground(null);
+            setMessageBubbleZeroPadding();
+        }
+        if (msg.isProcessing()) {
+            showProgressBar();
+            GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, msg.getProcessingThumbnail(), null, DEFAULT_RADIUS);
+            return;
+        }
+
         String snapshotPath = ChatFileDownloadPresenter.getVideoSnapshotPath(msg);
         if (FileUtil.isFileExists(snapshotPath)) {
             loadSnapshotImage(msg, snapshotPath);
@@ -154,14 +169,6 @@ public class VideoMessageHolder extends MessageContentHolder {
         if (FileUtil.isFileExists(videoPath) && msg.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
             showProgressBar();
         }
-
-        progressListener = new ProgressPresenter.ProgressListener() {
-            @Override
-            public void onProgress(int progress) {
-                updateProgress(progress, msg);
-            }
-        };
-        ProgressPresenter.registerProgressListener(msg.getId(), progressListener);
 
         if (isMultiSelectMode) {
             msgContentFrame.setOnClickListener(new View.OnClickListener() {
@@ -222,10 +229,6 @@ public class VideoMessageHolder extends MessageContentHolder {
                 }
             }
         });
-        if (!msg.isHasReaction()) {
-            setMessageBubbleBackground(null);
-            setMessageBubbleZeroPadding();
-        }
     }
 
     private void loadSnapshotImage(TUIMessageBean messageBean, String snapshotPath) {
@@ -243,6 +246,9 @@ public class VideoMessageHolder extends MessageContentHolder {
     }
 
     private void updateProgress(int progress, VideoMessageBean messageBean) {
+        if (!TextUtils.equals(messageBean.getId(), msgID)) {
+            return;
+        }
         progressContainer.setVisibility(View.VISIBLE);
         fileProgressBar.setVisibility(View.VISIBLE);
         fileProgressBar.setProgress(progress);

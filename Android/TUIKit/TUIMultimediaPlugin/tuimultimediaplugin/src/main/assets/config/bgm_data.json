@@ -1,0 +1,42 @@
+{
+  "bgm_list": [
+    {
+      "bgm_type_name": "@string/multimedia_plugin_bgm_type_name_default",
+      "bgm_item_list": [
+        {
+          "item_bgm_path": "file:///asset/bgm/test1.mp3",
+          "item_bgm_name": "测试音乐1",
+          "item_bgm_author": "未知",
+          "item_start_time": 0,
+          "item_end_time": 0
+        },
+        {
+          "item_bgm_path": "file:///asset/bgm/test2.mp3",
+          "item_bgm_name": "测试音乐2",
+          "item_bgm_author": "未知",
+          "item_start_time": 0,
+          "item_end_time": 0
+        },
+        {
+          "item_bgm_path": "file:///asset/bgm/test3.mp3",
+          "item_bgm_name": "测试音乐3",
+          "item_bgm_author": "未知",
+          "item_start_time": 0,
+          "item_end_time": 0
+        }
+      ]
+    },
+    {
+      "bgm_type_name": "@string/multimedia_plugin_bgm_type_name_chosen",
+      "bgm_item_list": [
+        {
+          "item_bgm_path": "file:///asset/bgm/test1.mp3",
+          "item_bgm_name": "测试音乐1",
+          "item_bgm_author": "未知",
+          "item_start_time": 0,
+          "item_end_time": 0
+        }
+      ]
+    }
+  ]
+}

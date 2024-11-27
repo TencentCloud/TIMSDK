@@ -5,6 +5,7 @@ import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 public class UserEntity {
     private String userId;
     private String userName;
+    private String nameCard;
     private String avatarUrl;
 
     private int     userVoiceVolume = 0;
@@ -31,8 +32,16 @@ public class UserEntity {
         return userName;
     }
 
+    public String getNameCard() {
+        return nameCard;
+    }
+
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public void setNameCard(String nameCard) {
+        this.nameCard = nameCard;
     }
 
     public String getAvatarUrl() {
@@ -118,6 +127,7 @@ public class UserEntity {
         UserEntity userEntity = new UserEntity();
         userEntity.userId = userInfo.userId;
         userEntity.userName = userInfo.userName;
+        userEntity.nameCard = userInfo.nameCard;
         userEntity.avatarUrl = userInfo.avatarUrl;
         userEntity.hasAudioStream  = userInfo.hasAudioStream;
         userEntity.hasVideoStream = userInfo.hasVideoStream;
@@ -130,6 +140,7 @@ public class UserEntity {
         UserEntity userEntity = new UserEntity();
         userEntity.userId = userInfo.userId;
         userEntity.userName = userInfo.userName;
+        userEntity.nameCard = userInfo.nameCard;
         userEntity.avatarUrl = userInfo.avatarUrl;
         userEntity.hasAudioStream  = userInfo.hasAudioStream;
         userEntity.hasVideoStream = userInfo.hasScreenStream;

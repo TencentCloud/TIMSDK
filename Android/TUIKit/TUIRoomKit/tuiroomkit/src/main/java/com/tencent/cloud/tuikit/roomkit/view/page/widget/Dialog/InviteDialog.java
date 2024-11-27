@@ -2,7 +2,6 @@ package com.tencent.cloud.tuikit.roomkit.view.page.widget.Dialog;
 
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.CONFIGURATION_CHANGE;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_INVITE_PANEL;
-import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_INVITE_PANEL_SECOND;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -15,6 +14,7 @@ import androidx.annotation.NonNull;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceSessionImpl;
 import com.tencent.cloud.tuikit.roomkit.view.component.BaseBottomDialog;
 
 import java.util.Map;
@@ -34,7 +34,6 @@ public class InviteDialog extends BaseBottomDialog implements ConferenceEventCen
         super.dismiss();
         ConferenceEventCenter.getInstance().unsubscribeUIEvent(CONFIGURATION_CHANGE, this);
         ConferenceEventCenter.getInstance().notifyUIEvent(DISMISS_INVITE_PANEL, null);
-        ConferenceEventCenter.getInstance().notifyUIEvent(DISMISS_INVITE_PANEL_SECOND, null);
     }
 
     @Override
@@ -46,6 +45,7 @@ public class InviteDialog extends BaseBottomDialog implements ConferenceEventCen
     protected void initView() {
         mLayoutAddUser = findViewById(R.id.ll_add_user);
         mLayoutShareRoom = findViewById(R.id.ll_share_room);
+        mLayoutAddUser.setVisibility(ConferenceSessionImpl.sharedInstance().mContactsActivity == null ? View.GONE : View.VISIBLE);
 
         mLayoutAddUser.setOnClickListener(new View.OnClickListener() {
             @Override

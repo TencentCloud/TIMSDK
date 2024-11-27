@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -114,8 +116,14 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
 
     @Override
     public void layoutViews(final TUIMessageBean msg, final int position) {
-        super.layoutViews(msg, position);
+        Context context = itemView.getContext();
+        if (context instanceof Activity) {
+            if (((Activity) context).isDestroyed()) {
+                return;
+            }
+        }
 
+        super.layoutViews(msg, position);
         setLayoutAlignment(msg);
         setIsShowAvatar(msg, position);
         setMessageGravity();
@@ -131,6 +139,13 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         if (!isForwardMode && !isMessageDetailMode) {
             setTimeInLineStatus(msg);
             setShowReadStatusClickListener(msg);
+        }
+        if (timeInLineTextLayout != null && timeInLineTextLayout.getTextView() != null) {
+            if (isMultiSelectMode) {
+                timeInLineTextLayout.getTextView().setActivated(false);
+            } else {
+                timeInLineTextLayout.getTextView().setActivated(true);
+            }
         }
 
         if (timeInLineTextLayout != null) {
@@ -525,8 +540,34 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             @Override
             public void onClick(View v) {
                 if (onItemClickListener != null) {
-                    onItemClickListener.onMessageClick(v, messageBean);
+                    onItemClickListener.onMessageClick(msgArea, messageBean);
                 }
+            }
+        });
+        timeInLineTextLayout.getTextView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onMessageClick(msgArea, messageBean);
+                }
+            }
+        });
+        timeInLineTextLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onMessageLongClick(msgArea, messageBean);
+                }
+                return true;
+            }
+        });
+        timeInLineTextLayout.getTextView().setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onMessageLongClick(msgArea, messageBean);
+                }
+                return true;
             }
         });
     }

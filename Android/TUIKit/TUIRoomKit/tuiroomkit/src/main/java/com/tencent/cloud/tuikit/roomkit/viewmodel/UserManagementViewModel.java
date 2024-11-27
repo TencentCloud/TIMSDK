@@ -16,6 +16,7 @@ import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceState;
+import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.UserManagementPanel;
@@ -83,13 +84,17 @@ public class UserManagementViewModel implements ConferenceEventCenter.RoomEngine
     }
 
     public boolean checkPermission(String action) {
+        UserState.UserInfo localUser = ConferenceController.sharedInstance().getUserState().selfInfo.get();
+        if (TextUtils.equals(localUser.userId, mUser.getUserId())) {
+            return false;
+        }
         if (TextUtils.equals(ACTION_MEDIA_CONTROL, action)) {
             return !mConferenceState.roomInfo.isSeatEnabled || mUser.isOnSeat();
         }
         if (TextUtils.equals(ACTION_KICK_OUT_ROOM, action)) {
             return mConferenceState.userModel.getRole() == TUIRoomDefine.Role.ROOM_OWNER;
         }
-        TUIRoomDefine.Role localUserRole = ConferenceController.sharedInstance().getConferenceState().userModel.getRole();
+        TUIRoomDefine.Role localUserRole = localUser.role.get();
         TUIRoomDefine.Role userRole = mUser.getRole();
         if (localUserRole == TUIRoomDefine.Role.ROOM_OWNER) {
             return true;
@@ -180,6 +185,30 @@ public class UserManagementViewModel implements ConferenceEventCenter.RoomEngine
                 TUIRoomDefine.Role.MANAGER;
 
         ConferenceController.sharedInstance().changeUserRole(mUser.getUserId(), role, callback);
+    }
+
+    public void stopScreenShareAfterManagerRemove() {
+        String sharingUserId = mConferenceState.userState.screenStreamUser.get();
+        if (TextUtils.isEmpty(sharingUserId)) {
+            return;
+        }
+        if (TextUtils.equals(sharingUserId, mUser.getUserId())) {
+            ConferenceController.sharedInstance().closeRemoteDeviceByAdmin(sharingUserId, TUIRoomDefine.MediaDevice.SCREEN_SHARING, null);
+        }
+    }
+
+    public void stopScreenShareAfterTransferOwner() {
+        String sharingUserId = mConferenceState.userState.screenStreamUser.get();
+        if (TextUtils.isEmpty(sharingUserId)) {
+            return;
+        }
+        if (TextUtils.equals(sharingUserId, mConferenceState.userModel.userId)) {
+            ConferenceController.sharedInstance().stopScreenCapture();
+        }
+    }
+
+    public boolean isDisableScreenShare() {
+        return mConferenceState.roomState.isDisableScreen.get();
     }
 
     public void switchSendingMessageAbility() {

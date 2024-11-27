@@ -1,9 +1,9 @@
 package com.tencent.cloud.tuikit.roomkit.view.page.widget.RaiseHandControlPanel;
 
-import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListObserver;
 import com.tencent.cloud.tuikit.roomkit.model.entity.Request;
 import com.tencent.cloud.tuikit.roomkit.view.StateHolder;
 import com.trtc.tuikit.common.livedata.LiveData;
+import com.trtc.tuikit.common.livedata.LiveListObserver;
 import com.trtc.tuikit.common.livedata.Observer;
 
 import java.util.List;

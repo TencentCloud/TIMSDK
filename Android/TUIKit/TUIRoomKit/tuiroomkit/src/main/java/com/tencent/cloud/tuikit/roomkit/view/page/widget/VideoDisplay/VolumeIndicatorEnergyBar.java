@@ -6,10 +6,10 @@ import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
 
-import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListObserver;
 import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
 import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.videoseat.ui.view.UserVolumePromptView;
+import com.trtc.tuikit.common.livedata.LiveListObserver;
 import com.trtc.tuikit.common.livedata.Observer;
 
 import java.util.List;

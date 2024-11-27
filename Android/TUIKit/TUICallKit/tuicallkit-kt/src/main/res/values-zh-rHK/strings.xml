@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tuicallkit_contact_default_name">測試123</string>
+    <string name="tuicallkit_toast_enable_mute">麥克風已關</string>
+    <string name="tuicallkit_toast_disable_mute">麥克風已開</string>
+    <string name="tuicallkit_toast_speaker">揚聲器已開</string>
+    <string name="tuicallkit_toast_use_earpiece">揚聲器已關</string>
+    <string name="tuicallkit_toast_user_end">%s 結束通話</string>
+    <string name="tuicallkit_toast_callee_hangup">對方已掛斷，通話結束</string>
+    <string name="tuicallkit_toast_user_reject">%s 拒絕了通話請求</string>
+    <string name="tuicallkit_toast_callee_reject">對方拒絕了通話請求</string>
+    <string name="tuicallkit_toast_callee_no_response">對方未響應</string>
+    <string name="tuicallkit_other_party_network_low_quality">當前通話對方網絡不佳</string>
+    <string name="tuicallkit_self_network_low_quality">當前通話你的網絡不佳</string>
+    <string name="tuicallkit_toast_switch_camera">翻轉</string>
+    <string name="tuicallkit_toast_enable_camera">攝像頭已開</string>
+    <string name="tuicallkit_toast_disable_camera">攝像頭已關</string>
+    <string name="tuicallkit_waiting_accept">等待對方接受邀請</string>
+    <string name="tuicallkit_invite_audio_call">邀請你語音通話</string>
+    <string name="tuicallkit_invite_video_call">邀請你視頻通話</string>
+    <string name="tuicallkit_text_microphone">麥克風</string>
+    <string name="tuicallkit_text_hangup">掛斷</string>
+    <string name="tuicallkit_text_reject">拒接</string>
+    <string name="tuicallkit_text_line_busy">對方忙</string>
+    <string name="tuicallkit_text_speaker">揚聲器</string>
+    <string name="tuicallkit_text_dialing">接聽</string>
+    <string name="tuicallkit_text_camera">攝像頭</string>
+    <string name="tuicallkit_switch_audio_call">切到語音通話</string>
+    <string name="tuicallkit_btn_cancel">取消</string>
+    <string name="tuicallkit_video_call">視頻通話</string>
+    <string name="tuicallkit_audio_call">語音通話</string>
+    <string name="tuicallkit_user_exceed_limit">暫支持最多9人通話。如需多人會議，請使用TUIRoom</string>
+    <string name="tuicallkit_wait_response">等待接聽</string>
+    <string name="tuicallkit_wait_accept_group">邀請你加入多人通話</string>
+    <string name="tuicallkit_accept_single">已接通</string>
+    <string name="tuicallkit_invitee_user_list">參與通話的還有:</string>
+
+    <string name="tuicallkit_permission_camera">攝像頭</string>
+    <string name="tuicallkit_permission_microphone">麥克風</string>
+    <string name="tuicallkit_permission_bluetooth">藍牙</string>
+    <string name="tuicallkit_permission_separator">、</string>
+    <string name="tuicallkit_permission_tips">請先打開%s權限</string>
+    <string name="tuicallkit_permission_title">%s申請獲取%s權限</string>
+    <string name="tuicallkit_permission_camera_reason">需要訪問您的相機權限，開啟後用於視頻通話、多人視頻通話等功能，在您使用美顏功能時，我們會對您實時拍攝的面部的像素信息進行實時智能識別，在識別過程中會實時收集您面部的像素信息，以為您提供更好的美顏效果。</string>
+    <string name="tuicallkit_permission_mic_reason">需要訪問您的麥克風權限，開啟後用於語音通話、多人語音通話、視頻通話、多人視頻通話等功能，並且開啟後錄製的視頻才會有聲音。</string>
+    <string name="tuicallkit_permission_bluetooth_reason">為確保您在音視頻通話中可正常連接藍牙功能進行溝通，我們需要向您申請查找與連接附近設備的權限。</string>
+
+    <string name="tuicallkit_package_not_purchased">您當前未購買音視頻通話能力套餐，請前往 IM 控制台開通免費體驗或加購正式版</string>
+    <string name="tuicallkit_package_not_support">您當前購買的音視頻通話能力套餐不支持該功能，建議您升級套餐類型</string>
+    <string name="tuicallkit_group_id_is_empty">群ID為空</string>
+    <string name="tuicallkit_have_a_new_call">您有一個新的通話</string>
+
+    <string name="tuicallkit_record_call_title">最近通話</string>
+    <string name="tuicallkit_record_call_delete">刪除</string>
+    <string name="tuicallkit_record_dialog_message">清除所有記錄</string>
+    <string name="tuicallkit_record_dialog_cancel">取消</string>
+    <string name="tuicallkit_record_tab_title_all">所有通話</string>
+    <string name="tuicallkit_record_tab_title_miss">未接來電</string>
+    <string name="tuicallkit_record_done">完成</string>
+    <string name="tuicallkit_record_clear">清除</string>
+    <string name="tuicallkit_group_recall_unsupport">多人通話記錄不支持重呼</string>
+    <string name="tuicallkit_record_result_unknown">未知通話</string>
+    <string name="tuicallkit_record_result_missed">未接</string>
+    <string name="tuicallkit_record_result_incoming">來電</string>
+    <string name="tuicallkit_record_result_outgoing">去電</string>
+
+    <string name="tuicallkit_group_title_add_user">添加成員</string>
+    <string name="tuicallkit_group_hint_you">(你)</string>
+    <string name="tuicallkit_group_btn_ok">確定</string>
+
+    <string name="tuicallkit_error_in_peer_blacklist">發起通話失敗，用戶在黑名單中，禁止發起！</string>
+    <string name="tuicallkit_error_invalid_login">登錄失敗,請重新登錄</string>
+    <string name="tuicallkit_error_parameter_invalid">參數錯誤</string>
+    <string name="tuicallkit_error_request_refused">當前狀態不支持調用</string>
+    <string name="tuicallkit_error_request_repeated">當前方法正在執行中，請勿重複調用</string>
+    <string name="tuicallkit_error_scene_not_support">當前通話場景，不支持該功能</string>
+    <string name="tuicallkit_join_group_call">加入</string>
+    <string name="tuicallkit_join_group_call_users">%s人正在%s</string>
+
+    <string name="tuicallkit_blur_background">模糊背景</string>
+</resources>

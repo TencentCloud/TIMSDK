@@ -64,7 +64,7 @@ public class ProgressPresenter {
         }
 
         List<WeakReference<ProgressListener>> list = ProgressPresenter.getInstance().progressListenerMap.get(progressId);
-        if (list != null) {
+        if (list == null) {
             return;
         }
         WeakReference<ProgressListener> remove = null;

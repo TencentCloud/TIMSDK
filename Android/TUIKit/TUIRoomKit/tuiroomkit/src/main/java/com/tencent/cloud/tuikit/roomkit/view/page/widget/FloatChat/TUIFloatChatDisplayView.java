@@ -2,6 +2,7 @@ package com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -10,25 +11,23 @@ import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.model.TUIFloatChat;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.service.FloatChatIMService;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.service.FloatChatPresenter;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.service.IFindNameCardService;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.service.IFloatChatMessage;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.service.IFloatChatPresenter;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.store.FloatChatStore;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.view.IFloatChatDisplayView;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.view.MessageBarrageView;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.view.adapter.FloatChatMsgListAdapter;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.view.adapter.TUIFloatChatDisplayAdapter;
 import com.trtc.tuikit.common.livedata.Observer;
 
 @SuppressLint("ViewConstructor")
 public class TUIFloatChatDisplayView extends FrameLayout implements IFloatChatDisplayView {
-    private static final String TAG                            = "TUIBarrageDisplayView";
+    private static final String TAG = "TUIBarrageDisplayView";
 
-    private MessageBarrageView      mViewMessageBarrage;
-    private FloatChatMsgListAdapter mAdapter;
+    private MessageBarrageView   mViewMessageBarrage;
+    private IFindNameCardService mFindNameCardService;
 
     private final IFloatChatPresenter    mPresenter;
     private final Observer<TUIFloatChat> mBarrageObserver = this::insertBarrages;
-    private       View.OnClickListener   mClickListener;
 
     public TUIFloatChatDisplayView(Context context, String roomId) {
         this(context, new FloatChatIMService(roomId));
@@ -61,12 +60,8 @@ public class TUIFloatChatDisplayView extends FrameLayout implements IFloatChatDi
         mViewMessageBarrage = findViewById(R.id.tuiroomkit_view_message_barrage);
     }
 
-    public void setViewClickListener(OnClickListener clickListener) {
-        mClickListener = clickListener;
-    }
-
-    public void setAdapter(TUIFloatChatDisplayAdapter adapter) {
-        mAdapter.setCustomAdapter(adapter);
+    public void setFindNameCardService(IFindNameCardService service) {
+        mFindNameCardService = service;
     }
 
     public void destroyPresenter() {
@@ -87,7 +82,18 @@ public class TUIFloatChatDisplayView extends FrameLayout implements IFloatChatDi
             return;
         }
         for (TUIFloatChat barrage : barrages) {
+            String userNameCard = getUserNameCard(barrage);
+            if (!TextUtils.isEmpty(userNameCard)) {
+                barrage.user.userName = userNameCard;
+            }
             mViewMessageBarrage.addMessage(barrage);
         }
+    }
+
+    private String getUserNameCard(TUIFloatChat barrage) {
+        if (mFindNameCardService == null || barrage == null || TextUtils.isEmpty(barrage.user.userId)) {
+            return "";
+        }
+        return mFindNameCardService.findUserNameCard(barrage.user.userId);
     }
 }

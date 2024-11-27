@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="pic">圖片</string>
+    <string name="photo">拍照</string>
+    <string name="video">攝像</string>
+    <string name="file">檔案</string>
+
+    <string name="release_end">鬆開結束</string>
+    <string name="hold_say">按住說話</string>
+
+    <string name="copy_action">複製</string>
+    <string name="translate_action">翻譯</string>
+    <string name="delete_action">刪除</string>
+    <string name="revoke_action">撤回</string>
+    <string name="resend_action">重發</string>
+    <string name="hide_action">隱藏</string>
+    <string name="chat_speaker_mode_on_action">揚聲器播放</string>
+    <string name="chat_speaker_mode_off_action">聽筒播放</string>
+
+    <string name="chat_speaker_mode_on_tip">已切換為揚聲器播放模式</string>
+    <string name="chat_speaker_mode_off_tip">已切換為聽筒播放模式</string>
+
+    <string name="copy_success_tip">複製成功</string>
+
+    <string name="chat_message_detail">訊息詳情</string>
+
+    <string name="titlebar_back">返回</string>
+    <string name="forward_tip">請選擇要操作的訊息！</string>
+    <string name="forward_mode_onebyone">逐條轉發</string>
+    <string name="forward_mode_merge">合併轉發</string>
+    <string name="forward_button">轉發</string>
+    <string name="reply_button">回覆</string>
+    <string name="quote_button">引用</string>
+    <string name="info_button">詳情</string>
+    <string name="delete_button">刪除</string>
+    <string name="chat_delete_msg_tip">確定刪除已選訊息</string>
+    <string name="forward_chats">群聊的聊天記錄</string>
+    <string name="and_text">和</string>
+    <string name="forward_chats_c2c">的聊天記錄</string>
+    <string name="forward_compatible_text">不支持合併轉發訊息，請升級到新版本。</string>
+
+    <string name="forward_failed_tip">發送失敗訊息不支持轉發！</string>
+    <string name="forward_group_note_or_poll_failed_tip">投票/接龍訊息不支持轉發！</string>
+    <string name="forward_chat_record">聊天記錄</string>
+    <string name="forward_oneByOne_limit_number_tip">轉發訊息過多，暫不支持逐條轉發</string>
+
+    <string name="and_and">已和</string>
+    <string name="be_friend">成為好友</string>
+
+    <string name="join_group_tip">您已被邀請進群:</string>
+    <string name="joined_tip">您已加入群:</string>
+    <string name="reject_join_tip">您被拒絕加入群:</string>
+    <string name="kick_group">您已被踢出群:</string>
+
+    <string name="send_two_mins">訊息發送已超過2分鐘</string>
+    <string name="revoke_fail">撤回失敗</string>
+
+    <string name="group_apply_tips">%1$d 條入群申請</string>
+    <string name="wait_tip">請稍後再試</string>
+
+    <string name="dismiss_tip_before">您所在的群</string>
+    <string name="dismiss_tip_after">已解散</string>
+    <string name="get_system_notice">收到自定義系統通知:</string>
+
+    <string name="down_cancle_send">手指上滑，取消發送</string>
+    <string name="say_time_short">說話時間太短</string>
+    <string name="record_fail">錄音失敗</string>
+    <string name="up_cancle_send">鬆開手指，取消發送</string>
+
+    <string name="send">發送</string>
+
+    <string name="custom_msg">[自定義訊息]</string>
+    <string name="custom_emoji">[動畫表情]</string>
+    <string name="picture_extra">[圖片]</string>
+    <string name="video_extra">[視頻]</string>
+    <string name="audio_extra">[語音]</string>
+    <string name="file_extra">[檔案]</string>
+    <string name="location_extra">[地理位置]</string>
+
+    <string name="locate_origin_msg_failed_tip">無法定位到原訊息</string>
+
+    <string name="forward_extra">[聊天記錄]</string>
+
+    <string name="create_group">創建群組</string>
+    <string name="create_community">創建社群</string>
+    <string name="etc">等</string>
+    <string name="join_group">%s加入群組</string>
+    <string name="invite_joined_group">%s邀請%s加入群組</string>
+    <string name="quit_group">%s退出群組</string>
+    <string name="kick_group_tip">%s將%s踢出群組</string>
+    <string name="be_group_manager">%s被設置管理員</string>
+    <string name="cancle_group_manager">%s被取消管理員</string>
+    <string name="modify_group_name_is">%s把群名稱修改為%s</string>
+    <string name="modify_notice">%s把群公告修改為%s</string>
+    <string name="modify_introduction">%s把群簡介修改為%s</string>
+    <string name="modify_shut_up_all">%s禁言全員</string>
+    <string name="modify_cancel_shut_up_all">%s取消禁言全員</string>
+    <string name="move_owner">%s轉讓群主給%s</string>
+    <string name="modify_group_avatar">%s修改了群頭像</string>
+    <string name="banned">%s被禁言%s</string>
+    <string name="cancle_banned">%s被取消禁言</string>
+    <string name="modify_group_add_opt">%s修改加群方式為%s</string>
+    <string name="modify_group_invite_opt">%s修改邀請進群方式為%s</string>
+    <string name="group_add_opt_auto_approval">自動審批</string>
+    <string name="group_add_opt_admin_approve">管理員審批</string>
+    <string name="group_add_opt_join_disable">禁止加群</string>
+    <string name="group_add_opt_invite_disable">禁止邀請</string>
+
+    <string name="modify_topic_name_is">%s把話題名稱修改為%s</string>
+    <string name="modify_topic_notice">%s把話題公告修改為%s</string>
+    <string name="modify_topic_introduction">%s把話題簡介修改為%s</string>
+    <string name="modify_topic_avatar">%s修改了話題頭像</string>
+
+    <string name="typing">對方正在輸入...</string>
+    <string name="titlebar_mutiselect">多選</string>
+    <string name="audio_permission_error">需要打開錄音權限</string>
+    <string name="record_occupied">錄音機被佔用</string>
+    <string name="record_null">錄音的結果為空</string>
+    <string name="record_limit_tips">已達到最大語音長度</string>
+    <string name="record_rejected_for_in_call">正在音視頻通話，請稍後再試</string>
+    <string name="record_rejected_for_in_recording">當前錄音未結束</string>
+    <string name="play_error_tip">語音檔案已損壞或不存在</string>
+    <string name="input_tip">沒有輸入暱稱，請重新填寫</string>
+    <string name="chat_camera_occupied_tip">攝像頭被其他功能佔用</string>
+    <string name="chat_mic_is_being_used_cant_record">其他功能正在使用麥克風，無法錄製</string>
+    <string name="chat_record_audio_failed">音頻錄製失敗</string>
+
+    <string name="delivered">已送達</string>
+    <string name="someone_unread">%d人未讀</string>
+    <string name="someone_have_read">%d人已讀</string>
+
+    <string name="un_download">未下載</string>
+    <string name="downloaded">已下載</string>
+    <string name="downloading">下載中...</string>
+    <string name="sended">已發送</string>
+    <string name="send_failed">發送失敗</string>
+    <string name="send_failed_file_not_exists">發送失敗，檔案不存在</string>
+    <string name="open_file_tips">選擇要打開此檔案的应用</string>
+    <string name="sending">發送中...</string>
+    <string name="download_file_error">下載視頻失敗:</string>
+    <string name="voice_play_tip">語音檔案還未下載完成</string>
+
+    <string name="device_info">手機型號:</string>
+    <string name="system_version">\n系统版本:</string>
+    <string name="sdk_version">\nSDK版本:</string>
+
+    <string name="permission_content">使用該功能，需要開啟權限，鑒於您禁用相關權限，請手動設置開啟權限</string>
+    <string name="setting">設置</string>
+
+    <string name="no_event_cancle_tip">瀏覽狀態下,沒有 cancle 事件</string>
+    <string name="no_event_confirm_tip">瀏覽狀態下,沒有 confirm 事件</string>
+
+    <string name="record_time_tip">錄製時間過短</string>
+    <string name="tap_tips">輕觸拍照，長按攝像</string>
+    <string name="tap_capture">點擊拍照</string>
+    <string name="tap_video">長按攝像</string>
+
+
+    <string name="completed">已完成</string>
+    <string name="view_original_image">查看原圖</string>
+
+    <string name="at_all">所有人</string>
+    <string name="ui_at_all">[@所有人]</string>
+    <string name="ui_at_me">[有人@我]</string>
+    <string name="ui_at_all_me">[@所有人][有人@我]</string>
+    <string name="drafts">[草稿]</string>
+
+    <string name="group_apply_click_handle">點擊處理</string>
+    <string name="no_support_msg">不支持的自定義訊息</string>
+
+    <string name="live">的直播</string>
+    <string name="live_group_live_streaming">正在直播</string>
+    <string name="live_group_live_end">結束直播</string>
+    <string name="live_group_user_live">%s的直播</string>
+    <string name="live_group_live">群直播</string>
+
+    <string name="start_group_call">發起群通話</string>
+    <string name="start_call">發起通話</string>
+    <string name="cancle_group_call">取消群通話</string>
+    <string name="cancle_call">取消通話</string>
+    <string name="other_line_busy">對方忙線</string>
+    <string name="reject_group_calls">拒絕群通話</string>
+    <string name="no_response_call">無應答</string>
+    <string name="accept_call">已接聽</string>
+    <string name="stop_group_call">結束群通話</string>
+    <string name="stop_call_tip">通話時長：</string>
+    <string name="line_busy">忙線</string>
+    <string name="reject_call">拒絕通話</string>
+    <string name="invalid_command">不能識別的通話指令</string>
+    <string name="reject_calls">拒絕通話</string>
+    <string name="chat_calling_switch_to_audio">視頻轉語音</string>
+    <string name="chat_calling_switch_to_audio_accept">確認視頻轉語音</string>
+    <string name="chat_calling_unknown_invitation">未知邀請</string>
+
+    <string name="test_custom_message">查看詳情>></string>
+
+    <string name="test_custom_action">自定義消息</string>
+    <string name="welcome_tip">歡迎加入騰訊雲IM大家庭！</string>
+
+    <string name="resend_tips">確定重發嗎？</string>
+    <string name="delete_tips">是否刪除該消息？</string>
+    <string name="reedit_msg">重新編輯</string>
+    <string name="save_success">保存成功</string>
+    <string name="save_failed">保存失敗</string>
+    <string name="saving_tips">保存中...</string>
+
+    <string name="back_to_lastmessage">回到最新位置</string>
+    <string name="back_to_newmessage">條新消息</string>
+    <string name="back_to_atmessage_all">\@所有人</string>
+    <string name="back_to_atmessage_me">有人@我</string>
+    <string name="chat_permission_mic_reason_title">%s申請獲取麥克風權限</string>
+    <string name="chat_permission_mic_reason">為方便您發送語音消息，進行攝像和音視頻通話，請允許我們訪問麥克風。</string>
+    <string name="chat_permission_camera_reason_title">%s申請獲取相機權限</string>
+    <string name="chat_permission_camera_reason">為方便您拍攝照片或視頻以發送給朋友，以及進行視頻通話，請允許我們訪問攝像頭。</string>
+    <string name="chat_permission_storage_reason_title">%s申請獲取存儲權限</string>
+    <string name="chat_permission_storage_reason">為方便您保存照片和視頻到設備，請允許我們寫入照片和視頻到設備。</string>
+    <string name="chat_permission_mic_dialog_alert">在設置-應用-%s-權限中開啟麥克風權限，以正常使用語音消息、攝像和音視頻通話功能</string>
+    <string name="chat_permission_camera_dialog_alert">在設置-應用-%s-權限中開啟相機權限，以正常使用拍照、攝像和視頻通話功能</string>
+    <string name="chat_permission_storage_dialog_alert">在設置-應用-%s-權限中開啟存儲權限，以正常使用保存照片和視頻功能</string>
+
+    <string name="chat_message_read_receipt">消息已讀回執</string>
+    <string name="chat_i_know">我知道了</string>
+    <string name="chat_no_more_reminders">不再提醒</string>
+    <string name="chat_im_flagship">旗艦版</string>
+    <string name="chat_buying_guidelines">價格說明</string>
+    <string name="chat_im_flagship_edition_update_tip">%s功能為IM旗艦版功能，購買旗艦版套餐包後可使用，詳見價格說明。</string>
+
+    <string name="chat_reply_detail">回覆詳情</string>
+
+    <string name="chat_not_read">尚未閱讀</string>
+
+    <string name="custom_evaluation_message">對本次服務評價</string>
+
+    <string name="chat_input_edit_hint_text">發送消息</string>
+    <string name="chat_header_not_desc">暫無簡介</string>
+    <string name="chat_tips_not_login">未登錄</string>
+
+    <string name="chat_user_status_online">在線</string>
+    <string name="chat_user_status_offline">離線</string>
+    <string name="chat_user_status_unknown">未知</string>
+
+    <string name="chat_start_audio_call">語音通話</string>
+    <string name="chat_start_video_call">視頻通話</string>
+
+    <string name="chat_call_reject_caller">對方已拒絕</string>
+    <string name="chat_call_reject_callee">已拒絕</string>
+    <string name="chat_call_cancel_caller">已取消</string>
+    <string name="chat_call_cancel_callee">對方已取消</string>
+    <string name="chat_call_timeout_caller">對方無應答</string>
+    <string name="chat_call_timeout_callee">對方已取消</string>
+    <string name="chat_call_line_busy_caller">對方忙線中</string>
+    <string name="chat_call_line_busy_callee">對方已取消</string>
+    <string name="chat_group_call_send">發起了群通話</string>
+    <string name="chat_group_call_end">通話結束</string>
+    <string name="chat_group_call_no_answer">未接聽</string>
+    <string name="chat_group_call_reject_format">%s拒絕群通話</string>
+    <string name="chat_group_call_accept_format">%s接聽</string>
+    <string name="chat_group_call_switch_to_audio_format">%s視頻轉語音</string>
+    <string name="chat_group_call_confirm_switch_to_audio_format">%s同意視頻轉語音</string>
+
+    <string name="chat_quick_tap_message_default_action_name">拍了拍</string>
+    <string name="chat_quick_tap_message_action_from_me">我%s"%s"</string>
+    <string name="chat_quick_tap_message_action_to_me">"%s"%s我</string>
+    <string name="chat_quick_tap_message_action">"%s"%s"%s"</string>
+
+    <string name="chat_risk_image_message_alert">涉及敏感內容，無法查看</string>
+    <string name="chat_risk_sound_message_alert">涉及敏感內容，無法收聽</string>
+    <string name="chat_risk_send_message_failed_alert">涉及敏感內容，發送失敗</string>
+    <string name="chat_risk_quote_message_alert">涉及敏感內容，引用失敗</string>
+    <string name="chat_risk_reply_message_alert">涉及敏感內容，回覆失敗</string>
+    <string name="chat_scan_risk_image_message_alert">檢測到圖片涉及敏感內容，暫時無法查看</string>
+    <string name="chat_scan_risk_video_message_alert">檢測到視頻涉及敏感內容，暫時無法查看</string>
+    <string name="chat_risk_content">[違規內容]</string>
+    <string name="chat_risk_sound">[違規語音]</string>
+    <string name="chat_risk_image">[違規圖片]</string>
+    <string name="chat_risk_video">[違規視頻]</string>
+
+    <string name="chat_recent_use">最近使用</string>
+    <string name="chat_all_emojis">所有表情</string>
+
+    <string name="chat_group_pin_message">置頂</string>
+    <string name="chat_group_unpin_message">取消置頂</string>
+    <string name="chat_group_message_pinned">%s置頂了一條消息</string>
+    <string name="chat_group_message_unpinned">%s移除了一條置頂消息</string>
+    <string name="chat_unpinned_button_text">移除</string>
+    <string name="chat_message_is_pinned">這條消息已經被置頂了</string>
+    <string name="chat_message_is_unpinned">這條消息已經被取消置頂了</string>
+
+    <string name="chat_quote_origin_message_revoked">引用內容已撤回</string>
+    <string name="chat_reply_origin_message_revoked">回覆內容已撤回</string>
+
+</resources>

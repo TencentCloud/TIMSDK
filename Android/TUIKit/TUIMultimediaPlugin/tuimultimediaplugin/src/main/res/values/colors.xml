@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="multimedia_plugin_black">#FF000000</color>
+    <color name="multimedia_plugin_white">#FFFFFFFF</color>
+
+    <color name="multimedia_plugin_common_disable">#77FFFFFF</color>
+
+    <color name="multimedia_plugin_standard_background">#FF0F1014</color>
+    <color name="multimedia_plugin_standard_transparent">#00ffffff</color>
+
+    <color name="multimedia_plugin_bgm_item_background_checked">#FFEEEEEE</color>
+    <color name="multimedia_plugin_bgm_item_background">#FF8F8F8F</color>
+    <color name="multimedia_plugin_bgm_panel_view_background">#C0000000</color>
+    <color name="multimedia_plugin_bgm_type_text_color_normal">#99FFFFFF</color>
+    <color name="multimedia_plugin_bgm_type_text_color_selected">#FFFFFFFF</color>
+    <color name="multimedia_plugin_bgm_item_text_color_normal">#99FFFFFF</color>
+    <color name="multimedia_plugin_bgm_item_text_color_disable">#77FFFFFF</color>
+    <color name="multimedia_plugin_bgm_item_name_text_color_normal">#FFFFFFFF</color>
+    <color name="multimedia_plugin_bgm_item_spectrum_color_disable">#99FFFFFF</color>
+
+    <color name="multimedia_plugin_edit_function_view_background">#990E0E0E</color>
+    <color name="multimedia_plugin_edit_function_button_view_background">#C0000000</color>
+    <color name="multimedia_plugin_paster_panel_view_background">#C0000000</color>
+
+    <color name="multimedia_plugin_record_beauty_panel_view_background_color">#FF000000</color>
+    <color name="multimedia_plugin_record_beauty_type_text_color_normal">#99FFFFFF</color>
+    <color name="multimedia_plugin_record_beauty_type_text_color_selected">#FFFFFFFF</color>
+
+    <color name="multimedia_plugin_picker_dark_color">#FF333333</color>
+    <color name="multimedia_plugin_picker_dark_gray">#FF555555</color>
+    <color name="multimedia_plugin_picker_light_gray">#FF999999</color>
+    <color name="multimedia_plugin_picker_white_color">#FFFFFFFF</color>
+</resources>

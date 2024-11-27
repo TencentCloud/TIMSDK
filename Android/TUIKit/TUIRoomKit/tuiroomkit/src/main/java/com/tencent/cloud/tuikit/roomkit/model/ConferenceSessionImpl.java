@@ -12,6 +12,8 @@ public class ConferenceSessionImpl extends ConferenceSession {
     private static ConferenceSessionImpl     sInstance;
     private final  ConferenceObserverManager mConferenceObserverManager = new ConferenceObserverManager();
 
+    public boolean isShowAISpeechToTextButton = false;
+
     private ConferenceSessionImpl() {}
 
     public static ConferenceSessionImpl sharedInstance() {

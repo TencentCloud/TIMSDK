@@ -10,6 +10,7 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.MessageContentHolder;
 import com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.TUIReplyQuoteView;
+import com.tencent.qcloud.tuikit.timcommon.util.TextUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TextReplyQuoteBean;
@@ -67,6 +68,7 @@ public class ReplyMessageHolder extends MessageContentHolder {
         if (!TextUtils.isEmpty(replyContent)) {
             FaceManager.handlerEmojiText(timeInLineTextLayout.getTextView(), replyContent, false);
         }
+        TextUtil.linkifyUrls(timeInLineTextLayout.getTextView());
         setOnTimeInLineTextClickListener(msg);
     }
 

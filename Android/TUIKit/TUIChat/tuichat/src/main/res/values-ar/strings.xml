@@ -291,4 +291,6 @@
 
     <string name="chat_quote_origin_message_revoked">تم سحب المحتوى المقتبس</string>
     <string name="chat_reply_origin_message_revoked">تم سحب محتوى الرد</string>
+
+    <string name="ugc_plugin_not_purchased">لم تقم بشراء حزمة القدرات المتقدمة لتسجيل الفيديو حتى الآن ، يرجى الانتقال إلى واجهة التحكم IM لتجربة مجانية أو شراء الإصدار الرسمي.</string>
 </resources>

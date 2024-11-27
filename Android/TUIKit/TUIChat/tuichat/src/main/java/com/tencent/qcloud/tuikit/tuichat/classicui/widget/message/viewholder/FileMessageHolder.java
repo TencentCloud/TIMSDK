@@ -120,7 +120,7 @@ public class FileMessageHolder extends MessageContentHolder {
                     setMessageBubbleBackground(R.drawable.chat_bubble_self_cavity_bg);
                 }
             } else {
-                Drawable receiveBubble = TUIConfigClassic.getSendBubbleBackground();
+                Drawable receiveBubble = TUIConfigClassic.getReceiveBubbleBackground();
                 if (receiveBubble != null) {
                     msgArea.setBackground(receiveBubble);
                 } else {
@@ -210,6 +210,7 @@ public class FileMessageHolder extends MessageContentHolder {
                 if (mAdapter != null) {
                     mAdapter.onItemRefresh(message);
                 }
+                TUIChatService.getInstance().refreshMessage(message);
             }
 
             @Override
@@ -219,6 +220,7 @@ public class FileMessageHolder extends MessageContentHolder {
                 if (mAdapter != null) {
                     mAdapter.onItemRefresh(message);
                 }
+                TUIChatService.getInstance().refreshMessage(message);
             }
         };
         ChatFileDownloadPresenter.downloadFile(message, downloadCallback);

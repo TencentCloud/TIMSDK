@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/multimedia_plugin_bgm_panel_view_background">
+
+    <com.google.android.material.tabs.TabLayout
+            android:id="@+id/bgm_panel_tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            app:tabPaddingStart="16dp"
+            app:tabMinWidth="30dp"
+            app:tabMaxWidth="80dp"
+            app:tabIndicator="@android:color/transparent" />
+
+    <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/multimedia_plugin_record_beauty_setting_view_split_line"
+            android:gravity="center"
+            android:contentDescription="@string/multimedia_plugin_empty" />
+
+    <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/bgm_panel_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="23dp"
+            android:layout_marginRight="17dp" />
+
+    <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/multimedia_plugin_record_beauty_setting_view_split_line"
+            android:gravity="center"
+            android:contentDescription="@string/multimedia_plugin_empty" />
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp">
+
+        <CheckBox
+                android:id="@+id/bgm_enable"
+                android:text="@string/multimedia_plugin_bgm_music"
+                android:textColor="@color/multimedia_plugin_white"
+                android:textSize="@dimen/multimedia_plugin_common_text_size"
+                android:fontFamily="@string/multimedia_plugin_common_font"
+                android:paddingStart="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="40dp"
+                android:bufferType="normal"
+                android:checked="true" />
+
+        <CheckBox
+                android:id="@+id/source_sound_enable"
+                android:text="@string/multimedia_plugin_origin_audio"
+                android:textColor="@color/multimedia_plugin_white"
+                android:textSize="@dimen/multimedia_plugin_common_text_size"
+                android:fontFamily="@string/multimedia_plugin_common_font"
+                android:paddingStart="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="40dp"
+                android:bufferType="normal"
+                android:checked="true" />
+    </RelativeLayout>
+
+</LinearLayout>
+

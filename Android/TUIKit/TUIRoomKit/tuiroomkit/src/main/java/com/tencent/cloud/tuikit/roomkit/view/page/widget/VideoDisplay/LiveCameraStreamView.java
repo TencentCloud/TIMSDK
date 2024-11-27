@@ -6,9 +6,9 @@ import android.util.AttributeSet;
 
 import com.tencent.cloud.tuikit.engine.common.TUIVideoView;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListObserver;
 import com.tencent.cloud.tuikit.roomkit.model.controller.MediaController;
 import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
+import com.trtc.tuikit.common.livedata.LiveListObserver;
 
 import java.util.List;
 

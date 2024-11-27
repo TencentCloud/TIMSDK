@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CC000000">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/bucket_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/multimedia_plugin_picker_dark_color"
+            android:layout_marginBottom="60dp"/>
+
+    </FrameLayout>
+
+</FrameLayout>

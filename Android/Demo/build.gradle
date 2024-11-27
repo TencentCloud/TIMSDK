@@ -58,12 +58,12 @@ ext {
     minSdkVersion = 19
     targetSdkVersion = 33
     versionCode = 1
-    versionName = "8.2.6325"
+    versionName = "8.3.6498"
     abiFilters = ['armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'] //['armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
     arguments = "-DANDROID_STL=c++_static"
     cppFlags = "-std=c++11"
 
-    liteavSdk = "com.tencent.liteav:LiteAVSDK_Professional:11.8.0.14176"
+    liteavSdk = "com.tencent.liteav:LiteAVSDK_Professional:12.2.0.15065"
 }
 
 task clean(type: Delete) {

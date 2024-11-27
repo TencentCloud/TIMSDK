@@ -78,7 +78,8 @@ public class RoomVideoFloatView extends FrameLayout {
     public void onNotifyUserInfoChanged(UserEntity userInfo) {
         mRoomOwnerView.setVisibility(TextUtils.equals(userInfo.getUserId(),
                 ConferenceController.sharedInstance().getConferenceState().roomInfo.ownerId) ? VISIBLE : GONE);
-        mUserNameTv.setText(TextUtils.isEmpty(userInfo.getUserName()) ? userInfo.getUserId() : userInfo.getUserName());
+        String name = TextUtils.isEmpty(userInfo.getNameCard()) ? userInfo.getUserName() : userInfo.getNameCard();
+        mUserNameTv.setText(TextUtils.isEmpty(name) ? userInfo.getUserId() : name);
         ImageLoader.loadImage(mContext, mUserAvatarIv, userInfo.getAvatarUrl(), R.drawable.tuivideoseat_head);
     }
 
@@ -88,5 +89,9 @@ public class RoomVideoFloatView extends FrameLayout {
             mTouchListener.onTouch(this, event);
         }
         return true;
+    }
+
+    public void updateUserName(String nameCard) {
+        mUserNameTv.setText(nameCard);
     }
 }

@@ -3,7 +3,9 @@ package com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.vie
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.InputType;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
@@ -26,10 +28,15 @@ import androidx.fragment.app.FragmentManager;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.qcloud.tuicore.util.TUIBuild;
 
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Pattern;
+
 public class EnterConferencePasswordView extends DialogFragment {
-    private static final String TAG           = "EnterPasswordView";
-    private static final String KEY_HUAWEI    = "HUAWEI";
-    private static final int    VERSION_O_MR1 = 27;
+    private static final String TAG             = "EnterPasswordView";
+    private static final String KEY_HUAWEI      = "HUAWEI";
+    public static final  String PASSWORD_FORMAT = "[^a-zA-Z0-9~`!@#$%^&*()-_=+\\{\\}\\[\\]\\\\|;:'\",<.>/?]";
+
+    private static final int VERSION_O_MR1 = 27;
 
     private View                    mDialogView;
     private EditText                mEtInputPassword;
@@ -85,8 +92,10 @@ public class EnterConferencePasswordView extends DialogFragment {
         mClearPassword.setVisibility(View.GONE);
         enableJoinRoomButton(false);
 
+        InputFilter[] passwordFilter = new InputFilter[]{new PasswordMaxLength()};
+        mEtInputPassword.setFilters(passwordFilter);
         if (isHUAWEI() && TUIBuild.getVersionInt() >= VERSION_O_MR1) {
-            mEtInputPassword.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
+            mEtInputPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_NUMBER_VARIATION_NORMAL);
             mEtInputPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
         }
 
@@ -143,8 +152,28 @@ public class EnterConferencePasswordView extends DialogFragment {
         window.setBackgroundDrawableResource(android.R.color.transparent);
     }
 
+
     public static boolean isHUAWEI() {
         return KEY_HUAWEI.equalsIgnoreCase(TUIBuild.getManufacturer());
     }
 
+    private class PasswordMaxLength implements InputFilter {
+        private static final int NAME_MAX_LENGTH = 32;
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int destStart, int destEnd) {
+            int currentBytes = countBytes(dest.toString());
+            int inputBytes = countBytes(source.toString().substring(start, end));
+            int newBytes = currentBytes + inputBytes;
+            Pattern pattern = Pattern.compile(PASSWORD_FORMAT);
+            if (newBytes > NAME_MAX_LENGTH || pattern.matcher(source).find()) {
+                return "";
+            }
+            return null;
+        }
+
+        private int countBytes(String str) {
+            return str.getBytes(StandardCharsets.UTF_8).length;
+        }
+    }
 }

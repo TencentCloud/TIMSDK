@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chat_top">置頂聊天</string>
+    <string name="chat_delete">刪除聊天</string>
+    <string name="quit_chat_top">取消置頂</string>
+    <string name="mark_unread">標為未讀</string>
+    <string name="mark_read">標為已讀</string>
+    <string name="not_display">不顯示</string>
+
+    <string name="forward_select_new_chat">創建新聊天</string>
+    <string name="forward_select_from_contact">從通訊錄選擇</string>
+    <string name="titlebar_cancle">取消</string>
+    <string name="titlebar_close">關閉</string>
+    <string name="forward_alert_title">您確定進行轉發嗎?</string>
+    <string name="forward_list_label">最近聊天</string>
+    <string name="ui_at_all">[@所有人]</string>
+    <string name="ui_at_me">[有人@我]</string>
+    <string name="ui_at_all_me">[@所有人][有人@我]</string>
+    <string name="drafts">[草稿]</string>
+    <string name="conversation_risk_message_extra">[違規消息]</string>
+    <string name="titlebar_mutiselect">多選</string>
+    <string name="message_num">條</string>
+
+    <string name="conversation_forward">轉發</string>
+
+    <string name="folded_group_chat">折疊的群聊</string>
+
+    <string name="conversation_title_edit">編輯</string>
+    <string name="conversation_add_new_conversation">添加會話</string>
+    <string name="conversation_page_all">全部</string>
+    <string name="conversation_null_text">暫無%1$s的會話</string>
+    <string name="conversation_delete_tips">此會話及聊天記錄將全部被刪除</string>
+</resources>

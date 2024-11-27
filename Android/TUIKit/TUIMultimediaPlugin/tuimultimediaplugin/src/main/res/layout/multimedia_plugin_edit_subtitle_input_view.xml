@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/multimedia_plugin_edit_function_view_background">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="50dp"
+            android:layout_height="wrap_content">
+
+        <Button
+                android:id="@+id/subtitle_input_cancel"
+                android:text="@string/multimedia_plugin_cancel"
+                android:textSize="@dimen/multimedia_plugin_common_text_size"
+                android:textColor="@color/multimedia_plugin_white"
+                android:fontFamily="@string/multimedia_plugin_common_font"
+                android:background="@null"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true" />
+
+        <Button
+                android:id="@+id/subtitle_input_confirm"
+                android:text="@string/multimedia_plugin_confirm"
+                android:textSize="@dimen/multimedia_plugin_common_text_size"
+                android:textColor="@color/multimedia_plugin_white"
+                android:fontFamily="@string/multimedia_plugin_common_font"
+                android:background="@null"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true" />
+    </RelativeLayout>
+
+    <EditText
+            android:id="@+id/subtitle_input_edit_text"
+            android:textSize="25sp"
+            android:textColor="@color/multimedia_plugin_white"
+            android:fontFamily="@string/multimedia_plugin_common_font"
+            android:background="@null"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="200dp"
+            android:inputType="textMultiLine"
+            android:layout_centerHorizontal="true"
+            android:gravity="center" />
+
+    <LinearLayout
+            android:id="@+id/color_select_layout"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="400dp">
+
+        <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:contentDescription="@string/multimedia_plugin_empty" />
+
+        <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:contentDescription="@string/multimedia_plugin_empty" />
+
+        <com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIHorizontalScrollView
+                android:id="@+id/input_text_color_scroll_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp"
+                android:paddingLeft="5dp"
+                android:scrollbars="none">
+
+            <LinearLayout
+                    android:id="@android:id/content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal" />
+        </com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIHorizontalScrollView>
+    </LinearLayout>
+</RelativeLayout>

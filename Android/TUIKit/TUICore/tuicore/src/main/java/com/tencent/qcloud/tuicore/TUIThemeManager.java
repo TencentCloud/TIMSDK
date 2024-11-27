@@ -41,6 +41,7 @@ public class TUIThemeManager {
     public static final int THEME_SERIOUS = 2;
 
     public static final String LANGUAGE_ZH_CN = "zh";
+    public static final String LANGUAGE_ZH_HK = "zh-traditional";
     public static final String LANGUAGE_EN = "en";
     public static final String LANGUAGE_AR = "ar";
 
@@ -63,7 +64,8 @@ public class TUIThemeManager {
     private boolean enableLanguageSwitch = false;
 
     private TUIThemeManager() {
-        languageMap.put(LANGUAGE_ZH_CN, Locale.SIMPLIFIED_CHINESE);
+        languageMap.put(LANGUAGE_ZH_CN, Locale.CHINESE);
+        languageMap.put(LANGUAGE_ZH_HK, Locale.TRADITIONAL_CHINESE);
         languageMap.put(LANGUAGE_EN, Locale.ENGLISH);
         languageMap.put(LANGUAGE_AR, new Locale("ar"));
     }

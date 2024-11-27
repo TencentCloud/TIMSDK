@@ -1,6 +1,9 @@
 package com.tencent.cloud.tuikit.roomkit.view.page.widget.RaiseHandControlPanel;
 
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceConstant.USER_NOT_FOUND;
+
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +27,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RaiseHandApplicationListAdapter extends RecyclerView.Adapter<RaiseHandApplicationListAdapter.ViewHolder> {
     private List<TakeSeatRequestEntity> mRequestList;
-    private Context mContext;
+    private Context                     mContext;
 
     public RaiseHandApplicationListAdapter(Context context) {
         mContext = context;
@@ -33,6 +36,20 @@ public class RaiseHandApplicationListAdapter extends RecyclerView.Adapter<RaiseH
     public void setDataList(List<TakeSeatRequestEntity> requestList) {
         mRequestList = requestList;
         notifyDataSetChanged();
+    }
+
+    public void updateRequestUserNameCard(String userId, String userName) {
+        int position = USER_NOT_FOUND;
+        for (int i = 0; i < mRequestList.size(); i++) {
+            if (TextUtils.equals(userId, mRequestList.get(i).getUserId())) {
+                mRequestList.get(i).setUserName(userName);
+                position = i;
+                break;
+            }
+        }
+        if (position != USER_NOT_FOUND) {
+            notifyItemChanged(position);
+        }
     }
 
     @NonNull

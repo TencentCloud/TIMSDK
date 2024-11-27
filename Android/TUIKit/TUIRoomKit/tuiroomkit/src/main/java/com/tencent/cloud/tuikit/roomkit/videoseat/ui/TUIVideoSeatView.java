@@ -36,7 +36,7 @@ public class TUIVideoSeatView extends RelativeLayout {
     private static final String TAG = "TUIVideoSeatView";
 
     private static final int CLICK_ACTION_MAX_MOVE_DISTANCE = 10;
-    private static final int SMALL_VIDEO_UPDATE_INTERVAL = 5 * 1000;
+    private static final int SMALL_VIDEO_UPDATE_INTERVAL    = 5 * 1000;
 
     private Context mContext;
 

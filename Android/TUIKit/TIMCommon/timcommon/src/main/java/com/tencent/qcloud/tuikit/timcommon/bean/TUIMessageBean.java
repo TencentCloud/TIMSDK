@@ -47,6 +47,8 @@ public abstract class TUIMessageBean implements Serializable {
     private boolean hasReaction = false;
     private Map<String, UserBean> userBeanMap = new LinkedHashMap<>();
     private boolean isSending = false;
+    private boolean isProcessing = false;
+    private Object processingThumbnail;
 
     public void setExcludeFromHistory(boolean excludeFromHistory) {
         this.excludeFromHistory = excludeFromHistory;
@@ -428,6 +430,22 @@ public abstract class TUIMessageBean implements Serializable {
             }
         }
         return userIdSet;
+    }
+
+    public void setProcessing(boolean processing) {
+        isProcessing = processing;
+    }
+
+    public boolean isProcessing() {
+        return isProcessing;
+    }
+
+    public Object getProcessingThumbnail() {
+        return processingThumbnail;
+    }
+
+    public void setProcessingThumbnail(Object processingThumbnail) {
+        this.processingThumbnail = processingThumbnail;
     }
 
     public boolean needAsyncGetDisplayString() {

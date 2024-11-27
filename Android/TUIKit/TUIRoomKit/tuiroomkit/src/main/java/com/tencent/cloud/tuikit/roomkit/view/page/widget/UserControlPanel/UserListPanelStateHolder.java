@@ -1,10 +1,10 @@
 package com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel;
 
-import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListObserver;
 import com.tencent.cloud.tuikit.roomkit.model.data.InvitationState;
 import com.tencent.cloud.tuikit.roomkit.model.data.ViewState;
 import com.tencent.cloud.tuikit.roomkit.view.StateHolder;
 import com.trtc.tuikit.common.livedata.LiveData;
+import com.trtc.tuikit.common.livedata.LiveListObserver;
 import com.trtc.tuikit.common.livedata.Observer;
 
 import java.util.List;

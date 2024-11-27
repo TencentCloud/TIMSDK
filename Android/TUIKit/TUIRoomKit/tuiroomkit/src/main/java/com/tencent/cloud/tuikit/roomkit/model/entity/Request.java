@@ -1,6 +1,7 @@
 package com.tencent.cloud.tuikit.roomkit.model.entity;
 
 import android.os.SystemClock;
+import android.text.TextUtils;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 
@@ -13,7 +14,7 @@ public class Request {
 
     public Request(TUIRoomDefine.Request request) {
         this.requestId = request.requestId;
-        this.userName = request.userName;
+        this.userName = TextUtils.isEmpty(request.nameCard) ? request.userName : request.nameCard;
         this.avatarUrl = request.avatarUrl;
         this.userId = request.userId;
         this.timestamp = SystemClock.elapsedRealtime();

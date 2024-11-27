@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="multimedia_plugin_empty">""</string>
+    <string name="multimedia_plugin_torch">Torch</string>
+    <string name="multimedia_plugin_record_aspect">Aspect</string>
+    <string name="multimedia_plugin_beauty">Beauty</string>
+
+    <string name="multimedia_plugin_confirm">Confirm</string>
+    <string name="multimedia_plugin_cancel">Cancel</string>
+    <string name="multimedia_plugin_close">Close</string>
+    <string name="multimedia_plugin_strength">Strength</string>
+    <string name="multimedia_plugin_setup">Setup</string>
+    <string name="multimedia_plugin_common_none">None</string>
+    <string name="multimedia_plugin_palm_out">Palm out</string>
+
+    <string name="multimedia_plugin_setting_panel_style">Style</string>
+    <string name="multimedia_plugin_setting_panel_beauty">Beauty</string>
+    <string name="multimedia_plugin_setting_panel_filter">Filter</string>
+
+    <string name="multimedia_plugin_beauty_cancel">Cancel</string>
+    <string name="multimedia_plugin_panel_style_smooth">Smooth</string>
+    <string name="multimedia_plugin_panel_style_natural">Beauty(Natural)</string>
+    <string name="multimedia_plugin_panel_style_pitu">Beauty(PS)</string>
+
+    <string name="multimedia_plugin_panel_white">White</string>
+    <string name="multimedia_plugin_panel_ruddy">Ruddy</string>
+
+    <string name="multimedia_plugin_panel_filter_standard">Standard</string>
+    <string name="multimedia_plugin_panel_filter_ziran">Natural</string>
+    <string name="multimedia_plugin_panel_filter_baixi">Blond</string>
+    <string name="multimedia_plugin_panel_filter_cheery">Cheery</string>
+    <string name="multimedia_plugin_panel_filter_cloud">Cloud</string>
+    <string name="multimedia_plugin_panel_filter_pure">Pure</string>
+    <string name="multimedia_plugin_panel_filter_orchid">Orchid</string>
+    <string name="multimedia_plugin_panel_filter_vitality">Vitality</string>
+    <string name="multimedia_plugin_panel_filter_super">Super</string>
+    <string name="multimedia_plugin_panel_filter_fragrance">Fragrance</string>
+    <string name="multimedia_plugin_panel_filter_white">White</string>
+    <string name="multimedia_plugin_panel_filter_romantic">Romantic</string>
+    <string name="multimedia_plugin_panel_filter_fresh">Fresh</string>
+    <string name="multimedia_plugin_panel_filter_beautiful">Aesthetic</string>
+    <string name="multimedia_plugin_panel_filter_pink">Rosy</string>
+    <string name="multimedia_plugin_panel_filter_reminiscence">Nostalgic</string>
+    <string name="multimedia_plugin_panel_filter_blues">Blues</string>
+    <string name="multimedia_plugin_panel_filter_cool">Cool</string>
+    <string name="multimedia_plugin_panel_filter_Japanese">Sweet</string>
+
+    <string name="multimedia_plugin_default_bgm_name">Unknown music name </string>
+    <string name="multimedia_plugin_default_time">00:00</string>
+    <string name="multimedia_plugin_bgm_music">Music</string>
+    <string name="multimedia_plugin_origin_audio">Audio</string>
+    <string name="multimedia_plugin_send">Send</string>
+    <string name="multimedia_plugin_done">Done</string>
+    <string name="multimedia_plugin_zero">0</string>
+    <string name="multimedia_plugin_zero_time">00:00</string>
+    <string name="multimedia_plugin_local">Local</string>
+    <string name="multimedia_plugin_default">Default</string>
+    <string name="multimedia_plugin_record_operation_tips">Tap to take a photo, long press to record</string>
+    <string name="multimedia_plugin_record_take_phone_operation_tips">Click to take a photo</string>
+    <string name="multimedia_plugin_bgm_type_name_default">default</string>
+    <string name="multimedia_plugin_bgm_type_name_chosen">chosen</string>
+    <string name="multimedia_plugin_bgm_item_bgm_name_default">unknown music</string>
+    <string name="multimedia_plugin_bgm_item_bgm_author_default">unknown author</string>
+
+    <string name="multimedia_plugin_picker_preview">Preview</string>
+    <string name="multimedia_plugin_picker_full_image">Full Image</string>
+    <string name="multimedia_plugin_picker_send">Send</string>
+    <string name="multimedia_plugin_picker_edit">Edit</string>
+    <string name="multimedia_plugin_picker_select">Select</string>
+
+    <string name="multimedia_plugin_request_permission_storage_title">%s requests access to storage permissions</string>
+    <string name="multimedia_plugin_request_permission_storage_reason">Access to storage is needed to send photos and videos from the album and save pictures and videos in chat</string>
+    <string name="multimedia_plugin_request_permission_storage_tip">Enable storage permissions in Settings-Apps-%s-Permissions to use sending photos and videos from the album and saving pictures in chat normally</string>
+
+    <string name="multimedia_plugin_request_permission_media_title">%s requests access to photos and videos</string>
+    <string name="multimedia_plugin_request_permission_media_reason">Access to photos and videos is needed to send photos and videos from the album and save pictures and videos in chat</string>
+    <string name="multimedia_plugin_request_permission_media_tip">Enable photo and video permissions in Settings-Apps-%s-Permissions to use sending photos and videos from the album and saving pictures in chat normally</string>
+</resources>

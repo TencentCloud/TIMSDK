@@ -9,6 +9,7 @@
 
     <string name="demo_current_language">العربية</string>
     <string name="demo_language_chinese">الصينية المبسطة</string>
+    <string name="demo_language_traditional_chinese">الصينية التقليدية</string>
     <string name="demo_language_english">إنجليزي</string>
     <string name="demo_language_arabic">العربية</string>
 
@@ -72,7 +73,7 @@
     <string name="style_classic">الإصدار الكلاسيكي</string>
     <string name="style_minimalist">الإصدار البسيط</string>
 
-    <string name="demo_language">الصينية المبسطة</string>
+    <string name="demo_language">العربية</string>
     <string name="demo_theme_light">خفيف وسريع</string>
     <string name="demo_signature_tag">التوقيع الشخصي:</string>
     <string name="demo_account_tag">المعرف:</string>

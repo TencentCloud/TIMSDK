@@ -38,7 +38,7 @@ import com.tencent.qcloud.tuikit.tuigroup.R;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupConstants;
 import com.tencent.qcloud.tuikit.tuigroup.TUIGroupService;
 import com.tencent.qcloud.tuikit.tuigroup.bean.GroupInfo;
-import com.tencent.qcloud.tuikit.tuigroup.config.classicui.TUIGroupConfigClassic;
+import com.tencent.qcloud.tuikit.tuigroup.config.TUIGroupConfig;
 import com.tencent.qcloud.tuikit.tuigroup.interfaces.IGroupMemberListener;
 import com.tencent.qcloud.tuikit.tuigroup.classicui.page.GroupInfoFragment;
 import com.tencent.qcloud.tuikit.tuigroup.classicui.page.GroupMemberActivity;
@@ -214,34 +214,34 @@ public class GroupInfoLayout extends LinearLayout implements IGroupMemberLayout,
     }
 
     private void applyCustomConfig() {
-        if (!TUIGroupConfigClassic.isShowMuteAndPin()) {
+        if (!TUIGroupConfig.isShowMuteAndPin()) {
             mMsgRevOptionSwitchView.setVisibility(GONE);
             mFoldGroupChatSwitchView.setVisibility(GONE);
             mTopSwitchView.setVisibility(GONE);
         }
-        if (!TUIGroupConfigClassic.isShowManage()) {
+        if (!TUIGroupConfig.isShowManage()) {
             mGroupManageView.setVisibility(GONE);
         }
-        if (!TUIGroupConfigClassic.isShowAlias()) {
+        if (!TUIGroupConfig.isShowAlias()) {
             mNickView.setVisibility(GONE);
         }
-        if (!TUIGroupConfigClassic.isShowBackground()) {
+        if (!TUIGroupConfig.isShowBackground()) {
             mChatBackground.setVisibility(GONE);
         }
-        if (!TUIGroupConfigClassic.isShowMembers()) {
+        if (!TUIGroupConfig.isShowMembers()) {
             mMemberView.setVisibility(GONE);
             memberList.setVisibility(GONE);
         }
-        if (!TUIGroupConfigClassic.isShowClearChatHistory()) {
+        if (!TUIGroupConfig.isShowClearChatHistory()) {
             mClearMsgBtn.setVisibility(GONE);
         }
-        if (!TUIGroupConfigClassic.isShowDeleteAndLeave()) {
+        if (!TUIGroupConfig.isShowDeleteAndLeave()) {
             mDissolveBtn.setVisibility(GONE);
         }
-        if (!TUIGroupConfigClassic.isShowTransfer()) {
+        if (!TUIGroupConfig.isShowTransfer()) {
             mChangeOwnerBtn.setVisibility(GONE);
         }
-        if (!TUIGroupConfigClassic.isShowDismiss()) {
+        if (!TUIGroupConfig.isShowDismiss()) {
             mDissolveBtn.setVisibility(GONE);
         }
     }

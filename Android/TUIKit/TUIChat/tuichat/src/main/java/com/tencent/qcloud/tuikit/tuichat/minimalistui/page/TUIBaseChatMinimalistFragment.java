@@ -168,7 +168,7 @@ public abstract class TUIBaseChatMinimalistFragment extends Fragment {
     }
 
     protected void onRecallClicked(TUIMessageBean messageInfo) {
-        if (messageInfo == null) {
+        if (messageInfo == null || TextUtils.isEmpty(messageInfo.getUserId())) {
             return;
         }
         CallingMessageBean callingMessageBean = (CallingMessageBean) messageInfo;

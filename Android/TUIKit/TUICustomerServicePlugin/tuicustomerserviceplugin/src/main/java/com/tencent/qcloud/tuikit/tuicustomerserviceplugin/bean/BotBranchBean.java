@@ -41,7 +41,7 @@ public class BotBranchBean implements Serializable {
         this.itemList = itemList;
     }
 
-    public static class Item {
+    public static class Item implements Serializable {
         private String content;
 
         public String getContent() {

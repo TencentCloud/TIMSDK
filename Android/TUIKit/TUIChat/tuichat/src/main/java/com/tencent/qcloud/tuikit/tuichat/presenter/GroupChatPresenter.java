@@ -16,7 +16,6 @@ import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
-import com.tencent.qcloud.tuikit.tuichat.bean.C2CChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupChatInfo;
@@ -110,7 +109,7 @@ public class GroupChatPresenter extends ChatPresenter {
             @Override
             public void addMessage(TUIMessageBean messageBean, String chatId) {
                 if (TextUtils.equals(chatId, groupChatInfo.getId())) {
-                    addMessageInfo(messageBean);
+                    addMessageToUI(messageBean);
                 }
             }
 
@@ -228,8 +227,8 @@ public class GroupChatPresenter extends ChatPresenter {
         getMessageReadReceipt(data, getType);
     }
 
-    protected void addMessageInfo(TUIMessageBean messageInfo) {
-        super.addMessageInfo(messageInfo);
+    protected void addMessageToUI(TUIMessageBean messageInfo) {
+        super.addMessageToUI(messageInfo, true);
         addGroupMessage(messageInfo);
     }
 

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="60dp"
+        android:layout_height="86dp"
+        android:layout_marginLeft="6dp"
+        android:orientation="vertical">
+
+    <ImageView
+            android:id="@+id/beauty_iv_icon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:src="@drawable/multimedia_plugin_beauty_cancel"
+            android:contentDescription="@string/multimedia_plugin_empty" />
+
+    <ImageView
+            android:id="@+id/select_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    </ImageView>
+
+    <TextView
+            android:id="@+id/beauty_tv_title"
+            android:textColor="@color/multimedia_plugin_white"
+            android:textSize="11sp"
+            android:fontFamily="@string/multimedia_plugin_common_font"
+            android:layout_width="match_parent"
+            android:layout_height="26dp"
+            android:layout_below="@+id/beauty_iv_icon"
+            android:gravity="center" />
+</RelativeLayout>

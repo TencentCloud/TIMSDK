@@ -1,6 +1,8 @@
 package com.tencent.qcloud.tuikit.timcommon.classicui.widget.message;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
@@ -12,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
@@ -25,13 +28,11 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.R;
-import com.tencent.qcloud.tuikit.timcommon.TIMCommonService;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.config.classicui.TUIConfigClassic;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
-import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonLog;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -40,6 +41,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public abstract class MessageContentHolder<T extends TUIMessageBean> extends MessageBaseHolder<T> {
+
     public ImageView leftUserIcon;
     public ImageView rightUserIcon;
     public TextView leftUserNameText;
@@ -59,7 +61,7 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
     public boolean isMultiSelectMode = false;
 
     private List<TUIMessageBean> mForwardDataSource = new ArrayList<>();
-    protected SelectTextHelper selectableTextHelper;
+    protected SelectionHelper selectionHelper;
 
     // Whether to display the bottom content. The merged-forwarded message details activity does not display the bottom content.
     protected boolean isNeedShowBottomLayout = true;
@@ -120,6 +122,13 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
 
     @Override
     public void layoutViews(final T msg, final int position) {
+        Context context = itemView.getContext();
+        if (context instanceof Activity) {
+            if (((Activity) context).isDestroyed()) {
+                return;
+            }
+        }
+
         hasRiskContent = msg.hasRiskContent();
         super.layoutViews(msg, position);
         setLayoutAlignment(msg);
@@ -621,8 +630,8 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
 
     public void onRecycled() {
         super.onRecycled();
-        if (selectableTextHelper != null) {
-            selectableTextHelper.destroy();
+        if (selectionHelper != null) {
+            selectionHelper.destroy();
         }
     }
 
@@ -632,37 +641,24 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
         }
     }
 
-    protected void setSelectableTextHelper(TUIMessageBean msg, TextView textView, int position) {
-        if (selectableTextHelper != null) {
-            selectableTextHelper.destroy();
-            selectableTextHelper.setTextView(textView);
-        } else {
-            selectableTextHelper = new SelectTextHelper.Builder(textView)
-                                       .setCursorHandleColor(TIMCommonService.getAppContext().getResources().getColor(R.color.font_blue))
-                                       .setCursorHandleSizeInDp(18)
-                                       .setSelectedColor(TIMCommonService.getAppContext().getResources().getColor(R.color.test_blue))
-                                       .setSelectAll(true)
-                                       .setScrollShow(false)
-                                       .setSelectedAllNoPop(true)
-                                       .setMagnifierShow(false)
-                                       .build();
+    protected void setSelectionHelper(TUIMessageBean msg, TextView textView, int position) {
+        if (selectionHelper == null) {
+            selectionHelper = new SelectionHelper();
         }
-
-        selectableTextHelper.setSelectListener(new SelectTextHelper.OnSelectListener() {
-            @Override
-            public void onClick(View v) {}
-
-            @Override
-            public void onLongClick(View v) {}
-
+        selectionHelper.setTextView(textView);
+        if (isMultiSelectMode || isForwardMode) {
+            selectionHelper.setFrozen(true);
+        } else {
+            selectionHelper.setFrozen(false);
+        }
+        selectionHelper.setSelectListener(new SelectionHelper.OnSelectListener() {
             @Override
             public void onTextSelected(CharSequence content) {
                 String selectedText = "";
                 if (!TextUtils.isEmpty(content)) {
                     selectedText = content.toString();
                     msg.setSelectText(selectedText);
-                    TIMCommonLog.d("TextMessageHolder", "onTextSelected selectedText = " + selectedText);
-                    SelectTextHelper.setSelected(selectableTextHelper);
+                    SelectionHelper.setSelected(selectionHelper);
                     if (onItemClickListener != null) {
                         onItemClickListener.onTextSelected(msgArea, position, msg);
                     }
@@ -678,19 +674,11 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
             public void onClickUrl(String url) {}
 
             @Override
-            public void onSelectAllShowCustomPop() {}
+            public void onShowPop() {}
 
             @Override
-            public void onReset() {
-                msg.setSelectText(null);
-                msg.setSelectText(msg.getExtra());
-            }
+            public void onDismissPop() {}
 
-            @Override
-            public void onDismissCustomPop() {}
-
-            @Override
-            public void onScrolling() {}
         });
     }
 

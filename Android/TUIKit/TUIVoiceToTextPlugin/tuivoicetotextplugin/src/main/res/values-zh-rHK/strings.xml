@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="convert_to_text">轉文字</string>
+    <string name="convert_to_text_failed_tips">轉換失敗</string>
+    <string name="copy_action">複製</string>
+    <string name="forward_action">轉發</string>
+    <string name="hide_action">隱藏</string>
+    <string name="copy_success_tip">複製成功</string>
+    <string name="convert_to_text_risk_content_failed_tip">涉及敏感內容，轉文字失敗</string>
+</resources>

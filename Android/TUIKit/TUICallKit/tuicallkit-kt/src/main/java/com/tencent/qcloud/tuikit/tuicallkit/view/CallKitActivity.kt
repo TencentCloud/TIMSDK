@@ -101,6 +101,9 @@ class CallKitActivity : AppCompatActivity() {
     }
 
     private fun startActivityByAction() {
+        if (TUICallState.instance.selfUser.get().callStatus.get() == TUICallDefine.Status.Accept) {
+            return
+        }
         if (intent.action == Constants.ACCEPT_CALL_ACTION) {
             TUILog.i(TAG, "IncomingView -> startActivityByAction")
             EngineManager.instance.accept(null)

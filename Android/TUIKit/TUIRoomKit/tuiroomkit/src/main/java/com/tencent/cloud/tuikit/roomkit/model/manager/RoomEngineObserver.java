@@ -1,6 +1,7 @@
 package com.tencent.cloud.tuikit.roomkit.model.manager;
 
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.RoomDismissedReason.BY_SERVER;
+import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.UserInfoModifyFlag.NAME_CARD;
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType.CAMERA_STREAM;
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType.CAMERA_STREAM_LOW;
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType.SCREEN_STREAM;
@@ -123,6 +124,12 @@ public class RoomEngineObserver extends TUIRoomObserver {
     }
 
     @Override
+    public void onScreenShareForAllUserDisableChanged(String roomId, boolean isDisable) {
+        Log.d(TAG, "onScreenShareForAllUserDisableChanged roomId=" + roomId + ",isDisable=" + isDisable);
+        mConferenceState.roomState.isDisableScreen.set(isDisable);
+    }
+
+    @Override
     public void onSendMessageForAllUserDisableChanged(String roomId, boolean isDisable) {
         Map<String, Object> map = new HashMap<>();
         map.put(ConferenceEventConstant.KEY_ROOM_ID, roomId);
@@ -204,6 +211,15 @@ public class RoomEngineObserver extends TUIRoomObserver {
         if (userInfo.userRole == TUIRoomDefine.Role.ROOM_OWNER) {
             mConferenceState.roomState.ownerName.set(userInfo.userName);
         }
+        if (modifyFlag.contains(NAME_CARD)) {
+            mSeatState.updateTakeSeatRequestUserName(userInfo.userId, userInfo.nameCard);
+            mConferenceState.setUserNameCard(userInfo.userId, userInfo.nameCard);
+            mConferenceState.updateTakeSeatRequestUserName(userInfo.userId, userInfo.nameCard);
+            mUserState.userNameCardChanged(userInfo);
+            if (userInfo.userRole == TUIRoomDefine.Role.ROOM_OWNER) {
+                mRoomState.ownerName.set(userInfo.nameCard);
+            }
+        }
     }
 
     @Override
@@ -222,6 +238,9 @@ public class RoomEngineObserver extends TUIRoomObserver {
         } else {
             mConferenceState.updateUserCameraState(userId, streamType, hasVideo, reason);
             mUserState.updateUserCameraState(userId, hasVideo, streamType);
+        }
+        if (TextUtils.equals(userId, mConferenceState.userModel.userId) && streamType == SCREEN_STREAM && !hasVideo && reason == TUIRoomDefine.ChangeReason.BY_ADMIN) {
+            ConferenceEventCenter.getInstance().notifyEngineEvent(ConferenceEventCenter.RoomEngineEvent.LOCAL_SHARE_STOPPED_BY_ADMIN, null);
         }
     }
 

@@ -5,11 +5,11 @@ import android.text.TextUtils;
 
 import com.tencent.cloud.tuikit.engine.extension.TUIConferenceListManager;
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListData;
-import com.tencent.cloud.tuikit.roomkit.common.livedata.LiveListObserver;
 import com.tencent.cloud.tuikit.roomkit.model.controller.ScheduleController;
 import com.tencent.cloud.tuikit.roomkit.model.data.ConferenceListState;
 import com.tencent.qcloud.tuicore.TUILogin;
+import com.trtc.tuikit.common.livedata.LiveListData;
+import com.trtc.tuikit.common.livedata.LiveListObserver;
 
 import java.util.Calendar;
 import java.util.List;

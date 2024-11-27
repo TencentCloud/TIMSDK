@@ -3,8 +3,6 @@ package com.tencent.qcloud.tuikit.timcommon.component.face;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
@@ -15,7 +13,6 @@ import android.text.style.ImageSpan;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -533,7 +530,7 @@ public class FaceManager {
             + "|[\\U0001F9E0-\\U0001F9EF]|[\\U0001F9F0-\\U0001F9FF]|[\\U0001FA70-\\U0001FA74]|[\\U0001FA78-\\U0001FA7C]"
             + "|[\\U0001FA80-\\U0001FA86]|[\\U0001FA90-\\U0001FA9F]|[\\U0001FAA0-\\U0001FAAC]|[\\U0001FAB0-\\U0001FABA]"
             + "|[\\U0001FAC0-\\U0001FAC5]|[\\U0001FAD0-\\U0001FAD9]|[\\U0001FAE0-\\U0001FAE7]|[\\U0001FAF0-\\U0001FAF6]";
-        String unsupport = "0x0023|0x002A|[0x0030-0x0039]|";
+        String unsupport = "\\u0023|\\u002A|[\\u0030-\\u0039]|";
         String emoji = unsupport + support;
 
         // Construct regex of emoji by the rules above.
@@ -553,28 +550,5 @@ public class FaceManager {
         String regexEmoji = risequence + "|" + element + "(" + zwj + "(" + risequence + "|" + element + "))*";
 
         return regexEmoji;
-    }
-
-    static class CenterImageSpan extends ImageSpan {
-
-        public CenterImageSpan(@NonNull Drawable drawable) {
-            super(drawable);
-        }
-
-        @Override
-        public int getSize(Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fm) {
-            Drawable drawable = getDrawable();
-            Rect rect = drawable.getBounds();
-            Paint.FontMetricsInt paintFm = paint.getFontMetricsInt();
-            int center = (paintFm.top + paintFm.bottom) / 2;
-            if (fm != null) {
-                fm.ascent = center - (rect.height() / 2);
-                fm.descent = center + (rect.height() / 2);
-                fm.top = fm.ascent;
-                fm.bottom = fm.descent;
-            }
-
-            return rect.right;
-        }
     }
 }

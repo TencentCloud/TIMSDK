@@ -55,7 +55,7 @@
         android:layout_width="@dimen/tuiroomkit_top_view_item_width"
         android:layout_height="@dimen/tuiroomkit_top_view_item_height"
         android:layout_centerVertical="true"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="16dp"
         android:layout_toEndOf="@+id/conference_view_audio_route"
         android:src="@drawable/tuiroomkit_ic_camera_switch" />
 
@@ -88,9 +88,7 @@
         android:layout_width="@dimen/tuiroomkit_top_view_item_width"
         android:layout_height="@dimen/tuiroomkit_top_view_item_height"
         android:layout_centerVertical="true"
-        android:layout_marginStart="-135dp"
-        android:layout_marginEnd="20dp"
-        android:layout_toStartOf="@id/conference_view_audio_route"
+        android:layout_toStartOf="@id/rl_meeting_info"
         android:src="@drawable/tuiroomkit_ic_report_room"
         android:visibility="gone" />
 

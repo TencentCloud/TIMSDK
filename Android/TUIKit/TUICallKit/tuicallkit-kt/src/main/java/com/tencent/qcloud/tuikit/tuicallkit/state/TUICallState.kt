@@ -39,7 +39,7 @@ class TUICallState {
     public var audioPlayoutDevice = LiveData<AudioPlaybackDevice>()
 
     public var enableMuteMode = false
-    public var enableFloatWindow = false
+    public var enableFloatWindow = true
     public var enableIncomingBanner = false
     public var showVirtualBackgroundButton = false
     public var enableBlurBackground = LiveData<Boolean>()

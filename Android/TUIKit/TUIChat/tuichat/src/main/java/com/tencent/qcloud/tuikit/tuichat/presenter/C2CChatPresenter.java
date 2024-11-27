@@ -83,7 +83,7 @@ public class C2CChatPresenter extends ChatPresenter {
             @Override
             public void addMessage(TUIMessageBean messageBean, String chatId) {
                 if (TextUtils.equals(chatId, c2CChatInfo.getId())) {
-                    addMessageInfo(messageBean);
+                    addMessageToUI(messageBean, true);
                 }
             }
 

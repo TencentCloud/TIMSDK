@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="multimedia_plugin_empty"></string>
+    <string name="multimedia_plugin_torch">手電筒</string>
+    <string name="multimedia_plugin_record_aspect">比例</string>
+    <string name="multimedia_plugin_beauty">美顏</string>
+
+    <string name="multimedia_plugin_confirm">確認</string>
+    <string name="multimedia_plugin_cancel">取消</string>
+    <string name="multimedia_plugin_close">關閉</string>
+    <string name="multimedia_plugin_strength">強度</string>
+    <string name="multimedia_plugin_setup">設置</string>
+    <string name="multimedia_plugin_common_none">無</string>
+    <string name="multimedia_plugin_palm_out">手掌展開</string>
+
+    <string name="multimedia_plugin_setting_panel_style">風格</string>
+    <string name="multimedia_plugin_setting_panel_beauty">美顏</string>
+    <string name="multimedia_plugin_setting_panel_filter">濾鏡</string>
+
+    <string name="multimedia_plugin_beauty_cancel">取消</string>
+    <string name="multimedia_plugin_panel_style_smooth">平滑</string>
+    <string name="multimedia_plugin_panel_style_natural">自然美顏</string>
+    <string name="multimedia_plugin_panel_style_pitu">美顏(PS)</string>
+
+    <string name="multimedia_plugin_panel_white">美白</string>
+    <string name="multimedia_plugin_panel_ruddy">紅潤</string>
+
+    <string name="multimedia_plugin_panel_filter_standard">標準</string>
+    <string name="multimedia_plugin_panel_filter_ziran">自然</string>
+    <string name="multimedia_plugin_panel_filter_baixi">白皙</string>
+    <string name="multimedia_plugin_panel_filter_cheery">活潑</string>
+    <string name="multimedia_plugin_panel_filter_cloud">雲</string>
+    <string name="multimedia_plugin_panel_filter_pure">純淨</string>
+    <string name="multimedia_plugin_panel_filter_orchid">蘭花</string>
+    <string name="multimedia_plugin_panel_filter_vitality">活力</string>
+    <string name="multimedia_plugin_panel_filter_super">超級</string>
+    <string name="multimedia_plugin_panel_filter_fragrance">香氣</string>
+    <string name="multimedia_plugin_panel_filter_white">白色</string>
+    <string name="multimedia_plugin_panel_filter_romantic">浪漫</string>
+    <string name="multimedia_plugin_panel_filter_fresh">清新</string>
+    <string name="multimedia_plugin_panel_filter_beautiful">美觀</string>
+    <string name="multimedia_plugin_panel_filter_pink">粉紅</string>
+    <string name="multimedia_plugin_panel_filter_reminiscence">懷舊</string>
+    <string name="multimedia_plugin_panel_filter_blues">藍調</string>
+    <string name="multimedia_plugin_panel_filter_cool">涼爽</string>
+    <string name="multimedia_plugin_panel_filter_Japanese">甜美</string>
+
+    <string name="multimedia_plugin_default_bgm_name">未知音樂名稱</string>
+    <string name="multimedia_plugin_default_time">00:00</string>
+    <string name="multimedia_plugin_bgm_music">音樂</string>
+    <string name="multimedia_plugin_origin_audio">原音</string>
+    <string name="multimedia_plugin_send">發送</string>
+    <string name="multimedia_plugin_done">完成</string>
+    <string name="multimedia_plugin_zero">0</string>
+    <string name="multimedia_plugin_zero_time">00:00</string>
+    <string name="multimedia_plugin_local">本地</string>
+    <string name="multimedia_plugin_default">預設</string>
+    <string name="multimedia_plugin_record_operation_tips">點擊拍照，長按錄影</string>
+    <string name="multimedia_plugin_record_take_phone_operation_tips">點擊拍照</string>
+    <string name="multimedia_plugin_bgm_type_name_default">預設</string>
+    <string name="multimedia_plugin_bgm_type_name_chosen">已選擇</string>
+    <string name="multimedia_plugin_bgm_item_bgm_name_default">未知音樂</string>
+    <string name="multimedia_plugin_bgm_item_bgm_author_default">未知作者</string>
+
+    <string name="multimedia_plugin_picker_preview">預覽</string>
+    <string name="multimedia_plugin_picker_full_image">完整圖片</string>
+    <string name="multimedia_plugin_picker_send">發送</string>
+    <string name="multimedia_plugin_picker_edit">編輯</string>
+    <string name="multimedia_plugin_picker_select">選擇</string>
+
+    <string name="multimedia_plugin_request_permission_storage_title">%s申請獲取存儲權限</string>
+    <string name="multimedia_plugin_request_permission_storage_reason">需要訪問您的存儲權限，開啟後用於相冊圖片視頻發送、聊天圖片視頻保存等功能</string>
+    <string name="multimedia_plugin_request_permission_storage_tip">在設置-應用-%s-權限中開啟存儲權限，以正常使用相冊圖片視頻發送、聊天圖片保存等功能</string>
+
+    <string name="multimedia_plugin_request_permission_media_title">%s申請訪問照片與視頻</string>
+    <string name="multimedia_plugin_request_permission_media_reason">需要訪問照片與視頻，開啟後用於相冊圖片視頻發送、聊天圖片視頻保存等功能</string>
+    <string name="multimedia_plugin_request_permission_media_tip">在設置-應用-%s-權限中開啟照片與視頻權限，以正常使用相冊圖片視頻發送、聊天圖片保存等功能</string>
+</resources>

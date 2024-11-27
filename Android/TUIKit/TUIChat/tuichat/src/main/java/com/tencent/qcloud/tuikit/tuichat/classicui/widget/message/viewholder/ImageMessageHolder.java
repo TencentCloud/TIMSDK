@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageContentHolder;
@@ -26,7 +25,6 @@ import com.tencent.qcloud.tuikit.tuichat.component.progress.ChatRingProgressBar;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ProgressPresenter;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatFileDownloadPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-
 import java.io.Serializable;
 
 public class ImageMessageHolder extends MessageContentHolder {
@@ -113,8 +111,23 @@ public class ImageMessageHolder extends MessageContentHolder {
         videoDurationText.setVisibility(View.GONE);
         sendingProgress.setVisibility(View.GONE);
 
-        progressListener = this::updateProgress;
+        progressListener = new ProgressPresenter.ProgressListener() {
+            @Override
+            public void onProgress(int progress) {
+                updateProgress(progress, msg);
+            }
+        };
         ProgressPresenter.registerProgressListener(msg.getId(), progressListener);
+
+        if (!msg.isHasReaction()) {
+            setMessageBubbleBackground(null);
+            setMessageBubbleZeroPadding();
+        }
+
+        if (msg.isProcessing()) {
+            GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, msg.getProcessingThumbnail(), null, DEFAULT_RADIUS);
+            return;
+        }
 
         String imagePath = ChatFileDownloadPresenter.getImagePath(msg);
         if (FileUtil.isFileExists(imagePath)) {
@@ -185,10 +198,6 @@ public class ImageMessageHolder extends MessageContentHolder {
                 return true;
             }
         });
-        if (!msg.isHasReaction()) {
-            setMessageBubbleBackground(null);
-            setMessageBubbleZeroPadding();
-        }
     }
 
     private void loadImage(TUIMessageBean messageBean, String finalImagePath) {
@@ -197,7 +206,10 @@ public class ImageMessageHolder extends MessageContentHolder {
         }
     }
 
-    private void updateProgress(int progress) {
+    private void updateProgress(int progress, TUIMessageBean messageBean) {
+        if (!TextUtils.equals(msgID, messageBean.getId())) {
+            return;
+        }
         progressContainer.setVisibility(View.VISIBLE);
         progressText.setVisibility(View.VISIBLE);
         fileProgressBar.setVisibility(View.VISIBLE);

@@ -92,6 +92,10 @@ public final class TUIConstants {
         public static final String SELF_ROLE = "selfRole";
         public static final String SELF_BIRTHDAY = "selfBirthday";
         public static final String SELF_ALLOW_TYPE = "selfAllowType";
+        // 账号类型
+        public static final int ACCOUNT_TYPE_UNKOWN = 0;
+        public static final int ACCOUNT_TYPE_IM = 1;
+        public static final int ACCOUNT_TYPE_PUSH = 2;
     }
 
     public static final class TUIChat {
