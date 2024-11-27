@@ -225,8 +225,14 @@
     ar.nameInCurrentLanguage = TIMCommonLocalizableString(ar);
     ar.selected = NO;
 
+    TUILanguageSelectCellModel *traditionalChinese = [[TUILanguageSelectCellModel alloc] init];
+    traditionalChinese.languageID = @"zh-Hant";
+    traditionalChinese.languageName = @"繁體中文";
+    traditionalChinese.nameInCurrentLanguage = TIMCommonLocalizableString(zh-Hant);
+    traditionalChinese.selected = NO;
 
-    self.datas = [NSMutableArray arrayWithArray:@[ chinese, english,ar ]];
+
+    self.datas = [NSMutableArray arrayWithArray:@[chinese, english, ar, traditionalChinese]];
 
     for (TUILanguageSelectCellModel *cellModel in self.datas) {
         if ([cellModel.languageID isEqual:languageID]) {

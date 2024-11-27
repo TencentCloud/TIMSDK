@@ -1,0 +1,193 @@
+/*
+  Localizable.strings
+  TUIKitDemo
+
+  Created by harvy on 2024/10/16.
+  Copyright © 2020 Tencent. All rights reserved.
+*/
+
+"cancel" = "取消";
+"Cancel" = "取消";
+"Send" = "發送";
+"Alia" = "備註";
+"Group" = "分組";
+"OK" = "好";
+"Accept" = "同意";
+"Decline" = "拒絕";
+"Password" = "密碼";
+
+"done" = "完成";
+"Done" = "完成";
+
+"logout" = "退出登錄";
+"login" = "登錄";
+
+"confirm" = "確定";
+
+"save" = "保存";
+"Save" = "保存";
+
+"None" = "無";
+
+"choose_avatar_for_you" = "App隨機為您分配一個系統頭像";
+
+"AppLoginSucc" = "已成功登錄";
+"AppGetAccessAddressFail" = "服務異常，請檢查網絡後重試";
+"AppOfflineTitle" = "下線通知";
+"AppOfflineDesc" = "您的賬號於另一台手機上登錄";
+"AppCancelRelogin" = "退出";
+"AppConfirmRelogin" = "重新登錄";
+
+"AppMainTitle" = "騰訊雲·IM";
+"AppMainConnectingTitle" = "連接中...";
+"AppMainDisconnectTitle" = "騰訊雲·IM(未連接)";
+
+"TabBarItemMessageText" = "消息";
+"TabBarItemContactText" = "通訊錄";
+"TabBarItemMeText"      = "設置";
+
+"ChatsCreateFailed" = "創建群失敗";
+
+"ChatSecurityWarning" = "請勿輕信匯款、中獎等信息，謹慎對待陌生電話，避免上當受騙。遇到可疑情況請及時反饋。";
+"ChatSecurityWarningReport" = "點此舉報";
+"ChatSecurityWarningGot" = "我知道了";
+
+"MeAbout" = "關於騰訊雲·IM";
+"MeDevelop" = "開發調試";
+"MeReportMemoryLeak" = "內存洩漏上報";
+
+"MeSwitchSkin" = "更換主題";
+"MeSwitchLaunguage" = "切換語言";
+
+"GroupRequestJoinGroupFormat" = "%@ 申請加入群聊";
+"GroupJoin" = "添加群組";
+
+"FriendRequestFormat" = "我是%@";
+"FriendRequestFillInfo" = "添加好友";
+"FriendOneWay" = "單向好友";
+"FriendAddResultSuccessWait" = "發送成功,等待審核同意";
+"FriendAddResultForbid" = "對方禁止添加";
+"FriendAddResultSuccess" = "已添加到好友列表";
+"FriendAddResultExists" = "對方已是您的好友";
+"FriendAddVerificationMessage" = "驗證消息";
+"FriendAddTitle" = "加好友";
+
+"SearchGroupPlaceholder" = "用戶ID";
+
+"GroupMember" = "群成員";
+"GroupAddFirend" = "添加聯繫人";
+"GroupDeleteFriend" = "刪除聯繫人";
+
+"ErrrorTipsCreate" = "創建失敗";
+"ErrorTipsDestory" = "銷毀失敗";
+"ErrirTipsHeart" = "心跳失敗";
+"ErrorTipsParamtersValid" = "參數失敗";
+"ErrorTipsServerRequest" = "服務請求失敗";
+"ErrorTipsOpFailed" = "操作失敗，請檢查網絡";
+"ErrorTipsInvalidUser" = "用戶名格式錯誤";
+"ErrorTIpsInvalidUserPwd" = "用戶名或密碼不合法";
+"ErrorTipsUsernameExists" = "用戶名已存在";
+"ErrorTipsServer" = "服務器錯誤";
+"ErrorTipsUsernameNull" = "用戶不存在";
+"ErrorTipsPwdError" = "密碼錯誤";
+
+"TipsCheckCodeHasSent" = "驗證碼已發出";
+"TipsGetCheckcode" = "獲取驗證碼";
+"TipsCheckCodeFailedFormat" = "獲取驗證碼失敗。錯誤碼：%d。錯誤信息：%@";
+"TipsPhoneCodeNotNull" = "手機號和驗證碼不能為空";
+"TipsPhoneNotMatch" = "當前手機號與獲取驗證碼手機號不一致，請確認";
+"TipsLoginErrorWithUserIdfailed" = "登錄失敗，userId or userSig 獲取失敗";
+"TipsLoginErrorFormat" = "登錄失敗。錯誤碼：%d。錯誤信息：%@";
+"TipsLoginWithAccountPassword" = "帳號密碼登錄";
+"TipsLoginWithAccountDirectly" = "帳號直接登錄";
+"TipsOldVersionRegisterAccount" =  "老版本用戶如果註冊了帳號密碼，可以直接輸入帳號密碼登錄";
+
+"exclued_from_unread_count" = "不計入未讀數消息";
+
+// ---- 2021-04-22 新增
+"TipsPhoneNotNull" = "手機號不能為空";
+
+"GetSmsErrorFormat" = "獲取驗證碼錯誤，請刷新重試！(%@)";
+
+"MarkAllMessageAsReadSucc" = "清空未讀成功";
+"MarkAllMessageAsReadErrFormat" = "清空未讀失敗, %d, %@";
+
+"ChooseNationOrRegion" = "選擇國家或地區";
+
+"ChangeStyle" = "切換風格";
+"ChangeSkin" = "切換皮膚";
+"ChangeLanguage" = "切換語言";
+"SimpleChinese" = "簡體中文";
+"English" = "英語(English)";
+"CurrentLanguage" = "簡體中文";
+"Classic" = "經典版";
+"Minimalist" = "簡約版";
+
+"ThemeNameSerious" = "深沉";
+"ThemeNameLight" = "輕量";
+"ThemeNameLivey" = "活潑";
+"ThemeNameDark" = "深色";
+"ThemeNameSystem" = "跟隨系統";
+
+"TUIKitAboutUsSDKVersion" = "SDK版本";
+"TUIKitAboutUsPrivacyRegulations" = "隱私條例";
+"TUIKitAboutUsUserAgreement" = "用戶協議";
+"TUIKitAboutUsDisclaimer" = "免責聲明";
+"TUIKitAboutUsPersonalInformationCollectionList" = "個人信息收集清單";
+"TUIKitAboutUs3PartySharingList" = "第三方信息共享清單";
+"TUIKitAboutUsCloseAccount" = "註銷賬戶";
+"TUIKitAboutUsContactUs" = "聯繫我們";
+"TUIKitAboutUsDisclaimerText" = "騰訊雲IM APP（“本產品”）是由騰訊雲提供的一款測試產品，騰訊雲享有本產品的著作權和所有權。本產品僅用于功能體驗，不得用于任何商業用途。為配合相關部門監管要求，嚴禁在使用中有任何色情、辱罵、暴恐、涉政等違法內容傳播。";
+
+"TUIKitAboutUsCloseAccountDescribe" =  "註銷後，您將無法使用當前帳號，相關數據也將刪除無法找回。當前帳號ID:%@";
+"TUIKitAboutUsCloseAccountAlterMsg" = "確認註銷帳號嗎?";
+"TUIKitAboutUsCloseAccountAlterAction1" = "註銷";
+"TUIKitAboutUsCloseAccountError1" = "註銷失敗,當前帳號未查到token或手機號，請使用手機號登錄";
+"TUIKitAboutUsCloseAccountSuccessful" = "註銷成功";
+"TUIKitAboutUsCloseAccountFailed" = "註銷失敗";
+
+//隱私彈窗協議
+"TUIPrivateProtocolAlertMsg" = "歡迎使用騰訊雲即時通信 IM，為保護您的個人信息安全，我們更新了《隱私政策》，主要完善了收集用戶信息的具体內容和目的、增加了第三方SDK使用等方面的內容。\n請您點擊 《用戶協議》、《隱私政策摘要》、《隱私政策》、《個人信息收集清單》和《第三方信息共享清單》並仔細閱讀，如您同意以上內容，請點擊“同意並繼續”，開始使用我們的產品與服務！";
+"TUIPrivateProtocolHighlight1" = "《用戶協議》";
+"TUIPrivateProtocolHighlight2" = "《隱私政策》";
+"TUIPrivateProtocolHighlight3" = "《個人信息收集清單》";
+"TUIPrivateProtocolHighlight4" = "《第三方信息共享清單》";
+"TUIPrivateProtocolHighlight5" = "《隱私政策摘要》";
+"TUIPrivateProtocolAlertActionAgree" = "同意並繼續";
+"TUIPrivateProtocolAlertActionDisagree" = "不同意並退出";
+
+"TipsSystemVerifyError" = "驗證用戶操作或參數錯誤";
+"TipsSystemError" = "後端未知的系統錯誤";
+"TipsServiceUnavailable" = "後端依賴的服務不可用";
+"TipsServiceResponseInvalid" = "後端服務返回的結果不符合規範";
+"TipsServiceSmsFailed" = "SMS發送短信服務失敗";
+"TipsServiceDBFailed" = "後端服務DB錯誤，SQL語句執行失敗";
+"TipsServiceUnknownError" = "服務未知錯誤";
+"TipsUserCodeInvalid" = "用戶登錄失敗，錯誤的驗證碼";
+"TipsUserCodeExpired" = "用戶登錄失敗，驗證碼已過期";
+"TipsUserCodeConsumed" = "驗證碼已經使用過了，請重新獲取";
+"TipsUserTokenExpired" = "用戶Token已經過期，請重新登錄";
+"TipsUserTokenInvalid" = "用戶Token不正確，請重新登錄";
+"TipsUseInfoEmpty" = "用戶的信息為空";
+"TipsUserNotExists" = "用戶不存在";
+"TipsUserEmailInvalid" = "給用戶發送郵件時參數錯誤";
+"TipsUserQueryParams" = "用戶查詢時參數錯誤";
+"TipsUserQueryLimit" = "用戶查詢數據過多，觸發限流";
+"TipsUserOAuthParams" = "用戶OAuth參數異常";
+
+"TUIThemeNameSystemFollowTitle" = "跟隨系統自動切換";
+"TUIThemeNameSystemFollowSubTitle" = "開啟後僅展示默認皮膚 (輕快/深色)，不可切換其他皮膚樣式";
+
+"UpgradeNow" = "立即升級";
+
+"OnlineStatus" = "在線狀態";
+
+//----------------Mini begin------------
+"Chat" = "聊天";
+"TabBarItemMessageText_mini" = "聊天";
+"TabBarItemContactText_mini" = "聯繫人";
+"TabBarItemSettingText_mini" = "設置";
+"TabBarItemCallsRecordText_mini"  = "通話記錄";
+//----------------Mini end------------
+
+"TUIStartPageTitle" = "騰訊雲即時通信 IM";

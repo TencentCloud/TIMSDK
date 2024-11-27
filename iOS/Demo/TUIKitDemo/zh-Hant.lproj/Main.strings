@@ -1,0 +1,39 @@
+
+/* Class = "UIButton"; normalTitle = "密碼登錄"; ObjectID = "2fk-Js-riJ"; */
+"2fk-Js-riJ.normalTitle" = "密碼登錄";
+
+/* Class = "UIButton"; normalTitle = "登錄"; ObjectID = "8jc-YP-vv6"; */
+"8jc-YP-vv6.normalTitle" = "登錄";
+
+/* Class = "UILabel"; text = "登錄·即時通信"; ObjectID = "FYr-lV-7eY"; */
+"FYr-lV-7eY.text" = "騰訊雲即時通信 IM";
+
+/* Class = "UIButton"; normalTitle = "+"; ObjectID = "GPZ-iZ-NTr"; */
+"GPZ-iZ-NTr.normalTitle" = "+";
+
+/* Class = "UITextField"; placeholder = "請輸入驗證碼"; ObjectID = "HVD-3G-U4R"; */
+"HVD-3G-U4R.placeholder" = "請輸入驗證碼";
+
+/* Class = "UITextField"; placeholder = "請輸入手機號"; ObjectID = "Sf3-sD-vMh"; */
+"Sf3-sD-vMh.placeholder" = "請輸入手機號";
+
+/* Class = "UIButton"; normalTitle = "獲取驗證碼"; ObjectID = "T2s-k9-52b"; */
+"T2s-k9-52b.normalTitle" = "獲取驗證碼";
+
+/* Class = "UILabel"; text = "|"; ObjectID = "VD5-Ez-H67"; */
+"VD5-Ez-H67.text" = "|";
+
+/* Class = "UILabel"; text = "驗證碼"; ObjectID = "ZzM-q6-Wwo"; */
+"ZzM-q6-Wwo.text" = "驗證碼";
+
+/* Class = "UITextView"; text = "86"; ObjectID = "b7c-nQ-0Kl"; */
+"b7c-nQ-0Kl.text" = "86";
+
+/* Class = "UIButton"; normalTitle = "訪問官網"; ObjectID = "g0a-sw-KpI"; */
+"g0a-sw-KpI.normalTitle" = "訪問官網";
+
+/* Class = "UILabel"; text = "體驗群組聊天，音視頻對話等 IM 功能"; ObjectID = "h6Y-de-UkQ"; */
+"h6Y-de-UkQ.text" = "體驗群組聊天，音視頻對話等 IM 功能";
+
+/* Class = "UILabel"; text = "手機號"; ObjectID = "lCo-nh-Fc4"; */
+"lCo-nh-Fc4.text" = "手機號";

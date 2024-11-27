@@ -1,0 +1,12 @@
+/* 
+  InfoPlist.strings
+  TUIKitDemo
+
+  Created by wyl on 2022/2/11.
+  Copyright © 2022 Tencent. All rights reserved.
+*/
+
+"NSCameraUsageDescription"  =  "为方便您将所拍摄的照片或视频发送给朋友，以及进行视频通话、快速会议，请允许我们访问摄像头进行拍摄照片和视频。";
+"NSMicrophoneUsageDescription" = "为方便您发送语音消息、拍摄视频以及音视频通话、快速会议，请允许我们使用麦克风进行录音。";
+"NSPhotoLibraryAddUsageDescription" = "为方便您保存照片和视频到设备，请允许我们写入照片和视频到设备。";
+"CFBundleDisplayName" = "腾讯云IM";

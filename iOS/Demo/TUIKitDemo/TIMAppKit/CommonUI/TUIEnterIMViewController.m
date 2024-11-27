@@ -81,6 +81,7 @@ NSString *kHaveViewedIMIntroduction = @"TUIKitDemo_HaveViewedIMIntroduction";
     TUIRegisterThemeResourcePath(TUIDemoThemePath, TUIThemeModuleDemo);
     [TUIThemeSelectController disableFollowSystemStyle];
     [TUIThemeSelectController applyLastTheme];
+    [TUITool configIMErrorMap];
     
     [self configIMNavigation];
     [self setupCustomSticker];
