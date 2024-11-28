@@ -1,0 +1,78 @@
+/* 
+  Localizable.strings
+ traditional Chinese
+
+  Created by eddardliu on 2024/11/18.
+  
+*/
+"record_tip" = "輕觸拍照，長按錄製";
+"record_photo_tip" = "點擊拍照";
+
+"flash" = "閃光燈";
+"aspect" = "屏比";
+"beautify" = "美顏";
+"filter" = "濾鏡";
+
+"strength" = "程度";
+
+"filter_none" = "無";
+"filter_bailan" = "白蘭";
+"filter_baixi" = "白皙";
+"filter_biaozhun" = "標準";
+"filter_chaotuo" = "超脫";
+"filter_chunzhen" = "純真";
+"filter_fennen" = "粉嫩";
+"filter_huaijiu" = "懷舊";
+"filter_landiao" = "藍調";
+"filter_langman" = "浪漫";
+"filter_qingliang" = "浪漫";
+"filter_qingxin" = "清新";
+"filter_rixi" = "日系";
+"filter_weimei" = "唯美";
+"filter_white" = "美白";
+"filter_xiangfen" = "香氛";
+"filter_yinghong" = "櫻紅";
+"filter_yuanqi" = "元氣";
+"filter_yunshang" = "雲裳";
+"filter_ziran" = "自然";
+
+"beautify_none" = "無";
+"beautify_smooth" = "磨皮";
+"beautify_natural" = "美顏(自然)";
+"beautify_pitu" = "美顏(天天P圖)";
+"beautify_whitness" = "美白";
+"beautify_ruddy" = "紅潤";
+
+"record_failed" = "錄製失敗";
+"record_failed_reason_camera" = "請檢查監視器許可權是否打開";
+"record_failed_reason_microphone" = "請檢查麥克風許可權是否打開";
+"record_failed_reason_license" = "licence驗證失敗";
+"record_failed_reason_unknown" = "未知原因";
+
+"photo_failed" = "拍照失敗";
+
+"modify_load_assert_failed" = "讀取視頻素材失敗";
+
+"editor_bgm" = "配樂";
+"editor_origin_audio" = "視頻原聲";
+
+"ok" = "確定";
+"cancel" = "取消";
+"delete" = "删除";
+
+"send" = "發送";
+"done" = "完成";
+
+"default_1" = "默認1";
+"default_2" = "默認2";
+"default_3" = "默認3";
+"custom" = "自定义";
+
+"default" = "自定義";
+"best" = "精選";
+
+"bgm_test_name" = "測試音樂";
+
+"bgm_source_unknown" = "未知歌手";
+
+"remove_paster" = "删除貼紙";

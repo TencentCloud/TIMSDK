@@ -20,6 +20,8 @@ English | [简体中文](./README_ZH.md)
 
 [Latest TUIEmojiPlugin download](https://im.sdk.cloud.tencent.cn/download/tuikit/8.3.6498/ios/TUIEmojiPlugin.zip)
 
+[Latest TUIMultimediaPlugin download](https://im.sdk.cloud.tencent.cn/download/tuikit/8.3.6498/ios/TUIMultimediaPlugin.zip)
+
 [Latest TUICore download](https://im.sdk.cloud.tencent.cn/download/tuikit/8.3.6498/ios/TUICore.zip)
 
 [Latest TIMCommon download](https://im.sdk.cloud.tencent.cn/download/tuikit/8.3.6498/ios/TIMCommon.zip)

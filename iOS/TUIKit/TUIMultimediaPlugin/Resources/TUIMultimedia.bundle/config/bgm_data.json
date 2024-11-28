@@ -1,0 +1,42 @@
+{
+  "bgm_list": [
+    {
+      "bgm_type_name": "default",
+      "bgm_item_list": [
+        {
+            "item_bgm_path": "file:///asset/music/test1.mp3",
+            "item_bgm_name": "测试音乐1",
+            "item_bgm_author": "未知",
+            "item_start_time": 0,
+            "item_end_time": 0
+        },
+        {
+            "item_bgm_path": "file:///asset/music/test2.mp3",
+            "item_bgm_name": "测试音乐2",
+            "item_bgm_author": "未知",
+            "item_start_time": 0,
+            "item_end_time": 0
+        },
+        {
+            "item_bgm_path": "file:///asset/music/test3.mp3",
+            "item_bgm_name": "测试音乐3",
+            "item_bgm_author": "未知",
+            "item_start_time": 0,
+            "item_end_time": 0
+        }
+      ]
+    },
+    {
+      "bgm_type_name": "best",
+      "bgm_item_list": [
+        {
+          "item_bgm_path": "file:///asset/music/test1.mp3",
+          "item_bgm_name": "测试音乐1",
+          "item_bgm_author": "未知",
+          "item_start_time": 0,
+          "item_end_time": 0
+        }
+      ]
+    }
+  ]
+}

@@ -22,6 +22,8 @@
 
 [最新 TUIEmojiPlugin 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/8.3.6498/ios/TUIEmojiPlugin.zip)
 
+[最新 TUIMultimediaPlugin 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/8.3.6498/ios/TUIMultimediaPlugin.zip)
+
 [最新 TUICore 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/8.3.6498/ios/TUICore.zip)
 
 [最新 TIMCommon 下载](https://im.sdk.cloud.tencent.cn/download/tuikit/8.3.6498/ios/TIMCommon.zip)

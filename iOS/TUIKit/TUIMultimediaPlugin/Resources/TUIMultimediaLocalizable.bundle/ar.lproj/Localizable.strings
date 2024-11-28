@@ -1,0 +1,79 @@
+/*
+  Localizable.strings
+  ar
+  
+  Created by eddardliu on 2024/11/16.
+  
+*/
+
+"record_tip" = "اضغط على الصورة ، اضغط على تسجيل طويل";
+"record_photo_tip" = "انقر على الصورة";
+
+"flash" = "فلاش";
+"aspect" = "جوانب";
+"beautify" = "تجميل";
+"filter" = "فلاتر";
+
+"strength" = "قوة";
+
+"filter_none" = "هل أنت بخير ؟ - لا -";
+"filter_bailan" = "بساتين الفاكهة";
+"filter_baixi" = "أبيض .";
+"filter_biaozhun" = "ستاندرد";
+"filter_chaotuo" = "سوبر";
+"filter_chunzhen" = "نقاء";
+"filter_fennen" = "روسي";
+"filter_huaijiu" = "حنين";
+"filter_landiao" = "بلوز .";
+"filter_langman" = "رومانسي";
+"filter_qingliang" = "هذا رائع";
+"filter_qingxin" = "نضارة";
+"filter_rixi" = "حلو .";
+"filter_weimei" = "جماليات";
+"filter_white" = "أبيض .";
+"filter_xiangfen" = "عطر";
+"filter_yinghong" = "سعيد !";
+"filter_yuanqi" = "حيوية";
+"filter_yunshang" = "سحابة";
+"filter_ziran" = "الطبيعة .";
+
+"beautify_none" = "هل أنت بخير ؟ - لا -";
+"beautify_smooth" = "سلاسة";
+"beautify_natural" = "الجمال ( الطبيعة )";
+"beautify_pitu" = "جميل ( س )";
+"beautify_whitness" = "البياض";
+"beautify_ruddy" = "رودي";
+
+"record_failed" = "غير قادر على تسجيل";
+"record_failed_reason_camera" = "يرجى التحقق من ما إذا كان يسمح بالدخول إلى الكاميرا";
+"record_failed_reason_microphone" = "يرجى التحقق من أن الميكروفون هو مسموح";
+"record_failed_reason_license" = "لا يمكن التحقق من الترخيص";
+"record_failed_reason_unknown" = "سبب غير معروف";
+
+"photo_failed" = "غير قادر على التقاط الصور";
+
+"modify_load_assert_failed" = "لا يمكن تحميل موارد الفيديو";
+
+"editor_bgm" = "بگم";
+"editor_origin_audio" = "فيديو صوتي";
+
+"ok" = "حَسَناً";
+"cancel" = "ألغى";
+"delete" = "حذف .";
+
+"send" = "أرسل";
+"done" = "دون";
+
+"default_1" = "القيمة الافتراضية";
+"default_2" = "القيمة الافتراضية";
+"default_3" = "القيمة الافتراضية";
+"custom" = "عرف";
+
+"default" = "خرق";
+"best" = "أفضل .";
+
+"bgm_test_name" = "اختبار الموسيقى";
+
+"bgm_source_unknown" = "المغني المجهول";
+
+"remove_paster" = "حذف لصق";

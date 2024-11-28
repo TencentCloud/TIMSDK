@@ -1,0 +1,30 @@
+{
+    "paster_type_list": [
+        {
+            "type_name": "",
+            "type_icon_path": "file:///asset/paster/heart.png",
+            "paster_item_list": [
+                {
+                    "item_icon_path": "file:///asset/paster_add.png",
+                    "item_is_file_selector": true
+                },
+                {
+                    "item_icon_path": "file:///asset/paster/emoji/emoji_0.png",
+                    "item_image_path": "file:///asset/paster/emoji/emoji_0.png"
+                },
+                {
+                    "item_icon_path": "file:///asset/paster/emoji/emoji_1.png",
+                    "item_image_path": "file:///asset/paster/emoji/emoji_1.png"
+                },
+                {
+                    "item_icon_path": "file:///asset/paster/emoji/emoji_2.png",
+                    "item_image_path": "file:///asset/paster/emoji/emoji_2.png"
+                },
+                {
+                    "item_icon_path": "file:///asset/paster/emoji/emoji_3.png",
+                    "item_image_path": "file:///asset/paster/emoji/emoji_3.png"
+                }
+            ]
+        }
+    ]
+}

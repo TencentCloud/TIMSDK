@@ -1,0 +1,81 @@
+/* 
+  Localizable.strings
+  Chinese Simplized
+
+  Created by rickwrwang on 2024/07/16.
+  
+*/
+
+"record_tip" = "轻触拍照，长按录制";
+"record_photo_tip" = "点击拍照";
+
+"flash" = "闪光灯";
+"aspect" = "屏比";
+"beautify" = "美颜";
+"filter" = "滤镜";
+
+"strength" = "程度";
+
+"filter_none" = "无";
+"filter_bailan" = "白兰";
+"filter_baixi" = "白皙";
+"filter_biaozhun" = "标准";
+"filter_chaotuo" = "超脱";
+"filter_chunzhen" = "纯真";
+"filter_fennen" = "粉嫩";
+"filter_huaijiu" = "怀旧";
+"filter_landiao" = "蓝调";
+"filter_langman" = "浪漫";
+"filter_qingliang" = "清亮";
+"filter_qingxin" = "清新";
+"filter_rixi" = "日系";
+"filter_weimei" = "唯美";
+"filter_white" = "美白";
+"filter_xiangfen" = "香氛";
+"filter_yinghong" = "樱红";
+"filter_yuanqi" = "元气";
+"filter_yunshang" = "云裳";
+"filter_ziran" = "自然";
+
+"beautify_none" = "无";
+"beautify_smooth" = "磨皮";
+"beautify_natural" = "美颜(自然)";
+"beautify_pitu" = "美颜(天天P图)";
+"beautify_whitness" = "美白";
+"beautify_ruddy" = "红润";
+
+"record_failed" = "录制失败";
+"record_failed_reason_camera" = "请检查摄像头权限是否打开";
+"record_failed_reason_microphone" = "请检查麦克风权限是否打开";
+"record_failed_reason_license" = "licence 验证失败";
+"record_failed_reason_unknown" = "未知原因";
+
+"photo_failed" = "拍照失败";
+
+"modify_load_assert_failed" = "读取视频素材失败";
+
+"editor_bgm" = "配乐";
+"editor_origin_audio" = "视频原声";
+
+"ok" = "确定";
+"cancel" = "取消";
+"delete" = "删除";
+
+"send" = "发送";
+"done" = "完成";
+
+"default_1" = "默认1";
+"default_2" = "默认2";
+"default_3" = "默认3";
+"custom" = "自定义";
+
+"default" = "默认";
+"best" = "精选";
+
+"bgm_test_name" = "测试音乐";
+
+"bgm_test1_lyric" = "测试音乐1    歌词是歌曲中的文词部分。许多用以咏唱，并有较具体和详细内容的歌，除了音乐部分以外，都会有文词部分。";
+
+"bgm_source_unknown" = "未知歌手";
+
+"remove_paster" = "删除贴纸";

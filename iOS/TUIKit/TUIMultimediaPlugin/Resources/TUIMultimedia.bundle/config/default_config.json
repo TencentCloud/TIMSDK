@@ -1,0 +1,15 @@
+{
+  "max_record_duration_ms": "15000",
+  "min_record_duration_ms": "2000",
+  "video_quality": "2",
+  "picture_paster_config_file_path": "config/picture_paster_data",
+  "bgm_config_file_path": "config/bgm_data",
+  "support_record_torch": "true",
+  "support_record_beauty": "true",
+  "support_record_aspect": "true",
+  "support_record_scroll_filter": "true",
+  "support_video_edit_graffiti": "true",
+  "support_video_edit_paster": "true",
+  "support_video_edit_subtitle": "true",
+  "support_video_edit_bgm": "true"
+}
