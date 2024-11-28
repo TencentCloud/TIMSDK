@@ -52,11 +52,6 @@
  */
 + (void)setPreferredLanguage:(NSString *)language;
 
-/**
- * Ignore traditional chinese and switch to simplified chinese
- */
-+ (void)ignoreTraditionChinese:(BOOL)ignore;
-
 + (void)setRTLOption:(BOOL)op;
 
 + (BOOL)getRTLOption;
@@ -64,5 +59,6 @@
 #pragma mark - Deprecated
 + (NSString *)g_localizedStringForKey:(NSString *)key bundle:(NSString *)bundleName __attribute__((deprecated("use getLocalizedStringForKey:bundle:")));
 + (NSString *)tk_localizableLanguageKey __attribute__((deprecated("use getPreferredLanguage")));
++ (void)ignoreTraditionChinese:(BOOL)ignore __attribute__((deprecated("traditional chinese is now supported by the TUIKit component, and the current API has been deprecated")));
 
 @end

@@ -9,7 +9,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-
 @interface TUIConfig_Minimalist : NSObject
 /**
  *  Show the toast prompt built in TUIKit.

@@ -136,5 +136,7 @@
 	<string>#FF7756</string>
 	<key>chat_react_desc_color</key>
 	<string>#FFFFFF</string>
+	<key>chat_highlight_link_color</key>
+	<string>#6495ED</string>
 </dict>
 </plist>

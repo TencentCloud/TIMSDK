@@ -58,7 +58,7 @@
         callService:TUICore_TUICallingService
              method:TUICore_TUICallingService_EnableVirtualBackgroundForCallMethod
               param:@{
-        TUICore_TUICallingService_EnableVirtualBackgroundForCallMethod_EnableVirtualBackgroundForCall 
+        TUICore_TUICallingService_EnableVirtualBackgroundForCallMethod_EnableVirtualBackgroundForCall
                     : @(TUIChatConfig.defaultConfig.enableVirtualBackgroundForCall)
               }];
 }
@@ -83,10 +83,17 @@
         return [self getDisplayString:param[TUICore_TUIChatService_GetDisplayStringMethod_MsgKey]];
     } else if ([method isEqualToString:TUICore_TUIChatService_SendMessageMethod]) {
         V2TIMMessage *message = [param tui_objectForKey:TUICore_TUIChatService_SendMessageMethod_MsgKey asClass:V2TIMMessage.class];
-        if (message == nil) {
+        TUIMessageCellData *cellData = [param tui_objectForKey:TUICore_TUIChatService_SendMessageMethod_PlaceHolderUIMsgKey asClass:TUIMessageCellData.class];
+        if (!message && !cellData) {
             return nil;
         }
-        NSDictionary *userInfo = @{TUICore_TUIChatService_SendMessageMethod_MsgKey : message};
+        NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+        if (message) {
+            [userInfo setObject:message forKey:TUICore_TUIChatService_SendMessageMethod_MsgKey];
+        }
+        if (cellData) {
+            [userInfo setObject:cellData forKey:TUICore_TUIChatService_SendMessageMethod_PlaceHolderUIMsgKey];
+        }
         [[NSNotificationCenter defaultCenter] postNotificationName:TUIChatSendMessageNotification object:nil userInfo:userInfo];
     } else if ([method isEqualToString:TUICore_TUIChatService_SendMessageMethodWithoutUpdateUI]) {
         V2TIMMessage *message = [param tui_objectForKey:TUICore_TUIChatService_SendMessageMethodWithoutUpdateUI_MsgKey asClass:V2TIMMessage.class];

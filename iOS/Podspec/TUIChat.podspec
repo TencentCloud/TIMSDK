@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIChat'
-  spec.version      = '8.2.6325'
+  spec.version      = '8.3.6498'
   spec.platform     = :ios
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -17,7 +17,7 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/8.2.6325/ios/TUIChat.zip?time=11'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/8.3.6498/ios/TUIChat.zip?time=11'}
 
   spec.default_subspec = 'ALL'
 
@@ -25,7 +25,7 @@ Pod::Spec.new do |spec|
     commonModel.source_files = '**/TUIChat/CommonModel/*.{h,m,mm}'
     commonModel.dependency 'TXIMSDK_Plus_iOS_XCFramework'
     commonModel.dependency 'TUICore'
-    commonModel.dependency 'TIMCommon','~> 8.2.6325'
+    commonModel.dependency 'TIMCommon','~> 8.3.6498'
     commonModel.dependency 'ReactiveObjC'
     commonModel.dependency 'SDWebImage'
     commonModel.dependency 'Masonry'
@@ -68,10 +68,16 @@ Pod::Spec.new do |spec|
   end
 
   spec.subspec 'CommonUI' do |commonUI|
+    commonUI.subspec 'Album' do |album|
+      album.source_files = '**/TUIChat/CommonUI/Album/*.{h,m,mm}'
+      album.dependency "TUIChat/BaseDataProvider"
+      album.dependency "TUIChat/BaseCell"
+    end
     commonUI.subspec 'Camera' do |camera|
       camera.source_files = '**/TUIChat/CommonUI/Camera/*.{h,m,mm}'
       camera.dependency "TUIChat/BaseDataProvider"
       camera.dependency "TUIChat/BaseCell"
+      camera.dependency "TUIChat/CommonUI/Album"
     end
     commonUI.subspec 'Pendency' do |pendency|
       pendency.source_files = '**/TUIChat/CommonUI/Pendency/*.{h,m,mm}'
@@ -120,6 +126,10 @@ Pod::Spec.new do |spec|
       header.source_files = '**/TUIChat/UI_Classic/Header/*.{h,m,mm}'
       header.dependency "TUIChat/UI_Classic/Service"
     end
+    uiClassic.subspec 'Config' do |config|
+      config.source_files = '**/TUIChat/UI_Classic/Config/*.{h,m,mm}'
+      config.dependency "TUIChat/UI_Classic/Chat"
+    end
     uiClassic.resource = [
       '**/TUIChat/Resources/*.bundle'
     ]
@@ -159,6 +169,10 @@ Pod::Spec.new do |spec|
     uiMinimalist.subspec 'Header' do |header|
       header.source_files = '**/TUIChat/UI_Minimalist/Header/*.{h,m,mm}'
       header.dependency "TUIChat/UI_Minimalist/Service"
+    end
+    uiMinimalist.subspec 'Config' do |config|
+      config.source_files = '**/TUIChat/UI_Minimalist/Config/*.{h,m,mm}'
+      config.dependency "TUIChat/UI_Minimalist/Chat"
     end
     uiMinimalist.resource = [
       '**/TUIChat/Resources/*.bundle'

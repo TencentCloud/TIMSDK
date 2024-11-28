@@ -254,9 +254,10 @@
         CGFloat topMargin = 10;
         CGFloat tagViewTopMargin = 6;
         CGFloat thumbHeight = self.bubbleView.mm_h - topMargin - self.messageData.messageContainerAppendSize.height - tagViewTopMargin;
+        CGSize size = [self.class getContentSize:self.messageData];
         [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(thumbHeight);
-            make.width.mas_equalTo(self.bubbleView).multipliedBy(0.7);
+            make.width.mas_equalTo(size.width);
             make.centerX.mas_equalTo(self.bubbleView);
             make.top.mas_equalTo(self.container).mas_offset(topMargin);
         }];

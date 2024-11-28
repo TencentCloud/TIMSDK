@@ -1,0 +1,31 @@
+/* 
+  Localizable.strings
+  Chinese Simplized
+
+  Created by harvy on 2024/10/9.
+  
+*/
+"TUIChatCallDurationFormat" = "通話時長";
+"TUIChatCallCancelInCaller" = "已取消";
+"TUIChatCallCancelInCallee" = "對方已取消";
+"TUIChatCallRejectInCaller" = "對方已拒絕";
+"TUIChatCallRejectInCallee" = "已拒絕";
+"TUIChatCallTimeoutInCaller" = "對方無應答";
+"TUIChatCallTimeoutInCallee" = "對方已取消";
+"TUIChatCallLinebusyInCaller" = "對方忙線中";
+"TUIChatCallLinebusyInCallee" = "對方已取消";
+"TUIChatCallSend" = "發起通話";
+"TUIChatCallAccept" = "接聽通話";
+"TUIChatCallSwitchToAudio" = "視頻轉語音";
+"TUIChatCallConfirmSwitchToAudio" = "確認轉語音";
+"TUIChatCallUnrecognized" = "其他通話指令";
+"TUIChatGroupCallSendFormat" = "%@發起了群通話";
+"TUIChatGroupCallEnd" = "通話結束";
+"TUIChatGroupCallNoAnswer" = "未接聽";
+"TUIChatGroupCallRejectFormat" = "%@拒絕群通話";
+"TUIChatGroupCallAcceptFormat" = "%@接聽";
+"TUIChatGroupCallSwitchToAudioFormat" = "%@視頻轉語音";
+"TUIChatGroupCallConfirmSwitchToAudioFormat" = "%@同意視頻轉語音";
+"TUIChatVideoCall" = "視頻通話";
+"TUIChatAudioCall" = "音頻通話";
+"TUIChatUnknownCall" = "未知通話";

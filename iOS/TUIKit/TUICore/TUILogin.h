@@ -46,6 +46,13 @@ typedef NS_ENUM(NSInteger, TUIBusinessScene) {
     InLivingRoom = 4,
 };
 
+/// Enumeration definition of login account type
+typedef NS_ENUM(NSInteger, TUILoginAccountType) {
+    TUI_ACCOUNT_TYPE_UNKOWN              = 0,  ///< Unkown
+    TUI_ACCOUNT_TYPE_IM                  = 1,  ///< IM
+    TUI_ACCOUNT_TYPE_PUSH                = 2,  ///< Push
+};
+
 /**
  * Notification for init im sdk succeed
  */

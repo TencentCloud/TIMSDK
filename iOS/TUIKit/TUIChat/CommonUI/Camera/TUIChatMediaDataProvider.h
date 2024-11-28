@@ -19,6 +19,7 @@ typedef void (^TUIChatMediaDataProviderResultCallback)(BOOL success, NSString *_
 - (void)selectPhoto;
 - (void)takePicture;
 - (void)takeVideo;
+- (void)multimediaRecord;
 - (void)selectFile;
 
 @end

@@ -222,10 +222,18 @@
     BOOL isDir = NO;
     *isExist = NO;
     if (_videoPath && _videoPath.lastPathComponent.length) {
-        path = [NSString stringWithFormat:@"%@%@", TUIKit_Video_Path, _videoPath.lastPathComponent];
+        path = _videoPath;
         if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]) {
             if (!isDir) {
                 *isExist = YES;
+            }
+        }
+        else {
+            path = [NSString stringWithFormat:@"%@%@", TUIKit_Video_Path, _videoPath.lastPathComponent];
+            if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir]) {
+                if (!isDir) {
+                    *isExist = YES;
+                }
             }
         }
     }

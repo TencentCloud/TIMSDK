@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)onSelectPhotoMoreCellData;
 - (void)onTakePictureMoreCellData;
 - (void)onTakeVideoMoreCellData;
+- (void)onMultimediaRecordMoreCellData;
 - (void)onSelectFileMoreCellData;
 
 @end

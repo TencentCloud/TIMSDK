@@ -218,7 +218,7 @@
         } else {
             // Marked unread Show number 1
             [self.unReadView setNum:1];
-            self.unReadView.hidden = convData.unreadCount == 0 ? YES : ![TUIConversationConfig sharedConfig].showCellUnreadCount;
+            self.unReadView.hidden = ![TUIConversationConfig sharedConfig].showCellUnreadCount;
         }
     }
 

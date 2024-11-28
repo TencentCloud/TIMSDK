@@ -45,6 +45,26 @@
     return self.frame.size.height;
 }
 
+- (CGPoint)mm_origin {
+    return self.frame.origin;
+}
+
+- (void)setMm_origin:(CGPoint)mm_origin {
+    CGRect frame = self.frame;
+    frame.origin = mm_origin;
+    self.frame = frame;
+}
+
+- (CGSize)mm_size {
+    return self.frame.size;
+}
+
+- (void)setMm_size:(CGSize)size {
+    CGRect frame = self.frame;
+    frame.size = size;
+    self.frame = frame;
+}
+
 - (CGFloat)mm_centerX {
     return self.center.x;
 }
@@ -157,6 +177,7 @@
       return self;
     };
 }
+
 - (UIView * (^)(CGFloat))mm_height {
     @tui_mm_weakify(self);
     return ^(CGFloat m_height) {

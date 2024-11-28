@@ -10,7 +10,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol TUITextViewDelegate <NSObject>
+- (void)onLongPressTextViewMessage:(UITextView *)textView;
+@end
+
 @interface TUITextView : UITextView
+@property (nonatomic, strong) UILongPressGestureRecognizer *longPressGesture;
+@property (nonatomic, weak) id<TUITextViewDelegate> tuiTextViewDelegate;
+
+- (void)disableHighlightLink;
 
 @end
 

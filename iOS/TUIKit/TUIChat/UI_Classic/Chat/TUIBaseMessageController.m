@@ -53,6 +53,7 @@
 @property(nonatomic, strong) TUIMessageDataProvider *messageDataProvider;
 @property(nonatomic, strong) TUIMessageCellData *menuUIMsg;
 @property(nonatomic, strong) TUIMessageCellData *reSendUIMsg;
+@property(nonatomic, strong) TUIChatPopMenu *chatPopMenu;
 @property(nonatomic, strong) TUIChatConversationModel *conversationData;
 @property(nonatomic, strong) UIActivityIndicatorView *indicatorView;
 @property(nonatomic, assign) BOOL isActive;
@@ -461,9 +462,11 @@
     [self.messageDataProvider preProcessMessage:@[ newUIMsg ]
                                        callback:^{
         @strongify(self)
-        [self.messageDataProvider replaceUIMsg:newUIMsg atIndex:index];
-        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] 
-                              withRowAnimation:UITableViewRowAnimationNone];
+        [UIView performWithoutAnimation:^{
+            [self.messageDataProvider replaceUIMsg:newUIMsg atIndex:index];
+            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]
+                                  withRowAnimation:UITableViewRowAnimationNone];
+        }];
     }];
 }
 
@@ -488,14 +491,16 @@
 
 - (void)onReceivedSendMessageRequest:(NSNotification *)notification {
     NSDictionary *userInfo = notification.userInfo;
-    if (userInfo == nil) {
+    if (!userInfo) {
         return;
     }
     V2TIMMessage *message = [userInfo objectForKey:TUICore_TUIChatService_SendMessageMethod_MsgKey];
-    if (message == nil) {
-        return;
+    TUIMessageCellData *cellData = [userInfo objectForKey:TUICore_TUIChatService_SendMessageMethod_PlaceHolderUIMsgKey];
+    if (cellData && !message) {
+        [self sendPlaceHolderUIMessage:cellData];
+    } else if (message) {
+        [self sendMessage:message placeHolderCellData:cellData];
     }
-    [self sendMessage:message];
 }
 
 - (void)onReceivedSendMessageWithoutUpdateUIRequest:(NSNotification *)notification {
@@ -639,7 +644,7 @@
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.messageDataProvider.uiMsgs.count - 1 - i inSection:0];
             TUIMessageCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
             /**
-             * 
+             *
              * Determine whether the current unread needs to be changed to read by the callback timestamp
              */
             time_t msgTime = [cell.messageData.innerMessage.timestamp timeIntervalSince1970];
@@ -809,7 +814,12 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return UITableViewAutomaticDimension;
+    if (indexPath.row < self.messageDataProvider.uiMsgs.count) {
+        TUIMessageCellData *cellData = self.messageDataProvider.uiMsgs[indexPath.row];
+        return [self.messageCellConfig getEstimatedHeightFromMessageCellData:cellData];
+    } else {
+        return UITableViewAutomaticDimension;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -991,9 +1001,14 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     
     self.menuUIMsg = data;
     
-    __weak typeof(self) weakSelf = self;
+    if (self.chatPopMenu && self.chatPopMenu.superview) {
+        //The pop-up menu can only appear one at a time.
+        return;
+    }
     TUIChatPopMenu *menu = [[TUIChatPopMenu alloc] initWithEmojiView:YES frame:CGRectZero];
+    self.chatPopMenu = menu;
     menu.targetCellData = data;
+    menu.targetCell = cell;
     __weak typeof(menu) weakMenu = menu;
     BOOL isPluginCustomMessage = [TUIMessageCellConfig isPluginCustomMessageCellData:data];
     BOOL isChatNoramlMessageOrCustomMessage = !isPluginCustomMessage;
@@ -1019,9 +1034,11 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
          */
         TUITextMessageCell *textCell = (TUITextMessageCell *)cell;
         [textCell.textView becomeFirstResponder];
+        [textCell.textView selectAll:self];
     } else if ([data isKindOfClass:[TUIReferenceMessageCellData class]]) {
         TUIReferenceMessageCell *referenceCell = (TUIReferenceMessageCell *)cell;
         [referenceCell.textView becomeFirstResponder];
+        [referenceCell.textView selectAll:self];
     }
     
     BOOL isFirstResponder = NO;
@@ -1371,7 +1388,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     return ![TUIMessageCellConfig isPluginCustomMessageCellData:data];
 }
 
-- (void)onLongSelectMessageAvatar:(TUIMessageCell *)cell {    
+- (void)onLongSelectMessageAvatar:(TUIMessageCell *)cell {
     if (TUIChatConfig.defaultConfig.eventConfig.chatEventListener &&
     [TUIChatConfig.defaultConfig.eventConfig.chatEventListener respondsToSelector:@selector(onUserIconLongClicked:messageCellData:)]) {
         BOOL result = [TUIChatConfig.defaultConfig.eventConfig.chatEventListener onUserIconLongClicked:cell messageCellData:cell.messageData];
@@ -1523,7 +1540,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
 - (void)onCopyMsg:(id)sender {
     NSString *content = @"";
     /**
-     * 
+     *
      * The text message should be based on the content of the message actually selected by the cursor
      */
     if ([sender isKindOfClass:[TUITextMessageCell class]]) {

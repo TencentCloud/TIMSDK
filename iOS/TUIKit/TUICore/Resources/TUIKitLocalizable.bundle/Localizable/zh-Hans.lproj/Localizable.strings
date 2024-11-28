@@ -304,7 +304,7 @@
 "TUIKitErrorWifiNeedAuth" = "wifi需要认证";
 "TUIKitErrorUserCanceled" = "用户已取消";
 "TUIkitErrorRevokeTimeLimitExceed" = "消息撤回超过了时间限制（默认2分钟）";
-"TUIKitErrorLackUGExt" = "缺少UGC扩展包";
+"TUIKitErrorLackUGExt" = "缺少Multimedia扩展包";
 "TUIKitErrorAutoLoginNeedUserSig" = "自动登录，本地票据过期，需要userSig手动登录";
 "TUIKitErrorQALNoShortConneAvailable" = "没有可用的短连接sso";
 "TUIKitErrorReqContentAttach" = "消息内容安全打击";

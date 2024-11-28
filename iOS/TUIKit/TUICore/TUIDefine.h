@@ -115,6 +115,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 #define Screen_Width [UIScreen mainScreen].bounds.size.width
 #define Screen_Height [UIScreen mainScreen].bounds.size.height
+#define System_Version [[UIDevice currentDevice] systemVersion]
 #define Is_Iphone (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
 #define Is_IPhoneX (Screen_Width >= 375.0f && Screen_Height >= 812.0f && Is_Iphone)
 #define StatusBar_Height (Is_IPhoneX ? (44.0) : (20.0))
@@ -148,6 +149,7 @@
 #define TUITranslationBundle @"TUITranslation"
 #define TUIVoiceToTextBundle @"TUIVoiceToText"
 #define TUICustomerServicePluginBundle @"TUICustomerServicePlugin"
+#define TUIMultimediaPluginBundle @"TUIMultimedia"
 
 #define TUIKitLocalizableBundle @"TUIKitLocalizable"
 #define TUICoreLocalizableBundle TUIKitLocalizableBundle
@@ -157,6 +159,7 @@
 #define TUIGroupLocalizableBundle @"TUIGroupLocalizable"
 #define TUISearchLocalizableBundle @"TUISearchLocalizable"
 #define TIMCommonLocalizableBundle @"TIMCommonLocalizable"
+#define TUIMultimediaPluginLocalizableBundle @"TUIMultimediaPluginLocalizable"
 
 #define TUIDemoBundle_Key_Class @"TUIKit"
 #define TUICoreBundle_Key_Class @"TUICore"
@@ -178,6 +181,7 @@
 #define TUIChatLocalizableBundle_Key_Class @"TUIChatService"
 #define TIMCommonLocalizableBundle_Key_Class @"TIMConfig"
 #define TUICustomerServicePluginBundle_Key_Class @"TUICustomerServicePluginService"
+#define TUIMultimediaPluginBundle_Key_Class @"TUIMultimediaService"
 
 static inline NSString *getTUIFrameWorkName(NSString *bundleKeyClass) {
     if ([bundleKeyClass isEqualToString:TUICoreBundle_Key_Class] || [bundleKeyClass isEqualToString:TUIKitLocalizableBundle_Key_Class]) {
@@ -223,6 +227,9 @@ static inline NSString *getTUIFrameWorkName(NSString *bundleKeyClass) {
     }
     if ([bundleKeyClass isEqualToString:TUICustomerServicePluginBundle_Key_Class]) {
         return @"TUICustomerServicePlugin";
+    }
+    if ([bundleKeyClass isEqualToString:TUIMultimediaPluginBundle_Key_Class]) {
+        return @"TUIMultimediaPlugin";
     }
     return @"";
 }
@@ -271,6 +278,7 @@ static inline NSString *getTUIGetBundlePath(NSString *bundleName, NSString *bund
 #define TUIVoiceToTextThemePath TUIBundlePath(@"TUIVoiceToTextTheme", TUIVoiceToTextBundle_Key_Class)
 #define TUICallKitThemePath TUIBundlePath(@"TUICallKitTheme", TUICallKitBundle_Key_Class)
 #define TUICustomerServicePluginThemePath TUIBundlePath(@"TUICustomerServicePluginTheme",TUICustomerServicePluginBundle_Key_Class)
+#define TUIMultimediaPluginThemePath TUIBundlePath(@"TUIMultimediaTheme",TUIMultimediaPluginBundle_Key_Class)
 
 static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
     if ([bundleName isEqualToString:TUIChatLocalizableBundle] || [bundleName isEqualToString:TUIChatFaceBundle]) {
@@ -304,6 +312,8 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUIVoiceToTextImagePath(imageName) [TUIBundlePath(TUIVoiceToTextBundle, TUIVoiceToTextBundle_Key_Class) stringByAppendingPathComponent:imageName]
 #define TUICustomerServicePluginImagePath(imageName) \
     [TUIBundlePath(TUICustomerServicePluginBundle,TUICustomerServicePluginBundle_Key_Class) stringByAppendingPathComponent:imageName]
+#define TUIMultimediaPluginImagePath(imageName) \
+    [TUIBundlePath(TUIMultimediaPluginBundle,TUIMultimediaPluginBundle_Key_Class) stringByAppendingPathComponent:imageName]
 
 //-----Minimalist-------
 #define TUIDemoBundle_Minimalist @"TUIDemo_Minimalist"
@@ -696,6 +706,7 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 
 #define TUICore_TUIChatService_SendMessageMethod @"TUICore_TUIChatService_SendMessageMethod"
 #define TUICore_TUIChatService_SendMessageMethod_MsgKey @"TUICore_TUIChatService_SendMessageMethod_MsgKey"
+#define TUICore_TUIChatService_SendMessageMethod_PlaceHolderUIMsgKey @"TUICore_TUIChatService_SendMessageMethod_PlaceHolderUIMsgKey"
 
 #define TUICore_TUIChatService_SendMessageMethodWithoutUpdateUI @"TUICore_TUIChatService_SendMessageMethodWithoutUpdateUI"
 #define TUICore_TUIChatService_SendMessageMethodWithoutUpdateUI_MsgKey @"TUICore_TUIChatService_SendMessageMethodWithoutUpdateUI_MsgKey"
@@ -1245,6 +1256,7 @@ static inline NSBundle *getTUIGetLocalizable(NSString *bundleName) {
 #define TUICore_TUICallKitVoIPExtensionNotify @"TUICore_TUICallKitVoIPExtension_Notify"
 #define TUICore_TUICore_TUICallKitVoIPExtensionNotify_OpenMicrophoneSubKey @"TUICore_TUICore_TUICallKitVoIPExtensionNotify_OpenMicrophoneSubKey"
 #define TUICore_TUICore_TUICallKitVoIPExtensionNotify_CloseMicrophoneSubKey @"TUICore_TUICore_TUICallKitVoIPExtensionNotify_CloseMicrophoneSubKey"
+
 
 /////////////////////////////////////////////////////////////////////////////////
 //

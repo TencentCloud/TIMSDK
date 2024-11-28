@@ -149,7 +149,7 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
     _tableView.delegate = self;
     _tableView.dataSource = self;
     _tableView.estimatedRowHeight = 0;
-    _tableView.rowHeight = 64.0;
+    _tableView.rowHeight = kScale390(64.0);
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.delaysContentTouches = NO;
     [self.view addSubview:_tableView];

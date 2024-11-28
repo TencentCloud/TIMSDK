@@ -437,8 +437,11 @@ typedef NSNumber * HeightNumber;
     [self.messageDataProvider preProcessMessage:@[ newUIMsg ]
                                        callback:^{
         @strongify(self)
-        [self.messageDataProvider replaceUIMsg:newUIMsg atIndex:index];
-        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+        [UIView performWithoutAnimation:^{
+            [self.messageDataProvider replaceUIMsg:newUIMsg atIndex:index];
+            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]
+                                  withRowAnimation:UITableViewRowAnimationNone];
+        }];
     }];
 }
 
@@ -779,7 +782,12 @@ static NSMutableArray *reloadMsgIndexs = nil;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return UITableViewAutomaticDimension;
+    if (indexPath.row < self.messageDataProvider.uiMsgs.count) {
+        TUIMessageCellData *cellData = self.messageDataProvider.uiMsgs[indexPath.row];
+        return [self.messageCellConfig getEstimatedHeightFromMessageCellData:cellData];
+    } else {
+        return UITableViewAutomaticDimension;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

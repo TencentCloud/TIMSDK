@@ -314,7 +314,7 @@
 "TUIKitErrorWifiNeedAuth" = "يتطلب wifi المصادقة";
 "TUIKitErrorUserCanceled" = "ألغى المستخدم";
 "TUIkitErrorRevokeTimeLimitExceed" = "تجاوزت إعادة الرسالة الحد الزمني (الافتراضي 2 دقيقة)";
-"TUIKitErrorLackUGExt" = "يفتقر إلى حزمة UGC الموسعة";
+"TUIKitErrorLackUGExt" = "يفتقر إلى حزمة Multimedia الموسعة";
 "TUIKitErrorAutoLoginNeedUserSig" = "تسجيل الدخول التلقائي، انتهت صلاحية التذكرة المحلية، يتطلب تسجيل الدخول اليدوي باستخدام userSig";
 "TUIKitErrorQALNoShortConneAvailable" = "لا يوجد اتصال قصير SSO متاح";
 "TUIKitErrorReqContentAttach" = "ضربة أمنية لمحتوى الرسالة";

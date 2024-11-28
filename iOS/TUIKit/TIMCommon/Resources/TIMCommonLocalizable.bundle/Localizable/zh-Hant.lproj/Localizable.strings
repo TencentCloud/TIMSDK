@@ -1,0 +1,811 @@
+/*
+  Localizable.strings
+  Chinese Simplized
+
+  Created by harvy on 2024/10/9.
+  
+*/
+
+/***************************** 日期格式化 Start *************************/
+"YesterdayDateFormat" = "aHH:mm";
+/***************************** 日期格式化 End *************************/
+
+"TUIKitTipsMostSelectTextFormat" = "最多選擇%ld個";
+
+"Confirm" = "確定";
+"Cancel" = "取消";
+"Send" = "發送";
+"Save" = "保存";
+"You" = "您";
+"you" = "您";
+"Male" = "男";
+"Female" = "女";
+"File" = "文件";
+"Download" = "下載";
+"Unsetted" = "未設置";
+"Show" = "展示";
+
+"Monday" = "星期一";
+"Tuesday" = "星期二";
+"Wednesday" = "星期三";
+"Thursday" = "星期四";
+"Friday" = "星期五";
+"Saturday" = "星期六";
+"Sunday" = "星期日";
+"Yesterday" = "昨天";
+"am" = "上午";
+"pm" = "下午";
+
+"Read" = "已讀";
+"Unread" = "未讀";
+
+"Copy" = "複製";
+"Delete" = "刪除";
+"Revoke" = "撤回";
+"Retry" = "重試";
+"Re_send" = "重發";
+"Make_a_call" = "發起呼叫";
+"Done" = "完成";
+"All" = "所有人";
+"Agreed" = "已同意";
+"Disclined" = "已拒絕";
+"Agree" = "同意";
+"Have_been_sent" = "已發送";
+
+"OK" = "好";
+"None" = "無";
+"Send" = "發送";
+"Cancel" = "取消";
+"Alia" = "備註";
+"Group" = "分組";
+"Accept" = "同意";
+"Decline" = "拒絕";
+"send_success" = "發送成功";
+"add_success" = "添加成功";
+"delete_success" = "刪除成功";
+"my_friend" = "我的朋友";
+"no_personal_signature" = "暫無個性簽名";
+"SignatureFormat" = "個性簽名:%@";
+"choose_avatar_for_you" = "App隨機為您分配一個系統頭像";
+"SearchGroupPlaceholder" = "用戶ID";
+"please_fill_in_verification_information" = "請填寫驗證信息";
+"please_fill_in_remarks_group_info" = "請填寫備註";
+
+"no_set" = "未設置";
+"no_personal_signature" = "暫無個性簽名";
+"logout" = "退出登錄";
+"login" = "登錄";
+"ReadAll" = "全部已讀";
+"Hide"    = "隱藏";
+"Delete"    = "刪除";
+
+"ContactsJoinGroup"  = "添加群聊";
+"ContactsAddFriends" = "添加好友";
+
+"ChatsNewChatText"    = "發起會話";
+"ChatsNewGroupText"  = "創建群聊";
+"ChatsSelectContact" = "選擇聯繫人";
+
+"GroupJoin" = "添加群組";
+"GroupRequestJoinGroupFormat" = "%@ 申請加入群聊";
+"GroupDeleteFriend" = "刪除聯繫人";
+"GroupAddFirend" = "添加聯繫人";
+"GroupMember" = "群成員";
+
+"ProfileAlia" = "備註名";
+"ProfileMessageDoNotDisturb" = "消息免打擾";
+"ProfileStickyonTop" = "置頂聊天";
+"ProfileBlocked" = "加入黑名單";
+"ProfileSendMessages" = "發送消息";
+"ProfileDeleteFirend" = "刪除好友";
+"ProfileEditAlia" = "修改備註";
+"ProfileDetails" = "詳細資料";
+"ProfileSetBackgroundImage" = "設置當前聊天背景";
+"ProfilePhoto" = "頭像";
+"ProfileName"  = "昵稱";
+"ProfileAccount" = "帳號";
+"ProfileSignature" = "個性簽名";
+"ProfileGender" = "性別";
+"ProfileEditName" = "修改昵稱";
+"ProfileEditNameDesc" = "僅限中文、字母、數字和下劃線";
+"ProfileEditSignture" = "修改個性簽名";
+"ProfileEditGender" = "修改性別";
+"ProfileEditAlia" = "修改備註";
+"ProfileEdit" = "編輯";
+"ProfileAlia" = "備註名";
+"ProfileBlocked" = "加入黑名單";
+"ProfileMessageDoNotDisturb" = "消息免打擾";
+"ProfileStickyonTop" = "置頂聊天";
+"ProfileSendMessages" = "發送消息";
+"ProfileDeleteFirend" = "刪除好友";
+"ProfileBirthday" = "生日";
+"SignatureFormat" = "個性簽名:%@";
+
+"FriendRequestFormat" = "我是%@";
+"FriendRequestFillInfo" = "添加好友";
+"FriendOneWay" = "單向好友";
+"FriendAddTitle" = "加好友";
+"FriendAddVerificationMessage" = "驗證消息";
+"FriendAddResultSuccessWait" = "發送成功,等待審核同意";
+"FriendAddResultForbid" = "對方禁止添加";
+"FriendAddResultSuccess" = "已添加到好友列表";
+"FriendAddResultExists" = "對方已是您的好友";
+"MeFriendRequest" = "加我為好友時";
+"MeFriendRequestMethodAgreeAll" = "同意任何用戶加好友";
+"MeFriendRequestMethodNeedConfirm" = "需要驗證";
+"MeFriendRequestMethodDenyAll" = "拒絕任何人加好友";
+"MeMessageReadStatus" = "消息閱讀狀態";
+"MeMessageReadStatusOpenDesc" = "關閉後，您收發的消息均不帶消息閱讀狀態，您將無法看到對方是否已讀，同時對方也無法看到您是否已讀。";
+"MeMessageReadStatusCloseDesc" = "開啟後，您在群聊中收發的消息均帶有消息閱讀狀態，並且可以看到對方是否已讀。與您單聊的好友若也開啟了消息閱讀狀態，您與好友在單聊中收發的消息也將帶有消息閱讀狀態。";
+
+"ShowOnlineStatus" = "顯示在線狀態";
+"ShowOnlineStatusOpenDesc" = "關閉後，您將不可以在會話列表和通訊錄中看到好友在線或離線的狀態提示。";
+"ShowOnlineStatusCloseDesc" = "開啟後，您將可以在會話列表和通訊錄中看到好友在線或離線的狀態提示。";
+"ShowPackageToast" = "該功能為旗艦版功能";
+
+"ShowCallsRecord" = "顯示通話記錄";
+
+"TUIKitClassic" = "經典版";
+"TUIKitMinimalist" = "簡約版";
+"TUIKitThemeNameSystemFollowTitle" = "跟隨系統自動切換";
+"TUIKitThemeNameSystemFollowSubTitle" = "開啟後僅展示默認皮膚 (輕快/深色)，不可切換其他皮膚樣式";
+"TUIKitThemeNameSerious" = "深沉";
+"TUIKitThemeNameLight" = "輕量";
+"TUIKitThemeNameLivey" = "活潑";
+"TUIKitThemeNameDark" = "深色";
+"TUIKitThemeNameSystem" = "跟隨系統";
+
+"TUIKitDone" = "完成";
+"TUIKitWelcome" = "歡迎加入騰訊雲 IM 大家庭！";
+"TUIKitMicCamerAuthTips" = "請開啟麥克風和攝像頭權限";
+"TUIKitMicAuth" = "請開啟麥克風權限";
+"TUIKitTipsConfirmResendMessage" = "確定重發此消息嗎? ";
+"TUIKitTipsSystemError" = "系統錯誤";
+"TUIKitTipsEnterRoomErrorFormat" = "進房失敗: %d";
+"TUIKitWhoRequestForJoinGroupFormat" = "%@申請加入群聊";
+"TUIKitInviteJoinGroupFormat" = "邀請%@加入群聊";
+"TUIKitAgreedByAdministor" = "管理員同意申請";
+"TUIkitDiscliedByAdministor" = "管理員拒絕申請";
+"TUIKitDownloadProgressFormat" = "正在下載%d%%";
+"TUIKitOpenWithOtherApp" = "用其他應用程序打開";
+"TUIKitTipsContactListNil" = "聯繫人列表為空，請先添加好友";
+
+"TUIKitUserStatusUnknown" = "未知";
+"TUIKitUserStatusOnline" = "在線";
+"TUIKitUserStatusOffline" = "離線";
+"TUIKitUserStatusUnlogined" = "未登錄";
+
+"TUIKitInputHoldToTalk" = "按住 說話";
+"TUIKitInputReleaseToSend" = "鬆開 結束";
+"TUIKitInputReleaseToCancel" = "鬆開 取消";
+"TUIKitInputBlankMessageTitle" = "不能發送空白消息";
+"TUIKitInputWillFinishRecordInSeconds" = "將在 %ld 秒後結束錄製";
+"TUIKitInputRecordSlideToCancel" = "手指上滑，取消發送";
+"TUIKitInputRecordReleaseToCancel" = "鬆開手指，取消發送";
+"TUIKitInputRecordTimeshort" = "說話時間太短";
+"TUIKitInputRecordTimeLong" = "說話時間太長";
+
+"TUIKitGroupProfileDetails" = "詳細資料";
+"TUIKitGroupProfileMember" = "群成員";
+"TUIKitGroupProfileMemberCount" = "%d 人";
+"TUIKitGroupProfileMemberCountlu" = "%lu人";
+"TUIKitGroupProfileType" = "群類型";
+"TUIKitGroupProfileJoinType" = "主動加群方式";
+"TUIKitGroupProfileInviteType" = "邀請進群方式";
+"TUIKitGroupProfileInviteJoin" = "邀請加入";
+"TUIKitGroupProfileAutoApproval" = "自動審批";
+"TUIKitGroupProfileAlias" = "我的群昵稱";
+"TUIKitGroupProfileMessageDoNotDisturb" = "消息免打擾";
+"TUIKitGroupProfileStickyOnTop" = "置頂聊天";
+"TUIKitGroupProfileDeleteAndExit" = "刪除並退出";
+"TUIKitGroupProfileReport" = "舉報";
+"TUIKitGroupProfileDissolve" = "解散該群";
+"TUIKitGroupProfileJoinDisable" = "禁止加群";
+"TUIKitGroupProfileInviteDisable" = "禁止邀請";
+"TUIKitGroupProfileAdminApprove" = "管理員審批";
+"TUIKitGroupProfileEditAlias" = "修改我的群昵稱";
+"TUIKitGroupProfileEditAliasDesc" = "僅限中文、字母、數字和下劃線";
+"TUIKitGroupProfileEditGroupName" = "修改群名稱";
+"TUIKitGroupProfileEditAnnouncement" = "修改群公告";
+"TUIKitGroupProfileEditAvatar" = "修改群頭像";
+"TUIKitGroupProfileDeleteGroupTips" = "退出後不會再接收到此群聊消息";
+"TUIKitGroupProfileGroupCountFormat" = "群成員(%ld人)";
+"TUIKitGroupProfileManage" = "管理";
+"TUIKitGroupProfileManageAdd" = "添加成員";
+"TUIKitGroupProfileManageDelete" = "刪除成員";
+"TUIKitGroupProfileAdmainAdd" = "設置為管理員";
+"TUIKitGroupProfileAdmainDelete" = "取消管理員";
+"TUIKitGroupTransferOwner" = "轉讓群主";
+"TUIKitGroupTransferOwnerSuccess" = "轉讓群主成功";
+
+"TUIKitGroupApplicant" = "群申請";
+"TUIKitGroupDismssTipsFormat" = "%@ 群已解散";
+"TUIKitGroupRecycledTipsFormat" = "%@ 群已回收";
+"TUIKitGroupKickOffTipsFormat" = "您已被踢出 %@ 群";
+"TUIKitGroupDropoutTipsFormat" = "您已退出 %@ 群";
+
+"TUIKitGroupMessagePinRemove" = "移除";
+
+"TUIKitMessageTipsNormalRecallMessage" = "有一條消息被撤回";
+"TUIKitMessageTipsYouRecallMessage" = "您撤回了一條消息";
+"TUIKitMessageTipsReEditMessage" = "重新編輯";
+"TUIKitMessageTipsRecallMessageFormat" = "\"%@\"撤回了一條消息";
+"TUIKitMessageTipsOthersRecallMessage" = "對方撤回了一條消息";
+"TUIKitMessageTipsJoinGroupFormat" = "\"%@\"加入群組";
+"TUIKitMessageTipsInviteJoinGroupFormat" = "\"%@\"邀請\"%@\"加入群組";
+"TUIKitMessageTipsLeaveGroupFormat" = "\"%@\"退出了群聊";
+"TUIKitMessageTipsKickoffGroupFormat" = "\"%@\"將\"%@\"踢出群組";
+"TUIKitMessageTipsSettAdminFormat" = "\"%@\"被設置管理員";
+"TUIKitMessageTipsCancelAdminFormat" = "\"%@\"被取消管理員";
+"TUIkitMessageTipsEditGroupNameFormat" = "%@修改群名為\"%@\"、";
+"TUIKitMessageTipsEditGroupIntroFormat" = "%@修改群簡介為\"%@\"、";
+"TUIKitMessageTipsEditGroupAnnounceFormat" = "%@修改群公告為\"%@\"、";
+"TUIKitMessageTipsDeleteGroupAnnounceFormat" = "%@刪除了群公告、";
+"TUIKitMessageTipsEditGroupAvatarFormat" = "%@修改群頭像、";
+"TUIKitMessageTipsEditGroupOwnerFormat" = "%@修改群主為\"%@\"、";
+"TUIKitMessageTipsCreateGroupFormat" = "\"%@\"創建群組";
+"TUIKitMessageTipsUnsupportCustomMessage" = "[自定義消息]";
+"TUIKitMessageTipsMute" = "被禁言";
+"TUIKitMessageTipsUnmute" = "被解除禁言";
+"TUIKitMessageTipsRecallRiskContent" = "違規消息被撤回";
+"TUIKitMessageDisplayRiskContent" = "[違規消息]";
+"TUIKitMessageTipsGroupPinMessage" = "\"%@\"置頂了一條消息";
+"TUIKitMessageTipsGroupUnPinMessage" = "\"%@\"移除了一條置頂消息";
+
+
+"TUIKitSignalingFinishGroupChat" = "結束群聊";
+"TUIKitSignalingFinishConversationAndTimeFormat" = "通話時長";
+"TUIKitSignalingNewCall" = "發起通話";
+"TUIKitSignalingNewGroupCallFormat" = "\"%@\" 發起群通話";
+"TUIkitSignalingCancelCall" = "取消通話";
+"TUIkitSignalingCancelGroupCallFormat" = "\"%@\" 取消群通話";
+"TUIkitSignalingHangonCall" = "已接聽";
+"TUIKitSignalingHangonCallFormat" = "\"%@\" 已接聽";
+"TUIKitSignalingBusyFormat" = "\"%@\" 忙線";
+"TUIKitSignalingDeclineFormat" = "\"%@\" 拒絕通話";
+"TUIKitSignalingCallBusy" = "對方忙線";
+"TUIkitSignalingDecline" = "拒絕通話";
+"TUIKitSignalingNoResponse" = "無應答";
+"TUIkitSignalingUnrecognlize" = "不能識別的通話指令";
+
+"TUIkitMessageTypeImage" = "[圖片]";
+"TUIKitMessageTypeVoice" = "[語音]";
+"TUIkitMessageTypeVideo" = "[視頻]";
+"TUIkitMessageTypeFile" = "[文件]";
+"TUIKitMessageTypeAnimateEmoji" = "[動畫表情]";
+"TUIKitMessageTypeDraftFormat" = "[草稿] ";
+
+"TUIkitMessageTypeRiskImage" = "[違規圖片]";
+"TUIkitMessageTypeRiskVoice" = "[違規語音]";
+"TUIkitMessageTypeRiskVideo" = "[違規視頻]";
+
+"TUIKitMessageTypeLastMsgCountFormat" = "條";
+"TUIKitMessageTypeSecurityStrike" = "涉及敏感內容，發送失敗";
+"TUIKitMessageTypeSecurityStrikeVoice" = "涉及敏感內容，無法收聽";
+"TUIKitMessageTypeSecurityStrikeImage" = "涉及敏感內容，無法查看";
+"TUIKitMessageTypeSecurityStrikeTranslate" = "涉及敏感內容，翻譯失敗";
+"TUIKitMessageTypeOtherUseMic" = "其他功能正在使用麥克風，無法錄製";
+
+"TUIKitMessageReadPartRead" = "人已讀";
+"TUIKitMessageReadPartUnread" = "人未讀";
+"TUIKitMessageReadPartDisable" = "人無狀態";
+"TUIKitMessageReadAllRead" = "全部已讀";
+"TUIKitMessageReadC2CRead" = "已讀";
+"TUIKitMessageReadC2CUnRead" = "未讀";
+"TUIKitMessageReadC2CUnReadDetail" = "尚未閱讀";
+"TUIKitMessageReadDetail" = "訊息詳情";
+"TUIKitMessageReadNoMoreData" = "沒有更多數據了";
+"TUIKitMessageReadGetReadMembersFail" = "獲取已讀成員失敗";
+"TUIKitMessageReadGetUnreadMembersFail" = "獲取未讀成員失敗";
+
+"TUIKitMoreCamera" = "拍照";
+"TUIKitMorePhoto" = "圖片";
+"TUIKitMoreVideo" = "錄像";
+"TUIKitMoreVideoCaptureDurationTip" = "錄製時間過短";
+"TUIKitMoreFile" = "文件";
+"TUIKitMoreVideoCall" = "視頻通話";
+"TUIKitMoreVoiceCall" = "語音通話";
+"TUIKitMoreLink" = "自定義";
+"TUIKitMoreLinkDetails" = "查看詳情>>";
+"TUIKitMorePoll" = "投票";
+"TUIKitMoreGroupNote" = "群接龍";
+"TUIKitMoreEvaluation" = "服務評價";
+"TUIKitMoreCard" = "卡片訊息";
+
+"TUIKitFileSizeCheckLimited" = "文件大小超出限制";
+"TUIKitImageSizeCheckLimited" = "圖片大小超出限制";
+
+"TUIKitCallInviteYouVideoCall" = "邀請你視頻通話";
+"TUIKitCallTurningOnMute" = "開啟靜音";
+"TUIKitCallTurningOffMute" = "關閉靜音";
+"TUIKitCallUsingSpeaker" = "使用揚聲器";
+"TUIKitCallUsingHeadphone" = "使用聽筒";
+"TUIKitCallCancelCallingFormat" = "%@ 取消了通話";
+
+"TUIKitAtSelectMemberTitle" = "選擇群成員";
+
+"TUIKitConversationTipsAtMe" = "[有人@我]";
+"TUIKitConversationTipsAtAll" = "[@所有人]";
+"TUIKitConversationTipsAtMeAndAll" = "[有人@我][@所有人]";
+"TUIKitConversationTipsDelete" = "此會話及聊天記錄將全部被刪除";
+
+"TUIKitPublicGroup" = "公開群";
+"TUIKitWorkGroup" = "討論組";
+"TUIKitChatRoom" = "聊天室";
+"TUIKitCommunity" = "社群";
+
+"TUIKitContactsNewFriends" = "新的聯繫人";
+"TUIKitContactsGroupChats" = "群聊";
+"TUIKitContactsBlackList" = "黑名單";
+"TUIKitAddFriendSourceFormat" = "來源: %@";
+"TUIKitFriendApplicationApproved" = "已同意好友申請";
+"TUIKitFirendRequestRejected" = "已拒絕好友申請";
+
+"TUIKitOfflinePushCallTips" = "您有一個通話請求";
+
+"TUIKitChatTap2Remove" = "點擊刪除";
+"TUIKitChatPendencyTitle" = "點擊處理";
+"TUIKitChatPendencyRequestToJoinGroupFormat" = "%@條入群請求";
+"TUIKitChatTipsAtMe" = "有人@我";
+"TUIKitChatBackToLatestLocation" = "回到最新位置";
+"TUIKitChatNewMessages" = "%@條新訊息";
+
+"TUIKitAllowTypeAcceptOne" = "同意任何用戶加好友";
+"TUIKitAllowTypeNeedConfirm" = "需要驗證";
+"TUIKitAllowTypeDeclineAll" = "拒絕任何人加好友";
+
+/***************************** 消息转发 & 消息搜索 *************************/
+// 补充
+"Multiple" = "多選";
+"Forward" = "轉發";
+"Delete" = "刪除";
+"Copy" = "複製";
+"Revoke" = "撤回";
+"Resend" = "重發";
+"Search" = "搜尋";
+"Recall" = "撤回";
+"MultiSelect" = "多選";
+"Quote" = "引用";
+
+"TUIKitCallMicCamAuthTips" = "請開啟麥克風和攝像頭權限";
+"TUIKitCallMicAuthTips" = "請開啟麥克風權限";
+"TUIKitMessageTipsSureToResend" = "確定重發訊息?";
+
+// 訊息轉發
+"TUIKitRelayNoMessageTips" = "請選擇訊息";
+"TUIKitRelayRecentMessages" = "最近聊天";
+"TUIKitRelayChatHistory" = "聊天記錄";
+"TUIKitRelaySepcialForbid" = "選中的訊息中，語音訊息等其他訊息不能被轉發.";
+"TUIKitRelayConfirmForward" = "確定轉發?";
+"TUIKitRelayOneByOneForward" = "逐條轉發";
+"TUIKitRelayCombineForwad" = "合併轉發";
+"TUIKitRelayGroupChatHistory" = "群聊的聊天記錄";
+"TUIKitRelayChatHistoryForSomebodyFormat" = "%@和%@的聊天記錄";
+"TUIKitRelayErrorForwardFormat" = "@\"轉發失敗, code:%d, desc:%@\"";
+"TUIKitRelayTargetCreateNewChat" = "創建新聊天";
+"TUIKitRelayTargetCreateNewGroup" = "創建新群聊";
+"TUIKitRelayTargetSelectFromContacts" = "從聯繫人中選擇";
+"TUIKitRelayTargetCrateGroupError" = "創建群失敗";
+"TUIKitRelayTargetNoneTips" = "請選擇聯繫人或會話";
+"TUIKitRelayLayerLimitTips" = "抱歉，當前嵌套層級超過了限制";
+"TUIKitRelayCompatibleText" = "不支持合併轉發訊息，請升級到最新版本。";
+"TUIKitRelayUnsupportForward" = "發送失敗的訊息不支持轉發";
+"TUIKitRelayOneByOnyOverLimit" = "轉發訊息過多，暫不支持逐條轉發";
+"TUIKitRelayPluginNotAllowed" = "投票/接龍訊息不支持轉發";
+
+// 訊息搜尋
+"TUIKitSearchItemHeaderTitleContact" = "聯繫人";
+"TUIKitSearchItemFooterTitleContact" = "查看更多聯繫人";
+"TUIKitSearchItemHeaderTitleGroup" = "群聊";
+"TUIKitSearchItemFooterTitleGroup" = "查看更多群聊";
+"TUIkitSearchItemHeaderTitleChatHistory" = "聊天記錄";
+"TUIKitSearchItemFooterTitleChatHistory" = "查看更多聊天記錄";
+"TUIKitSearchResultMatchFormat" = "包含:%@";
+"TUIKitSearchResultMatchGroupIDFormat" = "包含群ID:%@";
+"TUIKitSearchResultMatchGroupMember" = "包含群成員:";
+"TUIKitSearchResultDisplayChatHistoryCountFormat" = "%zd條聊天記錄";
+/***************************** 消息转发 & 消息搜索 *************************/
+
+
+/***************************** 消息回复 & 换肤 *************************/
+"Reply" = "回覆";
+"TUIKitReplyMessageNotFoundOriginMessage" = "無法定位到原訊息";
+"TUIKitClearAllChatHistory" = "清空聊天記錄";
+"TUIKitClearAllChatHistoryTips" = "確定清空聊天記錄？";
+"Discline" = "拒絕";
+"Copied" = "已複製";
+"ConfirmDeleteMessage" = "確定刪除已選訊息";
+"TUIKitAddFriend" = "添加好友";
+"TUIKitAddGroup" = "添加群組";
+"TUIKitSearchUserID" = "搜尋用戶ID";
+"TUIKitSearchGroupID" = "搜尋群ID";
+"TUIKitNoSelfSignature" = "暫無個性簽名";
+"TUIKitSelfSignatureFormat" = "個性簽名:%@";
+"TUIKitGroupProfileManage" = "群管理";
+"TUIKitGroupManageShutupAllTips" = "全員禁言開啟後，只允許群主和管理员發言。";
+"TUIKitGroupManageAdminSetting" = "設置管理员";
+"TUIKitGroupManageShutAll" = "全員禁言";
+"TUIKitGroupAddShutupMember" = "添加需要禁言的群成員";
+"TUIKitGroupShutupOption" = "禁言";
+"TUIKitGroupDisShutupOption" = "解除禁言";
+"TUIKitGroupOwner" = "群主";
+"TUIKitGroupManagerFormat" = "管理员(%zd/%zd)";
+"TUIKitSetShutupAllFormat" = "%@ 開啟全員禁言、";
+"TUIKitCancelShutupAllFormat" = "%@ 取消全員禁言、";
+"TUIKitGroupNotice" = "群公告";
+"TUIKitGroupNoticeNull" = "暫未設置群公告";
+"Edit" = "編輯";
+"Done" = "完成";
+"TUIKitAddContactMyUserIDFormat" = "我的用戶ID: %@";
+"TUIKitAddUserNoDataTips" = "該用戶不存在";
+"TUIKitAddGroupNoDataTips" = "該群聊不存在";
+/***************************** 消息回复 & 换肤 *************************/
+
+
+/***************************** 视频、图片加载 & 保存 *************************/
+"TUIKitVideoTranscoding" = "視頻轉碼中...";
+"TUIKitVideoDownloading" = "視頻下載中...";
+"TUIKitVideoSavedSuccess" = "視頻保存成功";
+"TUIKitVideoSavedFailed" = "視頻保存失敗";
+"TUIKitPictureSavedSuccess" = "圖片保存成功";
+"TUIKitPictureSavedFailed" = "圖片保存失敗";
+"TUIKitPictureCheckRisk" = "檢測到圖片涉及敏感內容，暫時無法查看";
+"TUIKitVideoCheckRisk" = "檢測到視頻涉及敏感內容，暫時無法查看";
+"TUIKitVideoCheckRiskCancel" = "我知道了";
+/***************************** 视频、图片加载 & 保存 *************************/
+
+"TUIKitGroupSetAdminsForbidden" = "當前類型群聊暫不支持設置管理员";
+"TUIKitGroupAddAdmins" = "添加管理员";
+"TUIKitGroupAddMemberOfBlockedForbidden" = "當前類型群聊暫不支持禁言指定群成員";
+
+"TUIKitNotDownload"= "未下載";
+
+"TUIKitInputNoCameraTitle" = "相機權限未開啟";
+"TUIKitInputNoCameraTips"  = "無法使用拍攝圖片視頻、視頻通話等功能，點擊\"去開啟\"打開相機權限";
+"TUIKitInputNoCameraOperateLater" = "以後再說";
+"TUIKitInputNoCameraOperateEnable" = "去開啟";
+
+"TUIKitInputNoMicTitle" = "麥克風權限未開啟";
+"TUIKitInputNoMicTips"  = "無法使用發送語音消息、拍攝視頻、音視頻通話等功能，點擊\"去開啟\"打開麥克風權限";
+"TUIKitInputNoMicOperateLater" = "以後再說";
+"TUIKitInputNoMicOperateEnable" = "去開啟";
+
+"TUIKitInputNoPhotoTitle" = "圖片權限未開啟";
+"TUIKitInputNoPhotoTips"  = "無法使用聊天功能中的圖片查看、選擇等功能，點擊\"去開啟\"打開圖片權限";
+"TUIKitInputNoPhotoOperateLater" = "以後再說";
+"TUIKitInputNoPhotoerateEnable" = "去開啟";
+
+"TUIKitInputRecordTipsTitle" = "鬆開手指發送，左滑取消發送";
+"TUIKitInputRecordCancelTipsTitle" = "鬆開手指，取消發送";
+"TUIKitInputRecordRejectedInCall" = "正在音視頻通話，請稍後再試";
+"TUIKitInputRecordRejectedIsRecording" = "當前錄音未結束";
+
+"StickyonTop" = "置頂";
+"CancelStickonTop" = "取消置頂";
+"ClearHistoryChatMessage" = "清空消息";
+"MarkAsRead" = "標為已讀";
+"MarkAsUnRead" = "標為未讀";
+"MarkHide" = "不顯示";
+"MinimizeGroup" = "會話折疊";
+"More" = "更多";
+"Info" = "詳情";
+
+"TUIKitConversationMarkHide" = "會話隱藏";
+"TUIKitConversationMarkHideDescriptionOn" = "開啟後，此會話將不會出現在會話列表中，聊天記錄仍會被保留。";
+"TUIKitConversationMarkHideDescriptionOff" = "關閉後，此會話將出現在會話列表中，聊天記錄仍會被保留。";
+
+"TUIKitConversationMarkFoldGroups" = "折疊的群聊";
+"TUIKitConversationMarkFold" = "折疊該群聊";
+
+"TUIKitRepliesDetailTitle" = "回覆詳情";
+"TUIKitRepliesNum" = "條回覆";
+"TUIKitReference" = "引用";
+"TUIKitNotSupportThisMessage" = "[暫時不支持該消息展示]";
+
+"TUIKitRepliesOriginMessageRevoke" = "回覆內容已撤回";
+"TUIKitReferenceOriginMessageRevoke" = "引用內容已撤回";
+
+"TUIKitAudioPlaybackStyleLoudspeaker" = "揚聲器";
+"TUIKitAudioPlaybackStyleHandset" = "聽筒";
+"TUIKitAudioPlaybackStyleChange2Loudspeaker" = "切換至揚聲器播放";
+"TUIKitAudioPlaybackStyleChange2Handset" = "切換至聽筒播放";
+
+"TUIKitGroupMessagePin" = "置頂";
+"TUIKitGroupMessageUnPin" = "取消置頂";
+"TUIKitGroupMessagePinOverLimit" = "置頂消息超過數量上限";
+"TUIKitGroupMessagePinRepeatedly" = "這條消息已經被置頂了";
+"TUIKitGroupMessageUnPinRepeatedly" = "這條消息已經被取消置頂了";
+
+"TUIKitTranslate" = "翻譯";
+"TUIKitTranslateDefaultTips" = "由騰訊雲 IM 提供翻譯支持";
+"TUIKitTranslateFailed" = "翻譯失敗";
+"Hide" = "隱藏";
+"TranslateMessage" = "將消息翻譯為";
+"TranslateLanguageNotSupport" = "當前翻譯語言不支持，請切換至其他語言";
+
+"TUIKitConvertToText" = "轉文字";
+"TUIKitConvertToTextFailed" = "轉換失敗";
+
+"TUIKitSignalingSwitchToAudio" = "視頻轉語音";
+"TUIKitSignalingUnsupportedCalling" = "未知邀請";
+"TUIKitSignalingComfirmSwitchToAudio" = "確認轉語音";
+
+"TUIKitErrorEnableUserStatusOnConsole" = "您未開啟用戶狀態功能，請先登錄控制台開啟";
+
+"TUIKitChooseAvatar" = "選擇頭像";
+"TUIKitChooseCover" = "選擇封面";
+"TUIKitChooseBackground" = "更換背景";
+"TUIKitDefaultBackground" = "默認背景";
+"TUIKitIdentity" = "ID";
+
+"TUIKitChooseBackgroundSuccess" = "設置成功！";
+"TUIKitChooseBackgroundFailed" = "設置失敗！";
+
+"TUIKitContactNoNewApplicationRequest" = "暫無新的聯繫人好友";
+"TUIKitContactNoGroupChats" = "暫無群聊";
+"TUIKitContactNoBlockList" = "暫無黑名單好友";
+"TUIKitSearchNoResultLists" = "無相關會話、聯繫人或消息記錄";
+"TUIKitTyping" = "對方正在輸入";
+
+"TUIKitMessageTipsEditGroupAddOptFormat" = "%@修改加群方式為\"%@\"、";
+"TUIKitMessageTipsEditGroupInviteOptFormat" = "%@修改邀請進群方式為\"%@\"、";
+
+"TUIKitCreatGroupNamed" = "群名稱";
+"TUIKitCreatGroupID" = "群ID（選填）";
+"TUIKitCreatGroupNamed_Placeholder" = "輸入群名稱";
+"TUIKitCreatGroupID_Placeholder" = "輸入群ID";
+"TUIKitCreatGroupAvatar" = "群頭像";
+"TUIKitCreatGroupType" = "群類型";
+"TUIKitCreatGroupType_Work" = "好友工作群(Work)";
+"TUIKitCreatGroupType_Public" = "陌生人社交群(Public）";
+"TUIKitCreatGroupType_Meeting" = "臨時會議群(Meeting）";
+"TUIKitCreatGroupType_Community" = "社群(Community)";
+"TUIKitCreatGroupType_Work_Desc" = "好友工作群(Work）：類似普通微信群，創建後僅支持已在群內的好友邀請加群，且無需被邀請方同意或群主審批。";
+"TUIKitCreatGroupType_Public_Desc" = "陌生人社交群(Public）：類似 QQ 群，創建後群主可以指定群管理員，用戶搜索群 ID 發起加群申請後，需要群主或管理員審批通過才能入群。";
+"TUIKitCreatGroupType_Meeting_Desc" = "臨時會議群(Meeting）：創建後可以隨意進出，且支持查看入群前消息；適用於音視頻會議場景、在線教育場景等與實時音視頻產品結合的場景。";
+"TUIKitCreatGroupType_Community_Desc" = "社群(Community)：創建後可以隨意進出，最多支持100000人，支持歷史消息存儲，用戶搜索群 ID 發起加群申請後，無需管理員審批即可進群。";
+"TUIKitCreatGroupType_See_Doc" ="詳見產品文檔";
+"TUIKitCreatGroupType_Desc_Highlight" = "產品文檔";
+"TUIKitCreatGroupType_See_Doc_Simple" = "查看產品文檔";
+"TUIKitSearchItemCancel" = "取消";
+
+//----mini---
+"Pin" = "置頂";
+"UnPin" = "取消置頂";
+"TUIKitSelected" = "條選中";
+"TUIKitThreadQuote" = "條回覆";
+"MessageInfo" = "消息詳情";
+"C2CReadBy" = "已讀";
+"C2CDeliveredTo" = "未讀";
+"GroupReadBy" = "已讀列表";
+"GroupDeliveredTo" = "未讀列表";
+"TUIKitMessage" = "發送消息";
+"TUIKitAudio" = "語音通話";
+"TUIKitVideo" = "視頻通話";
+"TUIKitAddMembers" = "+ 添加成員";
+"TUIKitMembersRoleMember" = "成員";
+"TUIKitMembersRoleAdmin" = "管理員";
+"TUIKitMembersRoleSuper" = "群主";
+"TUIKitCreateCancel" = "取消";
+"TUIKitCreateNext" = "下一步";
+"TUIKitCreateFinish" = "創建";
+"TUIKitCreateMemebers" = "已選成員";
+"TUIKitDateToday" = "今天";
+//----mini---
+
+"TUIPollCreateNew" = "發起投票";
+"TUIPollCreateSucceed" = "創建成功";
+"TUIPollCreateFail" = "創建失敗";
+"TUIPollEnterTitle" = "請輸入投票主題";
+"TUIPollEnterOption" = "請輸入選項";
+"TUIPollAddOption" = "添加選項";
+"TUIPollEnableMultiSelect" = "允許多選";
+"TUIPollSingleSelect" = "單選";
+"TUIPollMultiSelect" = "多選";
+"TUIPollAnonymousVote" = "匿名投票";
+"TUIPollPublic" = "公開結果";
+"TUIPollNonPublic" = "不公開結果";
+"TUIPollNonAnonymous" = "不匿名";
+"TUIPollAnonymous" = "匿名";
+"TUIPollEnableNotification" = "有新提交時在群里發通知";
+"TUIPolllPublish" = "發布";
+"TUIPollOneCount" = "票";
+"TUIPollMoreCount" = "票";
+"TUIPollInvitedParticipants" = "應參與人數：%d";
+"TUIPollRespondedParticipants" = "實際參與人數：%d";
+"TUIPollResend" = "再次發送";
+"TUIPollResendFail" = "再次發送失敗，錯誤碼：%d";
+"TUIPollEnd" = "結束投票";
+"TUIPollEndFail" = "結束投票失敗，錯誤碼：%d";
+"TUIPollVoteNow" = "立即投票";
+"TUIPollConfirmVote" = "確定";
+"TUIPollCancelVote" = "取消";
+"TUIPollPercent" = "已投%d票，占比%.0f%%";
+"TUIPollEnded" = "投票已結束";
+"TUIPollVoteSucceed" = "投票成功";
+"TUIPollVoteFail" = "投票失敗";
+"TUIPollPublicResult" = "公開結果";
+"TUIPollViewAllOptions" = "查看全部選項";
+"TUIPollDisplayString" = "[投票]";
+"TUIPollTextFieldExceedLimit" = "超過最大字符數 50";
+"TUIPollVoted" = "已投票";
+"TUIPoll" = "投票";
+
+"TUIGroupNote" = "接龍";
+"TUIGroupNoteTitle" = "群接龍";
+"TUIGroupNoteSettings" = "設置";
+"TUIGroupNoteDeadline" = "截止時間 %@";
+"TUIGroupNoteTitleHint" = "添加接龍主題";
+"TUIGroupNoteDescriptionHint" = "添加接龍說明";
+"TUIGroupNoteFormatExample" = "例";
+"TUIGroupNoteFormatHint" = "可填寫接龍格式";
+"TUIGroupNoteFillIn" = "請填寫";
+"TUIGroupNoteMultipleSettings" = "允許每人提交多份";
+"TUIGroupNoteDeadlineSettings" = "設置截止時間";
+"TUIGroupNoteDeadlineNotSet" = "未設置";
+"TUIGroupNoteNotifySettings" = "有新提交時在群里發通知";
+"TUIGroupNoteSend" = "發送";
+"TUIGroupNoteNow" = "立即接龍";
+"TUIGroupNoteMessageTitle" = "群接龍";
+"TUIGroupNoteMessageTitleInfo" = "由%@發起，已有%d人參加";
+"TUIGroupNoteTipsMessagePrefix" = "%@已參加群接龍";
+"TUIGroupNoteHasStopped" = "已停止接龍";
+"TUIGroupNoteDeadlineMustBeLater" = "截止時間不能早於當前時間";
+"TUIGroupNoteDisplayString" = "[群接龍]";
+"TUIGroupNoteSendSucceed" = "發送成功";
+"TUIGroupNoteSendFail" = "發送失敗";
+"TUIGroupNoteSubmitExceedLimit" = "接龍數量超過上限";
+"TUIGroupNoteTextFieldExceedLimit" = "超過最大字符數 50";
+"TUIGroupNoteSubmitOnce" = "只允許提交一次";
+"TUIGroupNoteSubmitNotAllowed" = "不允許提交";
+"TUIGroupNoteExceedDeadline" = "超過截止時間，已停止接龍";
+"TUIGroupNoteNotChanged" = "接龍信息沒有變化";
+"TUIGroupNoteExpand" = "...展開...";
+"TUIGroupNoteNotDatePickerConfirm" = "確定";
+"TUIGroupNoteNotDatePickerCancel" = "取消";
+"TUIGroupNoteNotDatePickerDone" = "完成";
+"TUIGroupNoteNotDatePickerYear" = " 年";
+"TUIGroupNoteNotDatePickerMonth" = " 月";
+"TUIGroupNoteNotDatePickerDay" = " 日";
+"TUIGroupNoteNotDatePickerHour" = " 時";
+"TUIGroupNoteNotDatePickerMinute" = " 分";
+"TUIGroupNoteNotDatePickerSecond" = " 秒";
+"TUIGroupNoteNotDatePickerAM" = "上午";
+"TUIGroupNoteNotDatePickerPM" = "下午";
+"TUIGroupNoteNotDatePickerNow" = " 至今";
+"TUIGroupNoteNotDatePickerToday" = " 今天";
+"TUIGroupNoteNotDatePickerMon" = " 周一";
+"TUIGroupNoteNotDatePickerTue" = " 周二";
+"TUIGroupNoteNotDatePickerWed" = " 周三";
+"TUIGroupNoteNotDatePickerTHR" = " 周四";
+"TUIGroupNoteNotDatePickerFRI" = " 周五";
+"TUIGroupNoteNotDatePickerSAT" = " 周六";
+"TUIGroupNoteNotDatePickerSUN" = " 周日";
+
+"TUICustomerServiceAccounts" = "客服號";
+"TUICustomerServiceBranchMessage" = "[分支消息]";
+"TUICustomerServiceCardMessage" = "[卡片消息]";
+"TUICustomerServiceCollectInfomation" = "[收集信息]";
+"TUICustomerServiceSatisfactionEvaluation" = "[滿意度評價]";
+"TUICustomerServiceTimeout" = "[客服會話已超時，自動結束]";
+"TUICustomerServiceEnd" = "[客服會話已結束]";
+"TUICustomerServiceFillProductInfo" = "請填寫商品信息";
+"TUICustomerServiceSubmitProductInfo" = "提交商品信息";
+"TUICustomerServiceClose" = "關閉";
+"TUICustomerServiceName" = "名稱";
+"TUICustomerServiceFillProductName" = "請填寫產品名稱";
+"TUICustomerServiceDesc" = "描述";
+"TUICustomerServiceFillProductDesc" = "請填寫相關描述";
+"TUICustomerServicePic" = "圖片";
+"TUICustomerServiceFillPicLink" = "請填寫圖片鏈接";
+"TUICustomerServiceJumpLink" = "跳轉";
+"TUICustomerServiceFillJumpLink" = "請填寫卡片跳轉鏈接";
+"TUICustomerServiceSubmitEvaluation" = "提交評價";
+"TUICustomerService" = "客服插件";
+"TUICustomerServiceSendProduct" = "發送商品";
+"TUICustomerServiceCommonPhrase" = "常用語";
+"TUICustomerServiceCommonPhraseStock" = "是否有貨？";
+"TUICustomerServiceCommonPhraseCheaper" = "可以便宜一點嗎？";
+"TUICustomerServiceCommonPhraseGift" = "有什麼贈品？";
+"TUICustomerServiceCommonPhraseShipping" = "什麼時候發貨？";
+"TUICustomerServiceCommonPhraseDelivery" = "發什麼快遞？";
+"TUICustomerServiceCommonPhraseArrive" = "什麼時候到貨？";
+
+"TUIChatBotAccounts" = "機器人";
+"TUIChatBotChangeQuestion" = "換一換";
+
+"TUIConversationGroupAll" = "全部";
+"TUIConversationGroupUnread" = "未讀";
+"TUIConversationGroupAtMe" = "@ 我";
+"TUIConversationGroupGroup" = "群聊";
+"TUIConversationGroupC2C" = "單聊";
+"TUIConversationGroupInputGroupName" = "請輸入分組名";
+"TUIConversationGroupCreateGroup" = "創建會話分組";
+"TUIConversationGroupNewGroup" = "新增分組";
+"TUIConversationGroupAddGroup" = "添加分組";
+"TUIConversationGroupMoveGroup" = "移動分組";
+"TUIConversationGroupRemoveGroup" = "移除分組";
+"TUIConversationGroupShowGroup" = "展示會話分組";
+"TUIConversationGroupHideGroup" = "隱藏會話分組";
+"TUIConversationGroupEditGroup" = "會話分組設置";
+"TUIConversationGroupEdit" = "編輯";
+"TUIConversationGroupSave" = "保存";
+"TUIConversationGroupSaveSucc" = "分組保存成功";
+"TUIConversationGroupCreate" = "創建";
+"TUIConversationGroupNameIsNull" = "分組名不能為空！";
+"TUIConversationGroupNameIsInvalid" = "分組名不能是預置的默認分組名";
+"TUIConversationGroupConversationIsNull" = "會話不能為空！";
+"TUIConversationGroupCreateSucc" = "分組創建成功";
+"TUIConversationGroupModifySucc" = "分組修改成功";
+"TUIConversationGroupName" = "分組名稱";
+"TUIConversationGroupIncludeConversation" = "包含會話";
+"TUIConversationGroupAddConversation" = "添加會話";
+"TUIConversationGroup" = "會話分組";
+"TUIConversationGroupManager" = "管理";
+"TUIConversationGroupSelectGroup" = "選擇會話分組";
+"TUIConversationGroupUnlogined" = "未登錄，保存失敗！";
+
+"TUIConversationMark" = "標記";
+"TUIConversationMarkCancel" = "取消標記";
+
+"TUIConversationNone" = "暫無%@的會話";
+
+//----timApp---
+"TIMAppMainTitle" = "騰訊雲·IM";
+"TIMAppMainConnectingTitle" = "連接中...";
+"TIMAppMainDisconnectTitle" = "騰訊雲·IM(未連接)";
+"TIMAppTabBarItemMessageText" = "消息";
+"TIMAppTabBarItemContactText" = "通訊錄";
+"TIMAppTabBarItemMeText"      = "設置";
+"TIMAppTabBarItemMessageText_mini" = "聊天";
+"TIMAppTabBarItemContactText_mini" = "聯繫人";
+"TIMAppTabBarItemSettingText_mini" = "設置";
+"TIMAppTabBarItemCallsRecordText_mini" = "通話記錄";
+"TIMAppChat" = "聊天";
+"TIMAppChatDisconnectTitle" = "聊天(未連接)";
+"TIMAppChatSecurityWarning" = "請勿輕信匯款、中獎等信息，謹慎對待陌生電話，避免上當受騙。遇到可疑情況請及時反饋。";
+"TIMAppChatSecurityWarningReport" = "點此舉報";
+"TIMAppChatSecurityWarningGot" = "我知道了";
+
+"TIMAppTencentCloudIM" = "即時通信";
+"TIMAppWelcomeToChat" = "歡迎使用本 APP 體驗即時通信 IM 產品服務";
+"TIMAppWelcomeToChatDetails" = "歡迎使用本 APP 體驗即時通信 IM 產品服務，如發送文字/表情/富媒體消息、消息回復、表情回應、消息閱讀狀態、好友關係鏈等功能。同時，我們為您默認提供了3個不會回復的機器人好友，您可直接發起單聊、群聊會話，體驗群管理等功能。";
+"TIMAppSelectStyle" = "選擇風格";
+"TIMAppChatStyles" = "IM 專屬風格切換";
+"TIMAppChangeTheme" = "選擇皮膚";
+"TIMAppChatThemes" = "IM 專屬皮膚切換";
+"TIMAppEnterChat" = "進入 IM";
+"TIMAppRunDemo" = "改2行代碼，1分鐘跑通 Demo";
+"TIMAppCustomers" = "每月服務客戶數超過10000家";
+"TIMAppMessagingSuccess" = "消息收發成功率、服務可靠性高於99.99%";
+"TIMAppActiveUsers" = "每月活躍用戶數超過10億";
+"TIMAppOK" = "已了解";
+"TIMApp1Billion+" = "10億+";
+"TIMApp10000+" = "10000+";
+"TIMApp1Minute" = "1分鐘";
+"TIMAppMeAbout" = "關於騰訊雲·IM";
+"TIMAppConfirmLogout" = "確定退出嗎";
+"TIMAppConfirm" = "確定";
+"TIMAppCancel" = "取消";
+"TIMAppMarkAllMessageAsReadSucc" = "清空未讀成功";
+"TIMAppMarkAllMessageAsReadErrFormat" = "清空未讀失敗, %d, %@";
+"TIMChangeLanguage" = "切換語言";
+
+//----timApp---
+"TUIKitTickledMe" = "我";
+"TUIKitTickledActionVaule" = "拍了拍";
+"TUIKitTickledMyself" = "自己";
+"TUIKitImageViewOrigin" = "查看原圖";
+"TUIGroupCreateTipsMessage" = "創建群組";
+"TUICommunityCreateTipsMessage" = "創建社群";
+"TUICommunityCreateTipsMessageRuleError" = "社群 ID，必須以 @TGS#_ 開頭";
+"TUIGroupCreateTipsMessageRuleError" = "非社群，不能以 @TGS#_ 閅頭";
+
+//languageID
+"zh-Hans" = "簡體中文";
+"en"      = "英語";
+"ar"      = "阿拉伯語";
+"zh-Hant" = "繁體中文";
+
+"TUIChatFaceGroupAllEmojiName" = "所有表情";
+"TUIChatFaceGroupRecentEmojiName" = "最近使用";

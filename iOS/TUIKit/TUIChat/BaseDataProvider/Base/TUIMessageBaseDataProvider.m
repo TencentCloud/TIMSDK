@@ -641,7 +641,7 @@
                           [self.dataSource dataProviderDataSourceChange:self
                                                                withType:TUIMessageBaseDataProviderDataSourceChangeTypeInsert
                                                                 atIndex:(self.uiMsgs.count - 1)
-                                                              animation:self];
+                                                              animation:YES];
                       }
 
                        [self.dataSource dataProviderDataSourceDidChange:self];

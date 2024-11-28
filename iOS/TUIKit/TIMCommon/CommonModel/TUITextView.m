@@ -7,10 +7,21 @@
 //
 
 #import "TUITextView.h"
+#import <TUICore/TUIThemeManager.h>
 
 @implementation TUITextView
 
-- (BOOL)canBecameFirstResponder {
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.dataDetectorTypes = UIDataDetectorTypeLink | UIDataDetectorTypePhoneNumber;
+        [self setupLongPressGesture];
+        self.tintColor = TIMCommonDynamicColor(@"chat_highlight_link_color", @"#6495ED");
+    }
+    return self;
+}
+
+- (BOOL)canBecomeFirstResponder {
     return YES;
 }
 
@@ -23,6 +34,32 @@
         [builder removeMenuForIdentifier:UIMenuLookup];
     }
     [super buildMenuWithBuilder:builder];
+}
+
+- (void)disableHighlightLink {
+    self.dataDetectorTypes = UIDataDetectorTypeNone;
+}
+
+- (void)setupLongPressGesture {
+    self.longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
+    [self addGestureRecognizer:self.longPressGesture];
+}
+
+- (void)handleLongPress:(UILongPressGestureRecognizer *)gesture {
+    if ([gesture isKindOfClass:[UILongPressGestureRecognizer class]] && gesture.state == UIGestureRecognizerStateBegan) {
+        if (self.tuiTextViewDelegate && [self.tuiTextViewDelegate respondsToSelector:@selector(onLongPressTextViewMessage:)]) {
+            [self.tuiTextViewDelegate onLongPressTextViewMessage:self];
+        }
+    }
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
+shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    if ([gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]] &&
+        gestureRecognizer != self.longPressGesture) {
+        return NO;
+    }
+    return YES;
 }
 
 @end

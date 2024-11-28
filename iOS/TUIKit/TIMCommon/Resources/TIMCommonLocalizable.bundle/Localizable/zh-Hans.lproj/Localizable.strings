@@ -69,7 +69,7 @@
 "choose_avatar_for_you" = "App随机为您分配一个系统头像";
 "SearchGroupPlaceholder" = "用户ID";
 "please_fill_in_verification_information" = "请填写验证信息";
-"please_fill_in_remarks_group_info" = "请填写备注和分组";
+"please_fill_in_remarks_group_info" = "请填写备注";
 
 "no_set" = "未设置";
 "no_personal_signature" = "暂无个性签名";
@@ -807,6 +807,7 @@
 "zh-Hans" = "简体中文";
 "en"      = "英语";
 "ar"      = "阿拉伯语";
+"zh-Hant" = "繁体中文";
 
 "TUIChatFaceGroupAllEmojiName" = "所有表情";
 "TUIChatFaceGroupRecentEmojiName" = "最近使用";

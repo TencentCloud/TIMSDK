@@ -121,7 +121,7 @@ static NSMutableDictionary * gIMErrorMsgMap = nil;
     [map setObject:TUIKitLocalizableString(TUIKitErrorSDKNetWaitSendTimeout) forKey:@(ERR_SDK_NET_WAIT_SEND_TIMEOUT)];
     [map setObject:TUIKitLocalizableString(TUIKitErrorSDKNetWaitAckTimeut) forKey:@(ERR_SDK_NET_WAIT_ACK_TIMEOUT)];
     [map setObject:TUIKitLocalizableString(TUIKitErrorSDKWaitSendRemainingTimeout) forKey:@(ERR_SDK_NET_WAIT_SEND_REMAINING_TIMEOUT)];
-    [map setObject:TUIKitLocalizableString(TUIKitErrorSDKNetPKGSizeLimit) 
+    [map setObject:TUIKitLocalizableString(TUIKitErrorSDKNetPKGSizeLimit)
             forKey:@(ERR_SDK_NET_PKG_SIZE_LIMIT)];
     [map setObject:TUIKitLocalizableString(TUIKitErrorSDKNetWaitSendTimeoutNoNetwork) forKey:@(ERR_SDK_NET_WAIT_SEND_TIMEOUT_NO_NETWORK)];
     [map setObject:TUIKitLocalizableString(TUIKitErrorSDKNetWaitAckTimeoutNoNetwork) forKey:@(ERR_SDK_NET_WAIT_ACK_TIMEOUT_NO_NETWORK)];
@@ -656,10 +656,35 @@ static NSMutableDictionary * gIMErrorMsgMap = nil;
     return name;
 }
 
++ (NSString *)genImageExtenionName:(UIImage *)image {
+    if (!image) {
+        return @"";
+    }
+    static NSDictionary *imageFormatExtensionMap = nil;
+    if (imageFormatExtensionMap == nil) {
+        imageFormatExtensionMap = @{
+            @(SDImageFormatUndefined) : @"",
+            @(SDImageFormatJPEG) : @"jpeg",
+            @(SDImageFormatPNG) : @"png",
+            @(SDImageFormatGIF) : @"gif",
+            @(SDImageFormatTIFF) : @"tiff",
+            @(SDImageFormatWebP) : @"webp",
+            @(SDImageFormatHEIC) : @"heic",
+            @(SDImageFormatHEIF) : @"heif",
+            @(SDImageFormatPDF) : @"pdf",
+            @(SDImageFormatSVG) : @"svg",
+            @(SDImageFormatBMP) : @"bmp",
+            @(SDImageFormatRAW) : @"raw"
+        };
+    }
+    return [imageFormatExtensionMap objectForKey:@(image.sd_imageFormat)];
+}
+
 + (NSString *)genSnapshotName:(NSString *)uuid {
     NSString *identifier = [[V2TIMManager sharedInstance] getLoginUser];
     if (uuid == nil) {
-        uuid = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
+        int value = arc4random() % 1000;
+        uuid = [NSString stringWithFormat:@"%ld_%d", (long)[[NSDate date] timeIntervalSince1970], value];
     }
     NSString *name = [NSString stringWithFormat:@"%d_%@_snapshot_%@", [TUILogin getSdkAppID], identifier, uuid];
     return name;
@@ -940,7 +965,7 @@ static NSMutableDictionary * gIMErrorMsgMap = nil;
                                             sel:@selector(onTapValueAddedPurchaseLabel)];
 }
 
-+ (void)showValueAddedUnsupportAlertOfService:(NSString *)service serviceDesc:(NSString *)serviceDesc onVC:(UIViewController *)vc 
++ (void)showValueAddedUnsupportAlertOfService:(NSString *)service serviceDesc:(NSString *)serviceDesc onVC:(UIViewController *)vc
                                 highlightText:(NSString *)text sel:(SEL)selector {
     NSString *desc = [NSString stringWithFormat:@"%@%@", service, serviceDesc ?: @""];
     NSString *button = TUIKitLocalizableString(TUIKitErrorUnsupportIntefaceIGotIt);

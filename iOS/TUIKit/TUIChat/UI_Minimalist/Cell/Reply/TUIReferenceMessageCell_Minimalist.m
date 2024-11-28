@@ -39,10 +39,12 @@
 #endif
 #endif
 
-@interface TUIReferenceMessageCell_Minimalist () <UITextViewDelegate>
+@interface TUIReferenceMessageCell_Minimalist () <UITextViewDelegate,TUITextViewDelegate>
 @property(nonatomic, strong) TUIReplyQuoteView_Minimalist *currentOriginView;
 
 @property(nonatomic, strong) NSMutableDictionary<NSString *, TUIReplyQuoteView_Minimalist *> *customOriginViewsCache;
+
+@property(nonatomic,strong) UILongPressGestureRecognizer *longPressGesture;
 
 @end
 
@@ -71,12 +73,18 @@
     self.textView.scrollEnabled = NO;
     self.textView.editable = NO;
     self.textView.delegate = self;
+    self.textView.tuiTextViewDelegate = self;
     self.textView.font = [UIFont systemFontOfSize:16.0];
     self.textView.textColor = TUIChatDynamicColor(@"chat_reference_message_content_text_color", @"#000000");
 
     [self.bubbleView addSubview:self.textView];
 }
 
+- (void)onLongPressTextViewMessage:(UITextView *)textView {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onLongPressMessage:)]) {
+        [self.delegate onLongPressMessage:self];
+    }
+}
 - (void)fillWithData:(TUIReferenceMessageCellData *)data {
     [super fillWithData:data];
     self.referenceData = data;

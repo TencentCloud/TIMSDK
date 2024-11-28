@@ -29,7 +29,7 @@
 #import "TUIVideoReplyQuoteView.h"
 #import "TUIVoiceReplyQuoteView.h"
 
-@interface TUIReplyMessageCell () <UITextViewDelegate>
+@interface TUIReplyMessageCell () <UITextViewDelegate,TUITextViewDelegate>
 
 @property(nonatomic, strong) TUIReplyQuoteView *currentOriginView;
 
@@ -320,9 +320,17 @@
         _textView.scrollEnabled = NO;
         _textView.editable = NO;
         _textView.delegate = self;
+        _textView.tuiTextViewDelegate = self;
         _textView.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
     }
     return _textView;
+}
+
+
+- (void)onLongPressTextViewMessage:(UITextView *)textView {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onLongPressMessage:)]) {
+        [self.delegate onLongPressMessage:self];
+    }
 }
 
 - (NSMutableDictionary *)customOriginViewsCache {
@@ -389,6 +397,7 @@
     CGFloat quoteMinWidth = 100;
     CGFloat quoteMaxWidth = TReplyQuoteView_Max_Width;
     CGFloat quotePlaceHolderMarginWidth = 12;
+    UIFont *font = [UIFont systemFontOfSize:16.0];
 
     // Calculate the size of label which displays the sender's displyname
     CGSize senderSize = [@"0" sizeWithAttributes:@{NSFontAttributeName : [UIFont boldSystemFontOfSize:12.0]}];
@@ -413,12 +422,10 @@
     CGSize placeholderSize = [replyCellData quotePlaceholderSizeWithType:replyCellData.originMsgType data:replyCellData.quoteData];
 
     // Calculate the size of label which displays the content of replying the original message
-    NSAttributedString *attributeString = [replyCellData.content getFormatEmojiStringWithFont:[UIFont systemFontOfSize:16.0] emojiLocations:nil];
+    NSAttributedString *attributeString = [replyCellData.content getFormatEmojiStringWithFont:font emojiLocations:nil];
     CGRect replyContentRect = [attributeString boundingRectWithSize:CGSizeMake(quoteMaxWidth, CGFLOAT_MAX)
                                                             options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                             context:nil];
-
-    // 
     // Calculate the size of quote view base the content
     quoteWidth = senderRect.size.width;
     if (quoteWidth < placeholderSize.width) {
@@ -428,8 +435,12 @@
         quoteWidth = replyContentRect.size.width;
     }
     quoteWidth += quotePlaceHolderMarginWidth;
+    
+    BOOL lineSpacingChecked = NO ;
     if (quoteWidth > quoteMaxWidth) {
         quoteWidth = quoteMaxWidth;
+        //line spacing
+        lineSpacingChecked = YES;
     }
     if (quoteWidth < quoteMinWidth) {
         quoteWidth = quoteMinWidth;
@@ -449,6 +460,16 @@
     // Calculate the height of cell
     height = 12 + quoteHeight + 12 + replyCellData.replyContentSize.height + 12;
     
+    CGRect replyContentRect2 = [attributeString boundingRectWithSize:CGSizeMake(MAXFLOAT, [font lineHeight])
+                                                             options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                                             context:nil];
+    // Determine whether the width of the last line exceeds the position of the message status. If it exceeds, the message status will be wrapped.
+    if (lineSpacingChecked) {
+        if ((int)replyContentRect2.size.width % (int)quoteWidth == 0 ||
+            (int)replyContentRect2.size.width % (int)quoteWidth + font.lineHeight > quoteWidth) {
+            height += font.lineHeight;
+        }
+    }
     CGSize size = CGSizeMake(quoteWidth + TReplyQuoteView_Margin_Width, height);
     
     BOOL hasRiskContent = replyCellData.innerMessage.hasRiskContent;

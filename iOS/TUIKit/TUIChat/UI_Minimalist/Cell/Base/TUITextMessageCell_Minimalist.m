@@ -12,6 +12,9 @@
 #import <TUICore/TUICore.h>
 #import <TUICore/TUIGlobalization.h>
 
+@interface TUITextMessageCell_Minimalist ()<TUITextViewDelegate>
+
+@end
 @implementation TUITextMessageCell_Minimalist
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -24,8 +27,9 @@
         self.textView.scrollEnabled = NO;
         self.textView.editable = NO;
         self.textView.delegate = self;
+        self.textView.tuiTextViewDelegate = self;
+        self.bubbleView.userInteractionEnabled = YES;
         [self.bubbleView addSubview:self.textView];
-
         self.bottomContainer = [[UIView alloc] init];
         [self.contentView addSubview:self.bottomContainer];
 
@@ -44,6 +48,12 @@
     [super prepareForReuse];
     for (UIView *view in self.bottomContainer.subviews) {
         [view removeFromSuperview];
+    }
+}
+
+- (void)onLongPressTextViewMessage:(UITextView *)textView {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onLongPressMessage:)]) {
+        [self.delegate onLongPressMessage:self];
     }
 }
 

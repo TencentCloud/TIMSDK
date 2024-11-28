@@ -13,10 +13,12 @@
 
 @interface UIView (TUILayout)
 
-@property(nonatomic) CGFloat mm_x;  ///<< frame.x
-@property(nonatomic) CGFloat mm_y;  ///<< frame.y
-@property(nonatomic) CGFloat mm_w;  ///<< frame.size.width
-@property(nonatomic) CGFloat mm_h;  ///<< frame.size.height
+@property(nonatomic) CGFloat mm_x;       ///<< frame.x
+@property(nonatomic) CGFloat mm_y;       ///<< frame.y
+@property(nonatomic) CGFloat mm_w;       ///<< frame.size.width
+@property(nonatomic) CGFloat mm_h;       ///<< frame.size.height
+@property(nonatomic) CGPoint mm_origin;  ///<< frame.origin
+@property(nonatomic) CGSize  mm_size;    ///<< frame.size
 
 @property(nonatomic) CGFloat mm_r;  ///<< right
 @property(nonatomic) CGFloat mm_b;  ///<< bottom

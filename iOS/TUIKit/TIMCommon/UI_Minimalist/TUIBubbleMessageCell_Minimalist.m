@@ -16,6 +16,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         _bubbleView = [[UIImageView alloc] initWithFrame:self.container.bounds];
+        _bubbleView.userInteractionEnabled = YES;
         [self.container addSubview:_bubbleView];
         _bubbleView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     }

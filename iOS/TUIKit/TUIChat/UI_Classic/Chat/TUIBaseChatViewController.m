@@ -1054,6 +1054,10 @@ static CGRect gCustomTopViewRect;
     [self.mediaProvider takeVideo];
 }
 
+- (void)onMultimediaRecordMoreCellData {
+    [self.mediaProvider multimediaRecord];
+}
+
 - (void)onSelectFileMoreCellData {
     [self.mediaProvider selectFile];
 }

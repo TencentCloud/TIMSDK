@@ -8,6 +8,7 @@
 
 #import <TIMCommon/TUIBubbleMessageCell_Minimalist.h>
 #import "TUIChatDefine.h"
+#import <TIMCommon/TUITextView.h>
 
 @class TUIReplyMessageCellData;
 @class TUIReplyQuoteViewData;
@@ -21,7 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) UIView *quoteBorderLine;
 @property(nonatomic, strong) UIView *quoteView;
-@property(nonatomic, strong) UILabel *contentLabel;
+
+@property(nonatomic, strong) TUITextView *textView;
 @property(nonatomic, strong) UILabel *senderLabel;
 
 @property(nonatomic, strong) TUIReplyMessageCellData *replyData;

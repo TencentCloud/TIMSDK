@@ -36,6 +36,7 @@ typedef void (^TAsyncImageComplete)(NSString *path, UIImage *image);
 + (void)configIMErrorMap;
 
 + (NSString *)genImageName:(NSString *)uuid;
++ (NSString *)genImageExtenionName:(UIImage *)image;
 + (NSString *)genSnapshotName:(NSString *)uuid;
 + (NSString *)genVideoName:(NSString *)uuid;
 + (NSString *)genFileName:(NSString *)uuid;

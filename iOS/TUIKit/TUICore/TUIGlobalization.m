@@ -23,7 +23,6 @@
 }
 
 static NSString *gCustomLanguage = nil;
-static BOOL gIgnoreTraditionChinese = YES;
 static BOOL gRTLOption = NO;
 
 + (NSString *)getLocalizedStringForKey:(NSString *)key bundle:(NSString *)bundleName {
@@ -80,11 +79,6 @@ static BOOL gRTLOption = NO;
         language = @"en";
     }
 
-    // Since traditional Chinese is not supported for the time being, avoid using English in traditional Chinese, and force the use of simplified Chinese here
-    if (gIgnoreTraditionChinese && [language hasPrefix:@"zh"]) {
-        language = @"zh-Hans";
-    }
-
     return language;
 }
 
@@ -99,7 +93,9 @@ static BOOL gRTLOption = NO;
 }
 
 + (void)ignoreTraditionChinese:(BOOL)ignore {
-    gIgnoreTraditionChinese = ignore;
+#ifdef DEBUG
+  NSAssert(false, @"traditional chinese is now supported by the TUIKit component, and the current API has been deprecated");
+#endif
 }
 
 + (void)setRTLOption:(BOOL)op {

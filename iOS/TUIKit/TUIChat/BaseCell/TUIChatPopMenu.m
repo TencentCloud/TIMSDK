@@ -101,6 +101,7 @@
             self.emojiHeight = kEmojiHeight;
         }
 
+        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(hideWithAnimation) name:@"kTUIChatPopMenuWillHideNotification" object:nil];
         [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(hideWithAnimation) name:UIKeyboardWillChangeFrameNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onThemeChanged) name:TUIDidApplyingThemeChangedNotfication object:nil];
         [[V2TIMManager sharedInstance] addAdvancedMsgListener:self];
@@ -123,9 +124,49 @@
     if ([touch.view isDescendantOfView:self.containerView]) {
         return NO;
     }
+
+    if (@available(iOS 17.0, *)) {
+        CGPoint touchPoint = [touch locationInView:touch.view.nextResponder];
+        CGRect frame = self.targetCell.frame;
+        if (CGRectContainsPoint(frame, touchPoint)) {
+            return NO;
+        }
+    }
     return YES;
 }
-
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    if (@available(iOS 17.0, *)) {
+        CGPoint touchPoint = [self.superview convertPoint:point fromView:self];
+        CGRect frame = self.targetCell.frame;
+        CGRect containerFrame = [self.superview convertRect:self.targetCell.container.frame fromView:self.targetCell];
+//        CGRect popFrame1 =   [self.superview convertRect:self.emojiContainerView.frame fromView:self];
+        CGRect popFrame2 =  [self.superview convertRect:self.containerView.frame fromView:self];
+        if ( CGRectContainsPoint(popFrame2, touchPoint)) {
+            return  [super hitTest:point withEvent:event];
+        }
+        [self.superview convertRect:self.targetCell.container.frame fromView:self.targetCell];
+        
+        if (CGRectContainsPoint(frame, touchPoint)) {
+            UITextView *textView = [self.targetCell valueForKey:@"textView"];
+            if (CGRectContainsPoint(containerFrame,touchPoint)) {
+                if (textView && [textView isKindOfClass:UITextView.class] && !textView.isSelectable) {
+                    [textView selectAll:self];
+                }
+                return textView;
+            }else {
+                if (textView && [textView isKindOfClass:UITextView.class]) {
+                    [textView selectAll:nil];
+                    [self hideWithAnimation];
+                }
+            }
+            return [super hitTest:point withEvent:event];
+        }
+        return [super hitTest:point withEvent:event];
+    }
+    else {
+        return [super hitTest:point withEvent:event];
+    }
+}
 - (void)hideWithAnimation {
     [UIView animateWithDuration:0.3
         animations:^{

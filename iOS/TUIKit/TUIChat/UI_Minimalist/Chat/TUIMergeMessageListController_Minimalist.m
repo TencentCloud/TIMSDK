@@ -252,6 +252,19 @@
         [self.delegate messageController:nil onSelectMessageContent:cell];
     }
 }
+- (BOOL)checkIfMessageExistsInLocal:(V2TIMMessage *)locateMessage {
+    NSInteger index = 0;
+    for (TUIMessageCellData *uiMsg in self.uiMsgs) {
+        if ([uiMsg.innerMessage.msgID isEqualToString:locateMessage.msgID]) {
+            return YES;
+        }
+        index++;
+    }
+    if (index == self.uiMsgs.count) {
+        return NO;
+    }
+    return NO;
+}
 
 - (void)scrollToLocateMessage:(V2TIMMessage *)locateMessage matchKeyword:(NSString *)msgAbstract {
     CGFloat offsetY = 0;
@@ -366,6 +379,11 @@
                   if ([cell isKindOfClass:TUIReplyMessageCell_Minimalist.class]) {
                       [self jumpDetailPageByMessage:message];
                   } else if ([cell isKindOfClass:TUIReferenceMessageCell_Minimalist.class]) {
+                      BOOL existInLocal = [self checkIfMessageExistsInLocal:message];
+                      if (!existInLocal) {
+                          [TUITool makeToast:TIMCommonLocalizableString(TUIKitReplyMessageNotFoundOriginMessage)];
+                          return;
+                      }
                       [self scrollToLocateMessage:message matchKeyword:msgAbstract];
                   }
                 }];

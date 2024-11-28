@@ -163,11 +163,12 @@
 
 #pragma mark -- Classic
 - (NSArray<TUIInputMoreCellData *> *)createBuiltInInputMoreMenusWithConversationModel:(TUIChatConversationModel *)conversationModel {
+
     BOOL isNeedRecordVideo = [TUIChatConfig defaultConfig].showRecordVideoButton && conversationModel.enableRecordVideo;
     BOOL isNeedTakePhoto = [TUIChatConfig defaultConfig].showTakePhotoButton && conversationModel.enableTakePhoto;
     BOOL isNeedAlbum = [TUIChatConfig defaultConfig].showAlbumButton && conversationModel.enableAlbum;
     BOOL isNeedFile = [TUIChatConfig defaultConfig].showFileButton && conversationModel.enableFile;
-    
+
     __weak typeof(self) weakSelf = self;
     TUIInputMoreCellData *albumData = [[TUIInputMoreCellData alloc] init];
     albumData.priority = 1000;
@@ -199,6 +200,7 @@
       }
     };
 
+
     TUIInputMoreCellData *fileData = [[TUIInputMoreCellData alloc] init];
     fileData.priority = 700;
     fileData.title = TIMCommonLocalizableString(TUIKitMoreFile);
@@ -219,6 +221,7 @@
     if (isNeedRecordVideo) {
         [formatArray addObject:videoData];
     }
+    
     if (isNeedFile) {
         [formatArray addObject:fileData];
     }

@@ -29,7 +29,7 @@
 #import "TUIVideoReplyQuoteView_Minimalist.h"
 #import "TUIVoiceReplyQuoteView_Minimalist.h"
 
-@interface TUIReplyMessageCell_Minimalist ()
+@interface TUIReplyMessageCell_Minimalist ()<UITextViewDelegate,TUITextViewDelegate>
 
 @property(nonatomic, strong) TUIReplyQuoteView_Minimalist *currentOriginView;
 
@@ -51,7 +51,7 @@
     [self.quoteView addSubview:self.quoteBorderLine];
 
     [self.bubbleView addSubview:self.quoteView];
-    [self.bubbleView addSubview:self.contentLabel];
+    [self.bubbleView addSubview:self.textView];
 
     self.bottomContainer = [[UIView alloc] init];
     [self.contentView addSubview:self.bottomContainer];
@@ -68,15 +68,15 @@
     self.replyData = data;
     self.senderLabel.text = [NSString stringWithFormat:@"%@:", data.sender];
     if (data.direction == MsgDirectionIncoming) {
-        self.contentLabel.textColor = TUIChatDynamicColor(@"chat_reply_message_content_recv_text_color", @"#000000");
+        self.textView.textColor = TUIChatDynamicColor(@"chat_reply_message_content_recv_text_color", @"#000000");
         self.senderLabel.textColor = TUIChatDynamicColor(@"chat_reply_message_quoteView_recv_text_color", @"#888888");
         self.quoteView.backgroundColor = TUIChatDynamicColor(@"chat_reply_message_quoteView_bg_color", @"#4444440c");
     } else {
-        self.contentLabel.textColor = TUIChatDynamicColor(@"chat_reply_message_content_text_color", @"#000000");
+        self.textView.textColor = TUIChatDynamicColor(@"chat_reply_message_content_text_color", @"#000000");
         self.senderLabel.textColor = TUIChatDynamicColor(@"chat_reply_message_quoteView_text_color", @"#888888");
         self.quoteView.backgroundColor = [UIColor colorWithRed:68 / 255.0 green:68 / 255.0 blue:68 / 255.0 alpha:0.05];
     }
-    self.contentLabel.attributedText = [data.content getFormatEmojiStringWithFont:self.contentLabel.font emojiLocations:nil];
+    self.textView.attributedText = [data.content getFormatEmojiStringWithFont:self.textView.font emojiLocations:self.replyData.emojiLocations];
 
     self.bottomContainer.hidden = CGSizeEqualToSize(data.bottomContainerSize, CGSizeZero);
 
@@ -140,14 +140,15 @@
         make.bottom.mas_equalTo(self.quoteView);
     }];
 
-    [self.contentLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+    [self.textView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.leading.mas_equalTo(self.quoteView).mas_offset(4);
         make.top.mas_equalTo(self.quoteView.mas_bottom).mas_offset(12);
-        make.trailing.mas_lessThanOrEqualTo(self.quoteView);
+        make.trailing.mas_lessThanOrEqualTo(self.quoteView).mas_offset(-4);;
+        make.bottom.mas_equalTo(self.bubbleView).mas_offset(-4);
     }];
 
     [self.senderLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.leading.mas_equalTo(self.contentLabel);
+        make.leading.mas_equalTo(self.textView);
         make.top.mas_equalTo(3);
         make.size.mas_equalTo(self.replyData.senderSize);
     }];
@@ -296,15 +297,27 @@
     return _quoteBorderLine;
 }
 
-- (UILabel *)contentLabel {
-    if (_contentLabel == nil) {
-        _contentLabel = [[UILabel alloc] init];
-        _contentLabel.font = [UIFont systemFontOfSize:16.0];
-        _contentLabel.textColor = TUIChatDynamicColor(@"chat_reply_message_content_text_color", @"#000000");
-        _contentLabel.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
-        _contentLabel.numberOfLines = 0;
+- (TUITextView *)textView {
+    if (_textView == nil) {
+        _textView = [[TUITextView alloc] init];
+        _textView.font = [UIFont systemFontOfSize:16.0];
+        _textView.textColor = TUIChatDynamicColor(@"chat_reply_message_content_text_color", @"#000000");
+        _textView.backgroundColor = [UIColor clearColor];
+        _textView.textContainerInset = UIEdgeInsetsMake(0, 0, 0, 0);
+        _textView.textContainer.lineFragmentPadding = 0;
+        _textView.scrollEnabled = NO;
+        _textView.editable = NO;
+        _textView.delegate = self;
+        _textView.tuiTextViewDelegate = self;
+        _textView.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
     }
-    return _contentLabel;
+    return _textView;
+}
+
+- (void)onLongPressTextViewMessage:(UITextView *)textView {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(onLongPressMessage:)]) {
+        [self.delegate onLongPressMessage:self];
+    }
 }
 
 - (NSMutableDictionary *)customOriginViewsCache {

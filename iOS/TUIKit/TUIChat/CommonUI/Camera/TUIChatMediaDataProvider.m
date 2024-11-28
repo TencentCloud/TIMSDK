@@ -18,9 +18,11 @@
 #import <TIMCommon/TUIUserAuthorizationCenter.h>
 #import <TIMCommon/NSTimer+TUISafe.h>
 #import <TUICore/TUITool.h>
+#import <TUICore/TUICore.h>
 #import "TUICameraViewController.h"
 #import "TUIChatConfig.h"
-
+#import "AlbumPicker.h"
+#import "MultimediaRecorder.h"
 #define kTUIChatMediaSelectImageMax 9
 @interface TUIChatMediaDataProvider () <PHPickerViewControllerDelegate,
                                         UINavigationControllerDelegate,
@@ -34,96 +36,150 @@
 
 #pragma mark - Public API
 - (void)selectPhoto {
+    if ([AlbumPicker sharedInstance].advancedAlbumPicker) {
+        [[AlbumPicker sharedInstance].advancedAlbumPicker pickMediaWithCaller:self.presentViewController];
+    }
+    else {
+        //defalut AlbumPicker
+        [self _selectPhoto];
+    }
+}
+
+- (void)_selectPhoto {
     dispatch_async(dispatch_get_main_queue(), ^{
-      if (@available(iOS 14.0, *)) {
-          PHPickerConfiguration *configuration = [[PHPickerConfiguration alloc] init];
-          configuration.filter = [PHPickerFilter anyFilterMatchingSubfilters:@[ [PHPickerFilter imagesFilter], [PHPickerFilter videosFilter] ]];
-          configuration.selectionLimit = kTUIChatMediaSelectImageMax;
-          PHPickerViewController *picker = [[PHPickerViewController alloc] initWithConfiguration:configuration];
-          picker.delegate = self;
-          picker.modalPresentationStyle = UIModalPresentationFullScreen;
-          picker.view.backgroundColor = [UIColor whiteColor];
-          [self.presentViewController presentViewController:picker animated:YES completion:nil];
-      } else {
-          if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
-              UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-              picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-              picker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-              picker.delegate = self;
-              [self.presentViewController presentViewController:picker animated:YES completion:nil];
-          }
-      }
+        if (@available(iOS 14.0, *)) {
+            PHPickerConfiguration *configuration = [[PHPickerConfiguration alloc] init];
+            configuration.filter = [PHPickerFilter anyFilterMatchingSubfilters:@[ [PHPickerFilter imagesFilter], [PHPickerFilter videosFilter] ]];
+            configuration.selectionLimit = kTUIChatMediaSelectImageMax;
+            PHPickerViewController *picker = [[PHPickerViewController alloc] initWithConfiguration:configuration];
+            picker.delegate = self;
+            picker.modalPresentationStyle = UIModalPresentationFullScreen;
+            picker.view.backgroundColor = [UIColor whiteColor];
+            [self.presentViewController presentViewController:picker animated:YES completion:nil];
+        } else {
+            if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
+                UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+                picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+                picker.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+                picker.delegate = self;
+                [self.presentViewController presentViewController:picker animated:YES completion:nil];
+            }
+        }
     });
 }
 
+
 - (void)takePicture {
+    if ([MultimediaRecorder sharedInstance].advancedVideoRecorder) {
+        [[MultimediaRecorder sharedInstance].advancedVideoRecorder takePhoneWithCaller:self.presentViewController successBlock:^(NSURL * _Nonnull uri) {
+            NSData *imageData = [NSData dataWithContentsOfURL:uri];
+            UIImage *photo = [UIImage imageWithData:imageData];
+            NSString *path = [TUIKit_Image_Path stringByAppendingString:[TUITool genImageName:nil]];
+            [[NSFileManager defaultManager] createFileAtPath:path
+                                                    contents:UIImagePNGRepresentation(photo) attributes:nil];
+            if ([self.listener respondsToSelector:@selector(onProvideImage:)]) {
+                [self.listener onProvideImage:path];
+            }
+        } failureBlock:^(NSInteger errorCode, NSString * _Nonnull errorMessage) {
+            
+        }];
+    }
+    else {
+        //defalut PhotoCamera
+        [self _takePicture];
+    }
+}
+- (void)_takePicture {
     __weak typeof(self) weakSelf = self;
     void (^actionBlock)(void) = ^(void) {
-      TUICameraViewController *vc = [[TUICameraViewController alloc] init];
-      vc.type = TUICameraMediaTypePhoto;
-      vc.delegate = weakSelf;
-      if (weakSelf.presentViewController.navigationController) {
-          [weakSelf.presentViewController.navigationController pushViewController:vc animated:YES];
-      } else {
-          [weakSelf.presentViewController presentViewController:vc animated:YES completion:nil];
-      }
+        TUICameraViewController *vc = [[TUICameraViewController alloc] init];
+        vc.type = TUICameraMediaTypePhoto;
+        vc.delegate = weakSelf;
+        if (weakSelf.presentViewController.navigationController) {
+            [weakSelf.presentViewController.navigationController pushViewController:vc animated:YES];
+        } else {
+            [weakSelf.presentViewController presentViewController:vc animated:YES completion:nil];
+        }
     };
     if ([TUIUserAuthorizationCenter isEnableCameraAuthorization]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-          actionBlock();
+            actionBlock();
         });
     } else {
         if (![TUIUserAuthorizationCenter isEnableCameraAuthorization]) {
             [TUIUserAuthorizationCenter cameraStateActionWithPopCompletion:^{
-              dispatch_async(dispatch_get_main_queue(), ^{
-                actionBlock();
-              });
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    actionBlock();
+                });
             }];
         };
     }
 }
 
-- (void)takeVideo {
-    __weak typeof(self) weakSelf = self;
-    void (^actionBlock)(void) = ^(void) {
-      TUICameraViewController *vc = [[TUICameraViewController alloc] init];
-      vc.type = TUICameraMediaTypeVideo;
-      vc.videoMinimumDuration = 1.5;
-      vc.delegate = weakSelf;
-      if ([TUIChatConfig defaultConfig].maxVideoRecordDuration > 0) {
-         vc.videoMaximumDuration = [TUIChatConfig defaultConfig].maxVideoRecordDuration;
-      }
-      if (weakSelf.presentViewController.navigationController) {
-          [weakSelf.presentViewController.navigationController pushViewController:vc animated:YES];
-      } else {
-          [weakSelf.presentViewController presentViewController:vc animated:YES completion:nil];
-      }
-    };
-
+- (void)executeBlockWithMicroAndCameraAuth:(void(^)(void))block{
     if ([TUIUserAuthorizationCenter isEnableMicroAuthorization] && [TUIUserAuthorizationCenter isEnableCameraAuthorization]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-          actionBlock();
-        });
+        dispatch_async(dispatch_get_main_queue(), block);
     } else {
         if (![TUIUserAuthorizationCenter isEnableMicroAuthorization]) {
             [TUIUserAuthorizationCenter microStateActionWithPopCompletion:^{
-              if ([TUIUserAuthorizationCenter isEnableCameraAuthorization]) {
-                  dispatch_async(dispatch_get_main_queue(), ^{
-                    actionBlock();
-                  });
-              }
+                if ([TUIUserAuthorizationCenter isEnableCameraAuthorization]) {
+                    dispatch_async(dispatch_get_main_queue(), block);
+                }
             }];
         }
         if (![TUIUserAuthorizationCenter isEnableCameraAuthorization]) {
             [TUIUserAuthorizationCenter cameraStateActionWithPopCompletion:^{
-              if ([TUIUserAuthorizationCenter isEnableMicroAuthorization]) {
-                  dispatch_async(dispatch_get_main_queue(), ^{
-                    actionBlock();
-                  });
-              }
+                if ([TUIUserAuthorizationCenter isEnableMicroAuthorization]) {
+                    dispatch_async(dispatch_get_main_queue(), block);
+                }
             }];
         }
     }
+}
+
+- (void)takeVideo {
+    if ([MultimediaRecorder sharedInstance].advancedVideoRecorder) {
+//        [[MultimediaRecorder sharedInstance].advancedVideoRecorder setConfig:
+//         @"{\"theme_color\": \"#00FF00\",\"max_record_duration_ms\": \"8000\"}"];
+        [[MultimediaRecorder sharedInstance].advancedVideoRecorder recordVideoWithCaller:self.presentViewController successBlock:^(NSURL * _Nonnull uri) {
+            if (uri) {
+                if ([uri.pathExtension.lowercaseString isEqualToString:@"mp4"]) {
+                    [self handleVideoPick:YES message:nil videoUrl:uri];
+                    return;
+                }
+                else {
+                    [self transcodeIfNeed:YES message:nil videoUrl:uri];
+                }
+            }
+        } failureBlock:^(NSInteger errorCode, NSString * _Nonnull errorMessage) {
+            
+        }];
+        
+        return;
+    }
+    else {
+        //defalut VideoRecorder
+        [self _takeVideo];
+    }
+}
+- (void)_takeVideo {
+    __weak typeof(self) weakSelf = self;
+    void (^actionBlock)(void) = ^(void) {
+        TUICameraViewController *vc = [[TUICameraViewController alloc] init];
+        vc.type = TUICameraMediaTypeVideo;
+        vc.videoMinimumDuration = 1.5;
+        vc.delegate = weakSelf;
+        if ([TUIChatConfig defaultConfig].maxVideoRecordDuration > 0) {
+            vc.videoMaximumDuration = [TUIChatConfig defaultConfig].maxVideoRecordDuration;
+        }
+        if (weakSelf.presentViewController.navigationController) {
+            [weakSelf.presentViewController.navigationController pushViewController:vc animated:YES];
+        } else {
+            [weakSelf.presentViewController presentViewController:vc animated:YES completion:nil];
+        }
+    };
+    
+    [self executeBlockWithMicroAndCameraAuth:actionBlock];
 }
 
 - (void)selectFile {
