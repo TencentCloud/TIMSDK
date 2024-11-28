@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIVoiceToTextPlugin'
-  spec.version      = '8.2.6325'
+  spec.version      = '8.3.6498'
   spec.platform     = :ios
   spec.ios.deployment_target = '10.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,13 +16,13 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/8.2.6325/ios/TUIVoiceToTextPlugin.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/8.3.6498/ios/TUIVoiceToTextPlugin.zip'}
 
   spec.subspec 'CommonModel' do |commonModel|
     commonModel.source_files = '**/TUIVoiceToTextPlugin/CommonModel/*.{h,m,mm}'
     commonModel.dependency 'TUICore'
-    commonModel.dependency 'TIMCommon', '~> 8.2.6325'
-    commonModel.dependency 'TUIChat', '~> 8.2.6325'
+    commonModel.dependency 'TIMCommon', '~> 8.3.6498'
+    commonModel.dependency 'TUIChat', '~> 8.3.6498'
   end
 
   spec.subspec 'UI' do |commonUI|
