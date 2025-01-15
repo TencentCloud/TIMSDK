@@ -154,27 +154,28 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 8.3.6498 @2024.11.26
+## Latest Enhanced Version 8.4.6667 @2025.01.15
 ### SDK
+- Support searching for group data in the cloud.
+- Support searching for user data in the cloud.
+- Support searching for group member data in the cloud.
+- The community supports setting private topics.
+- Pure push messages support offline storage.
+- Honor's offline push supports message categorization.
+- iOS offline push supports background silent push.
+- iOS push supports setting the interruption level.
+- Self-developed high-performance and highly reliable local KV component.
+- Optimize the local cache policy of the log module.
+- IMSDK supports blocking Tencent package names.
+- Upgrade the SSO connection IP address of the India site.
+- Support SSO to configure the long - polling interval of live broadcast group owners.
+- Optimize the topic data pulling logic and directly return when there is no network connection.
+- Fix an occasional failure in sending @messages to all members in a group by the HarmonyOS SDK.
+- Fix an occasional failure in setting global message Do - Not - Disturb by the HarmonyOS SDK.
 
-- Support for Lite Signaling SDK
-- Support for configuring AnyCast routing address
-- Optimization of long connection IP address routing strategy
-- Online push supports custom ringtones
-- Support for OPPO push message classification
-- HarmonyOS platform SDK adaptation API 12
-- Support for HarmonyOS SDK connecting to private servers
-- Support for HarmonyOS TS API and C API mixed compilation
-- Conversation marking supports filtering duplicate requests
-- Optimization and upgrade of single chat unread message and unread count protocol
-- Completion of the recall information of the last message in the conversation
-- Fix occasional issue of message body size exceeding limit in merged forwarding - messages
-- Fix occasional issue of incorrect account type during random login of IM and Push
-- Fix parsing error of message response data format in HarmonyOS SDK
-- Fix occasional failure issue of editing merged forwarding messages
+### Note:
+**Local sensitive word detection is no longer supported.**
 
 ### TUIKit & Demo
-- TUIKit document message supports automatic URL resolution
-- TUIKit's self-developed album browser
-- TUIKit supports video editor
-- TUIKit supports Traditional Chinese
+- TUIKit removes the TUIGroup component.
+
