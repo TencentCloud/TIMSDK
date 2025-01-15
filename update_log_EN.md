@@ -1,6 +1,32 @@
 English | [简体中文](./版本历史.md)
 
 # TIMSDK
+## 8.4.6667 @2025.01.15 - Enhanced Version
+### SDK
+
+- Support searching for group data in the cloud.
+- Support searching for user data in the cloud.
+- Support searching for group member data in the cloud.
+- The community supports setting private topics.
+- Pure push messages support offline storage.
+- Honor's offline push supports message categorization.
+- iOS offline push supports background silent push.
+- iOS push supports setting the interruption level.
+- Self-developed high-performance and highly reliable local KV component.
+- Optimize the local cache policy of the log module.
+- IMSDK supports blocking Tencent package names.
+- Upgrade the SSO connection IP address of the India site.
+- Support SSO to configure the long - polling interval of live broadcast group owners.
+- Optimize the topic data pulling logic and directly return when there is no network connection.
+- Fix an occasional failure in sending @messages to all members in a group by the HarmonyOS SDK.
+- Fix an occasional failure in setting global message Do - Not - Disturb by the HarmonyOS SDK.
+
+### Note:
+**Local sensitive word detection is no longer supported.**
+
+### TUIKit & Demo
+- TUIKit removes the TUIGroup component.
+
 
 ## 8.3.6498 @2024.11.26 - Enhanced Version
 ### SDK
