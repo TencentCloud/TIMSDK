@@ -18,7 +18,6 @@ import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.common.utils.DrawOverlaysPermissionUtil;
 import com.tencent.cloud.tuikit.roomkit.common.utils.IntentUtils;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.store.FloatChatStore;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatWindow.VideoPlaying.RoomFloatViewService;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
@@ -122,13 +121,11 @@ public class RoomWindowManager
                 dismissFloatWindow();
                 ConferenceController.sharedInstance().release();
                 break;
-
             case KICKED_OFF_LINE:
                 dismissFloatWindow();
                 startLoginIfNeeded();
                 ConferenceController.sharedInstance().release();
                 break;
-
             default:
                 Log.w(TAG, "un handle event : " + event);
                 break;

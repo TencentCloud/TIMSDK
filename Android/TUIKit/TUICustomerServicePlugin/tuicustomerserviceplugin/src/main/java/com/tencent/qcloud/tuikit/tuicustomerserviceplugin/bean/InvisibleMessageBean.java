@@ -12,8 +12,10 @@ import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.TUICustomerServicePlug
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 public class InvisibleMessageBean extends TUIMessageBean {
-    public class InvisibleBean {
+    public static class InvisibleBean implements Serializable {
         public String src = "";
 
         // Satisfaction Setting

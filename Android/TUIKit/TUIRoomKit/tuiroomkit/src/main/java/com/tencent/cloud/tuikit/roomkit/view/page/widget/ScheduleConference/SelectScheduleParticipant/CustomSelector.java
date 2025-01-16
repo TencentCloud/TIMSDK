@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultCaller;
 
+import com.tencent.cloud.tuikit.roomkit.ConferenceDefine;
 import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
 import com.tencent.qcloud.tuicore.TUICore;
 
@@ -33,12 +34,12 @@ public class CustomSelector implements ParticipantSelector.IParticipantSelection
             if (result.getData() == null) {
                 return;
             }
-            List<User> selectedParticipants = (List<User>) result.getData().getSerializableExtra(SELECTED_PARTICIPANTS);
+            List<ConferenceDefine.User> selectedParticipants = (List<ConferenceDefine.User>) result.getData().getSerializableExtra(SELECTED_PARTICIPANTS);
             if (selectedParticipants != null) {
                 List<UserState.UserInfo> attendees = new ArrayList<>();
-                for (User participant : selectedParticipants) {
-                    UserState.UserInfo userInfo = new UserState.UserInfo(participant.userId);
-                    userInfo.userName = participant.userName;
+                for (ConferenceDefine.User participant : selectedParticipants) {
+                    UserState.UserInfo userInfo = new UserState.UserInfo(participant.id);
+                    userInfo.userName = participant.name;
                     userInfo.avatarUrl = participant.avatarUrl;
                     attendees.add(userInfo);
                 }

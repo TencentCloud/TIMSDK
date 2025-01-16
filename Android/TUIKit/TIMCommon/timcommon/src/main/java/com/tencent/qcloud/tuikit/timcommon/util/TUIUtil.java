@@ -64,4 +64,8 @@ public class TUIUtil {
         }
         return drawable.mutate();
     }
+
+    public static String identityHashCode(Object object) {
+        return System.identityHashCode(object) + "";
+    }
 }

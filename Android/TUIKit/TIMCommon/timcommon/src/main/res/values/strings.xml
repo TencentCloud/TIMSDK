@@ -10,7 +10,8 @@
     <string name="date_yesterday">Yesterday</string>
     <string name="chat_time_today">Today</string>
 
-
+    <string name="cancel">Cancel</string>
+    <string name="sure">Confirm</string>
     <string name="setting">setting</string>
     <string name="setting_fail">Setup failed！</string>
     <string name="setting_success">Setup Success！</string>

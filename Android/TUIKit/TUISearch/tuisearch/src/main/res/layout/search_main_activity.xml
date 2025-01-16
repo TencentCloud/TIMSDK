@@ -32,7 +32,7 @@
             android:layout_gravity="center"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="5dp"
-            android:background="@drawable/shape_search"
+            android:background="@drawable/search_search_box_bg"
             android:orientation="horizontal">
             <ImageView
                 android:layout_marginStart="5dp"
@@ -90,7 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:background="@drawable/shape_search">
+                android:background="@drawable/search_search_box_bg">
                 <TextView
                     android:id="@+id/contact_title"
                     android:layout_marginStart="20dp"
@@ -156,10 +156,10 @@
 
                     <ImageView
                         android:id="@+id/more_contact_arrow"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:layout_alignParentEnd="true"
-                        android:src="@drawable/arrow_right"
+                        android:src="@drawable/common_arrow_right"
                         android:textSize="11.14sp"
                         android:gravity="center|end" />
 
@@ -180,7 +180,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:background="@drawable/shape_search">
+                android:background="@drawable/search_search_box_bg">
                 <TextView
                     android:id="@+id/group_title"
                     android:layout_marginStart="20dp"
@@ -245,10 +245,10 @@
 
                     <ImageView
                         android:id="@+id/more_group_arrow"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:layout_alignParentEnd="true"
-                        android:src="@drawable/arrow_right"
+                        android:src="@drawable/common_arrow_right"
                         android:textSize="11.14sp"
                         android:gravity="center|end" />
 
@@ -269,7 +269,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:background="@drawable/shape_search">
+                android:background="@drawable/search_search_box_bg">
                 <TextView
                     android:id="@+id/conversation_title"
                     android:layout_marginStart="20dp"
@@ -334,10 +334,10 @@
 
                     <ImageView
                         android:id="@+id/more_conversation_arrow"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:layout_alignParentEnd="true"
-                        android:src="@drawable/arrow_right"
+                        android:src="@drawable/common_arrow_right"
                         android:textSize="11.14sp"
                         android:gravity="center|end" />
 

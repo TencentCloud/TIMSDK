@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.tencent.qcloud.tuicore.TUICore
+import com.tencent.qcloud.tuicore.interfaces.ITUINotification
 import com.tencent.qcloud.tuicore.permission.PermissionCallback
 import com.tencent.qcloud.tuicore.util.ScreenUtil
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
@@ -53,6 +54,13 @@ class IncomingFloatView(context: Context) : RelativeLayout(context) {
         }
     }
 
+    private val notification = ITUINotification { key, subKey, param ->
+        if (key == Constants.EVENT_VIEW_STATE_CHANGED &&
+            (subKey == Constants.EVENT_FULL_VIEW || subKey == Constants.EVENT_FLOAT_VIEW)) {
+            cancelIncomingView()
+        }
+    }
+
     fun showIncomingView(user: User) {
         TUILog.i(TAG, "showIncomingView")
         addObserver()
@@ -70,10 +78,13 @@ class IncomingFloatView(context: Context) : RelativeLayout(context) {
 
     private fun addObserver() {
         TUICallState.instance.selfUser.get().callStatus.observe(callStatusObserver)
+        TUICore.registerEvent(Constants.EVENT_VIEW_STATE_CHANGED, Constants.EVENT_FULL_VIEW, notification)
+        TUICore.registerEvent(Constants.EVENT_VIEW_STATE_CHANGED, Constants.EVENT_FLOAT_VIEW, notification)
     }
 
     private fun removeObserver() {
         TUICallState.instance.selfUser.get().callStatus.removeObserver(callStatusObserver)
+        TUICore.unRegisterEvent(notification)
     }
 
     private fun initWindow() {

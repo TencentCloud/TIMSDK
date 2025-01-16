@@ -71,4 +71,10 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
+    public void reloadData() {
+        if (mProfileLayout != null) {
+            mProfileLayout.loadUserInfo();
+        }
+    }
 }

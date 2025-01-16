@@ -364,6 +364,9 @@ public class ChatProvider {
         }
         v2TIMOfflinePushInfo.setAndroidHuaWeiCategory("IM");
         v2TIMOfflinePushInfo.setAndroidVIVOCategory("IM");
+        v2TIMOfflinePushInfo.setIOSInterruptionLevel("time-sensitive");
+        v2TIMOfflinePushInfo.enableIOSBackgroundNotification(false);
+        v2TIMOfflinePushInfo.setAndroidHonorImportance("NORMAL");
 
         return v2TIMOfflinePushInfo;
     }
@@ -770,7 +773,7 @@ public class ChatProvider {
                     reactUserBean.setFriendRemark(result.getFriendInfo().getFriendRemark());
                     reactUserBean.setFaceUrl(result.getFriendInfo().getUserProfile().getFaceUrl());
                     if (result.getFriendInfo().getUserProfile() != null) {
-                        reactUserBean.setNikeName(result.getFriendInfo().getUserProfile().getNickName());
+                        reactUserBean.setNickName(result.getFriendInfo().getUserProfile().getNickName());
                     }
                     reactUserBeanList.add(reactUserBean);
                 }

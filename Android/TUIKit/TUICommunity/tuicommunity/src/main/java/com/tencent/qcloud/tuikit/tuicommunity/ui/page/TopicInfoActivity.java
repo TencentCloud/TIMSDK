@@ -97,26 +97,26 @@ public class TopicInfoActivity extends BaseLightActivity implements ITopicInfoAc
             @Override
             public void onClick(View view) {
                 new TUIKitDialog(TopicInfoActivity.this)
-                        .builder()
-                        .setCancelable(true)
-                        .setCancelOutside(true)
-                        .setTitle(TopicInfoActivity.this.getString(R.string.clear_message_tip))
-                        .setDialogWidth(0.75f)
-                        .setPositiveButton(TopicInfoActivity.this.getString(com.tencent.qcloud.tuicore.R.string.sure),
-                                new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Map<String, Object> hashMap = new HashMap<>();
-                                        hashMap.put(TUIConstants.TUIGroup.GROUP_ID, topicID);
-                                        TUICore.notifyEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_CLEAR_MESSAGE, hashMap);
-                                    }
-                                })
-                        .setNegativeButton(TopicInfoActivity.this.getString(com.tencent.qcloud.tuicore.R.string.cancel),
-                                new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {}
-                                })
-                        .show();
+                    .builder()
+                    .setCancelable(true)
+                    .setCancelOutside(true)
+                    .setTitle(TopicInfoActivity.this.getString(R.string.clear_message_tip))
+                    .setDialogWidth(0.75f)
+                    .setPositiveButton(TopicInfoActivity.this.getString(com.tencent.qcloud.tuicore.R.string.sure),
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Map<String, Object> hashMap = new HashMap<>();
+                                hashMap.put(TUIConstants.TUIContact.GROUP_ID, topicID);
+                                TUICore.notifyEvent(TUIConstants.TUIContact.EVENT_GROUP, TUIConstants.TUIContact.EVENT_SUB_KEY_CLEAR_GROUP_MESSAGE, hashMap);
+                            }
+                        })
+                    .setNegativeButton(TopicInfoActivity.this.getString(com.tencent.qcloud.tuicore.R.string.cancel),
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {}
+                        })
+                    .show();
             }
         });
     }

@@ -40,7 +40,7 @@ public class FoldedConversationLayout extends RelativeLayout implements IConvers
     }
 
     private void init() {
-        inflate(getContext(), R.layout.folded_layout, this);
+        inflate(getContext(), R.layout.conversation_folded_layout, this);
         titleBarLayout = findViewById(R.id.conversation_title);
         conversationListLayout = findViewById(R.id.folded_conversation_list);
     }

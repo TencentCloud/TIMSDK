@@ -27,7 +27,7 @@ public class ForwardConversationSelectorAdapter extends RecyclerView.Adapter<Rec
     @NonNull
     @Override
     public ConversationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ConversationViewHolder(LayoutInflater.from(context).inflate(R.layout.forward_conversation_selector_item, parent, false));
+        return new ConversationViewHolder(LayoutInflater.from(context).inflate(R.layout.conversation_forward_conversation_selector_item, parent, false));
     }
 
     @Override

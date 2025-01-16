@@ -156,7 +156,7 @@ public class ReplyPresenter {
                         UserBean userBean = dataEntry.getValue();
                         for (Map.Entry<MessageRepliesBean.ReplyBean, TUIMessageBean> entry : replyBeanDataMap.entrySet()) {
                             if (TextUtils.equals(entry.getKey().getMessageSender(), userID)) {
-                                entry.getKey().setSenderShowName(userBean.getDisplayString());
+                                entry.getKey().setSenderShowName(userBean.getDisplayName());
                                 entry.getKey().setSenderFaceUrl(userBean.getFaceUrl());
                             }
                         }

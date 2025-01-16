@@ -4,11 +4,13 @@ import android.text.TextUtils;
 import java.io.Serializable;
 
 public class UserBean implements Serializable {
-    private String userId;
-    private String nikeName;
-    private String nameCard;
-    private String friendRemark;
-    private String faceUrl;
+    protected String userId;
+    protected String nickName;
+    protected String nameCard;
+    protected String friendRemark;
+    protected String faceUrl;
+    protected String signature;
+    protected long birthday;
 
     public String getUserId() {
         return userId;
@@ -18,12 +20,12 @@ public class UserBean implements Serializable {
         this.userId = userId;
     }
 
-    public String getNikeName() {
-        return nikeName;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setNikeName(String nikeName) {
-        this.nikeName = nikeName;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public String getFriendRemark() {
@@ -42,13 +44,13 @@ public class UserBean implements Serializable {
         return nameCard;
     }
 
-    public String getDisplayString() {
+    public String getDisplayName() {
         if (!TextUtils.isEmpty(nameCard)) {
             return nameCard;
         } else if (!TextUtils.isEmpty(friendRemark)) {
             return friendRemark;
-        } else if (!TextUtils.isEmpty(nikeName)) {
-            return nikeName;
+        } else if (!TextUtils.isEmpty(nickName)) {
+            return nickName;
         } else {
             return userId;
         }
@@ -60,5 +62,21 @@ public class UserBean implements Serializable {
 
     public void setFaceUrl(String faceUrl) {
         this.faceUrl = faceUrl;
+    }
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public long getBirthday() {
+        return birthday;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
+
+    public void setBirthday(long birthday) {
+        this.birthday = birthday;
     }
 }

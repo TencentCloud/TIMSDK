@@ -10,7 +10,8 @@
     <string name="date_second_short">ثانية</string>
     <string name="date_yesterday">أمس</string>
     <string name="chat_time_today">اليوم</string>
-
+    <string name="sure">موافق</string>
+    <string name="cancel">إلغاء</string>
     <string name="setting">جاري الإعداد</string>
     <string name="setting_fail">فشل الإعداد!</string>
     <string name="setting_success">تم الإعداد بنجاح!</string>

@@ -1,6 +1,7 @@
 package com.tencent.qcloud.tuikit.tuicontact.classicui.widget;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
@@ -17,6 +20,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
+import com.tencent.qcloud.tuikit.tuicontact.classicui.pages.NewFriendApplicationDetailActivity;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.NewFriendPresenter;
 import java.util.List;
 
@@ -53,9 +57,9 @@ public class NewFriendListAdapter extends ArrayAdapter<FriendApplicationBean> {
             mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable(TUIContactConstants.ProfileType.CONTENT, data);
-                    TUICore.startActivity("FriendProfileActivity", bundle);
+                    Intent intent = new Intent(getContext(), NewFriendApplicationDetailActivity.class);
+                    intent.putExtra(TUIConstants.TUIContact.CONTENT, data);
+                    getContext().startActivity(intent);
                 }
             });
             mViewHolder = new ViewHolder();

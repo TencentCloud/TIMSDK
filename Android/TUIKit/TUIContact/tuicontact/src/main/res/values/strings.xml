@@ -3,15 +3,12 @@
     <string name="new_friend">New Contacts</string>
     <string name="group">Group Chats</string>
     <string name="blacklist">Blocked List</string>
-    <string name="contact_count">%d contact(s)</string>
     <string name="contact_title">Contacts</string>
     <string name="contact_add_friend_remark">Remark</string>
-    <string name="no_friend_apply">No contact request</string>
     <string name="at_all">All</string>
 
     <string name="success">Successful</string>
     <string name="contact_add_failed">Failed</string>
-    <string name="contact_add_success">Successful</string>
     <string name="have_be_friend">You two are already contacts of each other</string>
     <string name="friend_limit">The number of your contacts exceeds the limit.</string>
     <string name="other_friend_limit">The number of the other user\'s contacts exceeds the limit.</string>
@@ -19,7 +16,6 @@
     <string name="forbid_add_friend">This user has disabled contact request.</string>
     <string name="set_in_blacklist">You have been blocked.</string>
     <string name="wait_agree_friend">Request sent</string>
-    <string name="send_request">Request sent</string>
     <string name="contact_add_more_info">Info</string>
     <string name="contact_add_more_send_request_text">Send</string>
 
@@ -31,26 +27,18 @@
 
     <string name="request_agree">Accept</string>
     <string name="request_accepted">Accepted</string>
-    <string name="request_waiting">Pending</string>
     <string name="profile_detail">Details</string>
     <string name="profile_remark_edit">Edit Alias</string>
     <string name="contact_friend_remark">Set Alias</string>
-    <string name="contact_friend_group">Group</string>
     <string name="contact_set_add_wording">Verification Message</string>
     <string name="contact_add_wording">Verification Message：</string>
     <string name="contact_add_friend_default_validation">I am %s</string>
     <string name="contact_set_remark_and_group">Remark</string>
-    <string name="contact_profile_title_edit">Edit</string>
 
-
-    <string name="profile_id">Account</string>
-    <string name="profile_add_wording">Verification Message</string>
     <string name="profile_remark">Alias</string>
     <string name="profile_black">Block</string>
     <string name="profile_chat">Send Message</string>
     <string name="profile_delete_friend">Delete Contact</string>
-    <string name="profile_voice_chat">Voice Call</string>
-    <string name="profile_video_chat">Video Call</string>
     <string name="profile_clear_message">Clear Chat History</string>
     <string name="profile_chat_background">Chat background</string>
     <string name="chat_background_title">Background</string>
@@ -58,18 +46,11 @@
     <string name="contact_no_status">No status</string>
     <string name="contact_account_tag">ID : </string>
     <string name="contact_group_type_tag">Group Type : </string>
-    <string name="contact_my_friend">My Contacts</string>
-
-    <string name="contact_profile_message">`Message`</string>
-    <string name="contact_profile_audio_call">Audio</string>
-    <string name="contact_profile_video_call">Video</string>
 
     <string name="select_chat">Select Chat User</string>
 
     <string name="chat_to_top">Pin</string>
 
-    <string name="clear_msg_tip">Are you sure you want to clear the chat history?</string>
-    <string name="contact_delete_friend_tip">Are you sure you want to delete the contact?</string>
 
     <string name="tips_empty_group_member">Select members</string>
     <string name="tips_empty_group_type">Select a method to join the group</string>
@@ -86,13 +67,10 @@
     <string name="create_chat_room">Create Chat Room</string>
     <string name="create_community">Create Community</string>
     <string name="create_private_group">Create Discussion Group</string>
-    <string name="hint_add_user_id">Enter ID</string>
     <string name="hint_search_user_id">Search by user ID</string>
     <string name="hint_search_group_id">Search by group ID</string>
-    <string name="hint_add_wording">Enter verification message</string>
     <string name="contact_add">Add</string>
     <string name="user_id">ID</string>
-    <string name="add_wording">Verification Message</string>
     <string name="create_group">Create Group</string>
     <string name="contact_create">Create</string>
     <string name="contact_next_step">Next</string>
@@ -117,7 +95,6 @@
     <string name="contact_community">Community</string>
     <string name="contact_i_know">I got it</string>
     <string name="contact_no_more_reminders">No more reminders</string>
-    <string name="contact_im_flagship">Premium Edition</string>
     <string name="contact_buying_guidelines">price description</string>
     <string name="contact_im_flagship_edition_update_tip">%s function is the IM Premium Edition function, which can be used after purchasing the Premium Edition package. Please refer to the price description for details.</string>
 
@@ -150,4 +127,108 @@
     <string name="group_type_content_title">See details product documentation</string>
     <string name="group_type_content_url">product documentation</string>
     <string name="group_type_content_button">View product documentation</string>
+
+
+    <string name="group_id">Group ID</string>
+    <string name="group_name">Group Chat Name</string>
+    <string name="group_icon">Change Group Profile Photo</string>
+    <string name="group_notice">Group Notice</string>
+    <string name="group_notice_empty_tip">No group notice</string>
+    <string name="group_members">Group Members</string>
+    <string name="group_type">Group Type</string>
+    <string name="group_plus_add_group_member">+ Add members</string>
+    <string name="group_member_info">Info</string>
+    <string name="group_delete">Delete</string>
+    <string name="group_set_admin">Set Administrator</string>
+    <string name="remove_group_member">Delete Member</string>
+    <string name="join_group_type">Group Joining Method</string>
+    <string name="invite_group_type">Group Inviting Method</string>
+    <string name="in_group_nick_name">My Alias in Group</string>
+    <string name="dissolve">Disband Group</string>
+    <string name="clear_message">Clear Chat History</string>
+    <string name="modify_group_notice">Edit Group Notice</string>
+    <string name="modify_nick_name_in_goup">Edit My Alias in Group</string>
+    <string name="group_edit">Edit</string>
+    <string name="group_modify_remark_rule">Only letters, digits, underscores, and Chinese characters.</string>
+    <string name="group_clear_message">Clear Chat History</string>
+
+    <string name="group_profile_message">Message</string>
+    <string name="group_profile_audio_call">Audio</string>
+    <string name="group_profile_video_call">Video</string>
+
+    <string name="group_detail">Group Chat Details</string>
+
+    <string name="group_apply_members">Request to Join Group</string>
+
+    <string name="group_remove_member">Remove</string>
+    <string name="modify_group_name_success">Edited</string>
+    <string name="modify_group_notice_success">Edited</string>
+    <string name="exit_group">Leave</string>
+    <string name="modify_nickname_success">Edited</string>
+
+    <string name="search_call_hint">Enter Group Member\'s Name</string>
+
+
+    <string name="modify_icon_fail">Editing failed</string>
+    <string name="modify_icon_suc">Edited</string>
+    <string name="chat_room">Chatroom</string>
+    <string name="chat_room_tip">The request to join chat room is reviewed automatically. Unable to modify it.</string>
+    <string name="community_group">Community</string>
+    <string name="dismiss_group_tip">Disband the group?</string>
+    <string name="quit_group_tip">Leave the group?</string>
+    <string name="clear_group_msg_tip">Are you sure you want to clear the chat history?</string>
+
+    <string name="private_group">Discussion Group</string>
+    <string name="public_group">Public Group</string>
+    <string name="request_wait">Invitation sent. Waiting for response.</string>
+    <string name="remove">Remove</string>
+    <string name="remove_member">Delete Member</string>
+    <string name="remove_tip_suc">Deleted</string>
+    <string name="remove_tip_fail">Deletion failed: </string>
+    <string name="invite_suc">Member invited</string>
+    <string name="invite_fail">Invitation failed:</string>
+    <string name="remove_fail_tip">Removal failed</string>
+    <string name="manager">Manage</string>
+    <string name="group_manager">Manage</string>
+    <string name="invite">invite</string>
+
+    <string name="forbid_invite">Prohibited from Inviting</string>
+
+    <string name="group_invite_type">Group Inviting Method</string>
+
+    <string name="group_validation_message">Validation Message</string>
+    <string name="group_group_application_detail_title">Info</string>
+
+    <string name="join_group_tip">You have been invited to the group: </string>
+    <string name="joined_tip">You have joined the group: </string>
+    <string name="reject_join_tip">You are rejected from joining the group: </string>
+    <string name="kick_group">You have been kicked out of the group: </string>
+    <string name="dismiss_tip_before">Your group</string>
+    <string name="dismiss_tip_after">is disbanded.</string>
+    <string name="get_system_notice">Received a custom system notification: </string>
+
+    <string name="group_account_tag">ID : </string>
+    <string name="group_view_more_group_members">View more group members</string>
+
+    <string name="group_set_manager">Set as Admin</string>
+    <string name="group_mute_all">Mute All</string>
+    <string name="group_cancel_mute_label">Cancel Mute</string>
+    <string name="group_mute_tip">When Mute All is enabled, only the group owner and admins are allowed to send messages.</string>
+    <string name="group_add_mute_member_tip">Add members to mute</string>
+    <string name="group_owner_label">Group Owner</string>
+    <string name="group_manager_label">Administrator</string>
+    <string name="group_member_label">Member</string>
+    <string name="group_add_manager_count_label">Manager (%d)</string>
+    <string name="group_add_manager_label">Add Admin</string>
+    <string name="group_remove_manager_label">Cancel Admin</string>
+    <string name="group_remove_manager_tip">Admin canceled successfully.</string>
+
+    <string name="group_over_limit_tip">Max allowed: %d</string>
+    <string name="group_transfer_group_owner">Transfer Group Owner</string>
+
+    <string name="group_not_support_set_manager">Unable to set an admin for this type of group chat.</string>
+    <string name="group_not_support_mute_member">Unable to mute specified members for this type of group chat.</string>
+
+    <string name="group_you">You</string>
+
 </resources>

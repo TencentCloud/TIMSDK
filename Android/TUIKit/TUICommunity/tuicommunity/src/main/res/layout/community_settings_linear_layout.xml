@@ -79,7 +79,7 @@
                     android:layout_height="12dp"
                     android:layout_gravity="center"
                     android:layout_marginStart="8dp"
-                    android:background="@drawable/arrow_right" />
+                    android:background="@drawable/common_arrow_right" />
             </LinearLayout>
         </RelativeLayout>
 

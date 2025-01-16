@@ -24,10 +24,10 @@
 
         <ImageView
             android:id="@+id/forward_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/arrow_right"
+            android:src="@drawable/common_arrow_right"
             android:textSize="11.14sp"
             android:gravity="center|end" />
 

@@ -261,23 +261,31 @@ public class ProfileMinamalistLayout extends FrameLayout implements View.OnClick
         String selfUserID = TUILogin.getLoginUser();
 
         accountView.setText(selfUserID);
+        loadSelfInfo();
+        setUserInfoListener();
+
+        homeView = findViewById(com.tencent.qcloud.tuikit.tuicontact.R.id.home_rtcube);
+        titleView = findViewById(com.tencent.qcloud.tuikit.tuicontact.R.id.title);
+        rtCubeTitleView = findViewById(com.tencent.qcloud.tuikit.tuicontact.R.id.title_rtcube);
+    }
+
+    public void loadSelfInfo() {
+        String selfUserID = TUILogin.getLoginUser();
         List<String> selfIdList = new ArrayList<>();
         selfIdList.add(selfUserID);
         V2TIMManager.getInstance().getUsersInfo(selfIdList, new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
             @Override
             public void onSuccess(List<V2TIMUserFullInfo> v2TIMUserFullInfos) {
-                setUserInfo(v2TIMUserFullInfos.get(0));
+                if (v2TIMUserFullInfos != null && !v2TIMUserFullInfos.isEmpty()) {
+                    setUserInfo(v2TIMUserFullInfos.get(0));
+                }
             }
 
             @Override
-            public void onError(int code, String desc) {}
+            public void onError(int code, String desc) {
+                DemoLog.e(TAG, "getUsersInfo failed, code = " + code + ", desc = " + desc);
+            }
         });
-        setUserInfoListener();
-        ProfileUtil.setTestEntry(profileHeader);
-
-        homeView = findViewById(com.tencent.qcloud.tuikit.tuicontact.R.id.home_rtcube);
-        titleView = findViewById(com.tencent.qcloud.tuikit.tuicontact.R.id.title);
-        rtCubeTitleView = findViewById(com.tencent.qcloud.tuikit.tuicontact.R.id.title_rtcube);
     }
 
     private List<ProfileSetting> getExtensionMoreSettings() {
@@ -316,7 +324,7 @@ public class ProfileMinamalistLayout extends FrameLayout implements View.OnClick
             homeView.setVisibility(VISIBLE);
             titleView.setVisibility(GONE);
             rtCubeTitleView.setVisibility(VISIBLE);
-            homeView.setBackgroundResource(R.drawable.title_bar_left_icon);
+            homeView.setBackgroundResource(com.tencent.qcloud.tuikit.timcommon.R.drawable.common_title_bar_home_icon);
             homeView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

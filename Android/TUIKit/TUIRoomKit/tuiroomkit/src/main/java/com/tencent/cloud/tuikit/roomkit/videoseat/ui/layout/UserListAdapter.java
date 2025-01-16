@@ -79,16 +79,14 @@ public class UserListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             onBindViewHolder(holder, position);
             return;
         }
-        if (PAYLOAD_AUDIO.equals(payloads.get(0))) {
+        if (payloads.contains(PAYLOAD_AUDIO)) {
             UserEntity item = mList.get(position);
             ((ViewHolder) holder).setVolume(item);
             ((ViewHolder) holder).updateVolumeEffect(item.getAudioVolume());
             ((ViewHolder) holder).enableVolumeEffect(item.isAudioAvailable());
-            return;
         }
-        if (PAYLOAD_VIDEO.equals(payloads.get(0))) {
+        if (payloads.contains(PAYLOAD_VIDEO)) {
             ((ViewHolder) holder).updateUserInfoVisibility(mList.get(position));
-            return;
         }
     }
 

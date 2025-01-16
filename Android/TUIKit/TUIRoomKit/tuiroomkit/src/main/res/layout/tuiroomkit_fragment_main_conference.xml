@@ -2,10 +2,4 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tuiroomkit_fl_main_conference"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <com.tencent.cloud.tuikit.roomkit.view.page.ConferenceMainView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-</FrameLayout>
+    android:layout_height="match_parent" />

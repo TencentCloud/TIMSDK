@@ -7,19 +7,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageButton;
 
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.CameraIconStateHolder;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.CameraIconUiState;
 import com.trtc.tuikit.common.livedata.Observer;
 
 public class CameraIconView extends AppCompatImageButton {
-
-    private CameraIconStateHolder       mStateHolder = new CameraIconStateHolder();
-    private Observer<CameraIconUiState> mObserver    = new Observer<CameraIconUiState>() {
-        @Override
-        public void onChanged(CameraIconUiState cameraIconUiState) {
-            updateView(cameraIconUiState);
-        }
-    };
+    private final CameraIconStateHolder       mStateHolder = new CameraIconStateHolder();
+    private final Observer<CameraIconUiState> mObserver    = this::updateView;
 
     public CameraIconView(@NonNull Context context) {
         this(context, null);

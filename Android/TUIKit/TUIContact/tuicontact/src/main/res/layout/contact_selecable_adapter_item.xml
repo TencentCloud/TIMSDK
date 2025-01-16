@@ -86,7 +86,8 @@
             android:button="@null"
             android:clickable="false"
             android:focusable="false"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:visibility="visible"/>
     </LinearLayout>
 
     <View

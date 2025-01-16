@@ -54,7 +54,7 @@ public class ForwardSelectGroupActivity extends BaseLightActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.forward_select_group_contact);
+        setContentView(R.layout.contact_forward_select_group_contact);
 
         init();
     }
@@ -98,12 +98,12 @@ public class ForwardSelectGroupActivity extends BaseLightActivity {
             public void onSelectChanged(ContactItemBean contact, boolean selected) {
                 if (selected) {
                     GroupMemberInfo memberInfo = new GroupMemberInfo();
-                    memberInfo.setAccount(contact.getId());
-                    memberInfo.setIconUrl(contact.getAvatarUrl());
+                    memberInfo.setUserId(contact.getId());
+                    memberInfo.setFaceUrl(contact.getAvatarUrl());
                     mMembers.add(memberInfo);
                 } else {
                     for (int i = mMembers.size() - 1; i >= 0; i--) {
-                        if (mMembers.get(i).getAccount().equals(contact.getId())) {
+                        if (mMembers.get(i).getUserId().equals(contact.getId())) {
                             mMembers.remove(i);
                         }
                     }
@@ -132,7 +132,7 @@ public class ForwardSelectGroupActivity extends BaseLightActivity {
                     HashMap<String, String> conversationMap = new HashMap<>();
                     if (mMembers != null && mMembers.size() != 0) {
                         for (int i = 0; i < mMembers.size(); i++) {
-                            conversationMap.put(mMembers.get(i).getAccount(), mMembers.get(i).getIconUrl());
+                            conversationMap.put(mMembers.get(i).getUserId(), mMembers.get(i).getFaceUrl());
                         }
                     }
 
@@ -151,7 +151,7 @@ public class ForwardSelectGroupActivity extends BaseLightActivity {
         mSelectConversationIcons.clear();
         if (mMembers != null && mMembers.size() != 0) {
             for (int i = 0; i < mMembers.size(); i++) {
-                mSelectConversationIcons.add(mMembers.get(i).getIconUrl());
+                mSelectConversationIcons.add(mMembers.get(i).getFaceUrl());
             }
         }
         mAdapter.setDataSource(mSelectConversationIcons);
@@ -194,7 +194,7 @@ public class ForwardSelectGroupActivity extends BaseLightActivity {
         if (mMembers.size() == 1) {
             Intent intent = new Intent();
             HashMap<String, Boolean> conversationMap = new HashMap<>();
-            conversationMap.put(mMembers.get(0).getAccount(), false);
+            conversationMap.put(mMembers.get(0).getUserId(), false);
             intent.putExtra(TUIContactConstants.FORWARD_SELECT_CONVERSATION_KEY, conversationMap);
             setResult(TUIContactConstants.FORWARD_CREATE_GROUP_CODE, intent);
 
@@ -202,13 +202,13 @@ public class ForwardSelectGroupActivity extends BaseLightActivity {
             return;
         }
         GroupMemberInfo memberInfo = new GroupMemberInfo();
-        memberInfo.setAccount(ContactUtils.getLoginUser());
+        memberInfo.setUserId(ContactUtils.getLoginUser());
         mMembers.add(memberInfo);
 
         final GroupInfo groupInfo = new GroupInfo();
         String groupName = ContactUtils.getLoginUser();
         for (int i = 1; i < mMembers.size(); i++) {
-            groupName = groupName + "、" + mMembers.get(i).getAccount();
+            groupName = groupName + "、" + mMembers.get(i).getUserId();
         }
         if (groupName.length() > 20) {
             groupName = groupName.substring(0, 17) + "...";

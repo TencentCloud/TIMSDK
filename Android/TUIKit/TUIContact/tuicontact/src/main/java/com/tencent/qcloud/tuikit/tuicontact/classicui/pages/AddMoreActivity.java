@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
+
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
@@ -20,9 +22,9 @@ import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
-import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupInfo;
+import com.tencent.qcloud.tuikit.tuicontact.classicui.util.ClassicUIUtils;
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.IAddMoreActivity;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.AddMorePresenter;
 
@@ -97,10 +99,9 @@ public class AddMoreActivity extends BaseLightActivity implements IAddMoreActivi
                             detailArea.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Intent intent = new Intent(TUIContactService.getAppContext(), FriendProfileActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.putExtra(TUIContactConstants.ProfileType.CONTENT, data);
-                                    TUIContactService.getAppContext().startActivity(intent);
+                                    Intent intent = new Intent(AddMoreActivity.this, AddMoreDetailActivity.class);
+                                    intent.putExtra(TUIConstants.TUIContact.CONTENT, data);
+                                    startActivity(intent);
                                 }
                             });
                         }
@@ -120,10 +121,13 @@ public class AddMoreActivity extends BaseLightActivity implements IAddMoreActivi
                         detailArea.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intent = new Intent(TUIContactService.getAppContext(), FriendProfileActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.putExtra(TUIContactConstants.ProfileType.CONTENT, data);
-                                TUIContactService.getAppContext().startActivity(intent);
+                                if (data.isFriend()) {
+                                    ClassicUIUtils.showContactDetails(data.getId());
+                                } else {
+                                    Intent intent = new Intent(AddMoreActivity.this, AddMoreDetailActivity.class);
+                                    intent.putExtra(TUIConstants.TUIContact.CONTENT, data);
+                                    startActivity(intent);
+                                }
                             }
                         });
                     }

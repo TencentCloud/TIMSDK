@@ -43,7 +43,7 @@ import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupMemberInfo;
-import com.tencent.qcloud.tuikit.tuicontact.minimalistui.util.ContactStartChatUtils;
+import com.tencent.qcloud.tuikit.tuicontact.minimalistui.util.MinimalistUIUtils;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
 import java.util.ArrayList;
@@ -144,14 +144,14 @@ public class CreateGroupMinimalistActivity extends AppCompatActivity implements 
             return;
         }
 
-        mGroupMembers = (ArrayList<GroupMemberInfo>) bundle.getSerializable(TUIConstants.TUIGroup.GROUP_MEMBER_ID_LIST);
+        mGroupMembers = (ArrayList<GroupMemberInfo>) bundle.getSerializable(TUIConstants.TUIContact.GROUP_MEMBER_ID_LIST);
 
         if (mGroupMembers == null || mGroupMembers.size() <= 1) {
             TUIContactLog.e(TAG, "mGroupMemberIcons <= 1");
         }
         generateImageID();
 
-        groupName = bundle.getString(TUIConstants.TUIGroup.GROUP_NAME);
+        groupName = bundle.getString(TUIConstants.TUIContact.GROUP_NAME);
         groupNameEdit.setText(groupName);
 
         groupTypeLv.setContent(groupType);
@@ -162,7 +162,7 @@ public class CreateGroupMinimalistActivity extends AppCompatActivity implements 
             groupAvatarUrl = null;
         }
 
-        joinTypeIndex = bundle.getInt(TUIConstants.TUIGroup.JOIN_TYPE_INDEX, 2);
+        joinTypeIndex = bundle.getInt(TUIConstants.TUIContact.JOIN_TYPE_INDEX, 2);
     }
 
     private void generateImageID() {
@@ -253,9 +253,9 @@ public class CreateGroupMinimalistActivity extends AppCompatActivity implements 
             imageBean.setImageId(groupAvatarImageId);
             faceList.add(imageBean);
         }
-        for (int i = 0; i < TUIConstants.TUIContact.GROUP_FACE_COUNT; i++) {
+        for (int i = 0; i < TUIContactConstants.GROUP_FACE_COUNT; i++) {
             ImageSelectMinimalistActivity.ImageBean imageBean = new ImageSelectMinimalistActivity.ImageBean();
-            imageBean.setThumbnailUri(String.format(TUIConstants.TUIContact.GROUP_FACE_URL, (i + 1) + ""));
+            imageBean.setThumbnailUri(String.format(TUIContactConstants.GROUP_FACE_URL, (i + 1) + ""));
             faceList.add(imageBean);
         }
         groupAvatarSelectAdapter.setItemHeight(ScreenUtil.dip2px(50));
@@ -332,7 +332,7 @@ public class CreateGroupMinimalistActivity extends AppCompatActivity implements 
             int faceSize = Math.min(mGroupMembers.size(), 9);
             urlList.add(TUIConfig.getSelfFaceUrl());
             for (int i = 0; i < faceSize; i++) {
-                String iconUrl = mGroupMembers.get(i).getIconUrl();
+                String iconUrl = mGroupMembers.get(i).getFaceUrl();
                 urlList.add(TextUtils.isEmpty(iconUrl) ? TUIConfig.getDefaultAvatarImage() : iconUrl);
             }
         } else {
@@ -385,7 +385,7 @@ public class CreateGroupMinimalistActivity extends AppCompatActivity implements 
         presenter.createGroupChat(groupInfo, new IUIKitCallback<String>() {
             @Override
             public void onSuccess(String data) {
-                ContactStartChatUtils.startChatActivity(data, ChatInfo.TYPE_GROUP, groupInfo.getGroupName(), groupAvatarUrl, groupAvatarUrlList);
+                MinimalistUIUtils.startChatActivity(data, ChatInfo.TYPE_GROUP, groupInfo.getGroupName(), groupAvatarUrl, groupAvatarUrlList);
                 finish();
             }
 

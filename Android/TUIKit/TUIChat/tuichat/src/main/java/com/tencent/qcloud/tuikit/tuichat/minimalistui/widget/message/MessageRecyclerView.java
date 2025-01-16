@@ -33,6 +33,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.component.scroller.CenteredSmoothScroller;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnChatPopActionClickListener;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
@@ -539,16 +540,14 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         }
     }
 
-    @Override
-    public void scrollToPosition(int position) {
-        if (getAdapter() != null && position < getAdapter().getItemCount()) {
-            super.scrollToPosition(position);
-        }
-    }
-
     public void smoothScrollToPosition(int position) {
         if (getAdapter() != null && position < getAdapter().getItemCount()) {
-            super.smoothScrollToPosition(position);
+            CenteredSmoothScroller smoothScroller = new CenteredSmoothScroller(getContext());
+            smoothScroller.setTargetPosition(position);
+            RecyclerView.LayoutManager layoutManager = getLayoutManager();
+            if (layoutManager != null) {
+                layoutManager.startSmoothScroll(smoothScroller);
+            }
         }
     }
 

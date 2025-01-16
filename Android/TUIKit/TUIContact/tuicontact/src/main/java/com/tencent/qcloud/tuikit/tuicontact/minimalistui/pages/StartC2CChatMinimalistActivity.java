@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
-import com.tencent.qcloud.tuikit.tuicontact.minimalistui.util.ContactStartChatUtils;
+import com.tencent.qcloud.tuikit.tuicontact.minimalistui.util.MinimalistUIUtils;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 
@@ -71,7 +71,7 @@ public class StartC2CChatMinimalistActivity extends AppCompatActivity {
             chatName = selectedItem.getNickName();
         }
 
-        ContactStartChatUtils.startChatActivity(selectedItem.getId(), ContactItemBean.TYPE_C2C, chatName, selectedItem.getAvatarUrl(), null);
+        MinimalistUIUtils.startChatActivity(selectedItem.getId(), ContactItemBean.TYPE_C2C, chatName, selectedItem.getAvatarUrl(), null);
         finish();
     }
 }

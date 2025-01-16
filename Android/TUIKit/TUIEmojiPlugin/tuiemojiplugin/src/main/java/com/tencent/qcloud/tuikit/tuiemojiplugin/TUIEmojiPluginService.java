@@ -185,7 +185,7 @@ public class TUIEmojiPluginService implements TUIInitializer, ITUINotification, 
             for (V2TIMUserInfo v2TIMUserInfo : v2TIMUserInfoList) {
                 UserBean reactUserBean = new UserBean();
                 reactUserBean.setUserId(v2TIMUserInfo.getUserID());
-                reactUserBean.setNikeName(v2TIMUserInfo.getNickName());
+                reactUserBean.setNickName(v2TIMUserInfo.getNickName());
                 reactUserBean.setFaceUrl(v2TIMUserInfo.getFaceUrl());
                 userBeanList.add(reactUserBean);
             }

@@ -12,6 +12,8 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+
+        consumerProguardFiles "consumer-rules.pro"
     }
     buildFeatures {
         buildConfig = false
@@ -46,7 +48,7 @@ dependencies {
     if (projects.contains("imsdk-plus")) {
         api project(':imsdk-plus')
     } else {
-        api rootProject.getProperties().containsKey("imSdk") ? rootProject.ext.imSdk : "com.tencent.imsdk:imsdk-plus:8.3.6498"
+        api rootProject.getProperties().containsKey("imSdk") ? rootProject.ext.imSdk : "com.tencent.imsdk:imsdk-plus:8.4.6667"
     }
 
 }

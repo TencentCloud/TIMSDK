@@ -10,7 +10,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivit
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
-import com.tencent.qcloud.tuikit.tuicontact.classicui.util.ContactStartChatUtils;
+import com.tencent.qcloud.tuikit.tuicontact.classicui.util.ClassicUIUtils;
 import com.tencent.qcloud.tuikit.tuicontact.classicui.widget.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 
@@ -25,7 +25,7 @@ public class GroupListActivity extends BaseLightActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.group_list_activity);
+        setContentView(R.layout.contact_group_list_activity);
 
         init();
     }
@@ -67,7 +67,7 @@ public class GroupListActivity extends BaseLightActivity {
                 } else if (!TextUtils.isEmpty(contact.getNickName())) {
                     chatName = contact.getNickName();
                 }
-                ContactStartChatUtils.startChatActivity(contact.getId(), ContactItemBean.TYPE_GROUP, chatName, contact.getGroupType());
+                ClassicUIUtils.startChatActivity(contact.getId(), ContactItemBean.TYPE_GROUP, chatName, contact.getGroupType());
             }
         });
     }

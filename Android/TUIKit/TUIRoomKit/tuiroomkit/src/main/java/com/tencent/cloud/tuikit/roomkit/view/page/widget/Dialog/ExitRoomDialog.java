@@ -92,7 +92,6 @@ public class ExitRoomDialog extends BottomSheetDialog {
                 (isOwner && !isOnlyOneUserInRoom) ? mContext.getString(R.string.tuiroomkit_leave_room_tips) :
                         mContext.getString(R.string.tuiroomkit_confirm_leave_tip));
         Button exitRoomBtn = findViewById(R.id.btn_leave_room);
-        exitRoomBtn.setVisibility(isOwner && isOnlyOneUserInRoom ? View.GONE : View.VISIBLE);
         Button destroyRoomBtn = findViewById(R.id.btn_finish_room);
         destroyRoomBtn.setVisibility(isOwner ? View.VISIBLE : View.GONE);
 
@@ -117,12 +116,17 @@ public class ExitRoomDialog extends BottomSheetDialog {
     }
 
     private void handleOwnerExitRoom() {
+        ConferenceController manager = ConferenceController.sharedInstance();
+        int userCount = ConferenceController.sharedInstance().getConferenceState().getTotalUserCount();
+        if (userCount == 1) {
+            manager.exitRoom(null);
+            return;
+        }
         UserEntity nextOwner = filterRoomOwner();
         if (nextOwner == null) {
             ConferenceEventCenter.getInstance().notifyUIEvent(SHOW_OWNER_EXIT_ROOM_PANEL, null);
             return;
         }
-        ConferenceController manager = ConferenceController.sharedInstance();
         manager.changeUserRole(nextOwner.getUserId(), TUIRoomDefine.Role.ROOM_OWNER, new TUIRoomDefine.ActionCallback() {
             @Override
             public void onSuccess() {

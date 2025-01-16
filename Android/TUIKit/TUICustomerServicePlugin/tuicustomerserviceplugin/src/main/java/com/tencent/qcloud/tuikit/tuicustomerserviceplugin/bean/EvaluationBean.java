@@ -69,7 +69,7 @@ public class EvaluationBean implements Serializable {
         this.expireTime = expireTime;
     }
 
-    public static class Menu {
+    public static class Menu implements Serializable {
         private String id;
         private String content;
 

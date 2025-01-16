@@ -4,6 +4,9 @@ import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType.SCREEN_STREAM;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceConstant.USER_NOT_FOUND;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.GET_USER_LIST_COMPLETED_FOR_ENTER_ROOM;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.KICKED_OFF_LINE;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.KICKED_OUT_OF_ROOM;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.ROOM_DISMISSED;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.USER_CAMERA_STATE_CHANGED;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.USER_MIC_STATE_CHANGED;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.USER_ROLE_CHANGED;
@@ -16,15 +19,19 @@ import android.util.Log;
 
 import com.tencent.cloud.tuikit.engine.common.TUIVideoView;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
+import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
+import com.tencent.cloud.tuikit.roomkit.model.data.ViewState;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatWindow.VideoPlaying.RoomVideoFloatView;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.trtc.tuikit.common.livedata.LiveListObserver;
 import com.trtc.tuikit.common.livedata.Observer;
+import com.trtc.tuikit.common.system.ContextProvider;
 
 import java.util.List;
 import java.util.Map;
@@ -41,8 +48,9 @@ public class RoomVideoFloatViewModel implements ConferenceEventCenter.RoomEngine
     private TUIVideoView       mVideoView;
 
     private       UserEntity                           mFloatUser;
-    private final Observer<Map<String, Integer>>       mVolumeObserver = this::handleVolumeChanged;
-    private final LiveListObserver<UserState.UserInfo> mUserObserver   = new LiveListObserver<UserState.UserInfo>() {
+    private final Observer<Map<String, Integer>>       mVolumeObserver         = this::handleVolumeChanged;
+    private final Observer<Boolean>                    mIsPictureInPictureMode = this::onPictureInPictureModeChanged;
+    private final LiveListObserver<UserState.UserInfo> mUserObserver           = new LiveListObserver<UserState.UserInfo>() {
         @Override
         public void onItemRemoved(int position, UserState.UserInfo item) {
             handleUserLeave(item.userId);
@@ -50,10 +58,10 @@ public class RoomVideoFloatViewModel implements ConferenceEventCenter.RoomEngine
 
         @Override
         public void onItemChanged(int position, UserState.UserInfo item) {
-                updateFloatUserNameCard(item.userId, item.userName);
+            updateFloatUserNameCard(item.userId, item.userName);
         }
     };
-    private final LiveListObserver<String>             mSeatObserver   = new LiveListObserver<String>() {
+    private final LiveListObserver<String>             mSeatObserver           = new LiveListObserver<String>() {
         @Override
         public void onItemRemoved(int position, String item) {
             handleUserLeave(item);
@@ -80,6 +88,15 @@ public class RoomVideoFloatViewModel implements ConferenceEventCenter.RoomEngine
     @Override
     public void onEngineEvent(ConferenceEventCenter.RoomEngineEvent event, Map<String, Object> params) {
         switch (event) {
+            case ROOM_DISMISSED:
+                RoomToast.toastLongMessage(ContextProvider.getApplicationContext().getString(R.string.tuiroomkit_room_room_destroyed));
+                break;
+            case KICKED_OUT_OF_ROOM:
+                RoomToast.toastLongMessage(ContextProvider.getApplicationContext().getString(R.string.tuiroomkit_kicked_by_master));
+                break;
+            case KICKED_OFF_LINE:
+                RoomToast.toastLongMessage(ContextProvider.getApplicationContext().getString(R.string.tuiroomkit_kicked_off_line));
+                break;
             case GET_USER_LIST_COMPLETED_FOR_ENTER_ROOM:
                 initUserInfo();
                 break;
@@ -282,6 +299,20 @@ public class RoomVideoFloatViewModel implements ConferenceEventCenter.RoomEngine
         mRoomVideoFloatView.onNotifyUserInfoChanged(mFloatUser);
     }
 
+    private void onPictureInPictureModeChanged(boolean isPictureInPictureMode) {
+        if (ConferenceController.sharedInstance().getViewState().floatWindowType != ViewState.FloatWindowType.PICTURE_IN_PICTURE) {
+            return;
+        }
+        if (isPictureInPictureMode) {
+            if (mFloatUser.isHasVideoStream()) {
+                startVideoPlay(mFloatUser);
+            }
+        } else {
+            stopVideoPlay(mFloatUser);
+        }
+    }
+
+
     private void initUserInfo() {
         mFloatUser = findUserForFloatVideo();
         if (mFloatUser == null) {
@@ -303,10 +334,14 @@ public class RoomVideoFloatViewModel implements ConferenceEventCenter.RoomEngine
         eventCenter.subscribeEngine(USER_CAMERA_STATE_CHANGED, this);
         eventCenter.subscribeEngine(USER_SCREEN_STATE_CHANGED, this);
         eventCenter.subscribeEngine(USER_MIC_STATE_CHANGED, this);
+        eventCenter.subscribeEngine(ROOM_DISMISSED, this);
+        eventCenter.subscribeEngine(KICKED_OUT_OF_ROOM, this);
+        eventCenter.subscribeEngine(KICKED_OFF_LINE, this);
 
         ConferenceController.sharedInstance().getMediaState().volumeInfos.observe(mVolumeObserver);
         ConferenceController.sharedInstance().getUserState().allUsers.observe(mUserObserver);
         ConferenceController.sharedInstance().getSeatState().seatedUsers.observe(mSeatObserver);
+        ConferenceController.sharedInstance().getViewState().isInPictureInPictureMode.observe(mIsPictureInPictureMode);
     }
 
     private void unRegisterNotification() {
@@ -316,10 +351,14 @@ public class RoomVideoFloatViewModel implements ConferenceEventCenter.RoomEngine
         eventCenter.unsubscribeEngine(USER_CAMERA_STATE_CHANGED, this);
         eventCenter.unsubscribeEngine(USER_SCREEN_STATE_CHANGED, this);
         eventCenter.unsubscribeEngine(USER_MIC_STATE_CHANGED, this);
+        eventCenter.unsubscribeEngine(ROOM_DISMISSED, this);
+        eventCenter.unsubscribeEngine(KICKED_OUT_OF_ROOM, this);
+        eventCenter.unsubscribeEngine(KICKED_OFF_LINE, this);
 
         ConferenceController.sharedInstance().getMediaState().volumeInfos.removeObserver(mVolumeObserver);
         ConferenceController.sharedInstance().getUserState().allUsers.removeObserver(mUserObserver);
         ConferenceController.sharedInstance().getSeatState().seatedUsers.removeObserver(mSeatObserver);
+        ConferenceController.sharedInstance().getViewState().isInPictureInPictureMode.removeObserver(mIsPictureInPictureMode);
     }
 
     private void startVideoPlay(UserEntity userInfo) {

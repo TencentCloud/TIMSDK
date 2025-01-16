@@ -50,7 +50,7 @@ public class StartGroupChatMinimalistActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.minimalist_popup_start_group_chat_activity);
         selfInfo = new GroupMemberInfo();
-        selfInfo.setAccount(ContactUtils.getLoginUser());
+        selfInfo.setUserId(ContactUtils.getLoginUser());
         selfInfo.setNickName(TUIConfig.getSelfNickName());
         init();
     }
@@ -91,7 +91,7 @@ public class StartGroupChatMinimalistActivity extends AppCompatActivity {
             @Override
             public void onRemove(GroupMemberInfo groupMemberInfo) {
                 ContactAdapter adapter = mContactListView.getAdapter();
-                adapter.setSelected(groupMemberInfo.getAccount(), false);
+                adapter.setSelected(groupMemberInfo.getUserId(), false);
             }
         });
 
@@ -104,15 +104,15 @@ public class StartGroupChatMinimalistActivity extends AppCompatActivity {
             public void onSelectChanged(ContactItemBean contact, boolean selected) {
                 if (selected) {
                     GroupMemberInfo memberInfo = new GroupMemberInfo();
-                    memberInfo.setAccount(contact.getId());
+                    memberInfo.setUserId(contact.getId());
                     memberInfo.setNickName(contact.getNickName());
-                    memberInfo.setIconUrl(contact.getAvatarUrl());
+                    memberInfo.setFaceUrl(contact.getAvatarUrl());
                     mMembers.add(memberInfo);
                     selectedListAdapter.setMembers(mMembers);
                     selectedListAdapter.notifyItemInserted(mMembers.indexOf(memberInfo));
                 } else {
                     for (int i = mMembers.size() - 1; i >= 0; i--) {
-                        if (mMembers.get(i).getAccount().equals(contact.getId())) {
+                        if (mMembers.get(i).getUserId().equals(contact.getId())) {
                             selectedListAdapter.notifyItemRemoved(i);
                             mMembers.remove(i);
                             selectedListAdapter.setMembers(mMembers);
@@ -152,9 +152,9 @@ public class StartGroupChatMinimalistActivity extends AppCompatActivity {
         }
 
         Intent intent = new Intent(this, CreateGroupMinimalistActivity.class);
-        intent.putExtra(TUIConstants.TUIGroup.GROUP_NAME, groupName);
-        intent.putExtra(TUIConstants.TUIGroup.JOIN_TYPE_INDEX, mJoinTypeIndex);
-        intent.putExtra(TUIConstants.TUIGroup.GROUP_MEMBER_ID_LIST, mMembers);
+        intent.putExtra(TUIConstants.TUIContact.GROUP_NAME, groupName);
+        intent.putExtra(TUIConstants.TUIContact.JOIN_TYPE_INDEX, mJoinTypeIndex);
+        intent.putExtra(TUIConstants.TUIContact.GROUP_MEMBER_ID_LIST, mMembers);
         startActivity(intent);
         finish();
     }
@@ -185,7 +185,7 @@ public class StartGroupChatMinimalistActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull GroupMemberSelectedViewHolder holder, int position) {
             GroupMemberInfo groupMemberInfo = mMembers.get(position);
-            GlideEngine.loadImage(holder.userIconView, groupMemberInfo.getIconUrl());
+            GlideEngine.loadImage(holder.userIconView, groupMemberInfo.getFaceUrl());
             holder.userNameTv.setText(groupMemberInfo.getDisplayName());
             holder.removeIcon.setOnClickListener(new View.OnClickListener() {
                 @Override

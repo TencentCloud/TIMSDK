@@ -109,8 +109,8 @@ public class RoomFloatViewService extends Service {
         mWindowLayoutParams.x = mMaxPositionX;
         mWindowLayoutParams.y = mMaxPositionY >> 1;
 
-        mWindowLayoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
-        mWindowLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        mWindowLayoutParams.width = mAppContext.getResources().getDimensionPixelSize(R.dimen.tuiroomkit_room_video_float_view_width);
+        mWindowLayoutParams.height = mAppContext.getResources().getDimensionPixelSize(R.dimen.tuiroomkit_room_video_float_view_height);
         mWindowLayoutParams.format = PixelFormat.TRANSPARENT;
 
         return mWindowLayoutParams;

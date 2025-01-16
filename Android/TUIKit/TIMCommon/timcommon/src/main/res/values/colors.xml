@@ -6,13 +6,17 @@
     <color name="navigation_bar_color">#F7F7F7</color>
 
     <color name="read_dot_bg">#f74c31</color>
-
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
     <color name="black_font_color">#181818</color>
     <color name="font_blue">#066fff</color>
     <color name="line">#DDDDDD</color>
     <color name="text_gray1">#777777</color>
     <color name="dialog_line_bg">#c6c6c6</color>
     <color name="text_tips_color">#A5A5A5</color>
+    <color name="green">#70C160</color>
+    <color name="transparent">#00000000</color>
+    <color name="split_lint_color">#D9D9D9</color>
 
     <color name="core_line_controller_title_color">#444444</color>
     <color name="core_line_controller_content_color">#000000</color>
@@ -34,4 +38,11 @@
     <color name="timcommon_text_highlight_color">#80338BFF</color>
 
     <color name="timcommon_item_pressed_color">#E4E5E9</color>
+
+    <color name="timcommon_btn_positive">#00a4ff</color>
+    <color name="timcommon_btn_positive_hover">#006eff</color>
+
+    <color name="timcommon_btn_negative">#ffffff</color>
+    <color name="timcommon_btn_negative_hover">#cc3428</color>
+
 </resources>

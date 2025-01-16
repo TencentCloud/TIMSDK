@@ -223,7 +223,7 @@
     <string name="TUIKitErrorSVRGroupNotFound">The group does not exist.</string>
     <string name="TUIKitErrorSVRGroupJsonParseFailed">Failed to parse the JSON packet. Check whether the packet body conforms to the JSON format.</string>
     <string name="TUIKitErrorSVRGroupInvalidId">The identifier that is used to initiated the operation is invalid. Check whether the identifier of the user who initiated the operation is correct.</string>
-    <string name="TUIKitErrorSVRGroupAllreadyMember">The invited user is a group member.</string>
+    <string name="TUIKitErrorSVRGroupAllreadyMember">Already a group member.</string>
     <string name="TUIKitErrorSVRGroupFullMemberCount">The number of group members has reached the limit. Unable to add the user in the request to the group.</string>
     <string name="TUIKitErrorSVRGroupInvalidGroupId">Invalid group ID. Check whether the group ID is correct.</string>
     <string name="TUIKitErrorSVRGroupRejectFromThirdParty">The app backend rejected this operation via a third-party callback.</string>

@@ -38,7 +38,7 @@ public class TUIMultimediaAlbumPicker extends IAlbumPicker {
                     TUIMultimediaMediaProcessor.getInstance().transcodeMedia(transcodeData, new TUIMultimediaMediaProcessor.TUIMultimediaMediaTranscodeListener() {
                         @Override
                         public void onTranscodeFinished(TUIMultimediaMediaProcessor.TranscodeResult transcodeResult) {
-                            if (transcodeResult.errorCode != 0) {
+                            if (transcodeResult.errorCode == 0) {
                                 listener.onFinished(transcodeResult.originalUri, transcodeResult.transcodeMediaUri);
                             } else {
                                 listener.onFinished(transcodeResult.originalUri, null);

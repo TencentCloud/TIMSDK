@@ -30,7 +30,7 @@ public class UserIconView extends RelativeLayout {
     }
 
     private void init(AttributeSet attributeSet) {
-        inflate(getContext(), R.layout.profile_icon_view, this);
+        inflate(getContext(), R.layout.common_profile_icon_view, this);
         if (attributeSet != null) {
             TypedArray ta = getContext().obtainStyledAttributes(attributeSet, R.styleable.UserIconView);
             if (null != ta) {

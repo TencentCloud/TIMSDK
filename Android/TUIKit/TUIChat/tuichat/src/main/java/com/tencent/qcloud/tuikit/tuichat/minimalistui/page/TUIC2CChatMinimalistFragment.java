@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.minimalistui.page;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +10,10 @@ import androidx.annotation.Nullable;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.C2CChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
+import com.tencent.qcloud.tuikit.tuichat.classicui.page.FriendProfileActivity;
 import com.tencent.qcloud.tuikit.tuichat.presenter.C2CChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 
@@ -54,10 +57,11 @@ public class TUIC2CChatMinimalistFragment extends TUIBaseChatMinimalistFragment 
         chatView.setOnAvatarClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle param = new Bundle();
-                param.putString(TUIConstants.TUIChat.CHAT_ID, chatInfo.getId());
-                param.putString(TUIConstants.TUIChat.CHAT_BACKGROUND_URI, mChatBackgroundThumbnailUrl);
-                TUICore.startActivity("FriendProfileMinimalistActivity", param);
+                Intent intent = new Intent(getContext(), FriendProfileMinimalistActivity.class);
+                intent.putExtra(TUIConstants.TUIChat.CHAT_ID, chatInfo.getId());
+                intent.putExtra(TUIChatConstants.CHAT_BACKGROUND_URI, mChatBackgroundThumbnailUrl);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
         });
     }

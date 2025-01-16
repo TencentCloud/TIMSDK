@@ -21,7 +21,7 @@ import com.tencent.ugc.TXRecordCommon;
 public class RecordFunctionView extends LinearLayout {
 
     private final static int DEFAULT_OPERATION_VIEW_HEIGHT_DP = 215;
-    private final static int MIN_OPERATION_VIEW_HEIGHT_DP = 140;
+    private final static int MIN_OPERATION_VIEW_HEIGHT_DP = 155;
     private final static int DEFAULT_OPERATION_TIPS_VIEW_HEIGHT_DP = 40;
     private final Context mContext;
     private final TUIMultimediaRecordCore mRecordCore;

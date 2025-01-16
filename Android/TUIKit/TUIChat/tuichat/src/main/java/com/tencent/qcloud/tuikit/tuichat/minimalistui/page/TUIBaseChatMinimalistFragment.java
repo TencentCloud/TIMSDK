@@ -333,8 +333,8 @@ public abstract class TUIBaseChatMinimalistFragment extends Fragment {
             mChatBackgroundUrl = list[1];
         }
 
-        if (TextUtils.equals(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL, mChatBackgroundUrl)) {
-            mChatBackgroundThumbnailUrl = TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL;
+        if (TextUtils.equals(TUIChatConstants.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL, mChatBackgroundUrl)) {
+            mChatBackgroundThumbnailUrl = TUIChatConstants.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL;
             messageRecyclerView.setBackgroundResource(R.color.chat_background_color);
             return;
         }

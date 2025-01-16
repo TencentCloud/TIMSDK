@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="58.48dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:orientation="horizontal">
+
+    <CheckBox
+        android:id="@+id/group_member_check_box"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:button="@null"
+        android:background="@drawable/group_checkbox_selector"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:clickable="false"
+        android:focusable="false"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+    <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
+        android:id="@+id/group_member_icon"
+        android:layout_width="38.4dp"
+        android:layout_height="38.4dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="15.36dp"
+        android:layout_marginEnd="11.52dp"
+        android:scaleType="centerCrop" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/group_member_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:textAlignment="viewStart"
+            android:layout_weight="1"
+            android:lines="1"
+            android:textColor="#ff111111"
+            android:textSize="17.28sp" />
+
+        <View
+            android:id="@+id/view_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.55dp"
+            android:background="#D9D9D9" />
+    </LinearLayout>
+</LinearLayout>

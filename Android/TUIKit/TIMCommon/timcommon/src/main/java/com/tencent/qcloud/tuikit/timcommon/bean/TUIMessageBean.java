@@ -49,6 +49,8 @@ public abstract class TUIMessageBean implements Serializable {
     private boolean isSending = false;
     private boolean isProcessing = false;
     private Object processingThumbnail;
+    private String userId = "";
+    private String groupId = "";
 
     public void setExcludeFromHistory(boolean excludeFromHistory) {
         this.excludeFromHistory = excludeFromHistory;
@@ -194,7 +196,15 @@ public abstract class TUIMessageBean implements Serializable {
         if (v2TIMMessage != null) {
             return v2TIMMessage.getUserID();
         }
-        return "";
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 
     public boolean isSelf() {
@@ -231,7 +241,7 @@ public abstract class TUIMessageBean implements Serializable {
         if (v2TIMMessage != null) {
             return v2TIMMessage.getGroupID();
         }
-        return "";
+        return groupId;
     }
 
     public String getNameCard() {
@@ -348,7 +358,7 @@ public abstract class TUIMessageBean implements Serializable {
             if (fullInfo != null) {
                 revoker = new UserBean();
                 revoker.setUserId(fullInfo.getUserID());
-                revoker.setNikeName(fullInfo.getNickName());
+                revoker.setNickName(fullInfo.getNickName());
                 revoker.setFaceUrl(fullInfo.getFaceUrl());
                 return revoker;
             }
@@ -402,7 +412,7 @@ public abstract class TUIMessageBean implements Serializable {
             for (MessageRepliesBean.ReplyBean replyBean : replyBeanList) {
                 if (userBean != null && TextUtils.equals(replyBean.getMessageSender(), userID)) {
                     replyBean.setSenderFaceUrl(userBean.getFaceUrl());
-                    replyBean.setSenderShowName(userBean.getDisplayString());
+                    replyBean.setSenderShowName(userBean.getDisplayName());
                 }
             }
         }

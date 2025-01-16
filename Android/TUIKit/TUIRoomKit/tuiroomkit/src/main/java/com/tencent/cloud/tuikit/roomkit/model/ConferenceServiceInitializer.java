@@ -19,8 +19,8 @@ import com.tencent.cloud.tuikit.engine.extension.TUIConferenceInvitationManager;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomEngine;
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.imaccess.model.manager.RoomMsgManager;
 import com.tencent.cloud.tuikit.roomkit.common.utils.BusinessSceneUtil;
+import com.tencent.cloud.tuikit.roomkit.imaccess.model.manager.RoomMsgManager;
 import com.tencent.cloud.tuikit.roomkit.imaccess.view.InvitedToJoinRoomActivity;
 import com.tencent.cloud.tuikit.roomkit.imaccess.view.RoomClickListener;
 import com.tencent.cloud.tuikit.roomkit.imaccess.view.RoomMessageBean;
@@ -38,6 +38,7 @@ import com.tencent.qcloud.tuicore.interfaces.ITUINotification;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuikit.timcommon.component.LineControllerView;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.ChatInputMoreListener;
+import com.trtc.tuikit.common.system.ContextProvider;
 
 import org.json.JSONObject;
 
@@ -60,6 +61,7 @@ public class ConferenceServiceInitializer extends ServiceInitializer implements 
 
     @Override
     public void init(Context context) {
+        ContextProvider.setApplicationContext(context);
         initExtension();
         initRoomMessage();
         initSignalingListener();
@@ -215,12 +217,13 @@ public class ConferenceServiceInitializer extends ServiceInitializer implements 
                 getOfflineConferenceInvitation();
             }
         });
+        if (TUILogin.isUserLogined()) {
+            observerOnlineConferenceInvitation();
+            getOfflineConferenceInvitation();
+        }
     }
 
     private void getOfflineConferenceInvitation() {
-        if (TextUtils.isEmpty(mInvitationRoomInfo.roomId)) {
-            return;
-        }
         TUIRoomEngine.login(TUILogin.getAppContext(), TUILogin.getSdkAppId(), TUILogin.getUserId(), TUILogin.getUserSig(), new TUIRoomDefine.ActionCallback() {
             @Override
             public void onSuccess() {
@@ -236,6 +239,9 @@ public class ConferenceServiceInitializer extends ServiceInitializer implements 
     }
 
     private void getInvitationList(String roomId) {
+        if (TextUtils.isEmpty(roomId)) {
+            return;
+        }
         Log.d(TAG, "getInvitationList");
         TUIConferenceInvitationManager invitationManager = (TUIConferenceInvitationManager) TUIRoomEngine.sharedInstance().getExtension(TUICommonDefine.ExtensionType.CONFERENCE_INVITATION_MANAGER);
         invitationManager.getInvitationList(roomId, mGetInvitationListCursor, SINGLE_FETCH_COUNT, new TUIConferenceInvitationManager.GetInvitationListCallback() {

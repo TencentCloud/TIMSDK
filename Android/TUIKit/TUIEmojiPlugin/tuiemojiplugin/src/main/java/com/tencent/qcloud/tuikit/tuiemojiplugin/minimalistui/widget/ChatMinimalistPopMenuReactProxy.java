@@ -24,7 +24,6 @@ import com.tencent.qcloud.tuikit.timcommon.component.face.RecentEmojiManager;
 import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.messagepopmenu.ChatPopActivity;
-import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 import com.tencent.qcloud.tuikit.tuiemojiplugin.R;
 import com.tencent.qcloud.tuikit.tuiemojiplugin.bean.MessageReactionBean;
 import com.tencent.qcloud.tuikit.tuiemojiplugin.bean.ReactionBean;
@@ -156,7 +155,7 @@ public class ChatMinimalistPopMenuReactProxy {
         public RecentFaceAdapter.RecentFaceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View faceView = LayoutInflater.from(parent.getContext()).inflate(R.layout.tuiemoji_chat_menu_recent_face_item_layout, parent, false);
             moreBtn = new Emoji();
-            Bitmap bitMap = BitmapFactory.decodeResource(parent.getResources(), R.drawable.chat_pop_menu_add_icon);
+            Bitmap bitMap = BitmapFactory.decodeResource(parent.getResources(), R.drawable.tuiemoji_pop_menu_add_icon);
             moreBtn.setIcon(bitMap);
             return new RecentFaceAdapter.RecentFaceViewHolder(faceView);
         }

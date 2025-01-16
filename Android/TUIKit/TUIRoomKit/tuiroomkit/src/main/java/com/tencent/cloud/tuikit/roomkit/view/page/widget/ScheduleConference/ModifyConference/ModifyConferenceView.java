@@ -84,9 +84,9 @@ public class ModifyConferenceView extends FrameLayout {
             public void onError(TUICommonDefine.Error error, String s) {
                 if (error == PERMISSION_DENIED) {
                     RoomToast.toastShortMessageCenter(mContext.getString(R.string.tuiroomkit_conference_already_started_and_cannot_be_modified));
-                    finishActivity();
                 }
                 mLayoutModifyConference.setClickable(true);
+                finishActivity();
             }
         }));
         TextView view = parent.findViewById(R.id.tv_conference_info);

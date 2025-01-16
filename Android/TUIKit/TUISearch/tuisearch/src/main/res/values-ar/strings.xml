@@ -17,7 +17,6 @@
     <string name="ui_at_all">[@الجميع]</string>
     <string name="ui_at_me">[شخص ما @ لي]</string>
     <string name="ui_at_all_me">[@الجميع][شخص ما @ لي]</string>
-    <string name="open_file_tips">حدد التطبيق الذي تريد فتح هذا الملف به</string>
     <string name="custom_msg">[رسالة مخصصة]</string>
     <string name="custom_emoji">[رمز تعبيري متحرك]</string>
     <string name="picture_extra">[صورة]</string>

@@ -474,7 +474,10 @@ public class ChatView extends LinearLayout implements IChatLayout {
                         builder.append(memberInfo.getDisplayName());
                         builder.append("、");
                     }
-                    builder.deleteCharAt(builder.lastIndexOf("、"));
+                    int index = builder.lastIndexOf("、");
+                    if (index != -1) {
+                        builder.deleteCharAt(index);
+                    }
                     chatDescription.setText(builder);
                 }
 

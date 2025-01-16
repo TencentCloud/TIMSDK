@@ -27,7 +27,7 @@ public abstract class TUIBaseChatMinimalistActivity extends BaseMinimalistLightA
         TUIChatLog.i(TAG, "onCreate " + this);
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.chat_activity);
+        setContentView(R.layout.tuichat_chat_activity_layout);
         initChat(getIntent());
     }
 

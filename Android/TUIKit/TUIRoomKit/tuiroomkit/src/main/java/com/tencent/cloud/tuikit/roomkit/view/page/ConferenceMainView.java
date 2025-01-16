@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
+import com.tencent.cloud.tuikit.roomkit.ConferenceDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
@@ -36,6 +37,7 @@ import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceSessionImpl;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceState;
 import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
+import com.tencent.cloud.tuikit.roomkit.model.data.ViewState;
 import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.videoseat.ui.TUIVideoSeatView;
 import com.tencent.cloud.tuikit.roomkit.view.component.BaseDialogFragment;
@@ -55,7 +57,6 @@ import com.tencent.cloud.tuikit.roomkit.view.page.widget.MediaSettings.MediaSett
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.RaiseHandControlPanel.RaiseHandApplicationListPanel;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.SelectScheduleParticipant.ConferenceParticipants;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.SelectScheduleParticipant.ParticipantSelector;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.SelectScheduleParticipant.User;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.SpeechToText.SpeechToTextSubtitleView;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.TopNavigationBar.TopView;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.TransferOwnerControlPanel.TransferMasterPanel;
@@ -107,8 +108,9 @@ public class ConferenceMainView extends RelativeLayout implements IFindNameCardS
     private float           mTouchDownPointX;
     private float           mTouchDownPointY;
 
-    private final Observer<String>  mRoomIdObserver     = this::updateRoomId;
-    private final Observer<Boolean> mAISubtitleObserver = this::updateSubtitleView;
+    private final Observer<String>  mRoomIdObserver           = this::updateRoomId;
+    private final Observer<Boolean> mAISubtitleObserver       = this::updateSubtitleView;
+    private final Observer<Boolean> misInPictureInPictureMode = this::updatePipModeVideoView;
 
     private final LiveListObserver<String> mDisableSendMessageObserver = new LiveListObserver<String>() {
         @Override
@@ -277,11 +279,13 @@ public class ConferenceMainView extends RelativeLayout implements IFindNameCardS
         mLayoutTopView.addView(new TopView(mContext));
 
         mLayoutVideoSeat = findViewById(R.id.tuiroomkit_video_seat_container);
-        ViewParent parent = mVideoSeatView.getParent();
-        if (parent != null && parent instanceof ViewGroup) {
-            ((ViewGroup) parent).removeView(mVideoSeatView);
+        if (!ConferenceController.sharedInstance().getViewState().isInPictureInPictureMode.get()) {
+            ViewParent parent = mVideoSeatView.getParent();
+            if (parent instanceof ViewGroup) {
+                ((ViewGroup) parent).removeView(mVideoSeatView);
+            }
+            mLayoutVideoSeat.addView(mVideoSeatView);
         }
-        mLayoutVideoSeat.addView(mVideoSeatView);
         if (ConferenceSessionImpl.sharedInstance().mIsEnableWaterMark) {
             TextWaterMarkView textWaterMarkView = new TextWaterMarkView(mContext);
             textWaterMarkView.setText(mViewModel.getWaterMakText());
@@ -320,6 +324,24 @@ public class ConferenceMainView extends RelativeLayout implements IFindNameCardS
         mLayoutScreenCaptureGroup.setOnClickListener(this::onClick);
         mBtnStopScreenShare = findViewById(R.id.tuiroomkit_btn_stop_screen_capture);
         mStopCaptureListener = v -> mViewModel.stopScreenCapture();
+    }
+
+    private void updatePipModeVideoView(boolean isPipMode) {
+        if (ConferenceController.sharedInstance().getViewState().floatWindowType != ViewState.FloatWindowType.PICTURE_IN_PICTURE) {
+            return;
+        }
+        if (isPipMode) {
+            mLayoutVideoSeat.removeView(mVideoSeatView);
+            mVideoSeatView.destroy();
+        } else {
+            if (mVideoSeatView != null) {
+                mLayoutVideoSeat.removeView(mVideoSeatView);
+                mVideoSeatView.destroy();
+            }
+            mVideoSeatView = new TUIVideoSeatView(mContext);
+            mVideoSeatView.setViewClickListener(this::onClick);
+            mLayoutVideoSeat.addView(mVideoSeatView);
+        }
     }
 
     public void stopScreenShare() {
@@ -390,9 +412,9 @@ public class ConferenceMainView extends RelativeLayout implements IFindNameCardS
     private ConferenceParticipants getParticipants() {
         ConferenceParticipants participants = new ConferenceParticipants();
         for (UserState.UserInfo userInfo : ConferenceController.sharedInstance().getUserState().allUsers.getList()) {
-            User user = new User();
-            user.userId = userInfo.userId;
-            user.userName = userInfo.userName;
+            ConferenceDefine.User user = new ConferenceDefine.User();
+            user.id = userInfo.userId;
+            user.name = userInfo.userName;
             user.avatarUrl = userInfo.avatarUrl;
             participants.unSelectableList.add(user);
         }
@@ -447,7 +469,7 @@ public class ConferenceMainView extends RelativeLayout implements IFindNameCardS
         final ConfirmDialog confirmDialog = new ConfirmDialog(mContext);
         confirmDialog.setAutoConfirmSeconds(CONFIRM_DIALOG_AUTO_DISMISS_SECONDS);
         confirmDialog.setCancelable(true);
-        confirmDialog.setMessage(mContext.getString(R.string.tuiroomkit_kiecked_off_line));
+        confirmDialog.setMessage(mContext.getString(R.string.tuiroomkit_kicked_off_line));
         confirmDialog.setPositiveText(mContext.getString(R.string.tuiroomkit_dialog_ok));
         confirmDialog.setPositiveClickListener(new ConfirmDialog.PositiveClickListener() {
             @Override
@@ -504,6 +526,7 @@ public class ConferenceMainView extends RelativeLayout implements IFindNameCardS
         ConferenceController.sharedInstance().getViewController().updateScreenOrientation(curConfig);
         ConferenceController.sharedInstance().getRoomState().roomId.observe(mRoomIdObserver);
         ConferenceController.sharedInstance().getViewState().isSpeechToTextSubTitleShowing.observe(mAISubtitleObserver);
+        ConferenceController.sharedInstance().getViewState().isInPictureInPictureMode.observe(misInPictureInPictureMode);
         ConferenceController.sharedInstance().getUserState().disableMessageUsers.observe(mDisableSendMessageObserver);
     }
 
@@ -518,8 +541,10 @@ public class ConferenceMainView extends RelativeLayout implements IFindNameCardS
         if (mFloatChatView != null) {
             mFloatChatView.destroy();
         }
+        mMainHandler.removeCallbacksAndMessages(null);
         ConferenceController.sharedInstance().getRoomState().roomId.removeObserver(mRoomIdObserver);
         ConferenceController.sharedInstance().getViewState().isSpeechToTextSubTitleShowing.removeObserver(mAISubtitleObserver);
+        ConferenceController.sharedInstance().getViewState().isInPictureInPictureMode.removeObserver(misInPictureInPictureMode);
         ConferenceController.sharedInstance().getUserState().disableMessageUsers.removeObserver(mDisableSendMessageObserver);
     }
 

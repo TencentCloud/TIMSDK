@@ -71,10 +71,13 @@ public class TUIChatConstants {
 
     public static final class Group {
         public static final String GROUP_ID = "group_id";
+        public static final String GROUP_INFO = "groupInfo";
+
     }
 
     public static class Selection {
-
+        public static final String TITLE = "title";
+        public static final String LIST = "list";
         public static final String USER_ID_SELECT = "user_id_select";
         public static final String USER_NAMECARD_SELECT = "user_namecard_select";
     }
@@ -82,4 +85,18 @@ public class TUIChatConstants {
     public static class DataStore {
         public static final String DATA_STORE_NAME = "tuichat_datastore";
     }
+
+    // Background
+    public static final String CHAT_CONVERSATION_BACKGROUND_URL =
+            "https://im.sdk.qcloud.com/download/tuikit-resource/conversation-backgroundImage/backgroundImage_%s_full.png";
+    public static final String CHAT_CONVERSATION_BACKGROUND_THUMBNAIL_URL =
+            "https://im.sdk.qcloud.com/download/tuikit-resource/conversation-backgroundImage/backgroundImage_%s.png";
+    public static final int CHAT_CONVERSATION_BACKGROUND_COUNT = 7;
+    public static final String CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL = "chat/conversation/background/default/url";
+    public static final int CHAT_REQUEST_BACKGROUND_CODE = 1001;
+    public static final String CHAT_BACKGROUND_URI = "chatBackgroundUri";
+
+    public static final String GROUP_FACE_URL = "https://im.sdk.qcloud.com/download/tuikit-resource/group-avatar/group_avatar_%s.png";
+    public static final int GROUP_FACE_COUNT = 24;
+
 }

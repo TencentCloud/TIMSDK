@@ -514,7 +514,7 @@ public class ChatMessageParser {
                 }
             }
         } else {
-            String operatorName = revokerBean.getDisplayString();
+            String operatorName = revokerBean.getDisplayName();
             showString = operatorName + context.getResources().getString(R.string.revoke_tips);
         }
         return showString;

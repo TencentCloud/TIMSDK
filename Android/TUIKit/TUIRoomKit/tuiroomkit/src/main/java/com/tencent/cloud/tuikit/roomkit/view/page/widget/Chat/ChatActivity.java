@@ -1,5 +1,7 @@
 package com.tencent.cloud.tuikit.roomkit.view.page.widget.Chat;
 
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.KICKED_OUT_OF_ROOM;
+
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -23,6 +26,14 @@ import java.util.Map;
 
 public class ChatActivity extends AppCompatActivity {
     private static final String TAG = "ChatActivity";
+    private ConferenceEventCenter.RoomEngineEventResponder mEngineEventObserver = new ConferenceEventCenter.RoomEngineEventResponder() {
+        @Override
+        public void onEngineEvent(ConferenceEventCenter.RoomEngineEvent event, Map<String, Object> params) {
+            if (event == KICKED_OUT_OF_ROOM) {
+                ChatActivity.this.finish();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,6 +41,7 @@ public class ChatActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate : " + this);
         initStatusBar();
         initView();
+        ConferenceEventCenter.getInstance().subscribeEngine(KICKED_OUT_OF_ROOM, mEngineEventObserver);
     }
 
     @Override
@@ -42,6 +54,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        ConferenceEventCenter.getInstance().unsubscribeEngine(KICKED_OUT_OF_ROOM, mEngineEventObserver);
         Log.d(TAG, "onDestroy : " + this);
     }
 

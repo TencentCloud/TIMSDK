@@ -39,7 +39,6 @@ import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.Conversatio
 import com.tencent.qcloud.tuikit.tuiconversation.minimalistui.widget.Menu;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class TUIConversationMinimalistFragment extends Fragment {
@@ -399,13 +398,13 @@ public class TUIConversationMinimalistFragment extends Fragment {
 
         action.setActionName(getResources().getString(R.string.start_conversation));
         action.setActionClickListener(popActionClickListener);
-        action.setIconResId(R.drawable.create_c2c);
+        action.setIconResId(R.drawable.conversation_create_c2c);
         List<PopMenuAction> menuActions = new ArrayList<>();
         menuActions.add(action);
 
         action = new PopMenuAction();
         action.setActionName(getResources().getString(R.string.create_group_chat));
-        action.setIconResId(R.drawable.group_icon);
+        action.setIconResId(R.drawable.conversation_group_icon);
         action.setActionClickListener(popActionClickListener);
         menuActions.add(action);
 

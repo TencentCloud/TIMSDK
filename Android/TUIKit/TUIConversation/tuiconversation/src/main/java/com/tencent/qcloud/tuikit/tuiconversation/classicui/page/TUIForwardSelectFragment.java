@@ -53,7 +53,7 @@ public class TUIForwardSelectFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        mBaseView = inflater.inflate(R.layout.forward_fragment, container, false);
+        mBaseView = inflater.inflate(R.layout.conversation_forward_fragment, container, false);
         return mBaseView;
     }
 

@@ -39,6 +39,7 @@ import java.util.List;
 public class ImageSelectActivity extends BaseLightActivity {
     private static final String TAG = ImageSelectActivity.class.getSimpleName();
 
+    public static final String CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL = "chat/conversation/background/default/url";
     public static final int RESULT_CODE_ERROR = -1;
     public static final int RESULT_CODE_SUCCESS = 0;
     public static final String TITLE = "title";
@@ -135,7 +136,7 @@ public class ImageSelectActivity extends BaseLightActivity {
         }
 
         if (selected.isDefault()) {
-            selected.setLocalPath(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL);
+            selected.setLocalPath(CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL);
             setResult(selected);
             ToastUtil.toastShortMessage(getResources().getString(R.string.setting_success));
             finish();

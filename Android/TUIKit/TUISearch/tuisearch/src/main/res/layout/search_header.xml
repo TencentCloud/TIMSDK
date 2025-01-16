@@ -36,13 +36,13 @@
 
     <ImageView
         android:id="@+id/more_conversation_arrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
         android:layout_alignParentEnd="true"
         android:gravity="center|end"
         android:background="#FFFFFF"
-        android:paddingEnd="14.85dp"
-        android:src="@drawable/arrow_right"
+        android:layout_marginEnd="14.85dp"
+        android:src="@drawable/common_arrow_right"
         android:textSize="11.14sp" />
 
     <LinearLayout

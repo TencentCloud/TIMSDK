@@ -8,6 +8,11 @@ object Constants {
     const val EVENT_START_FEATURE = "eventStartFeature"
     const val EVENT_START_ACTIVITY = "eventStartActivity"
     const val EVENT_SHOW_INCOMING_VIEW = "eventShowIncomingView"
+
+    const val EVENT_VIEW_STATE_CHANGED = "eventViewStateChanged"
+    const val EVENT_FULL_VIEW = "eventFullView"
+    const val EVENT_FLOAT_VIEW = "eventFloatView"
+
     const val GROUP_ID = "groupId"
     const val SELECT_MEMBER_LIST = "selectMemberList"
 

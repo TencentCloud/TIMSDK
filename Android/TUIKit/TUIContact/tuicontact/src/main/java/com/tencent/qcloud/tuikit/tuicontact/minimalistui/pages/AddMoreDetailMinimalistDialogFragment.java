@@ -22,6 +22,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.TUICallback;
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView;
 import com.tencent.qcloud.tuikit.timcommon.component.PopupInputCard;
@@ -36,9 +37,13 @@ import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.IAddMoreActivity;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactToast;
+import com.tencent.qcloud.tuikit.tuicontact.presenter.AddMorePresenter;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.FriendProfilePresenter;
+import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
 
 public class AddMoreDetailMinimalistDialogFragment extends DialogFragment implements IAddMoreActivity {
+    private static final String TAG = "AddMoreDetailMinimalist";
+
     private BottomSheetDialog dialog;
 
     private View detailArea;
@@ -58,7 +63,9 @@ public class AddMoreDetailMinimalistDialogFragment extends DialogFragment implem
 
     private TUICallback addMoreCallback;
     private Object data;
+    private String userID;
     private FriendProfilePresenter presenter;
+    private AddMorePresenter addMorePresenter = new AddMorePresenter();
 
     @NonNull
     @Override
@@ -134,9 +141,13 @@ public class AddMoreDetailMinimalistDialogFragment extends DialogFragment implem
                             TUICallback.onError(addMoreCallback, errCode, errMsg);
                         }
                     });
-                } else if (data instanceof ContactItemBean) {
+                } else if (data instanceof ContactItemBean || !TextUtils.isEmpty(userID)) {
+                    String friendID = userID;
+                    if (data instanceof ContactItemBean) {
+                        friendID = ((ContactItemBean) data).getId();
+                    }
                     String remark = remarkController.getContent();
-                    presenter.addFriend(((ContactItemBean) data).getId(), addWording, remark, new IUIKitCallback<Pair<Integer, String>>() {
+                    presenter.addFriend(friendID, addWording, remark, new IUIKitCallback<Pair<Integer, String>>() {
                         @Override
                         public void onSuccess(Pair<Integer, String> data) {
                             int toastIconType = ContactToast.TOAST_ICON_NEGATIVE;
@@ -163,6 +174,18 @@ public class AddMoreDetailMinimalistDialogFragment extends DialogFragment implem
             remarksArea.setVisibility(View.GONE);
         } else if (data instanceof ContactItemBean) {
             setFriendDetail(((ContactItemBean) data).getAvatarUrl(), ((ContactItemBean) data).getId(), ((ContactItemBean) data).getNickName());
+        } else if (!TextUtils.isEmpty(userID)) {
+            addMorePresenter.getUserInfo(userID, new TUIValueCallback<ContactItemBean>() {
+                @Override
+                public void onSuccess(ContactItemBean object) {
+                    setFriendDetail(object.getAvatarUrl(), object.getId(), object.getNickName());
+                }
+
+                @Override
+                public void onError(int errorCode, String errorMessage) {
+                    TUIContactLog.e(TAG, "getUserInfo onError: " + errorMessage);
+                }
+            });
         }
         String nickName = TUIConfig.getSelfNickName();
         if (TextUtils.isEmpty(nickName)) {
@@ -202,8 +225,8 @@ public class AddMoreDetailMinimalistDialogFragment extends DialogFragment implem
         this.data = data;
     }
 
-    public void setAddMoreCallback(TUICallback addMoreCallback) {
-        this.addMoreCallback = addMoreCallback;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
     @Override

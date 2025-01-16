@@ -92,7 +92,7 @@
     <string name="tuiroomkit_room_free_speech">Free Speech conference</string>
     <string name="tuiroomkit_room_raise_hand">On-stage speaking conference</string>
     <string name="tuiroomkit_logout">Logout</string>
-    <string name="tuiroomkit_kiecked_off_line">You are already logged in elsewhere</string>
+    <string name="tuiroomkit_kicked_off_line">You are already logged in elsewhere</string>
     <string name="tuiroomkit_dialog_logout_title">You are logged out</string>
     <string name="tuiroomkit_cancel">Cancel</string>
     <string name="tuiroomkit_microphone">Microphone</string>
@@ -147,7 +147,7 @@
     <string name="tuiroomkit_raise_hand_notification">%s is applying to be on stage</string>
     <string name="tuiroomkit_multi_raise_hand_notification">Including %s, %d people are applying to be on stage.</string>
     <string name="tuiroomkit_leave_stage">Leave stage</string>
-    <string name="tuiroomkit_tip_kicked_off_seat">You have been asked to leave stage</string>
+    <string name="tuiroomkit_tip_kicked_off_seat">You have been invited by the host to step down, please raise your hand if you need to speak</string>
     <string name="tuiroomkit_dialog_off_seat_title">Are you sure you want to step down</string>
     <string name="tuiroomkit_dialog_off_seat_content">To come on stage again, you need to resend the application and wait for the owner/administrator to approve it.</string>
     <string name="tuiroomkit_hands_down">Hands down</string>
@@ -353,4 +353,21 @@
     <string name="tuiroomkit_local_user_disable_send_message">You have been banned from text chat</string>
     <string name="tuiroomkit_local_user_enable_send_message">You are allowed to text chat</string>
 
+    <string name="tuiroomkit_sent_a_picture">Sent a picture</string>
+    <string name="tuiroomkit_sent_a_video">Sent a video</string>
+    <string name="tuiroomkit_sent">Sent %s</string>
+    <string name="tuiroomkit_room_id_is_occupied">The room ID is occupied, please select another room ID</string>
+    <string name="tuiroomkit_room_is_full">The room is full and you cannot enter the room temporarily</string>
+    <string name="tuiroomkit_room_name_is_invalid">The room name is invalid. It cannot exceed 30 bytes. If it contains Chinese characters, the character encoding must be UTF-8</string>
+    <string name="tuiroomkit_room_id_is_invalid">The room number is invalid. It must be printable ASCII characters and cannot exceed 48 bytes</string>
+    <string name="tuiroomkit_use_function_need_enter_room">You need to enter the room to use this function</string>
+    <string name="tuiroomkit_is_not_supported_in_room_type">This operation is not supported in the current room type</string>
+    <string name="tuiroomkit_already_in_another_room">You are already in another room and need to leave the room before joining a new room</string>
+    <string name="tuiroomkit_format_select_participant">%s (%d)</string>
+    <string name="tuiroomkit_all_participant">All Members(%d)</string>
+    <string name="tuiroomkit_participant_name_and_id">%s(%s)</string>
+    <string name="tuiroomkit_selected_participant_size">Selected：%d people</string>
+    <string name="tuiroomkit_confirm_select_participant">OK(%d)</string>
+    <string name="tuiroomkit_select_schedule_participant">Select member</string>
+    <string name="tuiroomkit_hint_search_member_id_or_name">Enter user ID or name</string>
 </resources>

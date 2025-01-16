@@ -112,11 +112,12 @@
 
         <CheckBox
             android:id="@+id/select_checkbox"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignParentStart="true"
             android:layout_gravity="center_vertical"
-            android:button="@drawable/checkbox_selector"
+            android:background="@drawable/conversation_checkbox_selector"
+            android:button="@null"
             android:visibility="gone"
             tools:visibility="visible"/>
 

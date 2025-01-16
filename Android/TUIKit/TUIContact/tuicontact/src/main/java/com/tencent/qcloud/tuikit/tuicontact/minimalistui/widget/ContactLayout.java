@@ -89,7 +89,7 @@ public class ContactLayout extends LinearLayout implements IContactLayout {
             homeView.setVisibility(VISIBLE);
             titleView.setVisibility(GONE);
             rtCubeTitleView.setVisibility(VISIBLE);
-            homeView.setBackgroundResource(R.drawable.title_bar_left_icon);
+            homeView.setBackgroundResource(com.tencent.qcloud.tuikit.timcommon.R.drawable.common_title_bar_home_icon);
             homeView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

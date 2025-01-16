@@ -1,17 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <declare-styleable name="UserIconView">
-        <attr name="default_image" format="reference" />
-        <attr name="image_radius" format="dimension" />
-    </declare-styleable>
-
-    <declare-styleable name="SynthesizedImageView">
-        <attr name="synthesized_image_bg" format="color" />
-        <attr name="synthesized_default_image" format="reference" />
-        <attr name="synthesized_image_size" format="dimension" />
-        <attr name="synthesized_image_gap" format="dimension" />
-    </declare-styleable>
-
     <attr name="conversation_tab_selected" format="reference|color"/>
 </resources>

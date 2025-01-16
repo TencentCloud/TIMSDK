@@ -1,27 +1,30 @@
 package com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.service;
 
-import static com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.service.FloatChatConstants.VALUE_BUSINESS_ID;
-import static com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.service.FloatChatConstants.VALUE_PLATFORM;
-import static com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.service.FloatChatConstants.VALUE_VERSION;
+import static com.tencent.imsdk.v2.V2TIMImageElem.V2TIM_IMAGE_TYPE_THUMB;
 
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
-import com.tencent.imsdk.v2.V2TIMGroupMemberInfo;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.model.TUIFloatChat;
+import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
+import com.tencent.imsdk.v2.V2TIMCustomElem;
+import com.tencent.imsdk.v2.V2TIMFileElem;
+import com.tencent.imsdk.v2.V2TIMImageElem;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
-import com.tencent.imsdk.v2.V2TIMSimpleMsgListener;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.liteav.base.Log;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.model.TUIFloatChat;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
+import com.trtc.tuikit.common.system.ContextProvider;
 
+import java.util.List;
 
 public class FloatChatIMService implements IFloatChatMessage {
     private static final String TAG = "FloatChatIMService";
 
-    private SimpleListener          mSimpleListener;
+    private MessageListener         mMessageListener;
     private final String            mRoomId;
     private BarrageMessageDelegate  mDelegate;
 
@@ -34,12 +37,12 @@ public class FloatChatIMService implements IFloatChatMessage {
         mDelegate = delegate;
         if (delegate == null) {
             V2TIMManager.getInstance().setGroupListener(null);
-            V2TIMManager.getInstance().removeSimpleMsgListener(mSimpleListener);
+            V2TIMManager.getMessageManager().addAdvancedMsgListener(mMessageListener);
         } else {
-            if (mSimpleListener == null) {
-                mSimpleListener = new SimpleListener();
+            if (mMessageListener == null) {
+                mMessageListener = new MessageListener();
             }
-            V2TIMManager.getInstance().addSimpleMsgListener(mSimpleListener);
+            V2TIMManager.getMessageManager().addAdvancedMsgListener(mMessageListener);
         }
     }
 
@@ -72,87 +75,109 @@ public class FloatChatIMService implements IFloatChatMessage {
                 });
     }
 
-    private class SimpleListener extends V2TIMSimpleMsgListener {
+    private class MessageListener extends V2TIMAdvancedMsgListener {
         @Override
-        public void onRecvGroupTextMessage(String msgID, String groupID, V2TIMGroupMemberInfo sender, String text) {
-            Log.i(TAG, " onRecvGroupCustomMessage: msgID = " + msgID + " , groupID = " + groupID
-                    + " , mGroupId = " + mRoomId + " , sender = " + sender + " , text = " + text);
-            if (groupID == null || !groupID.equals(mRoomId)) {
+        public void onRecvNewMessage(V2TIMMessage msg) {
+            String groupID = msg.getGroupID();
+            if (!TextUtils.equals(mRoomId, groupID)) {
                 return;
             }
-            if (TextUtils.isEmpty(text)) {
-                Log.i(TAG, " onRecvGroupCustomMessage customData is empty");
+            if (handleTextMessageIfNeeded(msg)) {
                 return;
             }
-            TUIFloatChat barrage = new TUIFloatChat();
-            barrage.content = text;
-            barrage.user.userId = sender.getUserID();
-            barrage.user.userName = sender.getNickName();
-            barrage.user.avatarUrl = sender.getFaceUrl();
-            barrage.user.level = "0";
-
-            if (mDelegate != null) {
-                mDelegate.onReceivedBarrage(barrage);
+            if (handleCustomMessageIfNeeded(msg)) {
+                return;
             }
+            if (handleImageMessageIfNeeded(msg)) {
+                return;
+            }
+            if (handleVideoMessageIfNeeded(msg)) {
+                return;
+            }
+            handleFileMessageIfNeeded(msg);
         }
 
-        @Override
-        public void onRecvGroupCustomMessage(String msgID, String groupID,
-                                             V2TIMGroupMemberInfo sender, byte[] customData) {
-            Log.i(TAG, " onRecvGroupCustomMessage: msgID = " + msgID + " , groupID = " + groupID
-                    + " , mGroupId = " + mRoomId + " , sender = " + sender);
-            if (groupID == null || !groupID.equals(mRoomId)) {
-                return;
+        private boolean handleTextMessageIfNeeded(V2TIMMessage msg) {
+            if (msg.getElemType() != V2TIMMessage.V2TIM_ELEM_TYPE_TEXT) {
+                return false;
             }
-            if (customData == null) {
-                Log.e(TAG, " onRecvGroupCustomMessage customData is empty");
-                return;
+            notifyBarrage(msg, msg.getTextElem().getText());
+            return true;
+        }
+
+        private boolean handleCustomMessageIfNeeded(V2TIMMessage msg) {
+            if (msg.getElemType() != V2TIMMessage.V2TIM_ELEM_TYPE_CUSTOM) {
+                return false;
             }
             try {
-                String info = new String(customData);
+                V2TIMCustomElem customElem = msg.getCustomElem();
+                String info = new String(customElem.getData());
                 Gson gson = new Gson();
                 FloatChatJson barrageJson = gson.fromJson(info, FloatChatJson.class);
-                Log.i(TAG, " " + barrageJson);
                 TUIFloatChat barrage = new TUIFloatChat();
-                if (barrageJson.data != null) {
-                    barrage.content = barrageJson.data.content;
-                    if (barrageJson.data.user != null) {
-                        barrage.user.userId = barrageJson.data.user.userId;
-                        barrage.user.userName = barrageJson.data.user.userName;
-                        barrage.user.avatarUrl = barrageJson.data.user.avatarUrl;
-                        barrage.user.level = barrageJson.data.user.level;
-                    }
+                if (barrageJson.data == null) {
+                    return true;
                 }
+                barrage.content = barrageJson.data.content;
+                if (barrageJson.data.user == null) {
+                    return true;
+                }
+                barrage.user.userId = barrageJson.data.user.userId;
+                barrage.user.userName = barrageJson.data.user.userName;
+                barrage.user.avatarUrl = barrageJson.data.user.avatarUrl;
+                barrage.user.level = barrageJson.data.user.level;
                 if (mDelegate != null) {
                     mDelegate.onReceivedBarrage(barrage);
                 }
             } catch (Exception e) {
-                Log.e(TAG, " " + e.getLocalizedMessage());
+                Log.e(TAG, "handleCustomMessageIfNeeded : " + e.toString());
+            }
+            return true;
+        }
+
+        private boolean handleImageMessageIfNeeded(V2TIMMessage msg) {
+            if (msg.getElemType() != V2TIMMessage.V2TIM_ELEM_TYPE_IMAGE) {
+                return false;
+            }
+            V2TIMImageElem v2TIMImageElem = msg.getImageElem();
+            List<V2TIMImageElem.V2TIMImage> imageList = v2TIMImageElem.getImageList();
+            for (V2TIMImageElem.V2TIMImage v2TIMImage : imageList) {
+                if (V2TIM_IMAGE_TYPE_THUMB != v2TIMImage.getType()) {
+                    continue;
+                }
+                notifyBarrage(msg, ContextProvider.getApplicationContext().getString(R.string.tuiroomkit_sent_a_picture));
+            }
+            return true;
+        }
+
+        private boolean handleVideoMessageIfNeeded(V2TIMMessage msg) {
+            if (msg.getElemType() != V2TIMMessage.V2TIM_ELEM_TYPE_VIDEO) {
+                return false;
+            }
+            notifyBarrage(msg, ContextProvider.getApplicationContext().getString(R.string.tuiroomkit_sent_a_video));
+            return true;
+        }
+
+        private boolean handleFileMessageIfNeeded(V2TIMMessage msg) {
+            if (msg.getElemType() != V2TIMMessage.V2TIM_ELEM_TYPE_FILE) {
+                return false;
+            }
+            V2TIMFileElem v2TIMFileElem = msg.getFileElem();
+            String fileName = v2TIMFileElem.getFileName();
+            notifyBarrage(msg, ContextProvider.getApplicationContext().getString(R.string.tuiroomkit_sent, fileName));
+            return true;
+        }
+
+        private void notifyBarrage(V2TIMMessage msg, String content) {
+            TUIFloatChat barrage = new TUIFloatChat();
+            barrage.content = content;
+            barrage.user.userId = msg.getSender();
+            barrage.user.userName = msg.getNickName();
+            barrage.user.avatarUrl = msg.getFaceUrl();
+            barrage.user.level = "0";
+            if (mDelegate != null) {
+                mDelegate.onReceivedBarrage(barrage);
             }
         }
-    }
-
-    public static String getTextMsgJsonStr(TUIFloatChat barrage) {
-        if (barrage == null) {
-            return null;
-        }
-        FloatChatJson sendJson = new FloatChatJson();
-        sendJson.businessID = VALUE_BUSINESS_ID;
-        sendJson.platform = VALUE_PLATFORM;
-        sendJson.version = VALUE_VERSION;
-
-        FloatChatJson.Data data = new FloatChatJson.Data();
-        data.content = barrage.content;
-        sendJson.data = data;
-
-        FloatChatJson.Data.User user = new FloatChatJson.Data.User();
-        user.userName = barrage.user.userName;
-        user.userId = barrage.user.userId;
-        user.avatarUrl = barrage.user.avatarUrl;
-        user.level = barrage.user.level;
-        sendJson.data.user = user;
-
-        Gson gson = new Gson();
-        return gson.toJson(sendJson);
     }
 }

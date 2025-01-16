@@ -41,7 +41,7 @@ public class ConversationIconView extends RelativeLayout {
     }
 
     private void init() {
-        inflate(getContext(), com.tencent.qcloud.tuikit.timcommon.R.layout.profile_icon_view, this);
+        inflate(getContext(), com.tencent.qcloud.tuikit.timcommon.R.layout.common_profile_icon_view, this);
         mIconView = findViewById(com.tencent.qcloud.tuikit.timcommon.R.id.profile_icon);
         ((SynthesizedImageView) mIconView).defaultImage(TUIConfig.getDefaultAvatarImage());
         presenter = new ConversationIconPresenter();
@@ -70,7 +70,7 @@ public class ConversationIconView extends RelativeLayout {
 
     public void setConversation(ConversationInfo conversationInfo) {
         if (showFoldedStyle && conversationInfo.isMarkFold()) {
-            mIconView.setImageResource(R.drawable.ic_fold);
+            mIconView.setImageResource(R.drawable.conversation_ic_fold);
         } else if (mIconView instanceof SynthesizedImageView) {
             ((SynthesizedImageView) (mIconView)).setImageId(conversationInfo.getConversationId());
             if (conversationInfo.isGroup()) {

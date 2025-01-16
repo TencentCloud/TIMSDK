@@ -91,6 +91,10 @@ public class LineControllerView extends RelativeLayout {
         mContentText.requestLayout();
     }
 
+    public void setName(String name) {
+        mNameText.setText(name);
+    }
+
     public void setSingleLine(boolean singleLine) {
         mContentText.setSingleLine(singleLine);
     }

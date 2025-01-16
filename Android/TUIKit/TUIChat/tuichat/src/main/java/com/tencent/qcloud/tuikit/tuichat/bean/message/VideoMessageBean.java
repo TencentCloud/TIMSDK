@@ -57,6 +57,13 @@ public class VideoMessageBean extends TUIMessageBean {
         return 0;
     }
 
+    public String getSnapshotPath() {
+        if (videoElem != null) {
+            return videoElem.getSnapshotPath();
+        }
+        return "";
+    }
+
     @Override
     public Class<? extends TUIReplyQuoteBean> getReplyQuoteBeanClass() {
         return VideoReplyQuoteBean.class;

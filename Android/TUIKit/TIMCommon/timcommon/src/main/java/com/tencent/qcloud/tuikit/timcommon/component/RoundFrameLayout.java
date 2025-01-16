@@ -67,6 +67,51 @@ public class RoundFrameLayout extends FrameLayout {
         }
     }
 
+
+    public void setLeftBottomRadius(int leftBottomRadius) {
+        this.leftBottomRadius = leftBottomRadius;
+    }
+
+    public void setLeftTopRadius(int leftTopRadius) {
+        this.leftTopRadius = leftTopRadius;
+    }
+
+    public void setRadius(int radius) {
+        this.radius = radius;
+        leftBottomRadius = radius;
+        rightBottomRadius = radius;
+        rightTopRadius = radius;
+        leftTopRadius = radius;
+    }
+
+    public void setRightBottomRadius(int rightBottomRadius) {
+        this.rightBottomRadius = rightBottomRadius;
+    }
+
+    public void setRightTopRadius(int rightTopRadius) {
+        this.rightTopRadius = rightTopRadius;
+    }
+
+    public int getLeftBottomRadius() {
+        return leftBottomRadius;
+    }
+
+    public int getLeftTopRadius() {
+        return leftTopRadius;
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+
+    public int getRightBottomRadius() {
+        return rightBottomRadius;
+    }
+
+    public int getRightTopRadius() {
+        return rightTopRadius;
+    }
+
     @Override
     protected void dispatchDraw(Canvas canvas) {
         path.reset();

@@ -11,7 +11,7 @@ public class TUIFoldedConversationMinimalistActivity extends BaseMinimalistLight
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.folded_activity);
+        setContentView(R.layout.conversation_folded_activity);
 
         init();
     }

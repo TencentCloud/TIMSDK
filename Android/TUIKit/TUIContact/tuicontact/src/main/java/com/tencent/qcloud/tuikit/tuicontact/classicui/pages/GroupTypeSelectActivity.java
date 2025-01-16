@@ -37,7 +37,7 @@ public class GroupTypeSelectActivity extends BaseLightActivity implements View.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.group_type_select_layout);
+        setContentView(R.layout.contact_group_type_select_layout);
 
         initData();
         initView();
@@ -94,7 +94,7 @@ public class GroupTypeSelectActivity extends BaseLightActivity implements View.O
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.group_type_item, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_group_type_item, parent, false);
             ViewHolder viewHolder = new ViewHolder(v);
             return viewHolder;
         }

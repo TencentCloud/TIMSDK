@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuicontact.classicui.pages;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -10,8 +9,9 @@ import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.tuicontact.R;
-import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
+import com.tencent.qcloud.tuikit.tuicontact.classicui.ClassicUIExtensionObserver;
+import com.tencent.qcloud.tuikit.tuicontact.classicui.util.ClassicUIUtils;
 import com.tencent.qcloud.tuikit.tuicontact.classicui.widget.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 
@@ -44,9 +44,7 @@ public class BlackListActivity extends BaseLightActivity {
         mListView.setOnItemClickListener(new ContactListView.OnItemClickListener() {
             @Override
             public void onItemClick(int position, ContactItemBean contact) {
-                Intent intent = new Intent(BlackListActivity.this, FriendProfileActivity.class);
-                intent.putExtra(TUIContactConstants.ProfileType.CONTENT, contact);
-                startActivity(intent);
+                ClassicUIUtils.showContactDetails(contact.getId());
             }
         });
     }
