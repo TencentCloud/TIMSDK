@@ -46,24 +46,10 @@
     <string name="forward_chat_record">聊天记录</string>
     <string name="forward_oneByOne_limit_number_tip">转发消息过多，暂不支持逐条转发</string>
 
-    <string name="and_and">已和</string>
-    <string name="be_friend">成为好友</string>
-
-    <string name="join_group_tip">您已被邀请进群: </string>
-    <string name="joined_tip">您已加入群: </string>
-    <string name="reject_join_tip">您被拒绝加入群: </string>
-    <string name="kick_group">您已被踢出群: </string>
-
     <string name="send_two_mins">消息发送已超过2分钟</string>
     <string name="revoke_fail">撤回失败</string>
 
     <string name="group_apply_tips">%1$d 条入群申请</string>
-    <string name="wait_tip">请稍后再试试</string>
-
-    <string name="dismiss_tip_before">您所在的群</string>
-    <string name="dismiss_tip_after">已解散</string>
-    <string name="get_system_notice">收到自定义系统通知: </string>
-
     <string name="down_cancle_send">手指上滑，取消发送</string>
     <string name="say_time_short">说话时间太短</string>
     <string name="record_fail">录音失败</string>
@@ -143,16 +129,6 @@
     <string name="download_file_error">下载视频失败: </string>
     <string name="voice_play_tip">语音文件还未下载完成</string>
 
-    <string name="device_info">手机型号:</string>
-    <string name="system_version">\n系统版本:</string>
-    <string name="sdk_version">\nSDK版本:</string>
-
-    <string name="permission_content">使用该功能，需要开启权限，鉴于您禁用相关权限，请手动设置开启权限</string>
-    <string name="setting">设置</string>
-
-    <string name="no_event_cancle_tip">浏览状态下,没有 cancle 事件</string>
-    <string name="no_event_confirm_tip">浏览状态下,没有 confirm 事件</string>
-
     <string name="record_time_tip">录制时间过短</string>
     <string name="tap_tips">轻触拍照，长按摄像</string>
     <string name="tap_capture">点击拍照</string>
@@ -169,13 +145,6 @@
 
     <string name="group_apply_click_handle">点击处理</string>
     <string name="no_support_msg">不支持的自定义消息</string>
-
-    <string name="live">的直播</string>
-    <string name="live_group_live_streaming">正在直播</string>
-    <string name="live_group_live_end">结束直播</string>
-    <string name="live_group_user_live">%s的直播</string>
-    <string name="live_group_live">群直播</string>
-
 
     <string name="start_group_call">发起群通话</string>
     <string name="start_call">发起通话</string>
@@ -293,5 +262,77 @@
     <string name="chat_quote_origin_message_revoked">引用内容已撤回</string>
     <string name="chat_reply_origin_message_revoked">回复内容已撤回</string>
 
-    <string name="ugc_plugin_not_purchased">您当前未购买高级视频录制能力套餐，请前往 IM 控制台开通免费体验或加购正式版</string>
+    <string name="group_choose_avatar">选择头像</string>
+    <string name="group_id">群ID</string>
+    <string name="group_name">群聊名称</string>
+    <string name="group_icon">修改群头像</string>
+    <string name="group_notice">群公告</string>
+    <string name="group_notice_empty_tip">暂无群公告。</string>
+    <string name="group_members">群成员</string>
+    <string name="group_type">群类型</string>
+    <string name="join_group_type">主动加群方式</string>
+    <string name="invite_group_type">邀请进群方式</string>
+    <string name="in_group_nick_name">我的群昵称</string>
+    <string name="dissolve">解散该群</string>
+    <string name="clear_message">清除聊天记录</string>
+    <string name="modify_group_notice">修改群公告</string>
+    <string name="modify_nick_name_in_goup">修改我的群昵称</string>
+    <string name="group_edit">编辑</string>
+    <string name="group_modify_remark_rule">仅限中文、字母、数字和下划线</string>
+    <string name="group_clear_message">清除聊天记录</string>
+
+    <string name="group_detail">群聊详情</string>
+
+    <string name="modify_group_name_success">修改群名称成功</string>
+    <string name="modify_group_notice_success">修改群公告成功</string>
+    <string name="exit_group">退出群聊</string>
+    <string name="modify_nickname_success">修改昵称成功</string>
+
+    <string name="group_profile_message">发送消息</string>
+    <string name="modify_icon_fail">修改群头像失败</string>
+    <string name="modify_icon_suc">修改群头像成功</string>
+    <string name="chat_room">聊天室</string>
+    <string name="chat_room_tip">加入聊天室为自动审批，暂不支持修改</string>
+    <string name="community_group">社群</string>
+    <string name="dismiss_group_tip">您确认解散该群?</string>
+    <string name="quit_group_tip">您确认退出该群？</string>
+    <string name="clear_group_msg_tip">确认清除聊天记录？</string>
+    <string name="private_group">讨论组</string>
+    <string name="public_group">公开群</string>
+    <string name="forbid_join">禁止加群</string>
+    <string name="forbid_invite">禁止邀请</string>
+    <string name="manager_judge">管理员审批</string>
+    <string name="auto_judge">自动审批</string>
+
+    <string name="modify_group_name">修改群名称</string>
+    <string name="group_join_type">主动加群方式</string>
+    <string name="group_invite_type">邀请进群方式</string>
+
+    <string name="profile_msgrev_opt">消息免打扰</string>
+    <string name="fold_this_group_chat">折叠该群聊</string>
+
+    <string name="group_account_tag">ID：</string>
+    <string name="clear_msg_tip">确认清除聊天记录？</string>
+    <string name="contact_delete_friend_tip">确认删除联系人？</string>
+
+    <string name="profile_detail">详细资料</string>
+    <string name="profile_remark_edit">修改备注</string>
+    <string name="contact_modify_remark_rule">仅限中文、字母、数字和下划线</string>
+
+    <string name="profile_remark">备注名</string>
+    <string name="profile_black">加入黑名单</string>
+    <string name="profile_chat">发送消息</string>
+    <string name="profile_clear_message">清除聊天记录</string>
+    <string name="profile_delete_friend">删除好友</string>
+    <string name="profile_chat_background">设置当前聊天背景</string>
+    <string name="chat_background_title">更换背景</string>
+
+    <string name="contact_signature_tag">个性签名：</string>
+    <string name="contact_no_status">暂无个性签名</string>
+
+    <string name="contact_account_tag">ID：</string>
+
+    <string name="chat_to_top">置顶聊天</string>
+    <string name="chat_add_friend">添加好友</string>
+
 </resources>

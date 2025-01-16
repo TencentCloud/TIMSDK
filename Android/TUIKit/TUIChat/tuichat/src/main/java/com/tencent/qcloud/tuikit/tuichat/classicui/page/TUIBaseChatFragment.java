@@ -71,11 +71,6 @@ public abstract class TUIBaseChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         TUIChatLog.i(TAG, "onCreateView " + this);
         baseView = inflater.inflate(R.layout.chat_fragment, container, false);
-
-        //        // Example of setting various properties of ChatLayout through api
-        //        ChatLayoutSetting helper = new ChatLayoutSetting(getActivity());
-        //        helper.setGroupId(mChatInfo.getId());
-        //        helper.customizeChatLayout(mChatLayout);
         return baseView;
     }
 
@@ -356,8 +351,8 @@ public abstract class TUIBaseChatFragment extends Fragment {
             mChatBackgroundUrl = list[1];
         }
 
-        if (TextUtils.equals(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL, mChatBackgroundUrl)) {
-            mChatBackgroundThumbnailUrl = TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL;
+        if (TextUtils.equals(TUIChatConstants.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL, mChatBackgroundUrl)) {
+            mChatBackgroundThumbnailUrl = TUIChatConstants.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL;
             messageRecyclerView.setBackgroundResource(R.color.chat_background_color);
             return;
         }

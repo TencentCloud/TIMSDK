@@ -347,7 +347,7 @@ public class TUIVideoSeatView extends RelativeLayout {
      * @param fromItem
      * @param toItem
      */
-    private void processVideoPlay(int fromItem, int toItem) {
+    public void processVideoPlay(int fromItem, int toItem) {
         if (mViewModel == null || fromItem < 0 || toItem >= mMemberEntityList.size()) {
             return;
         }
@@ -440,11 +440,85 @@ public class TUIVideoSeatView extends RelativeLayout {
                 || position > mVisibleRange.getMaxVisibleRange()) {
             return;
         }
-        UserEntity entity = mMemberEntityList.get(position);
-        if (entity.isCameraAvailable()) {
-            startVideoPlay(entity);
+        processVideoPlay(mVisibleRange.getMinVisibleRange(), mVisibleRange.getMaxVisibleRange());
+    }
+
+    public void notifySortMove(int fromPosition, int toPosition) {
+        mMemberListAdapter.notifyItemMoved(fromPosition, toPosition);
+        int minVisible = mVisibleRange.getMinVisibleRange();
+        int maxVisible = mVisibleRange.getMaxVisibleRange();
+        if (fromPosition < minVisible) {
+            if (toPosition < minVisible) {
+            } else if (toPosition > maxVisible) {
+                stopOldMinVisibleVideo();
+                startNewMaxVisibleVideo();
+            } else {
+                stopOldMinVisibleVideo();
+                notifyItemVideoSwitchStageChanged(toPosition);
+            }
+        } else if (fromPosition > maxVisible) {
+            if (toPosition < minVisible) {
+                startNewMinVisibleVideo();
+                stopOldMaxVisibleVideo();
+            } else if (toPosition > maxVisible) {
+            } else {
+                stopOldMaxVisibleVideo();
+                notifyItemVideoSwitchStageChanged(toPosition);
+            }
         } else {
-            stopVideoPlay(entity);
+            if (toPosition < minVisible) {
+                startNewMinVisibleVideo();
+                if (mMemberEntityList.get(toPosition).isCameraAvailable()) {
+                    stopVideoPlay(mMemberEntityList.get(toPosition));
+                }
+            } else if (toPosition > maxVisible) {
+                startNewMaxVisibleVideo();
+                if (mMemberEntityList.get(toPosition).isCameraAvailable()) {
+                    stopVideoPlay(mMemberEntityList.get(toPosition));
+                }
+            } else {
+                notifyItemVideoSwitchStageChanged(toPosition);
+            }
+        }
+    }
+
+    private void stopOldMinVisibleVideo() {
+        int oldMinVisible = mVisibleRange.getMinVisibleRange() - 1;
+        if (oldMinVisible < 0 || oldMinVisible >= mMemberEntityList.size()) {
+            return;
+        }
+        if (mMemberEntityList.get(oldMinVisible).isCameraAvailable()) {
+            stopVideoPlay(mMemberEntityList.get(oldMinVisible));
+        }
+    }
+
+    private void stopOldMaxVisibleVideo() {
+        int oldMaxVisible = mVisibleRange.getMaxVisibleRange() + 1;
+        if (oldMaxVisible < 0 || oldMaxVisible >= mMemberEntityList.size()) {
+            return;
+        }
+        if (mMemberEntityList.get(oldMaxVisible).isCameraAvailable()) {
+            stopVideoPlay(mMemberEntityList.get(oldMaxVisible));
+        }
+    }
+
+    private void startNewMinVisibleVideo() {
+        int minVisible = mVisibleRange.getMinVisibleRange();
+        if (minVisible < 0 || minVisible >= mMemberEntityList.size()) {
+            return;
+        }
+        if (mMemberEntityList.get(minVisible).isCameraAvailable()) {
+            startVideoPlay(mMemberEntityList.get(minVisible));
+        }
+    }
+
+    private void startNewMaxVisibleVideo() {
+        int maxVisible = mVisibleRange.getMaxVisibleRange();
+        if (maxVisible < 0 || maxVisible >= mMemberEntityList.size()) {
+            return;
+        }
+        if (mMemberEntityList.get(maxVisible).isCameraAvailable()) {
+            startVideoPlay(mMemberEntityList.get(maxVisible));
         }
     }
 

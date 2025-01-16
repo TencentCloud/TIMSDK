@@ -443,7 +443,7 @@ public class CallModel implements Cloneable, Serializable {
         for (Map.Entry<String, UserBean> entry : participantsMap.entrySet()) {
             UserBean userBean = entry.getValue();
             if (userBean != null) {
-                participants.add(userBean.getDisplayString());
+                participants.add(userBean.getDisplayName());
             } else {
                 participants.add(entry.getKey());
             }

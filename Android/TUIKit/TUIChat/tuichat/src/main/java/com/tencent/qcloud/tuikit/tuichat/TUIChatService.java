@@ -102,24 +102,24 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
     }
 
     private void initEvent() {
-        TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_INFO_CHANGED, this);
-        TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_EXIT_GROUP, this);
-        TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_MEMBER_KICKED_GROUP, this);
-        TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_DISMISS, this);
-        TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_JOIN_GROUP, this);
-        TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_INVITED_GROUP, this);
-        TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_RECYCLE, this);
+        TUICore.registerEvent(TUIConstants.TUIContact.EVENT_GROUP, TUIConstants.TUIContact.EVENT_SUB_KEY_GROUP_INFO_CHANGED, this);
+        TUICore.registerEvent(TUIConstants.TUIContact.EVENT_GROUP, TUIConstants.TUIContact.EVENT_SUB_KEY_EXIT_GROUP, this);
+        TUICore.registerEvent(TUIConstants.TUIContact.EVENT_GROUP, TUIConstants.TUIContact.EVENT_SUB_KEY_MEMBER_KICKED_GROUP, this);
+        TUICore.registerEvent(TUIConstants.TUIContact.EVENT_GROUP, TUIConstants.TUIContact.EVENT_SUB_KEY_GROUP_DISMISS, this);
+        TUICore.registerEvent(TUIConstants.TUIContact.EVENT_GROUP, TUIConstants.TUIContact.EVENT_SUB_KEY_JOIN_GROUP, this);
+        TUICore.registerEvent(TUIConstants.TUIContact.EVENT_GROUP, TUIConstants.TUIContact.EVENT_SUB_KEY_INVITED_GROUP, this);
+        TUICore.registerEvent(TUIConstants.TUIContact.EVENT_GROUP, TUIConstants.TUIContact.EVENT_SUB_KEY_GROUP_RECYCLE, this);
         TUICore.registerEvent(TUIConstants.TUIContact.EVENT_FRIEND_INFO_CHANGED, TUIConstants.TUIContact.EVENT_SUB_KEY_FRIEND_REMARK_CHANGED, this);
-        TUICore.registerEvent(TUIConstants.TUIGroup.EVENT_GROUP, TUIConstants.TUIGroup.EVENT_SUB_KEY_CLEAR_MESSAGE, this);
-        TUICore.registerEvent(TUIConstants.TUIContact.EVENT_USER, TUIConstants.TUIContact.EVENT_SUB_KEY_CLEAR_MESSAGE, this);
+        TUICore.registerEvent(TUIConstants.TUIContact.EVENT_GROUP, TUIConstants.TUIContact.EVENT_SUB_KEY_CLEAR_GROUP_MESSAGE, this);
+        TUICore.registerEvent(TUIConstants.TUIContact.EVENT_USER, TUIConstants.TUIContact.EVENT_SUB_KEY_CLEAR_C2C_MESSAGE, this);
         TUICore.registerEvent(TUIConstants.TUIConversation.EVENT_UNREAD, TUIConstants.TUIConversation.EVENT_SUB_KEY_UNREAD_CHANGED, this);
         TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, this);
         TUICore.registerEvent(TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT, this);
         TUICore.registerEvent(TUIChatConstants.EVENT_KEY_MESSAGE_STATUS_CHANGED, TUIChatConstants.EVENT_SUB_KEY_MESSAGE_SEND, this);
         TUICore.registerEvent(TUIChatConstants.EVENT_KEY_OFFLINE_MESSAGE_PRIVATE_RING, TUIChatConstants.EVENT_SUB_KEY_OFFLINE_MESSAGE_PRIVATE_RING, this);
         TUICore.registerEvent(TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_MESSAGE_INFO_CHANGED, this);
-        TUICore.registerEvent(TUIConstants.TUIGroup.Event.GroupApplication.KEY_GROUP_APPLICATION,
-            TUIConstants.TUIGroup.Event.GroupApplication.SUB_KEY_GROUP_APPLICATION_NUM_CHANGED, this);
+        TUICore.registerEvent(TUIConstants.TUIContact.Event.GroupApplication.KEY_GROUP_APPLICATION,
+            TUIConstants.TUIContact.Event.GroupApplication.SUB_KEY_GROUP_APPLICATION_NUM_CHANGED, this);
     }
 
     @Override
@@ -171,12 +171,6 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
                     c2CChatEventListener.addMessage(messageBean, chatId);
                 }
             }
-        } else if (TextUtils.equals(TUIConstants.TUIChat.METHOD_UPDATE_DATA_STORE_CHAT_URI, method)) {
-            String uri = (String) param.get(TUIConstants.TUIChat.CHAT_BACKGROUND_URI);
-            String chatId = (String) param.get(TUIConstants.TUIChat.CHAT_ID);
-            if (!TextUtils.isEmpty(uri)) {
-                DataStoreUtil.getInstance().putValue(chatId, uri);
-            }
         } else if (TextUtils.equals(TUIConstants.TUIChat.Method.GetMessagesDisplayString.METHOD_NAME, method)) {
             getMessagesDisplayString(param);
         } else if (TextUtils.equals(TUIConstants.TUIChat.Method.GetTUIMessageBean.METHOD_NAME, method)) {
@@ -185,9 +179,15 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
         return null;
     }
 
+    public void setChatBackground(String chatID, String backgroundUrl) {
+        if (!TextUtils.isEmpty(backgroundUrl) && !TextUtils.isEmpty(chatID)) {
+            DataStoreUtil.getInstance().putValue(chatID, backgroundUrl);
+        }
+    }
+
     @Override
     public void onNotifyEvent(String key, String subKey, Map<String, Object> param) {
-        if (TextUtils.equals(key, TUIConstants.TUIGroup.EVENT_GROUP)) {
+        if (TextUtils.equals(key, TUIConstants.TUIContact.EVENT_GROUP)) {
             handleGroupEvent(subKey, param);
         } else if (key.equals(TUIConstants.TUIContact.EVENT_USER)) {
             handleContactUserEvent(subKey, param);
@@ -205,7 +205,7 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
             handleOfflineRingEvent(subKey, param);
         } else if (TextUtils.equals(key, TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT)) {
             handleMessageChangedEvent(subKey, param);
-        } else if (TextUtils.equals(TUIConstants.TUIGroup.Event.GroupApplication.KEY_GROUP_APPLICATION, key)) {
+        } else if (TextUtils.equals(TUIConstants.TUIContact.Event.GroupApplication.KEY_GROUP_APPLICATION, key)) {
             handleGroupApplicationEvent(subKey, param);
         }
     }
@@ -275,7 +275,7 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
     }
 
     private void handleContactUserEvent(String subKey, Map<String, Object> param) {
-        if (subKey.equals(TUIConstants.TUIContact.EVENT_SUB_KEY_CLEAR_MESSAGE)) {
+        if (subKey.equals(TUIConstants.TUIContact.EVENT_SUB_KEY_CLEAR_C2C_MESSAGE)) {
             if (param == null || param.isEmpty()) {
                 return;
             }
@@ -362,24 +362,24 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
     }
 
     private void handleGroupEvent(String subKey, Map<String, Object> param) {
-        if (TextUtils.equals(subKey, TUIConstants.TUIGroup.EVENT_SUB_KEY_EXIT_GROUP)
-            || TextUtils.equals(subKey, TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_DISMISS)
-            || TextUtils.equals(subKey, TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_RECYCLE)) {
+        if (TextUtils.equals(subKey, TUIConstants.TUIContact.EVENT_SUB_KEY_EXIT_GROUP)
+            || TextUtils.equals(subKey, TUIConstants.TUIContact.EVENT_SUB_KEY_GROUP_DISMISS)
+            || TextUtils.equals(subKey, TUIConstants.TUIContact.EVENT_SUB_KEY_GROUP_RECYCLE)) {
             List<GroupChatEventListener> groupChatEventListenerList = getGroupChatEventListenerList();
             String groupId = null;
             if (param != null) {
-                groupId = (String) getOrDefault(param.get(TUIConstants.TUIGroup.GROUP_ID), "");
+                groupId = (String) getOrDefault(param.get(TUIConstants.TUIContact.GROUP_ID), "");
             }
             for (GroupChatEventListener groupChatEventListener : groupChatEventListenerList) {
                 groupChatEventListener.onGroupForceExit(groupId);
             }
-        } else if (TextUtils.equals(subKey, TUIConstants.TUIGroup.EVENT_SUB_KEY_GROUP_INFO_CHANGED)) {
+        } else if (TextUtils.equals(subKey, TUIConstants.TUIContact.EVENT_SUB_KEY_GROUP_INFO_CHANGED)) {
             if (param == null) {
                 return;
             }
-            String newGroupName = (String) getOrDefault(param.get(TUIConstants.TUIGroup.GROUP_NAME), null);
-            String groupId = (String) getOrDefault(param.get(TUIConstants.TUIGroup.GROUP_ID), "");
-            String groupFaceUrl = (String) getOrDefault(param.get(TUIConstants.TUIGroup.GROUP_FACE_URL), null);
+            String newGroupName = (String) getOrDefault(param.get(TUIConstants.TUIContact.GROUP_NAME), null);
+            String groupId = (String) getOrDefault(param.get(TUIConstants.TUIContact.GROUP_ID), "");
+            String groupFaceUrl = (String) getOrDefault(param.get(TUIConstants.TUIContact.GROUP_FACE_URL), null);
 
             if (TextUtils.isEmpty(groupId)) {
                 return;
@@ -396,12 +396,12 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
                     groupChatEventListener.onGroupFaceUrlChanged(groupId, groupFaceUrl);
                 }
             }
-        } else if (TextUtils.equals(subKey, TUIConstants.TUIGroup.EVENT_SUB_KEY_MEMBER_KICKED_GROUP)) {
+        } else if (TextUtils.equals(subKey, TUIConstants.TUIContact.EVENT_SUB_KEY_MEMBER_KICKED_GROUP)) {
             if (param == null) {
                 return;
             }
-            String groupId = (String) getOrDefault(param.get(TUIConstants.TUIGroup.GROUP_ID), "");
-            ArrayList<String> memberList = (ArrayList<String>) param.get(TUIConstants.TUIGroup.GROUP_MEMBER_ID_LIST);
+            String groupId = (String) getOrDefault(param.get(TUIConstants.TUIContact.GROUP_ID), "");
+            ArrayList<String> memberList = (ArrayList<String>) param.get(TUIConstants.TUIContact.GROUP_MEMBER_ID_LIST);
             if (TextUtils.isEmpty(groupId) || memberList == null || memberList.isEmpty()) {
                 return;
             }
@@ -412,8 +412,8 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
                     groupChatEventListener.onGroupForceExit(groupId);
                 }
             }
-        } else if (TextUtils.equals(subKey, TUIConstants.TUIGroup.EVENT_SUB_KEY_CLEAR_MESSAGE)) {
-            String groupId = (String) getOrDefault(param.get(TUIConstants.TUIGroup.GROUP_ID), "");
+        } else if (TextUtils.equals(subKey, TUIConstants.TUIContact.EVENT_SUB_KEY_CLEAR_GROUP_MESSAGE)) {
+            String groupId = (String) getOrDefault(param.get(TUIConstants.TUIContact.GROUP_ID), "");
             List<GroupChatEventListener> groupChatEventListenerList = getGroupChatEventListenerList();
             for (GroupChatEventListener groupChatEventListener : groupChatEventListenerList) {
                 groupChatEventListener.clearGroupMessage(groupId);
@@ -422,7 +422,7 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
     }
 
     private void handleGroupApplicationEvent(String subKey, Map<String, Object> param) {
-        if (TextUtils.equals(subKey, TUIConstants.TUIGroup.Event.GroupApplication.SUB_KEY_GROUP_APPLICATION_NUM_CHANGED)) {
+        if (TextUtils.equals(subKey, TUIConstants.TUIContact.Event.GroupApplication.SUB_KEY_GROUP_APPLICATION_NUM_CHANGED)) {
             List<GroupChatEventListener> groupChatEventListenerList = getGroupChatEventListenerList();
             for (GroupChatEventListener groupChatEventListener : groupChatEventListenerList) {
                 groupChatEventListener.onApplied();
@@ -509,7 +509,7 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
             public void onRecvMessageRevoked(String msgID, V2TIMUserFullInfo operateUser, String reason) {
                 UserBean userBean = new UserBean();
                 userBean.setUserId(operateUser.getUserID());
-                userBean.setNikeName(operateUser.getNickName());
+                userBean.setNickName(operateUser.getNickName());
                 userBean.setFaceUrl(operateUser.getFaceUrl());
                 List<C2CChatEventListener> c2CChatEventListenerList = getInstance().getC2CChatEventListenerList();
                 for (C2CChatEventListener c2CChatEventListener : c2CChatEventListenerList) {
@@ -542,7 +542,7 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
             public void onGroupMessagePinned(String groupID, V2TIMMessage v2TIMMessage, boolean isPinned, V2TIMGroupMemberInfo opUser) {
                 UserBean userBean = new UserBean();
                 userBean.setUserId(opUser.getUserID());
-                userBean.setNikeName(opUser.getNickName());
+                userBean.setNickName(opUser.getNickName());
                 userBean.setFaceUrl(opUser.getFaceUrl());
                 userBean.setFriendRemark(opUser.getFriendRemark());
                 userBean.setNameCard(opUser.getNameCard());

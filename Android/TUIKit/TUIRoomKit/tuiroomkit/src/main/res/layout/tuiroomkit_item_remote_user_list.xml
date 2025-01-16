@@ -1,39 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cl_user_item_root"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
-    android:paddingTop="10dp">
+    android:layout_height="70dp">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/img_head"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginBottom="10dp"
-        android:src="@drawable/tuiroomkit_head"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_user_name"
+    <com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.ListUserInfoView
+        android:id="@+id/room_view_user_info"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
-        android:layout_marginBottom="10dp"
-        android:layout_toStartOf="@id/tuiroomkit_img_mic_state"
-        android:layout_toEndOf="@id/img_head"
-        android:layout_weight="1"
-        android:textColor="@color/tuiroomkit_color_text_light_grey"
-        android:textSize="16sp"
-        android:singleLine="true"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tuiroomkit_img_mic_state"
-        app:layout_constraintStart_toEndOf="@+id/img_head"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.CameraIconView
+        android:id="@+id/tuiroomkit_img_camera_state"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="30dp"
+        android:src="@drawable/tuiroomkit_ic_member_list_video"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.MicIconView
@@ -41,28 +31,20 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="10dp"
-        android:layout_toLeftOf="@id/tuiroomkit_img_camera_state"
-        android:background="@android:color/transparent"
-        android:clickable="false"
-        android:scaleType="fitXY"
         android:src="@drawable/tuiroomkit_ic_member_list_audio"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tuiroomkit_img_camera_state"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.CameraIconView
-        android:id="@+id/tuiroomkit_img_camera_state"
+    <com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.ScreenIconView
+        android:id="@+id/room_view_screen_state"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="10dp"
-        android:background="@android:color/transparent"
-        android:clickable="false"
-        android:scaleType="fitXY"
-        android:src="@drawable/tuiroomkit_ic_member_list_video"
+        android:layout_marginEnd="20dp"
+        android:visibility="gone"
+        android:src="@drawable/tuiroomkit_ic_item_list_screen"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tuiroomkit_img_mic_state"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.InviteSeatButton
@@ -100,66 +82,9 @@
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="@color/tuiroomkit_bg_main_light_black"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="60dp"
+        app:layout_constraintStart_toStartOf="@id/room_view_user_info"
         app:layout_constraintEnd_toEndOf="parent"
-
-        app:layout_constraintHorizontal_bias="1"
-        app:layout_constraintStart_toStartOf="@id/tv_user_name" />
-
-    <LinearLayout
-        android:id="@+id/tuiroomkit_ll_room_owner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="2dp"
-        app:layout_constraintStart_toEndOf="@+id/img_head"
-        app:layout_constraintTop_toBottomOf="@+id/tv_user_name">
-
-        <ImageView
-            android:id="@+id/tuiroomkit_image_room_owner"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:layout_gravity="center_vertical"
-            app:srcCompat="@drawable/tuiroomkit_icon_user_room_owner" />
-
-        <TextView
-            android:id="@+id/tuiroomkit_text_room_owner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="12sp"
-            android:textColor="@color/tuiroomkit_color_owner_name"
-            android:text="@string/tuiroomkit_master" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/tuiroomkit_ll_room_manager"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="2dp"
-        app:layout_constraintStart_toEndOf="@+id/img_head"
-        app:layout_constraintTop_toBottomOf="@+id/tv_user_name">
-
-        <ImageView
-            android:id="@+id/tuiroomkit_image_room_manager"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:layout_gravity="center_vertical"
-            app:srcCompat="@drawable/tuiroomkit_icon_user_room_manager" />
-
-        <TextView
-            android:id="@+id/tuiroomkit_text_room_manager"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="12sp"
-            android:textColor="@color/tuiroomkit_color_room_manager_name"
-            android:text="@string/tuiroomkit_room_manager" />
-    </LinearLayout>
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

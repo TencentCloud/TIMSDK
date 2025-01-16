@@ -54,11 +54,11 @@
 
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:layout_marginEnd="20dp"
                         android:layout_gravity="center_vertical"
-                        android:background="@drawable/arrow_right"/>
+                        android:background="@drawable/common_arrow_right"/>
                 </LinearLayout>
 
 

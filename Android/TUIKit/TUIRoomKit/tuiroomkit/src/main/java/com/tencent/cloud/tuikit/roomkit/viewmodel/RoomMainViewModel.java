@@ -13,6 +13,7 @@ import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomK
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_APPLY_LIST;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_EXIT_ROOM_VIEW;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_INVITE_PANEL;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_MAIN_ACTIVITY;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_MORE_FUNCTION_PANEL;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_MEDIA_SETTING_PANEL;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.DISMISS_MEETING_INFO;
@@ -31,6 +32,7 @@ import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomK
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_SELECT_USER_TO_CALL_VIEW;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_SHARE_ROOM_PANEL;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.SHOW_USER_LIST;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.START_LOGIN;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_ENABLE_FLOAT_CHAT;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_USER_POSITION;
 import static com.tencent.qcloud.tuicore.TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED;
@@ -404,10 +406,10 @@ public class RoomMainViewModel implements ConferenceEventCenter.RoomKitUIEventRe
                 onRoomDisMissed();
                 break;
             case KICKED_OUT_OF_ROOM:
-                mRoomMainView.showLeavedRoomConfirmDialog(mContext.getString(R.string.tuiroomkit_kicked_by_master));
+                onKickedOutOfRoom();
                 break;
             case KICKED_OFF_LINE:
-                mRoomMainView.showKickedOffLineDialog();
+                onKickedOffLine();
                 break;
             case USER_CAMERA_STATE_CHANGED:
                 onUserCameraStateChanged(params);
@@ -469,7 +471,29 @@ public class RoomMainViewModel implements ConferenceEventCenter.RoomKitUIEventRe
         if (isOwner() && showRTCubeAppLegalDialog()) {
             return;
         }
+        if (mConferenceState.viewState.isInPictureInPictureMode.get()) {
+            ConferenceEventCenter.getInstance().notifyUIEvent(DISMISS_MAIN_ACTIVITY, null);
+            return;
+        }
         mRoomMainView.showLeavedRoomConfirmDialog(mContext.getString(R.string.tuiroomkit_room_room_destroyed));
+    }
+
+    private void onKickedOutOfRoom() {
+        if (mConferenceState.viewState.isInPictureInPictureMode.get()) {
+            ConferenceEventCenter.getInstance().notifyUIEvent(DISMISS_MAIN_ACTIVITY, null);
+            return;
+        }
+
+        mRoomMainView.showLeavedRoomConfirmDialog(mContext.getString(R.string.tuiroomkit_kicked_by_master));
+    }
+
+    private void onKickedOffLine() {
+        if (mConferenceState.viewState.isInPictureInPictureMode.get()) {
+            ConferenceEventCenter.getInstance().notifyUIEvent(DISMISS_MAIN_ACTIVITY, null);
+            ConferenceEventCenter.getInstance().notifyUIEvent(START_LOGIN, null);
+            return;
+        }
+        mRoomMainView.showKickedOffLineDialog();
     }
 
     private boolean showRTCubeAppLegalDialog() {

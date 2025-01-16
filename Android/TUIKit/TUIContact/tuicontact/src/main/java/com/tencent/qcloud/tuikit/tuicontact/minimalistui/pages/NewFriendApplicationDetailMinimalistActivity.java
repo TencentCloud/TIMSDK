@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
+
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseMinimalistLightActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView;
@@ -35,7 +37,7 @@ public class NewFriendApplicationDetailMinimalistActivity extends BaseMinimalist
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contact_minimalist_new_friend_application_detail_activity);
-        applicationBean = (FriendApplicationBean) getIntent().getSerializableExtra(TUIContactConstants.ProfileType.CONTENT);
+        applicationBean = (FriendApplicationBean) getIntent().getSerializableExtra(TUIConstants.TUIContact.CONTENT);
         init();
     }
 

@@ -38,7 +38,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="center"
-        android:background="@drawable/shape_side_bar_bg"
+        android:background="@drawable/contact_shape_side_bar_bg"
         android:gravity="center"
         android:textColor="@android:color/white"
         android:textSize="40sp"

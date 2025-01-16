@@ -36,7 +36,7 @@ public class ContactLayout extends LinearLayout implements ILayout {
     }
 
     private void init() {
-        inflate(getContext(), R.layout.contact_layout, this);
+        inflate(getContext(), R.layout.contact_contact_list_layout, this);
         mContactListView = findViewById(R.id.contact_listview);
     }
 

@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
-import com.tencent.qcloud.tuikit.tuicontact.classicui.util.ContactStartChatUtils;
+import com.tencent.qcloud.tuikit.tuicontact.classicui.util.ClassicUIUtils;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.R;
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class MemberListAdapter extends ArrayAdapter<V2TIMUserFullInfo> {
             mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ContactStartChatUtils.startChatActivity(userInfo.getUserID(), ContactItemBean.TYPE_C2C, userInfo.getNickName(), "");
+                    ClassicUIUtils.startChatActivity(userInfo.getUserID(), ContactItemBean.TYPE_C2C, userInfo.getNickName(), "");
                 }
             });
             mViewHolder = new ViewHolder();

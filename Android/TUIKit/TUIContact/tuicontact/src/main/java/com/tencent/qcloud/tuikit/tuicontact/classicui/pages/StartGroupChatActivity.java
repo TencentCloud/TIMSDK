@@ -34,7 +34,7 @@ import com.tencent.qcloud.tuikit.tuicontact.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupMemberInfo;
-import com.tencent.qcloud.tuikit.tuicontact.classicui.util.ContactStartChatUtils;
+import com.tencent.qcloud.tuikit.tuicontact.classicui.util.ClassicUIUtils;
 import com.tencent.qcloud.tuikit.tuicontact.classicui.widget.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 import com.tencent.qcloud.tuikit.tuicontact.util.ContactUtils;
@@ -64,9 +64,9 @@ public class StartGroupChatActivity extends BaseLightActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.popup_start_group_chat_activity);
+        setContentView(R.layout.contact_popup_start_group_chat_activity);
         selfInfo = new GroupMemberInfo();
-        selfInfo.setAccount(ContactUtils.getLoginUser());
+        selfInfo.setUserId(ContactUtils.getLoginUser());
         selfInfo.setNickName(TUIConfig.getSelfNickName());
         init();
     }
@@ -124,13 +124,13 @@ public class StartGroupChatActivity extends BaseLightActivity {
             public void onSelectChanged(ContactItemBean contact, boolean selected) {
                 if (selected) {
                     GroupMemberInfo memberInfo = new GroupMemberInfo();
-                    memberInfo.setAccount(contact.getId());
+                    memberInfo.setUserId(contact.getId());
                     memberInfo.setNickName(contact.getNickName());
-                    memberInfo.setIconUrl(contact.getAvatarUrl());
+                    memberInfo.setFaceUrl(contact.getAvatarUrl());
                     mMembers.add(memberInfo);
                 } else {
                     for (int i = mMembers.size() - 1; i >= 0; i--) {
-                        if (mMembers.get(i).getAccount().equals(contact.getId())) {
+                        if (mMembers.get(i).getUserId().equals(contact.getId())) {
                             mMembers.remove(i);
                         }
                     }
@@ -208,9 +208,9 @@ public class StartGroupChatActivity extends BaseLightActivity {
         }
 
         Bundle bundle = new Bundle();
-        bundle.putString(TUIConstants.TUIGroup.GROUP_NAME, groupName);
-        bundle.putInt(TUIConstants.TUIGroup.JOIN_TYPE_INDEX, mJoinTypeIndex);
-        bundle.putSerializable(TUIConstants.TUIGroup.GROUP_MEMBER_ID_LIST, mMembers);
+        bundle.putString(TUIConstants.TUIContact.GROUP_NAME, groupName);
+        bundle.putInt(TUIConstants.TUIContact.JOIN_TYPE_INDEX, mJoinTypeIndex);
+        bundle.putSerializable(TUIConstants.TUIContact.GROUP_MEMBER_ID_LIST, mMembers);
         TUICore.startActivity("CreateGroupActivity", bundle);
         finish();
     }
@@ -252,7 +252,7 @@ public class StartGroupChatActivity extends BaseLightActivity {
             @Override
             public void onSuccess(String data) {
                 if (!communitySupportTopic) {
-                    ContactStartChatUtils.startChatActivity(data, ChatInfo.TYPE_GROUP, groupInfo.getGroupName(), groupInfo.getGroupType());
+                    ClassicUIUtils.startChatActivity(data, ChatInfo.TYPE_GROUP, groupInfo.getGroupName(), groupInfo.getGroupType());
                 }
                 finish();
             }

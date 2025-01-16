@@ -6,18 +6,10 @@
     <dimen name="page_title_height">45dp</dimen>
     <dimen name="page_margin">10dp</dimen>
 
-    <dimen name="btn_margin_top">36dp</dimen>
     <dimen name="btn_margin_left">12dp</dimen>
-    <dimen name="btn_margin_right">12dp</dimen>
-    <dimen name="btn_margin_bottom">8dp</dimen>
-    <dimen name="btn_margin_middle">10dp</dimen>
-    <dimen name="btn_padding_left">16dp</dimen>
-    <dimen name="btn_padding_right">16dp</dimen>
 
     <dimen name="item_height">49.35dp</dimen>
-    <dimen name="item_width">49.35dp</dimen>
 
-    <dimen name="search_bar_width">329.28dp</dimen>
     <dimen name="search_bar_height">38.4dp</dimen>
     <dimen name="search_bar_margin">15.36dp</dimen>
 </resources>

@@ -34,7 +34,6 @@ public final class TUIConstants {
         public static final String TUI_CONVERSATION = "TUIConversationService";
         public static final String TUI_CONTACT = "TUIContactService";
         public static final String TUI_SEARCH = "TUISearchService";
-        public static final String TUI_GROUP = "TUIGroupService";
         public static final String TUI_CALLING = "TUICallingService";
         public static final String TUI_AUDIO_RECORD = "TUIAudioMessageRecordService";
         public static final String TUI_LIVE = "TUILiveService";
@@ -200,6 +199,9 @@ public final class TUIConstants {
         public static final String FRAGMENT = "fragment";
         public static final String ACTIVITY = "activity";
 
+        public static final int VIEW_TYPE_CLASSIC = 0;
+        public static final int VIEW_TYPE_MINIMALIST = 1;
+
         public static class Extension {
             // UI extension for the input area at the bottom of the chat page
             public static class InputMore {
@@ -294,6 +296,25 @@ public final class TUIConstants {
                 public static final int VIEW_TYPE_MINIMALIST = 1;
                 public static final String CHAT_ID = "TUIChatID";
                 public static final String IS_GROUP = "TUIChatIsGroup";
+            }
+
+            public static final class GroupProfileMemberListExtension {
+                public static final String EXTENSION_ID = "TUIChatGroupProfileMemberGridExtension";
+                public static final String VIEW_TYPE = "TUIChatExtensionViewType";
+                public static final String GROUP_PROFILE_BEAN = "TUIChatGroupProfileBean";
+            }
+
+            public static final class GroupProfileSettingsItemExtension {
+                public static final String EXTENSION_ID = "TUIChatGroupProfileSettingsItemExtension";
+                public static final String VIEW_TYPE = "TUIChatExtensionViewType";
+                public static final String GROUP_PROFILE_BEAN = "TUIChatGroupProfileBean";
+            }
+
+            public static final class GroupProfileBottomItemExtension {
+                public static final String EXTENSION_ID = "TUIChatGroupProfileBottomItemExtension";
+                public static final String VIEW_TYPE = "TUIChatExtensionViewType";
+                public static final String GROUP_PROFILE_BEAN = "TUIChatGroupProfileBean";
+                public static final String CALLER = "CALLER";
             }
         }
 
@@ -435,13 +456,24 @@ public final class TUIConstants {
 
     public static final class TUIContact {
         public static final String SERVICE_NAME = Service.TUI_CONTACT;
+        public static final String MINIMALIST_SERVICE_NAME = "TUIContactMinimalistService";
 
         public static final String EVENT_FRIEND_STATE_CHANGED = "eventFriendStateChanged";
         public static final String EVENT_FRIEND_INFO_CHANGED = "eventFriendInfoChanged";
         public static final String EVENT_USER = "eventUser";
         public static final String EVENT_SUB_KEY_FRIEND_REMARK_CHANGED = "eventFriendRemarkChanged";
         public static final String EVENT_SUB_KEY_FRIEND_DELETE = "eventSubKeyFriendDelete";
-        public static final String EVENT_SUB_KEY_CLEAR_MESSAGE = "eventSubKeyC2CClearMessage";
+        public static final String EVENT_SUB_KEY_CLEAR_C2C_MESSAGE = "eventSubKeyC2CClearMessage";
+        public static final String EVENT_GROUP = "eventGroup";
+        public static final String EVENT_SUB_KEY_EXIT_GROUP = "eventExitGroup";
+        public static final String EVENT_SUB_KEY_MEMBER_KICKED_GROUP = "eventMemberKickedGroup";
+        public static final String EVENT_SUB_KEY_GROUP_RECYCLE = "eventMemberGroupRecycle";
+        public static final String EVENT_SUB_KEY_GROUP_DISMISS = "eventMemberGroupDismiss";
+        public static final String EVENT_SUB_KEY_JOIN_GROUP = "eventSubKeyJoinGroup";
+        public static final String EVENT_SUB_KEY_INVITED_GROUP = "eventSubKeyInvitedGroup";
+        public static final String EVENT_SUB_KEY_GROUP_INFO_CHANGED = "eventSubKeyGroupInfoChanged";
+        public static final String EVENT_SUB_KEY_CLEAR_GROUP_MESSAGE = "eventSubKeyGroupClearMessage";
+        public static final String EVENT_SUB_KEY_GROUP_MEMBER_SELECTED = "eventSubKeyGroupMemberSelected";
 
         public static final String FRIEND_ID_LIST = "friendIdList";
         public static final String FRIEND_ID = "friendId";
@@ -457,8 +489,35 @@ public final class TUIConstants {
         public static final int GROUP_TYPE_CHAT_ROOM = 2;
         public static final int GROUP_TYPE_COMMUNITY = 3;
 
-        public static final String GROUP_FACE_URL = "https://im.sdk.qcloud.com/download/tuikit-resource/group-avatar/group_avatar_%s.png";
-        public static final int GROUP_FACE_COUNT = 24;
+        public static final String GROUP_ID = "groupId";
+        public static final String GROUP_NAME = "groupName";
+        public static final String GROUP_FACE_URL = "groupFaceUrl";
+        public static final String GROUP_OWNER = "groupOwner";
+        public static final String GROUP_INTRODUCTION = "groupIntroduction";
+        public static final String GROUP_NOTIFICATION = "groupNotification";
+        public static final String GROUP_MEMBER_ID_LIST = "groupMemberIdList";
+
+        public static final String SELECT_FRIENDS = "select_friends";
+        public static final String SELECT_FOR_CALL = "isSelectForCall";
+        public static final String USER_DATA = "userData";
+        public static final String IS_SELECT_MODE = "isSelectMode";
+        public static final String EXCLUDE_LIST = "excludeList";
+        public static final String SELECTED_LIST = "selectedList";
+        public static final String CONTENT = "content";
+        public static final String TYPE = "type";
+        public static final String TITLE = "title";
+        public static final String LIST = "list";
+        public static final String LIMIT = "limit";
+        public static final String FILTER = "filter";
+        public static final String JOIN_TYPE_INDEX = "joinTypeIndex";
+
+        public static class Method {
+            public static class AddFriend {
+                public static final String METHOD_NAME = "addFriend";
+                public static final String USER_ID = "userID";
+                public static final String ACTIVITY = "activity";
+            }
+        }
 
         public static class Extension {
             public static class FriendProfileItem {
@@ -474,6 +533,24 @@ public final class TUIConstants {
             public static class ContactItem {
                 public static final String CLASSIC_EXTENSION_ID = "ContactItemClassicID";
                 public static final String MINIMALIST_EXTENSION_ID = "ContactItemMinimalistID";
+            }
+
+            public static class GroupProfileItem {
+                public static final String CLASSIC_EXTENSION_ID = "GroupProfileItemClassicID";
+                public static final String MINIMALIST_EXTENSION_ID = "GroupProfileItemMinimalistID";
+                public static final String GROUP_ID = "GroupProfileGroupID";
+                public static final String CONTEXT = "GroupProfileContext";
+            }
+
+            public static class GroupProfileWarningButton {
+                public static final String EXTENSION_ID = "GroupProfileWarningButtonExtensionID";
+            }
+        }
+
+        public static class Event {
+            public static class GroupApplication {
+                public static final String KEY_GROUP_APPLICATION = "groupApplication";
+                public static final String SUB_KEY_GROUP_APPLICATION_NUM_CHANGED = "groupApplicationNumChanged";
             }
         }
 
@@ -612,63 +689,6 @@ public final class TUIConstants {
         public static final String PUSHER_AVATAR = "pusherAvatar";
 
         public static final int ACTION_ID_LIVE = 0;
-    }
-
-    public static final class TUIGroup {
-        public static final String SERVICE_NAME = Service.TUI_GROUP;
-
-        public static final String EVENT_GROUP = "eventGroup";
-        public static final String EVENT_SUB_KEY_EXIT_GROUP = "eventExitGroup";
-        public static final String EVENT_SUB_KEY_MEMBER_KICKED_GROUP = "eventMemberKickedGroup";
-        public static final String EVENT_SUB_KEY_GROUP_RECYCLE = "eventMemberGroupRecycle";
-        public static final String EVENT_SUB_KEY_GROUP_DISMISS = "eventMemberGroupDismiss";
-        public static final String EVENT_SUB_KEY_JOIN_GROUP = "eventSubKeyJoinGroup";
-        public static final String EVENT_SUB_KEY_INVITED_GROUP = "eventSubKeyInvitedGroup";
-        public static final String EVENT_SUB_KEY_GROUP_INFO_CHANGED = "eventSubKeyGroupInfoChanged";
-        public static final String EVENT_SUB_KEY_CLEAR_MESSAGE = "eventSubKeyGroupClearMessage";
-        public static final String EVENT_SUB_KEY_GROUP_MEMBER_SELECTED = "eventSubKeyGroupMemberSelected";
-
-        public static final String GROUP_ID = "groupId";
-        public static final String GROUP_NAME = "groupName";
-        public static final String GROUP_FACE_URL = "groupFaceUrl";
-        public static final String GROUP_OWNER = "groupOwner";
-        public static final String GROUP_INTRODUCTION = "groupIntroduction";
-        public static final String GROUP_NOTIFICATION = "groupNotification";
-        public static final String GROUP_MEMBER_ID_LIST = "groupMemberIdList";
-
-        public static final String SELECT_FRIENDS = "select_friends";
-        public static final String SELECT_FOR_CALL = "isSelectForCall";
-        public static final String USER_DATA = "userData";
-        public static final String IS_SELECT_MODE = "isSelectMode";
-        public static final String EXCLUDE_LIST = "excludeList";
-        public static final String SELECTED_LIST = "selectedList";
-        public static final String CONTENT = "content";
-        public static final String TYPE = "type";
-        public static final String TITLE = "title";
-        public static final String LIST = "list";
-        public static final String LIMIT = "limit";
-        public static final String FILTER = "filter";
-        public static final String JOIN_TYPE_INDEX = "joinTypeIndex";
-
-        public static class Extension {
-            public static class GroupProfileItem {
-                public static final String CLASSIC_EXTENSION_ID = "GroupProfileItemClassicID";
-                public static final String MINIMALIST_EXTENSION_ID = "GroupProfileItemMinimalistID";
-                public static final String GROUP_ID = "GroupProfileGroupID";
-                public static final String CONTEXT = "GroupProfileContext";
-            }
-
-            public static class GroupProfileWarningButton {
-                public static final String EXTENSION_ID = "GroupProfileWarningButtonExtensionID";
-            }
-        }
-
-        public static class Event {
-            public static class GroupApplication {
-                public static final String KEY_GROUP_APPLICATION = "groupApplication";
-                public static final String SUB_KEY_GROUP_APPLICATION_NUM_CHANGED = "groupApplicationNumChanged";
-            }
-        }
     }
 
     public static final class TUIBeauty {

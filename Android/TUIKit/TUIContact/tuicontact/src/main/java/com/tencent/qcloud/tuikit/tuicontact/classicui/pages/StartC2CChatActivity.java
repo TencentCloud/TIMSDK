@@ -10,7 +10,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivit
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
-import com.tencent.qcloud.tuikit.tuicontact.classicui.util.ContactStartChatUtils;
+import com.tencent.qcloud.tuikit.tuicontact.classicui.util.ClassicUIUtils;
 import com.tencent.qcloud.tuikit.tuicontact.classicui.widget.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class StartC2CChatActivity extends BaseLightActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.popup_start_c2c_chat_activity);
+        setContentView(R.layout.contact_popup_start_c2c_chat_activity);
 
         mTitleBar = findViewById(R.id.start_c2c_chat_title);
         mTitleBar.setTitle(getResources().getString(com.tencent.qcloud.tuicore.R.string.sure), ITitleBarLayout.Position.RIGHT);
@@ -87,7 +87,7 @@ public class StartC2CChatActivity extends BaseLightActivity {
             chatName = mSelectedItem.getNickName();
         }
 
-        ContactStartChatUtils.startChatActivity(mSelectedItem.getId(), ContactItemBean.TYPE_C2C, chatName, "");
+        ClassicUIUtils.startChatActivity(mSelectedItem.getId(), ContactItemBean.TYPE_C2C, chatName, "");
         finish();
     }
 }

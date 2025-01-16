@@ -17,7 +17,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="false"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter"
+            android:foreground="#0F000000"
+            />
 
         <FrameLayout
             android:id="@+id/progress_container"
@@ -44,7 +46,7 @@
                 />
 
             <ImageView
-                android:id="@+id/file_progress_icon"
+                android:id="@+id/file_download_icon"
                 android:scaleType="centerInside"
                 android:layout_gravity="center"
                 android:background="@drawable/chat_progress_download_icon"

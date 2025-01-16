@@ -14,7 +14,7 @@
         android:id="@+id/message_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_search"
+        android:background="@drawable/search_search_box_bg"
         android:visibility="visible">
 
         <com.tencent.qcloud.tuikit.tuisearch.minimalistui.widget.PageRecycleView

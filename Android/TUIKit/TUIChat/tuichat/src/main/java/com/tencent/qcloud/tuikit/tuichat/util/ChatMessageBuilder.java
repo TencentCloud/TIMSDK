@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuichat.util;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.text.TextUtils;
+
 import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
@@ -11,6 +12,7 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonConstants;
+import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
@@ -30,7 +32,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class ChatMessageBuilder {
     public static final String TAG = ChatMessageBuilder.class.getSimpleName();
@@ -94,13 +95,14 @@ public class ChatMessageBuilder {
 
     public static TUIMessageBean buildPlaceholderVideoMessage(Uri uri) {
         VideoMessageBean messageBean = new VideoMessageBean();
-        messageBean.setId(UUID.randomUUID().toString());
+        String uriID = TUIUtil.identityHashCode(uri);
+        messageBean.setId(uriID);
         messageBean.setProcessing(true);
         messageBean.setProcessingThumbnail(uri);
         android.media.MediaMetadataRetriever mmr = new android.media.MediaMetadataRetriever();
         try {
             mmr.setDataSource(ServiceInitializer.getAppContext(), uri);
-            Bitmap bitmap = mmr.getFrameAtTime(0, android.media.MediaMetadataRetriever.OPTION_NEXT_SYNC);
+            Bitmap bitmap = mmr.getFrameAtTime();
 
             if (bitmap == null) {
                 TUIChatLog.e(TAG, "buildPlaceholderVideoMessage bitmap is null");
@@ -117,7 +119,8 @@ public class ChatMessageBuilder {
 
     public static TUIMessageBean buildPlaceholderImageMessage(Uri uri) {
         ImageMessageBean messageBean = new ImageMessageBean();
-        messageBean.setId(UUID.randomUUID().toString());
+        String uriID = TUIUtil.identityHashCode(uri);
+        messageBean.setId(uriID);
         messageBean.setProcessing(true);
         messageBean.setProcessingThumbnail(uri);
         android.media.MediaMetadataRetriever mmr = new android.media.MediaMetadataRetriever();
@@ -134,6 +137,8 @@ public class ChatMessageBuilder {
             messageBean.setImgHeight(bitmap.getHeight());
         } catch (Exception ex) {
             TUIChatLog.e(TAG, "MediaMetadataRetriever exception " + ex);
+        } finally {
+            mmr.release();
         }
         return messageBean;
     }
@@ -143,8 +148,7 @@ public class ChatMessageBuilder {
         try {
             mmr.setDataSource(videoPath);
             String sDuration = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION);
-            Bitmap bitmap = mmr.getFrameAtTime(0, android.media.MediaMetadataRetriever.OPTION_NEXT_SYNC);
-
+            Bitmap bitmap = mmr.getFrameAtTime();
             if (bitmap == null) {
                 TUIChatLog.e(TAG, "buildVideoMessage() bitmap is null");
                 return null;

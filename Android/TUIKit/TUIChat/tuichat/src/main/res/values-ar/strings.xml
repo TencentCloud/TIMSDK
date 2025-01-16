@@ -44,23 +44,11 @@
     <string name="forward_group_note_or_poll_failed_tip">لا يمكن تحويل رسائل الاستطلاع أو الملاحظات في المحادثات الجماعية!</string>
     <string name="forward_chat_record">سجل المحادثة</string>
     <string name="forward_oneByOne_limit_number_tip">تم تحويل الرسائل بكمية كبيرة جدًا، لا يمكن تحويلها تلو الأخرى.</string>
-    <string name="and_and">و</string>
-    <string name="be_friend">أصبح صديقًا</string>
-
-    <string name="join_group_tip">لقد تمت دعوتك للانضمام إلى المجموعة: </string>
-    <string name="joined_tip">لقد انضممت إلى المجموعة: </string>
-    <string name="reject_join_tip">تم رفض طلب الانضمام إلى المجموعة: </string>
-    <string name="kick_group">لقد تم طردك من المجموعة: </string>
 
     <string name="send_two_mins">تم تجاوز مهلة إرسال الرسالة لأكثر من 2 دقائق</string>
     <string name="revoke_fail">فشل إلغاء الرسالة</string>
 
     <string name="group_apply_tips">%1$d طلبات الانضمام إلى المجموعة</string>
-    <string name="wait_tip">يرجى المحاولة مرة أخرى في وقت لاحق</string>
-
-    <string name="dismiss_tip_before">المجموعة التي تنتمي إليها</string>
-    <string name="dismiss_tip_after">لم يعد موجود</string>
-    <string name="get_system_notice">تلقيت إشعار نظام مخصص: </string>
 
     <string name="down_cancle_send">اسحب الإصبع للأعلى لإلغاء الإرسال</string>
     <string name="say_time_short">مدة الكلام قصيرة جدًا</string>
@@ -141,16 +129,6 @@
     <string name="download_file_error">فشل تنزيل الفيديو: </string>
     <string name="voice_play_tip">لم يتم تنزيل ملف الصوت بعد</string>
 
-    <string name="device_info">نوع الهاتف:</string>
-    <string name="system_version">\nإصدار النظام:</string>
-    <string name="sdk_version">\nإصدار SDK:</string>
-
-    <string name="permission_content">لإستخدام هذه الخاصية، يجب تفعيل الصلاحيات، بما أنك قمت بإيقاف تفعيل الصلاحيات ذات الصلة، يرجى تفعيلها يدويًا</string>
-    <string name="setting">الإعدادات</string>
-
-    <string name="no_event_cancle_tip">في حالة التصفح، لا يوجد حدث cancle</string>
-    <string name="no_event_confirm_tip">في حالة التصفح، لا يوجد حدث confirm</string>
-
     <string name="record_time_tip">مدة التسجيل قصيرة جدًا</string>
     <string name="tap_tips">اضغط لالتقاط صورة، اضغط مع الاستمرار لتصوير فيديو</string>
     <string name="tap_capture">انقر لالتقاط صورة</string>
@@ -167,13 +145,6 @@
 
     <string name="group_apply_click_handle">انقر للمعالجة</string>
     <string name="no_support_msg">رسالة مخصصة غير مدعومة</string>
-
-    <string name="live">مباشر</string>
-    <string name="live_group_live_streaming">جاري البث المباشر</string>
-    <string name="live_group_live_end">إنهاء البث المباشر</string>
-    <string name="live_group_user_live">%s بث مباشر</string>
-    <string name="live_group_live">بث مباشر في المجموعة</string>
-
 
     <string name="start_group_call">بدء مكالمة جماعية</string>
     <string name="start_call">بدء مكالمة</string>
@@ -292,5 +263,81 @@
     <string name="chat_quote_origin_message_revoked">تم سحب المحتوى المقتبس</string>
     <string name="chat_reply_origin_message_revoked">تم سحب محتوى الرد</string>
 
-    <string name="ugc_plugin_not_purchased">لم تقم بشراء حزمة القدرات المتقدمة لتسجيل الفيديو حتى الآن ، يرجى الانتقال إلى واجهة التحكم IM لتجربة مجانية أو شراء الإصدار الرسمي.</string>
+
+    <string name="group_choose_avatar">اختر صورة رمزية</string>
+
+    <string name="group_id">معرف المجموعة</string>
+    <string name="group_name">اسم المجموعة</string>
+    <string name="group_icon">تغيير صورة المجموعة</string>
+    <string name="group_notice">إعلان المجموعة</string>
+    <string name="group_notice_empty_tip">لا يوجد إعلانات حاليًا.</string>
+    <string name="group_members">أعضاء المجموعة</string>
+    <string name="group_type">نوع المجموعة</string>
+    <string name="join_group_type">طريقة الانضمام النشطة</string>
+    <string name="invite_group_type">طريقة الدعوة للانضمام</string>
+    <string name="in_group_nick_name">اسم المستعار في المجموعة</string>
+    <string name="dissolve">حل المجموعة</string>
+    <string name="clear_message">مسح سجل الدردشة</string>
+    <string name="modify_group_notice">تعديل إعلان المجموعة</string>
+    <string name="modify_nick_name_in_goup">تعديل اسمي الداخلي في المجموعة</string>
+    <string name="group_edit">تحرير</string>
+    <string name="group_modify_remark_rule">مسموح فقط بالحروف الصينية والأحرف اللاتينية والأرقام والشرطة السفلية</string>
+    <string name="group_clear_message">مسح سجل الدردشة</string>
+    <string name="group_detail">تفاصيل المحادثة الجماعية</string>
+
+    <string name="modify_group_name_success">تم تعديل اسم المجموعة بنجاح</string>
+    <string name="modify_group_notice_success">تم تعديل إعلان المجموعة بنجاح</string>
+    <string name="exit_group">الخروج من المحادثة الجماعية</string>
+    <string name="modify_nickname_success">تم تعديل الاسم الداخلي بنجاح</string>
+
+    <string name="group_profile_message">إرسال رسالة</string>
+
+    <string name="modify_icon_fail">فشل تعديل صورة المجموعة</string>
+    <string name="modify_icon_suc">تم تعديل صورة المجموعة بنجاح</string>
+    <string name="chat_room">غرفة الدردشة</string>
+    <string name="chat_room_tip">تتم الموافقة تلقائيًا على الانضمام إلى غرفة الدردشة ولا يمكن تعديلها في الوقت الحالي</string>
+    <string name="community_group">مجموعة المجتمع</string>
+    <string name="dismiss_group_tip">هل تريد بالتأكيد حل هذه المجموعة؟</string>
+    <string name="quit_group_tip">هل تريد بالتأكيد الخروج من هذه المجموعة؟</string>
+    <string name="clear_group_msg_tip">هل تريد بالتأكيد مسح سجل الدردشة؟</string>
+    <string name="private_group">محادثة فردية</string>
+    <string name="public_group">مجموعة عامة</string>
+
+    <string name="forbid_join">منع الانضمام</string>
+    <string name="forbid_invite">منع الدعوة</string>
+    <string name="manager_judge">مراجعة المدير</string>
+    <string name="auto_judge">مراجعة تلقائية</string>
+
+    <string name="modify_group_name">تعديل اسم المجموعة</string>
+    <string name="group_join_type">طريقة الانضمام النشطة للمجموعة</string>
+    <string name="group_invite_type">طريقة الدعوة إلى المجموعة</string>
+
+    <string name="profile_msgrev_opt">عدم إزعاج</string>
+    <string name="fold_this_group_chat">طي هذه المحادثة الجماعية</string>
+
+    <string name="group_account_tag">المعرف: </string>
+
+    <string name="profile_remark">اسم الملاحظات</string>
+    <string name="profile_black">إضافة إلى القائمة السوداء</string>
+    <string name="profile_chat">إرسال رسالة</string>
+    <string name="profile_clear_message">مسح سجل الدردشة</string>
+    <string name="profile_delete_friend">حذف الصديق</string>
+    <string name="profile_chat_background">تعيين خلفية الدردشة الحالية</string>
+    <string name="chat_background_title">تغيير الخلفية</string>
+
+    <string name="contact_signature_tag">التوقيع الشخصي:</string>
+    <string name="contact_no_status">لا يوجد توقيع شخصي</string>
+
+    <string name="contact_account_tag">المعرف:</string>
+
+    <string name="clear_msg_tip">هل تريد بالتأكيد مسح سجل الدردشة؟</string>
+    <string name="contact_delete_friend_tip">هل تريد بالتأكيد حذف جهة الاتصال؟</string>
+
+    <string name="chat_to_top">تثبيت المحادثة</string>
+
+    <string name="profile_detail">تفاصيل الملف الشخصي</string>
+    <string name="profile_remark_edit">تعديل الملاحظات</string>
+    <string name="contact_modify_remark_rule">يسمح فقط بالأحرف الصينية والأحرف اللاتينية والأرقام والشرطة السفلية</string>
+    <string name="chat_add_friend">إضافة صديق</string>
+
 </resources>

@@ -6,6 +6,7 @@ import android.util.Log;
 
 import androidx.activity.result.ActivityResultCaller;
 
+import com.tencent.cloud.tuikit.roomkit.ConferenceDefine;
 import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
@@ -43,25 +44,25 @@ public class IMContactSelector implements ParticipantSelector.IParticipantSelect
         });
     }
 
-    private ArrayList<String> getSelectedList(List<User> participants) {
+    private ArrayList<String> getSelectedList(List<ConferenceDefine.User> participants) {
         ArrayList<String> selectedList = new ArrayList<>();
         if (participants == null || participants.isEmpty()) {
             return selectedList;
         }
-        for (User item : participants) {
-            selectedList.add(item.userId);
+        for (ConferenceDefine.User item : participants) {
+            selectedList.add(item.id);
         }
         return selectedList;
     }
 
-    private void parseSelectedParticipant(List<User> oldParticipants, List<String> newParticipants, ParticipantSelector.ParticipantSelectCallback participantSelectCallback) {
-        List<User> participants = new ArrayList<>(newParticipants.size());
+    private void parseSelectedParticipant(List<ConferenceDefine.User> oldParticipants, List<String> newParticipants, ParticipantSelector.ParticipantSelectCallback participantSelectCallback) {
+        List<ConferenceDefine.User> participants = new ArrayList<>(newParticipants.size());
         List<String> users = new LinkedList<>();
 
         int index;
         for (String item : newParticipants) {
-            User user = new User();
-            user.userId = item;
+            ConferenceDefine.User user = new ConferenceDefine.User();
+            user.id = item;
             index = oldParticipants.indexOf(user);
             if (index != -1) {
                 participants.add(oldParticipants.get(index));
@@ -79,9 +80,9 @@ public class IMContactSelector implements ParticipantSelector.IParticipantSelect
             public void onSuccess(List<V2TIMUserFullInfo> list) {
                 Log.d(TAG, "getUsersInfo onSuccess size=" + list.size());
                 for (V2TIMUserFullInfo item : list) {
-                    User user = new User();
-                    user.userId = item.getUserID();
-                    user.userName = item.getNickName();
+                    ConferenceDefine.User user = new ConferenceDefine.User();
+                    user.id = item.getUserID();
+                    user.name = item.getNickName();
                     user.avatarUrl = item.getFaceUrl();
                     participants.add(user);
                 }
@@ -96,14 +97,14 @@ public class IMContactSelector implements ParticipantSelector.IParticipantSelect
         });
     }
 
-    private List<UserState.UserInfo> transUserInfoList(List<User> Participants) {
+    private List<UserState.UserInfo> transUserInfoList(List<ConferenceDefine.User> Participants) {
         List<UserState.UserInfo> userInfoList = new ArrayList<>();
         if (Participants == null) {
             return userInfoList;
         }
-        for (User participant : Participants) {
-            UserState.UserInfo user = new UserState.UserInfo(participant.userId);
-            user.userName = participant.userName;
+        for (ConferenceDefine.User participant : Participants) {
+            UserState.UserInfo user = new UserState.UserInfo(participant.id);
+            user.userName = participant.name;
             user.avatarUrl = participant.avatarUrl;
             userInfoList.add(user);
         }

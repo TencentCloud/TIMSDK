@@ -107,6 +107,13 @@ public class FriendApplicationBean implements Serializable {
         return friendApplication;
     }
 
+    public String getDisplayName() {
+        if (nickName != null && !nickName.isEmpty()) {
+            return nickName;
+        }
+        return userId;
+    }
+
     public FriendApplicationBean convertFromTimFriendApplication(V2TIMFriendApplication v2TIMFriendApplication) {
         if (v2TIMFriendApplication == null) {
             return this;

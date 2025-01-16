@@ -7,7 +7,6 @@ import android.util.Pair;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationListFilter;
-import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
@@ -1410,7 +1409,7 @@ public class ConversationPresenter {
         } else {
             String operatorName = revoker;
             if (revokerBean != null) {
-                operatorName = revokerBean.getDisplayString();
+                operatorName = revokerBean.getDisplayName();
             }
             showString = operatorName + context.getResources().getString(com.tencent.qcloud.tuikit.timcommon.R.string.revoke_tips);
         }

@@ -1,17 +1,12 @@
 package com.tencent.qcloud.tuikit.tuicontact.presenter;
 
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Pair;
-import com.tencent.qcloud.tuicore.TUIConstants;
-import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
-import com.tencent.qcloud.tuikit.tuicontact.bean.ContactGroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.FriendApplicationBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupInfo;
@@ -21,9 +16,7 @@ import com.tencent.qcloud.tuikit.tuicontact.util.ContactUtils;
 import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 public class FriendProfilePresenter {
     private static final String TAG = FriendProfilePresenter.class.getSimpleName();
@@ -137,90 +130,6 @@ public class FriendProfilePresenter {
 
     public void isFriend(String id, ContactItemBean bean, TUIValueCallback<Boolean> callback) {
         provider.isFriend(id, bean, callback);
-    }
-
-    public void deleteFromBlackList(List<String> idList) {
-        provider.deleteFromBlackList(idList, new IUIKitCallback<Void>() {
-            @Override
-            public void onSuccess(Void data) {}
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastShortMessage("deleteFromBlackList Error code = " + errCode + ", desc = " + errMsg);
-            }
-        });
-    }
-
-    public void addToBlackList(List<String> idList) {
-        provider.addToBlackList(idList, new IUIKitCallback<Void>() {
-            @Override
-            public void onSuccess(Void data) {}
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastShortMessage("addToBlackList Error code = " + errCode + ", desc = " + errMsg);
-            }
-        });
-    }
-
-    public void modifyRemark(String id, String remark, IUIKitCallback<String> callback) {
-        provider.modifyRemark(id, remark, callback);
-    }
-
-    public void deleteFriend(List<String> idList, IUIKitCallback<Void> callback) {
-        provider.deleteFriend(idList, new IUIKitCallback<Void>() {
-            @Override
-            public void onSuccess(Void data) {
-                for (String id : idList) {
-                    String conversationId = TUIConstants.TUIConversation.CONVERSATION_C2C_PREFIX + id;
-                    HashMap<String, Object> param = new HashMap<>();
-                    param.put(TUIConstants.TUIConversation.CONVERSATION_ID, conversationId);
-                    param.put(TUIConstants.TUIChat.CHAT_ID, id);
-                    param.put(TUIConstants.TUIChat.IS_GROUP_CHAT, false);
-                    TUICore.callService(TUIConstants.TUIConversation.SERVICE_NAME, TUIConstants.TUIConversation.METHOD_DELETE_CONVERSATION, param);
-                    TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_EXIT_CHAT, param);
-                }
-                ContactUtils.callbackOnSuccess(callback, null);
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                ContactUtils.callbackOnError(callback, module, errCode, errMsg);
-            }
-        });
-    }
-
-    public void refuseFriendApplication(FriendApplicationBean friendApplication, IUIKitCallback<Void> callback) {
-        provider.refuseFriendApplication(friendApplication, callback);
-    }
-
-    public void acceptFriendApplication(FriendApplicationBean friendApplication, int responseType, IUIKitCallback<Void> callback) {
-        provider.acceptFriendApplication(friendApplication, responseType, callback);
-    }
-
-    public boolean isTopConversation(String chatId) {
-        HashMap<String, Object> param = new HashMap<>();
-        param.put(TUIConstants.TUIConversation.CHAT_ID, chatId);
-        Object result = TUICore.callService(TUIConstants.TUIConversation.SERVICE_NAME, TUIConstants.TUIConversation.METHOD_IS_TOP_CONVERSATION, param);
-        if (result instanceof Bundle) {
-            return ((Bundle) result).getBoolean(TUIConstants.TUIConversation.IS_TOP, false);
-        }
-        return false;
-    }
-
-    public void setConversationTop(String chatId, boolean isSetTop) {
-        HashMap<String, Object> param = new HashMap<>();
-        param.put(TUIConstants.TUIConversation.CHAT_ID, chatId);
-        param.put(TUIConstants.TUIConversation.IS_SET_TOP, isSetTop);
-        TUICore.callService(TUIConstants.TUIConversation.SERVICE_NAME, TUIConstants.TUIConversation.METHOD_SET_TOP_CONVERSATION, param);
-    }
-
-    public void acceptJoinGroupApply(ContactGroupApplyInfo info, IUIKitCallback<Void> callback) {
-        provider.acceptJoinGroupApply(info, callback);
-    }
-
-    public void refuseJoinGroupApply(ContactGroupApplyInfo info, String reason, IUIKitCallback<Void> callback) {
-        provider.refuseJoinGroupApply(info, reason, callback);
     }
 
     public void addFriend(String userId, String addWord, String remark, IUIKitCallback<Pair<Integer, String>> callback) {

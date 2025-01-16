@@ -13,12 +13,14 @@
 
     <CheckBox
         android:id="@+id/select_checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="6.23dp"
-        android:button="@drawable/checkbox_selector"
-        android:visibility="gone" />
+        android:background="@drawable/conversation_checkbox_selector"
+        android:button="@null"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
     <RelativeLayout
         android:layout_width="60.78dp"
@@ -118,7 +120,7 @@
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:layout_gravity="center_vertical"
-                android:background="@drawable/ic_sending_status"
+                android:background="@drawable/conversation_ic_sending_status"
                 android:visibility="gone" />
 
             <ImageView
@@ -127,7 +129,7 @@
                 android:layout_height="14dp"
                 android:layout_gravity="center_vertical"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_send_failed"
+                android:src="@drawable/conversation_ic_send_failed"
                 android:visibility="gone" />
         </RelativeLayout>
 
@@ -247,7 +249,7 @@
             android:layout_marginBottom="@dimen/conversation_list_text_margin_bottom"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:src="@drawable/ic_disturb"
+            android:src="@drawable/conversation_ic_disturb"
             android:visibility="gone" />
 
         <View

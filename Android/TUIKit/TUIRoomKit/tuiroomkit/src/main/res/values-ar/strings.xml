@@ -92,7 +92,7 @@
     <string name="tuiroomkit_room_free_speech">مؤتمر حرية التعبير</string>
     <string name="tuiroomkit_room_raise_hand">مؤتمر التحدث على خشبة المسرح</string>
     <string name="tuiroomkit_logout">تسجيل الخروج</string>
-    <string name="tuiroomkit_kiecked_off_line">لقد قمت بتسجيل الدخول في مكان آخر</string>
+    <string name="tuiroomkit_kicked_off_line">لقد قمت بتسجيل الدخول في مكان آخر</string>
     <string name="tuiroomkit_dialog_logout_title">لقد قمت بتسجيل الخروج</string>
     <string name="tuiroomkit_cancel">إلغاء</string>
     <string name="tuiroomkit_microphone">الميكروفون</string>
@@ -147,7 +147,7 @@
     <string name="tuiroomkit_raise_hand_notification">%s يتقدم بطلب للظهور على المسرح</string>
     <string name="tuiroomkit_multi_raise_hand_notification">بما في ذلك %s، يتقدم %d من الأشخاص للظهور على المسرح.</string>
     <string name="tuiroomkit_leave_stage">مغادرة المنصة</string>
-    <string name="tuiroomkit_tip_kicked_off_seat">لقد طلب منك مغادرة المسرح</string>
+    <string name="tuiroomkit_tip_kicked_off_seat">لقد تمت دعوتك للتنحي من قبل المضيف إذا كنت تريد التحدث، يرجى رفع يدك أولا</string>
     <string name="tuiroomkit_dialog_off_seat_title">هل أنت متأكد من أنك تريد التنحي</string>
     <string name="tuiroomkit_dialog_off_seat_content">للظهور على خشبة المسرح مرة أخرى، يتعين عليك إعادة إرسال الطلب وانتظار موافقة المالك/المسؤول عليه</string>
     <string name="tuiroomkit_hands_down">تخفيض اليد</string>
@@ -352,4 +352,22 @@
     <string name="tuiroomkit_conference_canceled">لقد تم إزالتك من المشاركين في المؤتمر</string>
     <string name="tuiroomkit_local_user_disable_send_message">لقد تم منعك من الدردشة النصية</string>
     <string name="tuiroomkit_local_user_enable_send_message">مسموح لك بالدردشة النصية</string>
+
+    <string name="tuiroomkit_sent_a_picture">أرسلت صورة</string>
+    <string name="tuiroomkit_sent_a_video">أرسلت فيديو</string>
+    <string name="tuiroomkit_sent">تم الإرسال %s</string>
+    <string name="tuiroomkit_room_id_is_occupied">رقم الغرفة مشغول بالفعل، يرجى اختيار رقم غرفة آخر</string>
+    <string name="tuiroomkit_room_is_full">الغرفة ممتلئة ولا يمكن دخولها في الوقت الحالي.</string>
+    <string name="tuiroomkit_room_name_is_invalid">اسم الغرفة غير صالح. الحد الأقصى للطول هو 30 بايت. إذا كان يحتوي على أحرف صينية، فيجب أن يكون ترميز الأحرف UTF-8.</string>
+    <string name="tuiroomkit_room_id_is_invalid">رقم الغرفة غير صالح، ويجب أن يتكون من أحرف ASCII قابلة للطباعة، بحد أقصى 48 بايت</string>
+    <string name="tuiroomkit_use_function_need_enter_room">تحتاج إلى دخول الغرفة لاستخدام هذه الوظيفة</string>
+    <string name="tuiroomkit_is_not_supported_in_room_type">هذه العملية غير مدعومة ضمن نوع الغرفة الحالي</string>
+    <string name="tuiroomkit_already_in_another_room">أنت بالفعل في غرفة أخرى وتحتاج إلى تسجيل المغادرة قبل الانضمام إلى غرفة جديدة</string>
+    <string name="tuiroomkit_format_select_participant">%s (%d)</string>
+    <string name="tuiroomkit_all_participant">مجموع الأعضاء(%d)</string>
+    <string name="tuiroomkit_participant_name_and_id">%s(%s)</string>
+    <string name="tuiroomkit_selected_participant_size">اختير:%d</string>
+    <string name="tuiroomkit_confirm_select_participant">مؤكد(%d)</string>
+    <string name="tuiroomkit_select_schedule_participant">اختر الأعضاء</string>
+    <string name="tuiroomkit_hint_search_member_id_or_name">أدخلIDالمستخدم أو الاسم</string>
 </resources>

@@ -161,9 +161,6 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     private ImageView quoteCloseBtn;
     private boolean isShowCustomFace = true;
     private ChatInputMoreListener chatInputMoreListener;
-    private IMultimediaRecorder defaultVideoRecorder;
-    private IMultimediaRecorder extVideoRecorder;
-    private AudioRecorder defaultAudioRecorder;
 
     public InputView(Context context) {
         super(context);
@@ -1092,7 +1089,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 && getChatInfo().isEnableCustomHelloMessage()
                 && !excludeItems.contains(TUIChatConfigClassic.CUSTOM)) {
             actionUnit = new InputMoreItem() {};
-            actionUnit.setIconResId(R.drawable.custom);
+            actionUnit.setIconResId(R.drawable.chat_more_input_custom_message);
             actionUnit.setName(getResources().getString(R.string.test_custom_action));
             actionUnit.setActionId(CustomHelloMessage.CUSTOM_HELLO_ACTION_ID);
             actionUnit.setPriority(10);

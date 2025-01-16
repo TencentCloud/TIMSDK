@@ -292,14 +292,14 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             if (position == ITEM_POSITION_UNKNOWN) {
                 return;
             }
-            mRecycleView.scrollToPosition(position);
+            mRecycleView.smoothScrollToPosition(position);
             HighlightPresenter.startHighlight(messageBean.getId());
         } else if (type == IMessageRecyclerView.SCROLL_TO_POSITION) {
             int position = getMessagePosition(messageBean);
             if (position == ITEM_POSITION_UNKNOWN) {
                 return;
             }
-            mRecycleView.scrollToPosition(position);
+            mRecycleView.smoothScrollToPosition(position);
             HighlightPresenter.startHighlight(messageBean.getId());
             mRecycleView.scrollMessageFinish();
         } else if (type == IMessageRecyclerView.DATA_CHANGE_SCROLL_TO_POSITION) {
@@ -324,7 +324,7 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
             if (position == ITEM_POSITION_UNKNOWN) {
                 return;
             }
-            mRecycleView.scrollToPosition(position);
+            mRecycleView.smoothScrollToPosition(position);
         }
     }
 

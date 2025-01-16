@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.classicui.page;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +10,14 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
+import com.tencent.qcloud.tuikit.tuichat.R;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.C2CChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.presenter.C2CChatPresenter;
+import com.tencent.qcloud.tuikit.tuichat.presenter.FriendProfilePresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -24,6 +28,7 @@ public class TUIC2CChatFragment extends TUIBaseChatFragment {
     private static final String TAG = TUIC2CChatFragment.class.getSimpleName();
 
     private final C2CChatPresenter presenter;
+    private final FriendProfilePresenter friendProfilePresenter = new FriendProfilePresenter();
 
     public TUIC2CChatFragment() {
         presenter = new C2CChatPresenter();
@@ -58,33 +63,43 @@ public class TUIC2CChatFragment extends TUIBaseChatFragment {
     }
 
     private void setTitleBarExtension() {
-        Map<String, Object> param = new HashMap<>();
-        param.put(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.USER_ID, chatInfo.getId());
-        List<TUIExtensionInfo> extensionInfoList = TUICore.getExtensionList(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.CLASSIC_EXTENSION_ID, param);
-        if (!extensionInfoList.isEmpty()) {
-            Collections.sort(extensionInfoList, new Comparator<TUIExtensionInfo>() {
-                @Override
-                public int compare(TUIExtensionInfo o1, TUIExtensionInfo o2) {
-                    return o2.getWeight() - o1.getWeight();
-                }
-            });
-
-            Collections.singletonList(extensionInfoList);
-            TUIExtensionInfo extensionInfo = extensionInfoList.get(0);
-            titleBar.setRightIcon((Integer) extensionInfo.getIcon());
-            titleBar.setOnRightClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        titleBar.setRightIcon(R.drawable.chat_title_bar_more_menu_icon);
+        titleBar.setOnRightClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, Object> param = new HashMap<>();
+                param.put(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.USER_ID, chatInfo.getId());
+                List<TUIExtensionInfo> extensionInfoList =
+                    TUICore.getExtensionList(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.CLASSIC_EXTENSION_ID, param);
+                if (!extensionInfoList.isEmpty()) {
+                    Collections.sort(extensionInfoList, new Comparator<TUIExtensionInfo>() {
+                        @Override
+                        public int compare(TUIExtensionInfo o1, TUIExtensionInfo o2) {
+                            return o2.getWeight() - o1.getWeight();
+                        }
+                    });
+                    TUIExtensionInfo extensionInfo = extensionInfoList.get(0);
                     TUIExtensionEventListener eventListener = extensionInfo.getExtensionListener();
                     if (eventListener != null) {
                         Map<String, Object> map = new HashMap<>();
                         map.put(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.USER_ID, chatInfo.getId());
-                        map.put(TUIConstants.TUIChat.CHAT_BACKGROUND_URI, mChatBackgroundThumbnailUrl);
+                        map.put(TUIChatConstants.CHAT_BACKGROUND_URI, mChatBackgroundThumbnailUrl);
                         eventListener.onClicked(map);
                     }
+                } else {
+                    String userId = chatInfo.getId();
+                    openFriendProfile(userId);
                 }
-            });
-        }
+            }
+        });
+    }
+
+    private void openFriendProfile(String userId) {
+        Intent intent = new Intent(getContext(), FriendProfileActivity.class);
+        intent.putExtra(TUIConstants.TUIChat.CHAT_ID, userId);
+        intent.putExtra(TUIChatConstants.CHAT_BACKGROUND_URI, mChatBackgroundThumbnailUrl);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @Override

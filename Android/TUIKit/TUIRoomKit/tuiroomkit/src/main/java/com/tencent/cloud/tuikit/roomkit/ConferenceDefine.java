@@ -6,6 +6,7 @@ import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class ConferenceDefine {
     public static final String KEY_START_CONFERENCE_PARAMS = "KEY_START_CONFERENCE_PARAMS";
@@ -91,5 +92,24 @@ public class ConferenceDefine {
         EXITED_BY_JOINED_ON_OTHER_DEVICE,
         EXITED_BY_KICKED_OUT_OF_LINE,
         EXITED_BY_USER_SIG_EXPIRED
+    }
+
+    public static class User implements Serializable {
+        public String name;
+        public String id;
+        public String avatarUrl;
+
+        @Override
+        public boolean equals(Object object) {
+            if (this == object) return true;
+            if (!(object instanceof User)) return false;
+            User user = (User) object;
+            return Objects.equals(id, user.id);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id);
+        }
     }
 }

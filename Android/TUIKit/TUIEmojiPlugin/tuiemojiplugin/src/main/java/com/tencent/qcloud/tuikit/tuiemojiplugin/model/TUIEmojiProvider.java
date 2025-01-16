@@ -60,7 +60,9 @@ public class TUIEmojiProvider {
             if (messageBean.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
                 continue;
             }
-            messages.add(messageBean.getV2TIMMessage());
+            if (messageBean.getV2TIMMessage() != null) {
+                messages.add(messageBean.getV2TIMMessage());
+            }
         }
         V2TIMManager.getMessageManager().getMessageReactions(messages, countPerReaction, new V2TIMValueCallback<List<V2TIMMessageReactionResult>>() {
             @Override
@@ -83,7 +85,7 @@ public class TUIEmojiProvider {
                                 for (V2TIMUserInfo v2TIMUserInfo : v2TIMUserInfoList) {
                                     UserBean reactUserBean = new UserBean();
                                     reactUserBean.setUserId(v2TIMUserInfo.getUserID());
-                                    reactUserBean.setNikeName(v2TIMUserInfo.getNickName());
+                                    reactUserBean.setNickName(v2TIMUserInfo.getNickName());
                                     reactUserBean.setFaceUrl(v2TIMUserInfo.getFaceUrl());
                                     userBeanList.add(reactUserBean);
                                 }
@@ -125,7 +127,7 @@ public class TUIEmojiProvider {
                         for (V2TIMUserInfo userInfo : v2TIMUserInfoList) {
                             UserBean reactUserBean = new UserBean();
                             reactUserBean.setUserId(userInfo.getUserID());
-                            reactUserBean.setNikeName(userInfo.getNickName());
+                            reactUserBean.setNickName(userInfo.getNickName());
                             reactUserBean.setFaceUrl(userInfo.getFaceUrl());
                             userBeanList.add(reactUserBean);
                         }

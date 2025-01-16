@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.tencent.qcloud.tuikit.timcommon.component.MinimalistLineControllerView
+        android:id="@+id/add_group_members"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginTop="1dp"
+        app:name="@string/group_plus_add_group_member" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/group_members"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:background="@color/white"
+        android:fadeScrollbars="true"
+        android:scrollbars="none" />
+</LinearLayout>

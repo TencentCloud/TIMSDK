@@ -10,13 +10,8 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import com.trtc.tuikit.common.livedata.Observer;
 
 public class MicIconView extends AppCompatImageButton {
-    private MicIconStateHolder       mStateHolder = new MicIconStateHolder();
-    private Observer<MicIconUiState> mObserver    = new Observer<MicIconUiState>() {
-        @Override
-        public void onChanged(MicIconUiState micIconUiState) {
-            updateView(micIconUiState);
-        }
-    };
+    private final MicIconStateHolder       mStateHolder = new MicIconStateHolder();
+    private final Observer<MicIconUiState> mObserver    = this::updateView;
 
     public MicIconView(@NonNull Context context) {
         this(context, null);

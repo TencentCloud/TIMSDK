@@ -100,6 +100,8 @@ public class ConferenceController {
     private TRTCCloud    mTRTCCloud;
     private TRTCObserver mTRTCObserver;
 
+    private TUILoginStateObserver mTUILoginStateObserver;
+
     private RoomWindowManager mRoomFloatWindowManager;
 
     public static ConferenceController sharedInstance() {
@@ -478,6 +480,9 @@ public class ConferenceController {
         mTRTCCloud = TUIRoomEngine.sharedInstance().getTRTCCloud();
         mTRTCObserver = new TRTCObserver();
         mTRTCCloud.addListener(mTRTCObserver);
+
+        mTUILoginStateObserver = new TUILoginStateObserver(mConferenceState);
+        mTUILoginStateObserver.registerObserver();
 
         mViewController = new ViewController(mConferenceState, mRoomEngine);
         mUserController = new UserController(mConferenceState, mRoomEngine);
@@ -1024,6 +1029,7 @@ public class ConferenceController {
         mConferenceListManager.removeObserver(mConferenceListObserver);
         mRoomEngine.removeObserver(mObserver);
         mTRTCCloud.removeListener(mTRTCObserver);
+        mTUILoginStateObserver.unregisterObserver();
         BusinessSceneUtil.clearJoinRoomFlag();
         if (mConferenceState.audioModel.isMicOpen()) {
             closeLocalMicrophone();

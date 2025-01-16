@@ -31,6 +31,8 @@ import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.IAddMoreActivity;
+import com.tencent.qcloud.tuikit.tuicontact.minimalistui.MinimalistUIExtensionObserver;
+import com.tencent.qcloud.tuikit.tuicontact.minimalistui.util.MinimalistUIUtils;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.AddMorePresenter;
 
 public class AddMoreMinimalistDialogFragment extends DialogFragment implements IAddMoreActivity {
@@ -132,19 +134,13 @@ public class AddMoreMinimalistDialogFragment extends DialogFragment implements I
                     @Override
                     public void onSuccess(ContactItemBean data) {
                         setFriendDetail(data.getAvatarUrl(), data.getId(), data.getNickName());
-                        detailArea.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (data.isFriend()) {
-                                    Intent intent = new Intent(TUIContactService.getAppContext(), FriendProfileMinimalistActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.putExtra(TUIConstants.TUIContact.USER_ID, data.getId());
-                                    startActivity(intent);
-                                } else {
-                                    AddMoreDetailMinimalistDialogFragment detailDialog = new AddMoreDetailMinimalistDialogFragment();
-                                    detailDialog.setData(data);
-                                    detailDialog.show(((AppCompatActivity) getContext()).getSupportFragmentManager(), "AddMoreDetail");
-                                }
+                        detailArea.setOnClickListener(v1 -> {
+                            if (data.isFriend()) {
+                                MinimalistUIUtils.showContactDetails(data.getId());
+                            } else {
+                                AddMoreDetailMinimalistDialogFragment detailDialog = new AddMoreDetailMinimalistDialogFragment();
+                                detailDialog.setData(data);
+                                detailDialog.show(((AppCompatActivity) getContext()).getSupportFragmentManager(), "AddMoreDetail");
                             }
                         });
                     }

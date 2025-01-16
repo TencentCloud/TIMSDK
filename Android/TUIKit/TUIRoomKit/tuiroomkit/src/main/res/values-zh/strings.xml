@@ -92,7 +92,7 @@
     <string name="tuiroomkit_room_free_speech">自由发言房间</string>
     <string name="tuiroomkit_room_raise_hand">举手发言房间</string>
     <string name="tuiroomkit_logout">退出登录</string>
-    <string name="tuiroomkit_kiecked_off_line">您已在其它地方登录</string>
+    <string name="tuiroomkit_kicked_off_line">您已在其它地方登录</string>
     <string name="tuiroomkit_dialog_logout_title">您已退出登录</string>
     <string name="tuiroomkit_cancel">取消</string>
     <string name="tuiroomkit_microphone">麦克风</string>
@@ -147,7 +147,7 @@
     <string name="tuiroomkit_raise_hand_notification">%s正在申请上台</string>
     <string name="tuiroomkit_multi_raise_hand_notification">%s等%d人正在申请上台</string>
     <string name="tuiroomkit_leave_stage">下台</string>
-    <string name="tuiroomkit_tip_kicked_off_seat">您已被请下台</string>
+    <string name="tuiroomkit_tip_kicked_off_seat">您已被主持人邀请下台，需要发言请先举手</string>
     <string name="tuiroomkit_dialog_off_seat_title">确定要下台吗</string>
     <string name="tuiroomkit_dialog_off_seat_content">再次上台需重新发送申请，并等待房主/管理员通过</string>
     <string name="tuiroomkit_hands_down">取消申请</string>
@@ -353,4 +353,21 @@
     <string name="tuiroomkit_local_user_disable_send_message">您已被禁止文字聊天</string>
     <string name="tuiroomkit_local_user_enable_send_message">您已被允许文字聊天</string>
 
+    <string name="tuiroomkit_sent_a_picture">发送了一张图片</string>
+    <string name="tuiroomkit_sent_a_video">发送了一个视频</string>
+    <string name="tuiroomkit_sent">发送了 %s</string>
+    <string name="tuiroomkit_room_id_is_occupied">房间号已被占用，请选择其他房间号</string>
+    <string name="tuiroomkit_room_is_full">房间成员已满，暂时无法进入房间</string>
+    <string name="tuiroomkit_room_name_is_invalid">房间名称无效，最长30字节，如果包含中文，字符编码必须是 UTF-8</string>
+    <string name="tuiroomkit_room_id_is_invalid">房间号无效，必须为可打印 ASCII 字符，最长48个字节</string>
+    <string name="tuiroomkit_use_function_need_enter_room">需要进入房间后才可以使用此功能</string>
+    <string name="tuiroomkit_is_not_supported_in_room_type">当前房间类型下不支持该操作</string>
+    <string name="tuiroomkit_already_in_another_room">您已经在其他房间内，需要先退房才能加入新的房间</string>
+    <string name="tuiroomkit_format_select_participant">%s (%d)</string>
+    <string name="tuiroomkit_all_participant">全部成员(%d)</string>
+    <string name="tuiroomkit_participant_name_and_id">%s(%s)</string>
+    <string name="tuiroomkit_selected_participant_size">已选择：%d人</string>
+    <string name="tuiroomkit_confirm_select_participant">确定(%d)</string>
+    <string name="tuiroomkit_select_schedule_participant">选择成员</string>
+    <string name="tuiroomkit_hint_search_member_id_or_name">输入用户ID或名称</string>
 </resources>

@@ -51,7 +51,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/btn_margin_right"
             android:text="@string/sure"
-            android:textColor="@color/bg_positive_btn"
+            android:textColor="@color/common_bg_positive_btn"
             android:textSize="14sp"
             android:visibility="visible" />
 

@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
@@ -55,7 +57,7 @@ public class NewFriendListAdapter extends ArrayAdapter<FriendApplicationBean> {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getContext(), NewFriendApplicationDetailMinimalistActivity.class);
-                    intent.putExtra(TUIContactConstants.ProfileType.CONTENT, data);
+                    intent.putExtra(TUIConstants.TUIContact.CONTENT, data);
                     getContext().startActivity(intent);
                 }
             });

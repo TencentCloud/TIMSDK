@@ -45,7 +45,6 @@ public class InviteDialog extends BaseBottomDialog implements ConferenceEventCen
     protected void initView() {
         mLayoutAddUser = findViewById(R.id.ll_add_user);
         mLayoutShareRoom = findViewById(R.id.ll_share_room);
-        mLayoutAddUser.setVisibility(ConferenceSessionImpl.sharedInstance().mContactsActivity == null ? View.GONE : View.VISIBLE);
 
         mLayoutAddUser.setOnClickListener(new View.OnClickListener() {
             @Override

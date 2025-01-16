@@ -247,6 +247,12 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
         String selfUserID = TUILogin.getLoginUser();
 
         accountView.setText(selfUserID);
+        loadUserInfo();
+        setUserInfoListener();
+    }
+
+    public void loadUserInfo() {
+        String selfUserID = TUILogin.getLoginUser();
         List<String> selfIdList = new ArrayList<>();
         selfIdList.add(selfUserID);
         V2TIMManager.getInstance().getUsersInfo(selfIdList, new V2TIMValueCallback<List<V2TIMUserFullInfo>>() {
@@ -260,9 +266,10 @@ public class ProfileLayout extends FrameLayout implements View.OnClickListener {
             }
 
             @Override
-            public void onError(int code, String desc) {}
+            public void onError(int code, String desc) {
+                DemoLog.e(TAG, "getUsersInfo failed, code: " + code + ", desc: " + desc);
+            }
         });
-        setUserInfoListener();
     }
 
     private List<ProfileSetting> getExtensionMoreSettings() {

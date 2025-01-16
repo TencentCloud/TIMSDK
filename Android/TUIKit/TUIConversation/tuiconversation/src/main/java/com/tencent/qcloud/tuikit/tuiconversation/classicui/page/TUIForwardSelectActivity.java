@@ -15,7 +15,7 @@ public class TUIForwardSelectActivity extends BaseLightActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.forward_activity);
+        setContentView(R.layout.conversation_forward_activity_layout);
 
         init();
     }

@@ -3,11 +3,14 @@ package com.tencent.cloud.tuikit.roomkit.model;
 import com.tencent.cloud.tuikit.roomkit.ConferenceDefine;
 import com.tencent.cloud.tuikit.roomkit.ConferenceSession;
 
+import java.util.List;
+
 public class ConferenceSessionImpl extends ConferenceSession {
     public boolean mIsEnableWaterMark = false;
     public String  mWaterMarkText     = "";
 
-    public Class<?> mContactsActivity;
+    public Class<?>   mContactsActivity;
+    public List<ConferenceDefine.User> mParticipants;
 
     private static ConferenceSessionImpl     sInstance;
     private final  ConferenceObserverManager mConferenceObserverManager = new ConferenceObserverManager();
@@ -59,6 +62,11 @@ public class ConferenceSessionImpl extends ConferenceSession {
     @Override
     public void setContactsViewProvider(Class<?> contactsActivity) {
         mContactsActivity = contactsActivity;
+    }
+
+    @Override
+    public void setParticipants(List<ConferenceDefine.User> participants) {
+        mParticipants = participants;
     }
 
     private void destroy() {

@@ -93,7 +93,7 @@ public class SearchMoreMsgAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (viewType == SEARCH_MESSAGE_HEADER_TYPE) {
             return new SearchMessageHeaderHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.search_header, parent, false));
         }
-        return new MessageViewHolder(LayoutInflater.from(context).inflate(R.layout.item_contact_search, parent, false));
+        return new MessageViewHolder(LayoutInflater.from(context).inflate(R.layout.search_item_contact, parent, false));
     }
 
     @Override

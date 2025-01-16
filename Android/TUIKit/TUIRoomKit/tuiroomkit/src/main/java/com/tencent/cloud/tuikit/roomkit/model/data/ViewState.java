@@ -19,6 +19,9 @@ public class ViewState {
     public LiveData<Boolean> isInvitationPending           = new LiveData<>(false);
     public LiveData<Boolean> isSpeechToTextSubTitleShowing = new LiveData<>(false);
 
+    public FloatWindowType   floatWindowType          = FloatWindowType.NONE;
+    public LiveData<Boolean> isInPictureInPictureMode = new LiveData<>(false);
+
     public void addPendingTakeSeatRequest(String requestId) {
         pendingTakeSeatRequests.add(requestId);
     }
@@ -46,11 +49,17 @@ public class ViewState {
         IN,
         OUTING
     }
-    
+
     public enum UserListType {
         ON_SEAT_INSIDE_THE_ROOM,
         OFF_SEAT_INSIDE_THE_ROOM,
         ALL_USER_ENTERED_THE_ROOM,
         ALL_USER_NOT_ENTERED_THE_ROOM
+    }
+
+    public enum FloatWindowType {
+        NONE,
+        WINDOW_MANAGER,
+        PICTURE_IN_PICTURE,
     }
 }

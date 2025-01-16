@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuiemojiplugin.minimalistui.widget;
 import android.view.View;
 import android.widget.FrameLayout;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
-import com.tencent.qcloud.tuikit.tuiemojiplugin.calssicui.widget.ChatFlowReactView;
 import com.tencent.qcloud.tuikit.tuiemojiplugin.presenter.MessageReactionPreviewPresenter;
 
 public class ChatMinimalistReactionPreviewProxy {
@@ -15,7 +14,7 @@ public class ChatMinimalistReactionPreviewProxy {
             reactionAreaContainer.addView(reactView);
         } else {
             View view = reactionAreaContainer.getChildAt(0);
-            if (view instanceof ChatFlowReactView) {
+            if (view instanceof ChatReactView) {
                 reactView = (ChatReactView) view;
             } else {
                 reactView = new ChatReactView(reactionAreaContainer.getContext());

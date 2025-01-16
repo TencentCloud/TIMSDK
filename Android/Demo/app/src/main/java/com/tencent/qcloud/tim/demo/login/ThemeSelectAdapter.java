@@ -38,7 +38,7 @@ public class ThemeSelectAdapter extends RecyclerView.Adapter<ThemeSelectAdapter.
         holder.name.setText(themeBean.name);
         if (selectedId == themeBean.id) {
             holder.frame.setForeground(TIMAppService.getAppContext().getResources().getDrawable(R.drawable.item_selected_border));
-            holder.selectedIcon.setBackgroundResource(R.drawable.check_box_selected);
+            holder.selectedIcon.setBackgroundResource(com.tencent.qcloud.tuikit.timcommon.R.drawable.common_check_box_selected);
         } else {
             holder.frame.setForeground(null);
             holder.selectedIcon.setBackgroundResource(R.drawable.demo_checkbox_unselect_bg);

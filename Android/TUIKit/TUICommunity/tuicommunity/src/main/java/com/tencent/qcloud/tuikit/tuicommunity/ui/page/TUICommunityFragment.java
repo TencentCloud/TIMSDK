@@ -106,7 +106,7 @@ public class TUICommunityFragment extends Fragment implements ICommunityFragment
             homeView.setVisibility(View.GONE);
         } else {
             homeView.setVisibility(View.VISIBLE);
-            homeView.setBackgroundResource(R.drawable.title_bar_left_icon);
+            homeView.setBackgroundResource(com.tencent.qcloud.tuikit.timcommon.R.drawable.common_title_bar_home_icon);
             int iconwidth = ScreenUtil.dip2px(TUIConstants.TIMAppKit.BACK_RTCUBE_HOME_ICON_WIDTH);
             int iconHeight = ScreenUtil.dip2px(TUIConstants.TIMAppKit.BACK_RTCUBE_HOME_ICON_HEIGHT);
             ViewGroup.LayoutParams iconParams = homeView.getLayoutParams();

@@ -77,6 +77,12 @@ public class ProfileMinimalistFragment extends Fragment {
         mProfileLayout.initUI();
     }
 
+    public void reloadData() {
+        if (mProfileLayout != null) {
+            mProfileLayout.loadSelfInfo();
+        }
+    }
+
     public interface OnClickListener {
         void finishActivity();
     }

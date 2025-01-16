@@ -31,6 +31,6 @@ public class BotBranchMessageBean extends TUIMessageBean {
 
     @Override
     public Class<? extends TUIReplyQuoteBean<?>> getReplyQuoteBeanClass() {
-        return BranchMessageReplyQuoteBean.class;
+        return BotBranchMessageReplyQuoteBean.class;
     }
 }

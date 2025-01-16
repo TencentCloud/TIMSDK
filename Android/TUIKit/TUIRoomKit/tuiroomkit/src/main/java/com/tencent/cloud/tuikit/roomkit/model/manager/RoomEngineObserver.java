@@ -2,6 +2,7 @@ package com.tencent.cloud.tuikit.roomkit.model.manager;
 
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.RoomDismissedReason.BY_SERVER;
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.UserInfoModifyFlag.NAME_CARD;
+import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.UserInfoModifyFlag.USER_ROLE;
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType.CAMERA_STREAM;
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType.CAMERA_STREAM_LOW;
 import static com.tencent.cloud.tuikit.engine.room.TUIRoomDefine.VideoStreamType.SCREEN_STREAM;
@@ -190,8 +191,19 @@ public class RoomEngineObserver extends TUIRoomObserver {
     }
 
     @Override
-    public void onUserRoleChanged(TUIRoomDefine.UserInfo userInfo) {
-        Log.d(TAG, "onUserRoleChanged userId=" + userInfo.userId + " role=" + userInfo.userRole);
+    public void onUserInfoChanged(TUIRoomDefine.UserInfo userInfo, List<TUIRoomDefine.UserInfoModifyFlag> modifyFlag) {
+        Log.d(TAG, "onUserInfoChanged userId=" + userInfo.userId + " role=" + userInfo.userRole);
+        handleUserRoleChangedIfNeeded(userInfo, modifyFlag);
+        handleNameCardChangedIfNeeded(userInfo, modifyFlag);
+    }
+
+    private void handleUserRoleChangedIfNeeded(TUIRoomDefine.UserInfo userInfo, List<TUIRoomDefine.UserInfoModifyFlag> modifyFlag) {
+        if (!modifyFlag.contains(USER_ROLE)) {
+            return;
+        }
+        if (userInfo.userRole == TUIRoomDefine.Role.ROOM_OWNER) {
+            mConferenceState.roomState.ownerName.set(TextUtils.isEmpty(userInfo.nameCard) ? userInfo.userName : userInfo.nameCard);
+        }
         if (TextUtils.equals(userInfo.userId, mConferenceState.userModel.userId)) {
             if (mConferenceState.userModel.getRole() == TUIRoomDefine.Role.GENERAL_USER
                     && userInfo.userRole != TUIRoomDefine.Role.GENERAL_USER) {
@@ -205,20 +217,16 @@ public class RoomEngineObserver extends TUIRoomObserver {
         mUserState.handleUserRoleChanged(userInfo);
     }
 
-    @Override
-    public void onUserInfoChanged(TUIRoomDefine.UserInfo userInfo, List<TUIRoomDefine.UserInfoModifyFlag> modifyFlag) {
-        Log.d(TAG, "onUserInfoChanged userId=" + userInfo.userId + " role=" + userInfo.userRole);
-        if (userInfo.userRole == TUIRoomDefine.Role.ROOM_OWNER) {
-            mConferenceState.roomState.ownerName.set(userInfo.userName);
+    private void handleNameCardChangedIfNeeded(TUIRoomDefine.UserInfo userInfo, List<TUIRoomDefine.UserInfoModifyFlag> modifyFlag) {
+        if (!modifyFlag.contains(NAME_CARD)) {
+            return;
         }
-        if (modifyFlag.contains(NAME_CARD)) {
-            mSeatState.updateTakeSeatRequestUserName(userInfo.userId, userInfo.nameCard);
-            mConferenceState.setUserNameCard(userInfo.userId, userInfo.nameCard);
-            mConferenceState.updateTakeSeatRequestUserName(userInfo.userId, userInfo.nameCard);
-            mUserState.userNameCardChanged(userInfo);
-            if (userInfo.userRole == TUIRoomDefine.Role.ROOM_OWNER) {
-                mRoomState.ownerName.set(userInfo.nameCard);
-            }
+        mSeatState.updateTakeSeatRequestUserName(userInfo.userId, userInfo.nameCard);
+        mConferenceState.setUserNameCard(userInfo.userId, userInfo.nameCard);
+        mConferenceState.updateTakeSeatRequestUserName(userInfo.userId, userInfo.nameCard);
+        mUserState.userNameCardChanged(userInfo);
+        if (userInfo.userRole == TUIRoomDefine.Role.ROOM_OWNER) {
+            mRoomState.ownerName.set(userInfo.nameCard);
         }
     }
 
@@ -300,15 +308,6 @@ public class RoomEngineObserver extends TUIRoomObserver {
     }
 
     @Override
-    public void onRoomMaxSeatCountChanged(String roomId, int maxSeatCount) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(ConferenceEventConstant.KEY_ROOM_ID, roomId);
-        map.put(ConferenceEventConstant.KEY_MAX_SEAT_COUNT, maxSeatCount);
-        ConferenceEventCenter.getInstance()
-                .notifyEngineEvent(ConferenceEventCenter.RoomEngineEvent.ROOM_MAX_SEAT_COUNT_CHANGED, map);
-    }
-
-    @Override
     public void onSeatListChanged(List<TUIRoomDefine.SeatInfo> seatList, List<TUIRoomDefine.SeatInfo> seatedList,
                                   List<TUIRoomDefine.SeatInfo> leftList) {
         Log.d(TAG, "onSeatListChanged");
@@ -375,9 +374,9 @@ public class RoomEngineObserver extends TUIRoomObserver {
     }
 
     @Override
-    public void onKickedOffSeat(String userId) {
+    public void onKickedOffSeat(int seatIndex, TUIRoomDefine.UserInfo operateUser) {
         Map<String, Object> map = new HashMap<>();
-        map.put(ConferenceEventConstant.KEY_USER_ID, userId);
+        map.put(ConferenceEventConstant.KEY_USER_ID, operateUser.userId);
         ConferenceEventCenter.getInstance().notifyEngineEvent(ConferenceEventCenter.RoomEngineEvent.KICKED_OFF_SEAT, map);
         mConferenceState.audioModel.setMicOpen(false);
     }

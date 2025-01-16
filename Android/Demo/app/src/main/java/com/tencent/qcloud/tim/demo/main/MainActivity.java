@@ -190,8 +190,9 @@ public class MainActivity extends BaseLightActivity {
 
     private void reloadTabData() {
         DemoLog.i(TAG, "reloadTabData");
-        ((TUIContactFragment)contactsBean.fragment).reloadData();
-        ((TUICommunityFragment)communityBean.fragment).reloadData();
+        ((TUIContactFragment) contactsBean.fragment).reloadData();
+        ((TUICommunityFragment) communityBean.fragment).reloadData();
+        ((ProfileFragment) profileBean.fragment).reloadData();
     }
 
     private void initUnreadCountReceiver() {
@@ -558,7 +559,7 @@ public class MainActivity extends BaseLightActivity {
         } else {
             mainTitleBar.getLeftGroup().setVisibility(View.VISIBLE);
             ImageView imageView = mainTitleBar.getLeftIcon();
-            imageView.setBackgroundResource(R.drawable.title_bar_left_icon);
+            imageView.setBackgroundResource(com.tencent.qcloud.tuikit.timcommon.R.drawable.common_title_bar_home_icon);
             int iconwidth = ScreenUtil.dip2px(TUIConstants.TIMAppKit.BACK_RTCUBE_HOME_ICON_WIDTH);
             int iconHeight = ScreenUtil.dip2px(TUIConstants.TIMAppKit.BACK_RTCUBE_HOME_ICON_HEIGHT);
             ViewGroup.LayoutParams iconParams = imageView.getLayoutParams();
@@ -664,13 +665,13 @@ public class MainActivity extends BaseLightActivity {
         };
         PopMenuAction action = new PopMenuAction();
         action.setActionName(getResources().getString(R.string.add_friend));
-        action.setIconResId(com.tencent.qcloud.tuikit.tuicontact.R.drawable.contact_add_friend);
+        action.setIconResId(R.drawable.demo_add_friend);
         action.setActionClickListener(popActionClickListener);
         menuActionList.add(action);
 
         action = new PopMenuAction();
         action.setActionName(getResources().getString(R.string.add_group));
-        action.setIconResId(com.tencent.qcloud.tuikit.tuicontact.R.drawable.contact_add_group);
+        action.setIconResId(R.drawable.demo_add_group);
         action.setActionClickListener(popActionClickListener);
         menuActionList.add(action);
         menu.setMenuAction(menuActionList);

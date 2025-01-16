@@ -11,7 +11,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseMinimalistLi
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
-import com.tencent.qcloud.tuikit.tuicontact.minimalistui.util.ContactStartChatUtils;
+import com.tencent.qcloud.tuikit.tuicontact.minimalistui.util.MinimalistUIUtils;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 
@@ -57,7 +57,7 @@ public class GroupListMinimalistActivity extends BaseMinimalistLightActivity {
                 } else if (!TextUtils.isEmpty(contact.getNickName())) {
                     chatName = contact.getNickName();
                 }
-                ContactStartChatUtils.startChatActivity(contact.getId(), ContactItemBean.TYPE_GROUP, chatName, contact.getAvatarUrl(), null);
+                MinimalistUIUtils.startChatActivity(contact.getId(), ContactItemBean.TYPE_GROUP, chatName, contact.getAvatarUrl(), null);
             }
         });
     }

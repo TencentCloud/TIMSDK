@@ -28,12 +28,15 @@ public class ConferenceMainActivity extends AppCompatActivity {
 
     private final long mFirstStartTime = SystemClock.elapsedRealtime();
 
+    private Intent mNewIntent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate : " + this);
         initStatusBar();
         setContentView(R.layout.tuiroomkit_activity_conference_main);
+        dismissFloatWindowIfNeeded();
         ConferenceMainFragment fragment = new ConferenceMainFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.app_fl_conference_main, fragment);
@@ -42,7 +45,6 @@ public class ConferenceMainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (isRepeatConference(intent)) {
             showRepeatConferenceDialog();
-            dismissFloatWindowIfNeeded();
             return;
         }
         if (!startConferenceIfNeeded(intent, fragment)) {
@@ -56,9 +58,22 @@ public class ConferenceMainActivity extends AppCompatActivity {
         if (SystemClock.elapsedRealtime() - mFirstStartTime < DEBOUNCE_TIME_MS) {
             return;
         }
-        if (isRepeatConference(intent)) {
-            showRepeatConferenceDialog();
+        mNewIntent = intent;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mNewIntent == null) {
+            return;
         }
+        if (ConferenceController.sharedInstance().getViewState().isInPictureInPictureMode.get()) {
+            return;
+        }
+        if (!isRepeatConference(mNewIntent)) {
+            return;
+        }
+        showRepeatConferenceDialog();
     }
 
     @Override
@@ -98,9 +113,22 @@ public class ConferenceMainActivity extends AppCompatActivity {
     }
 
     private boolean isRepeatConference(Intent intent) {
-        boolean isWithParams = isConferenceParams(intent);
-        boolean isProcessRoom = ConferenceController.sharedInstance().getViewController().isProcessRoom();
-        return isWithParams && isProcessRoom;
+        if (!isConferenceParams(intent)) {
+            return false;
+        }
+        if (!ConferenceController.sharedInstance().getViewController().isProcessRoom()) {
+            return false;
+        }
+        Serializable serializable = intent.getSerializableExtra(ConferenceDefine.KEY_START_CONFERENCE_PARAMS);
+        if (serializable instanceof ConferenceDefine.StartConferenceParams) {
+            return !((ConferenceDefine.StartConferenceParams) serializable).roomId.equals(ConferenceController.sharedInstance().getRoomState().roomId.get());
+        }
+        serializable = intent.getSerializableExtra(ConferenceDefine.KEY_JOIN_CONFERENCE_PARAMS);
+        if (serializable instanceof ConferenceDefine.JoinConferenceParams) {
+            return !((ConferenceDefine.JoinConferenceParams) serializable).roomId.equals(ConferenceController.sharedInstance().getRoomState().roomId.get());
+        }
+
+        return true;
     }
 
     private boolean isConferenceParams(Intent intent) {

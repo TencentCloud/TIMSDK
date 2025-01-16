@@ -14,7 +14,7 @@
         android:gravity="center"
         android:layout_marginStart="@dimen/search_bar_margin"
         android:layout_marginEnd="@dimen/search_bar_margin"
-        android:background="@drawable/shape_search"
+        android:background="@drawable/search_search_box_bg"
         android:orientation="horizontal">
 
         <ImageView
@@ -22,7 +22,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:background="@drawable/core_search_icon"
-            android:textCursorDrawable="@drawable/my_cursor" />
+            android:textCursorDrawable="@drawable/common_edit_cursor" />
 
         <TextView
             android:id="@+id/search_title"

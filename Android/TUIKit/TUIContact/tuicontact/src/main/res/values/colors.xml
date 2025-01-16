@@ -2,44 +2,23 @@
 <resources>
     <color name="partTranslucent">#39000000</color>
     <color name="slide_bar_hint_color">#CCCCCC</color>
-    <color name="title_bar_font_color">#016fff</color>
 
-    <color name="line">#DDDDDD</color>
-    <color name="navigation_bar_color">#F7F7F7</color>
-    <color name="transparent">#00000000</color>
-    <color name="list_bottom_text_bg">#999999</color>
-
-    <color name="font_blue">#066fff</color>
-    <color name="green">#70C160</color>
-    <color name="white">#FFFFFF</color>
-    <color name="text_color_gray">#696969</color>
-    <color name="black_font_color">#181818</color>
-    <color name="text_tips_color">#A5A5A5</color>
-
-    <color name="text_gray1">#777777</color>
     <color name="split_lint_color">#D9D9D9</color>
-
-    <color name="black">#000000</color>
-    <color name="dialog_line_bg">#c6c6c6</color>
-
-    <color name="text_positive">#ffffff</color>
-    <color name="text_positive_hover">#ffffff</color>
-
-    <color name="btn_positive">#00a4ff</color>
-    <color name="btn_positive_hover">#006eff</color>
-
-    <color name="btn_negative">#ffffff</color>
-    <color name="btn_negative_hover">#cc3428</color>
-
-    <color name="text_negative">#fb6155</color>
-    <color name="text_negative_hover">#FFFFFF</color>
-
-    <color name="read_dot_bg">#f74c31</color>
-
-    <color name="contact_profile_btn_positive_color">#147AFF</color>
-    <color name="contact_profile_btn_negative_color">#FF584C</color>
 
     <color name="contact_profile_btn_pressed_color">#E6E9EB</color>
     <color name="contact_profile_member_name_text_color">#888888</color>
+
+    <color name="text_color_black">#000</color>
+    <color name="timcommon_btn_positive">#00a4ff</color>
+    <color name="timcommon_btn_positive_hover">#006eff</color>
+
+    <color name="timcommon_btn_negative">#ffffff</color>
+    <color name="timcommon_btn_negative_hover">#cc3428</color>
+
+    <color name="group_btn_negative">#ffffff</color>
+
+    <color name="item_split_color">#cccccc</color>
+
+    <color name="group_profile_member_name_text_color">#888888</color>
 
 </resources>

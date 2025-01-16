@@ -8,28 +8,8 @@
     <color name="chat_title_line_color">#E6E6E6</color>
     <color name="input_title_line_color">#D2D2D2</color>
 
-    <color name="chat_title_bar_bg">#EBF0F6</color>
-
     <color name="voice_pressed">#DEDEDE</color>
     <color name="voice_normal">#ffffff</color>
-
-    <color name="line">#DDDDDD</color>
-    <color name="navigation_bar_color">#F7F7F7</color>
-    <color name="transparent">#00000000</color>
-
-    <color name="green">#70C160</color>
-    <color name="white">#FFFFFF</color>
-    <color name="text_color_gray">#696969</color>
-    <color name="black_font_color">#181818</color>
-
-    <color name="list_bottom_text_bg">#999999</color>
-    <color name="font_blue">#066fff</color>
-
-    <color name="text_gray1">#777777</color>
-    <color name="split_lint_color">#D9D9D9</color>
-
-    <color name="black">#333030</color>
-    <color name="dialog_line_bg">#c6c6c6</color>
 
     <color name="chat_text_color">#000000</color>
     <color name="chat_message_bubble_bg_stoke_color">#DDDDDD</color>
@@ -42,16 +22,19 @@
     <color name="reply_abstract_line_bg">#1A444444</color>
     <color name="reply_msg_text">#FF888888</color>
 
-
-    <color name="chat_unread_count_tip_color">#AABCD1</color>
-    <color name="jum_message_text_color">#147AFF</color>
-
     <color name="order_message_color">#FF7201</color>
     <color name="window_background_color">#BF000000</color>
 
     <color name="tuiemoji_divide_line_bg_color">#1A000000</color>
 
     <color name="tuichat_face_view_bg">#EBF0F6</color>
-    <color name="chat_clickable_text_color">#5B6B92</color>
+    <color name="contact_profile_btn_pressed_color">#E6E9EB</color>
+
+    <color name="group_minimalist_profile_item_bg_color">#F0F9F9F9</color>
+    <color name="group_minimalist_profile_item_warning_text_color">#FFFF584C</color>
+
+    <color name="contact_minimalist_profile_item_bg_color">#F0F9F9F9</color>
+    <color name="contact_minimalist_profile_item_warning_text_color">#FFFF584C</color>
+    <color name="contact_line_controller_color">#F0F9F9F9</color>
 
 </resources>

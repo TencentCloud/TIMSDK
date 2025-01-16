@@ -42,7 +42,7 @@ public class ActionsPagerAdapter extends RecyclerView.Adapter<ActionsPagerAdapte
         GridView gridView = holder.gridView;
         holder.setActions(subBaseActions);
         gridView.setNumColumns(COLUMN_COUNT);
-        gridView.setSelector(R.color.transparent);
+        gridView.setSelector(com.tencent.qcloud.tuikit.timcommon.R.color.transparent);
         gridView.setHorizontalSpacing(60);
         gridView.setVerticalSpacing(60);
         gridView.setGravity(Gravity.CENTER);

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -19,11 +20,12 @@ import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageConte
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.ImageVideoScanActivity;
+import com.tencent.qcloud.tuikit.tuichat.component.imagevideobrowse.ImageVideoBrowseActivity;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ChatRingProgressBar;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ProgressPresenter;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatFileDownloadPresenter;
@@ -41,7 +43,7 @@ public class VideoMessageHolder extends MessageContentHolder {
     private FrameLayout progressContainer;
     private ChatRingProgressBar fileProgressBar;
     private TextView progressText;
-    private ImageView progressIcon;
+    private ImageView downloadIcon;
 
     private TUIValueCallback downloadSnapshotCallback;
     private TUIValueCallback downloadVideoCallback;
@@ -56,7 +58,7 @@ public class VideoMessageHolder extends MessageContentHolder {
         progressContainer = itemView.findViewById(R.id.progress_container);
         fileProgressBar = itemView.findViewById(R.id.file_progress_bar);
         progressText = itemView.findViewById(R.id.file_progress_text);
-        progressIcon = itemView.findViewById(R.id.file_progress_icon);
+        downloadIcon = itemView.findViewById(R.id.file_download_icon);
     }
 
     @Override
@@ -87,7 +89,7 @@ public class VideoMessageHolder extends MessageContentHolder {
             }
             msgContentFrame.setOnClickListener(null);
         } else {
-            performVideo((VideoMessageBean) msg, position);
+            performVideo((VideoMessageBean) msg);
         }
     }
 
@@ -107,21 +109,25 @@ public class VideoMessageHolder extends MessageContentHolder {
         return params;
     }
 
-    private void performVideo(final VideoMessageBean msg, final int position) {
-        contentImage.setLayoutParams(getImageParams(contentImage.getLayoutParams(), msg));
-        progressContainer.setLayoutParams(getImageParams(progressContainer.getLayoutParams(), msg));
+    private void performVideo(final VideoMessageBean msg) {
+        if (msg.isSending() && msg.getImgHeight() == 0 && msg.getImgWidth() == 0) {
+            int[] size = ImageUtil.getImageSize(msg.getSnapshotPath());
+            msg.setImgWidth(size[0]);
+            msg.setImgHeight(size[1]);
+        }
+        setLayoutParams(msg);
         progressContainer.setVisibility(View.GONE);
         progressText.setVisibility(View.GONE);
+        downloadIcon.setVisibility(View.GONE);
         sendingProgress.setVisibility(View.GONE);
         videoPlayBtn.setVisibility(View.VISIBLE);
         videoDurationText.setVisibility(View.VISIBLE);
 
-        progressListener = new ProgressPresenter.ProgressListener() {
-            @Override
-            public void onProgress(int progress) {
-                updateProgress(progress, msg);
-            }
-        };
+        int currentProgress = ProgressPresenter.getProgress(msg.getId());
+        fileProgressBar.setProgress(currentProgress);
+        progressText.setText(currentProgress + "%");
+
+        progressListener = progress -> updateProgress(progress, msg);
         ProgressPresenter.registerProgressListener(msg.getId(), progressListener);
         if (!msg.isHasReaction()) {
             setMessageBubbleBackground(null);
@@ -164,19 +170,20 @@ public class VideoMessageHolder extends MessageContentHolder {
         final String videoPath = ChatFileDownloadPresenter.getVideoPath(msg);
         if (!FileUtil.isFileExists(videoPath)) {
             showProgressBar();
+            downloadIcon.setVisibility(View.VISIBLE);
+        } else {
+            downloadIcon.setVisibility(View.GONE);
         }
 
-        if (FileUtil.isFileExists(videoPath) && msg.getStatus() == TUIMessageBean.MSG_STATUS_SENDING) {
+        if (FileUtil.isFileExists(videoPath) && msg.isSending()) {
             showProgressBar();
+            progressText.setVisibility(View.VISIBLE);
         }
 
         if (isMultiSelectMode) {
-            msgContentFrame.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onItemClickListener != null) {
-                        onItemClickListener.onMessageClick(v, msg);
-                    }
+            msgContentFrame.setOnClickListener(v -> {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onMessageClick(v, msg);
                 }
             });
             return;
@@ -186,7 +193,7 @@ public class VideoMessageHolder extends MessageContentHolder {
             public void onProgress(long currentSize, long totalSize) {
                 int progress = (int) (currentSize * 100 / totalSize);
                 ProgressPresenter.updateProgress(msg.getId(), progress);
-                TUIChatLog.i(TAG, "downloadVideo progress current:" + currentSize + ", total:" + totalSize);
+                TUIChatLog.d(TAG, "downloadVideo progress current:" + currentSize + ", total:" + totalSize);
             }
 
             @Override
@@ -213,7 +220,7 @@ public class VideoMessageHolder extends MessageContentHolder {
                 }
                 if (FileUtil.isFileExists(videoPath)) {
                     progressContainer.setVisibility(View.GONE);
-                    Intent intent = new Intent(TUIChatService.getAppContext(), ImageVideoScanActivity.class);
+                    Intent intent = new Intent(TUIChatService.getAppContext(), ImageVideoBrowseActivity.class);
                     intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                     if (isForwardMode) {
                         if (getForwardDataSource() != null && !getForwardDataSource().isEmpty()) {
@@ -231,6 +238,11 @@ public class VideoMessageHolder extends MessageContentHolder {
         });
     }
 
+    private void setLayoutParams(VideoMessageBean msg) {
+        contentImage.setLayoutParams(getImageParams(contentImage.getLayoutParams(), msg));
+        progressContainer.setLayoutParams(getImageParams(progressContainer.getLayoutParams(), msg));
+    }
+
     private void loadSnapshotImage(TUIMessageBean messageBean, String snapshotPath) {
         if (TextUtils.equals(msgID, messageBean.getId())) {
             GlideEngine.loadCornerImageWithoutPlaceHolder(contentImage, snapshotPath, null, DEFAULT_RADIUS);
@@ -239,9 +251,8 @@ public class VideoMessageHolder extends MessageContentHolder {
 
     private void showProgressBar() {
         progressContainer.setVisibility(View.VISIBLE);
-        progressIcon.setVisibility(View.VISIBLE);
         fileProgressBar.setVisibility(View.VISIBLE);
-        fileProgressBar.setProgress(0);
+        progressText.setVisibility(View.GONE);
         videoPlayBtn.setVisibility(View.GONE);
     }
 
@@ -249,12 +260,10 @@ public class VideoMessageHolder extends MessageContentHolder {
         if (!TextUtils.equals(messageBean.getId(), msgID)) {
             return;
         }
-        progressContainer.setVisibility(View.VISIBLE);
-        fileProgressBar.setVisibility(View.VISIBLE);
         fileProgressBar.setProgress(progress);
         progressText.setVisibility(View.VISIBLE);
         progressText.setText(progress + "%");
-        progressIcon.setVisibility(View.GONE);
+        downloadIcon.setVisibility(View.GONE);
         if (progress == 100) {
             videoPlayBtn.setVisibility(View.VISIBLE);
             progressContainer.setVisibility(View.GONE);

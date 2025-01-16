@@ -43,7 +43,7 @@ public class CollectionBean implements Serializable {
         this.type = type;
     }
 
-    public static class FormItem {
+    public static class FormItem implements Serializable {
         private String content;
         private String description;
 

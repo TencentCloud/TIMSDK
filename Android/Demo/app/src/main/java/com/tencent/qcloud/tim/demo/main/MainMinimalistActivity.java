@@ -178,7 +178,8 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
 
     private void reloadTabData() {
         DemoLog.i(TAG, "reloadTabData");
-        ((TUIContactMinimalistFragment)contactsBean.fragment).reloadData();
+        ((TUIContactMinimalistFragment) contactsBean.fragment).reloadData();
+        ((ProfileMinimalistFragment) profileBean.fragment).reloadData();
     }
 
     private void initUnreadCountReceiver() {

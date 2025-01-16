@@ -12,6 +12,8 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
+import com.tencent.qcloud.tuikit.tuicontact.minimalistui.MinimalistUIExtensionObserver;
+import com.tencent.qcloud.tuikit.tuicontact.minimalistui.util.MinimalistUIUtils;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactLayout;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
@@ -63,10 +65,7 @@ public class TUIContactMinimalistFragment extends Fragment {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     TUIContactService.getAppContext().startActivity(intent);
                 } else {
-                    Intent intent = new Intent(TUIContactService.getAppContext(), FriendProfileMinimalistActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra(TUIConstants.TUIContact.USER_ID, contact.getId());
-                    TUIContactService.getAppContext().startActivity(intent);
+                    MinimalistUIUtils.showContactDetails(contact.getId());
                 }
             }
         });

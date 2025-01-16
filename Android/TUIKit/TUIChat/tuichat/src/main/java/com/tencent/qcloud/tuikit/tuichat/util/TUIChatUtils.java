@@ -22,6 +22,8 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
+import com.tencent.qcloud.tuikit.tuichat.R;
+import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.ChatEventListener;
 import java.util.ArrayList;
@@ -139,5 +141,23 @@ public class TUIChatUtils {
         Map<String, Object> param = new HashMap<>();
         param.put(TUIConstants.TUIChat.Event.MessageStatus.MESSAGE_LIST, messageBeans);
         TUICore.notifyEvent(TUIConstants.TUIChat.Event.MessageStatus.KEY, TUIConstants.TUIChat.Event.MessageStatus.SUB_KEY_PROCESS_MESSAGE, param);
+    }
+
+
+    public static String convertGroupTypeText(String groupType) {
+        String groupText = "";
+        if (TextUtils.isEmpty(groupType)) {
+            return groupText;
+        }
+        if (TextUtils.equals(groupType, V2TIMManager.GROUP_TYPE_WORK)) {
+            groupText = TUIChatService.getAppContext().getString(R.string.private_group);
+        } else if (TextUtils.equals(groupType, V2TIMManager.GROUP_TYPE_PUBLIC)) {
+            groupText = TUIChatService.getAppContext().getString(R.string.public_group);
+        } else if (TextUtils.equals(groupType, V2TIMManager.GROUP_TYPE_MEETING) || TextUtils.equals(groupType, V2TIMManager.GROUP_TYPE_AVCHATROOM)) {
+            groupText = TUIChatService.getAppContext().getString(R.string.chat_room);
+        } else if (TextUtils.equals(groupType, TUIConstants.GroupType.TYPE_COMMUNITY)) {
+            groupText = TUIChatService.getAppContext().getString(R.string.community_group);
+        }
+        return groupText;
     }
 }

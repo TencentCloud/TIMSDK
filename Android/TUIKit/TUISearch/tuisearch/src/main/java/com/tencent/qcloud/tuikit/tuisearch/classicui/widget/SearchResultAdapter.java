@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuisearch.classicui.widget;
 
-import android.animation.Animator;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.SpannableString;
@@ -22,7 +21,7 @@ import com.tencent.qcloud.tuikit.tuisearch.R;
 import com.tencent.qcloud.tuikit.tuisearch.TUISearchConstants;
 import com.tencent.qcloud.tuikit.tuisearch.bean.SearchDataBean;
 import com.tencent.qcloud.tuikit.tuisearch.interfaces.ISearchResultAdapter;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -100,7 +99,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ContactViewHolder holder = new ContactViewHolder(LayoutInflater.from(context).inflate(R.layout.item_contact_search, parent, false));
+        ContactViewHolder holder = new ContactViewHolder(LayoutInflater.from(context).inflate(R.layout.search_item_contact, parent, false));
         return holder;
     }
 

@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PointF;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import com.tencent.qcloud.tuicore.TUIConstants;
@@ -26,6 +28,7 @@ import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.SelectionHel
 import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.component.scroller.CenteredSmoothScroller;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnChatPopActionClickListener;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener;
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
@@ -494,16 +497,14 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         }
     }
 
-    @Override
-    public void scrollToPosition(int position) {
-        if (getAdapter() != null && position < getAdapter().getItemCount()) {
-            super.scrollToPosition(position);
-        }
-    }
-
     public void smoothScrollToPosition(int position) {
         if (getAdapter() != null && position < getAdapter().getItemCount()) {
-            super.smoothScrollToPosition(position);
+            CenteredSmoothScroller smoothScroller = new CenteredSmoothScroller(getContext());
+            smoothScroller.setTargetPosition(position);
+            RecyclerView.LayoutManager layoutManager = getLayoutManager();
+            if (layoutManager != null) {
+                layoutManager.startSmoothScroll(smoothScroller);
+            }
         }
     }
 

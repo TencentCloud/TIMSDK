@@ -7,6 +7,7 @@ import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomE
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_USER_ENTER_ROOM;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_USER_EXIT_ROOM;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
@@ -136,15 +137,15 @@ public class RoomObserver extends TUIRoomObserver implements ConferenceEventCent
     }
 
     @Override
-    public void onUserRoleChanged(String userId, TUIRoomDefine.Role userRole) {
-        super.onUserRoleChanged(userId, userRole);
+    public void onUserInfoChanged(TUIRoomDefine.UserInfo userInfo, List<TUIRoomDefine.UserInfoModifyFlag> modifyFlag) {
+        super.onUserInfoChanged(userInfo, modifyFlag);
         if (mRoomMsgData == null) {
             return;
         }
-        Log.d(TAG, "onUserRoleChanged userId=" + userId + " userRole=" + userRole);
-        if (userRole == ROOM_OWNER) {
-            mRoomMsgData.setRoomManagerId(userId);
-            mRoomMsgData.setRoomManagerName(TUILogin.getNickName());
+        Log.d(TAG, "onUserInfoChanged userId=" + userInfo.userId + " userRole=" + userInfo.userRole);
+        if (userInfo.userRole == ROOM_OWNER) {
+            mRoomMsgData.setRoomManagerId(userInfo.userId);
+            mRoomMsgData.setRoomManagerName(TextUtils.isEmpty(userInfo.nameCard) ? userInfo.userName : userInfo.nameCard);
             mRoomMsgManager.updateGroupRoomMessage(mRoomMsgData);
         }
     }

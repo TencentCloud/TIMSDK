@@ -64,11 +64,11 @@
 
                 <ImageView
                     android:id="@+id/rightArrow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_gravity="center"
                     android:layout_marginStart="10.56dp"
-                    android:src="@drawable/arrow_right" />
+                    android:src="@drawable/common_arrow_right" />
             </LinearLayout>
 
 

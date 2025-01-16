@@ -59,8 +59,8 @@ final class TUICallingService implements ITUINotification, ITUIService, ITUIExte
 
         TUICore.registerExtension(TUIConstants.TUIChat.Extension.InputMore.CLASSIC_EXTENSION_ID, this);
         TUICore.registerExtension(TUIConstants.TUIChat.Extension.InputMore.MINIMALIST_EXTENSION_ID, this);
-        TUICore.registerExtension(TUIConstants.TUIGroup.Extension.GroupProfileItem.MINIMALIST_EXTENSION_ID, this);
-        TUICore.registerExtension(TUIConstants.TUIGroup.Extension.GroupProfileItem.CLASSIC_EXTENSION_ID, this);
+        TUICore.registerExtension(TUIConstants.TUIContact.Extension.GroupProfileItem.MINIMALIST_EXTENSION_ID, this);
+        TUICore.registerExtension(TUIConstants.TUIContact.Extension.GroupProfileItem.CLASSIC_EXTENSION_ID, this);
         TUICore.registerExtension(TUIConstants.TUIContact.Extension.FriendProfileItem.CLASSIC_EXTENSION_ID, this);
         TUICore.registerExtension(TUIConstants.TUIContact.Extension.FriendProfileItem.MINIMALIST_EXTENSION_ID, this);
         TUICore.registerExtension(TUIConstants.TUIChat.Extension.ChatNavigationMoreItem.CLASSIC_EXTENSION_ID, this);
@@ -137,7 +137,7 @@ final class TUICallingService implements ITUINotification, ITUIService, ITUIExte
                 TUIConstants.TUIChat.Extension.InputMore.CLASSIC_EXTENSION_ID)) {
             return getClassicChatInputMoreExtension(param);
         } else if (TextUtils.equals(extensionID,
-                TUIConstants.TUIGroup.Extension.GroupProfileItem.MINIMALIST_EXTENSION_ID)) {
+                TUIConstants.TUIContact.Extension.GroupProfileItem.MINIMALIST_EXTENSION_ID)) {
             return getMinimalistGroupProfileExtension(param);
         } else if (TextUtils.equals(extensionID,
                 TUIConstants.TUIContact.Extension.FriendProfileItem.CLASSIC_EXTENSION_ID)) {
@@ -197,7 +197,7 @@ final class TUICallingService implements ITUINotification, ITUIService, ITUIExte
         TUIExtensionInfo videoCallExtension = new TUIExtensionInfo();
         videoCallExtension.setWeight(100);
 
-        String groupID = getOrDefault(param, TUIConstants.TUIGroup.Extension.GroupProfileItem.GROUP_ID, null);
+        String groupID = getOrDefault(param, TUIConstants.TUIContact.Extension.GroupProfileItem.GROUP_ID, null);
         ResultTUIExtensionEventListener voiceListener = new ResultTUIExtensionEventListener();
         voiceListener.mediaType = TUICallDefine.MediaType.Audio;
         voiceListener.groupID = groupID;
@@ -211,14 +211,14 @@ final class TUICallingService implements ITUINotification, ITUIService, ITUIExte
         voiceCallExtension.setIcon(R.drawable.tuicallkit_profile_minimalist_audio_icon);
         voiceCallExtension.setExtensionListener(voiceListener);
         voiceListener.activityResultCaller = getOrDefault(param,
-                TUIConstants.TUIGroup.Extension.GroupProfileItem.CONTEXT, null);
+                TUIConstants.TUIContact.Extension.GroupProfileItem.CONTEXT, null);
         voiceListener.isClassicUI = false;
         videoCallExtension.setText(appContext.getString(R.string.tuicalling_video_call));
         videoCallExtension.setIcon(R.drawable.tuicallkit_profile_minimalist_video_icon);
         videoCallExtension.setExtensionListener(videoListener);
         videoListener.isClassicUI = false;
         videoListener.activityResultCaller = getOrDefault(param,
-                TUIConstants.TUIGroup.Extension.GroupProfileItem.CONTEXT, null);
+                TUIConstants.TUIContact.Extension.GroupProfileItem.CONTEXT, null);
         List<TUIExtensionInfo> extensionInfoList = new ArrayList<>();
         extensionInfoList.add(videoCallExtension);
         extensionInfoList.add(voiceCallExtension);

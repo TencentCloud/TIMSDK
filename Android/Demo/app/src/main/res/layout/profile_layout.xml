@@ -94,12 +94,12 @@
                     tools:text="believe in light" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_alignTop="@id/self_account_tag"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
-                    android:background="@drawable/arrow_right" />
+                    android:background="@drawable/common_arrow_right" />
 
             </RelativeLayout>
 
@@ -117,7 +117,7 @@
                 android:layout_width="match_parent"
                 android:layout_marginTop="10dp"
                 android:layout_height="@dimen/demo_logout_btn_height"
-                android:background="@color/bg_negative_btn"
+                android:background="@color/common_bg_negative_btn"
                 android:textSize="16.32sp"
                 android:lineHeight="24.96sp"
                 android:text="@string/exit"

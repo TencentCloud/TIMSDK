@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.tencent.cloud.tuikit.roomkit.view.component.RoundRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="@dimen/tuiroomkit_room_video_float_view_width"
-    android:layout_height="@dimen/tuiroomkit_room_video_float_view_height"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/tuiroomkit_color_float_Window_bg">
 
     <androidx.constraintlayout.utils.widget.ImageFilterView
@@ -56,4 +56,4 @@
 
     </LinearLayout>
 
-</com.tencent.cloud.tuikit.roomkit.view.component.RoundRelativeLayout>
+</RelativeLayout>

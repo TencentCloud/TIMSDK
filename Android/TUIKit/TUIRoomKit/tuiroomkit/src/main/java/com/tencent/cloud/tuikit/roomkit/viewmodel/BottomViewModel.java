@@ -13,12 +13,15 @@ import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
@@ -30,6 +33,7 @@ import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceSessionImpl;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceState;
+import com.tencent.cloud.tuikit.roomkit.model.data.ViewState;
 import com.tencent.cloud.tuikit.roomkit.model.entity.BottomItemData;
 import com.tencent.cloud.tuikit.roomkit.model.entity.BottomSelectItemData;
 import com.tencent.cloud.tuikit.roomkit.model.entity.UserEntity;
@@ -41,8 +45,11 @@ import com.tencent.cloud.tuikit.roomkit.view.page.widget.Chat.ChatActivity;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.Dialog.AIAssistantDialog;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.ITUIService;
 import com.tencent.qcloud.tuicore.interfaces.TUIServiceCallback;
+import com.tencent.qcloud.tuicore.util.TUIBuild;
+import com.trtc.tuikit.common.system.ContextProvider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,8 +57,8 @@ import java.util.List;
 import java.util.Map;
 
 public class BottomViewModel implements ConferenceEventCenter.RoomEngineEventResponder {
-    private static final String TAG          = "BottomMainViewModel";
-    private static final int    SEAT_INDEX   = -1;
+    private static final String TAG        = "BottomMainViewModel";
+    private static final int    SEAT_INDEX = -1;
 
     private static final int TIME_OUT_60S = 60;
 
@@ -752,14 +759,28 @@ public class BottomViewModel implements ConferenceEventCenter.RoomEngineEventRes
         floatItemData.setOnItemClickListener(new BottomItemData.OnItemClickListener() {
             @Override
             public void onItemClick() {
+                if (isPictureInPictureSupported()) {
+                    ConferenceController.sharedInstance().getViewState().floatWindowType = ViewState.FloatWindowType.PICTURE_IN_PICTURE;
+                    ConferenceEventCenter.getInstance().notifyUIEvent(
+                            ConferenceEventCenter.RoomKitUIEvent.ENTER_PIP_MODE, null);
+                    return;
+                }
                 if (!DrawOverlaysPermissionUtil.isGrantedDrawOverlays()) {
                     DrawOverlaysPermissionUtil.requestDrawOverlays();
                     return;
                 }
+                ConferenceController.sharedInstance().getViewState().floatWindowType = ViewState.FloatWindowType.WINDOW_MANAGER;
                 ConferenceController.sharedInstance(mContext).enterFloatWindow();
             }
         });
         return floatItemData;
+    }
+
+    private boolean isPictureInPictureSupported() {
+        if (TUIBuild.getVersionInt() < Build.VERSION_CODES.O) {
+            return false;
+        }
+        return ContextProvider.getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE);
     }
 
     private BottomItemData createBeautyItem() {

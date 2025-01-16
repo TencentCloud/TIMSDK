@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import androidx.annotation.Nullable;
@@ -8,8 +7,9 @@ import com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseMinimalistLightActivity;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.tuicontact.R;
-import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
+import com.tencent.qcloud.tuikit.tuicontact.minimalistui.MinimalistUIExtensionObserver;
+import com.tencent.qcloud.tuikit.tuicontact.minimalistui.util.MinimalistUIUtils;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 
@@ -39,14 +39,7 @@ public class BlackListMinimalistActivity extends BaseMinimalistLightActivity {
         mTitleBar.getRightGroup().setVisibility(View.GONE);
 
         mListView = findViewById(R.id.black_list);
-        mListView.setOnItemClickListener(new ContactListView.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position, ContactItemBean contact) {
-                Intent intent = new Intent(BlackListMinimalistActivity.this, FriendProfileMinimalistActivity.class);
-                intent.putExtra(TUIContactConstants.ProfileType.CONTENT, contact);
-                startActivity(intent);
-            }
-        });
+        mListView.setOnItemClickListener((position, contact) -> MinimalistUIUtils.showContactDetails(contact.getId()));
     }
 
     @Override
