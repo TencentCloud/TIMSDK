@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIMultimediaPlugin'
-  spec.version      = '8.3.6498'
+  spec.version      = '8.4.6667'
   spec.platform     = :ios
   spec.ios.deployment_target = '10.0'
   spec.license      = { :type => 'Proprietary',
@@ -21,7 +21,7 @@ Pod::Spec.new do |spec|
   spec.static_framework = true
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/8.3.6498/ios/TUIMultimediaPlugin.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/8.4.6667/ios/TUIMultimediaPlugin.zip'}
   spec.source_files = 'TUIMultimediaPlugin/**/*.{h,m,mm,c}'
   spec.resource = ['TUIMultimediaPlugin/Resources/*.bundle']
   spec.resource_bundle = {
