@@ -18,6 +18,10 @@ public class TUIContactConstants {
      */
     public static final int JSON_VERSION_4 = 4;
     public static int version = JSON_VERSION_4;
+    public static final String GROUP_PROFILE_BEAN = "groupProfileBean";
+
+    public static final String GROUP_FACE_URL = "https://im.sdk.qcloud.com/download/tuikit-resource/group-avatar/group_avatar_%s.png";
+    public static final int GROUP_FACE_COUNT = 24;
 
     public static class Selection {
         public static final String SELECT_ALL = V2TIMGroupAtInfo.AT_ALL_TAG;
@@ -30,10 +34,6 @@ public class TUIContactConstants {
 
         public static final String USER_ID_SELECT = "user_id_select";
         public static final String USER_NAMECARD_SELECT = "user_namecard_select";
-    }
-
-    public static class ProfileType {
-        public static final String CONTENT = "content";
     }
 
     public static class GroupType {
@@ -49,4 +49,17 @@ public class TUIContactConstants {
         public static final String TYPE_WORK = "Work";
         public static final String TYPE_COMMUNITY = "Community";
     }
+
+    public static final class Group {
+        public static final int MODIFY_GROUP_NAME = 0X01;
+        public static final int MODIFY_GROUP_NOTICE = 0X02;
+        public static final int MODIFY_GROUP_JOIN_TYPE = 0X03;
+        public static final int MODIFY_GROUP_INVITE_TYPE = 0X04;
+        public static final int MODIFY_MEMBER_NAME = 0X11;
+
+        public static final String GROUP_ID = "group_id";
+        public static final String GROUP_INFO = "groupInfo";
+        public static final String MEMBER_APPLY = "apply";
+    }
+
 }

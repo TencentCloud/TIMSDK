@@ -152,7 +152,7 @@
                 android:background="@null"
                 android:textAlignment="viewStart"
                 android:hint="@string/account_hint"
-                android:textCursorDrawable="@drawable/my_cursor"
+                android:textCursorDrawable="@drawable/common_edit_cursor"
                 android:singleLine="true" />
 
         </LinearLayout>

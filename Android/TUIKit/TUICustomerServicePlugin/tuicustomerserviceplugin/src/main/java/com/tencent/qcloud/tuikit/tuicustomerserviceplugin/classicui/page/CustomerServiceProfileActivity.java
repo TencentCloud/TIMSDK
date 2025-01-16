@@ -6,9 +6,9 @@ import android.text.TextUtils;
 import androidx.annotation.Nullable;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuikit.timcommon.component.activities.BaseLightActivity;
-import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.FriendProfilePresenter;
+import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.R;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.classicui.widget.CustomerServiceProfileLayout;
 
 public class CustomerServiceProfileActivity extends BaseLightActivity {
@@ -32,7 +32,7 @@ public class CustomerServiceProfileActivity extends BaseLightActivity {
         if (!TextUtils.isEmpty(mChatId)) {
             layout.initData(mChatId);
         } else {
-            layout.initData(intent.getSerializableExtra(TUIContactConstants.ProfileType.CONTENT));
+            layout.initData(intent.getSerializableExtra(TUIConstants.TUIContact.CONTENT));
         }
     }
 }

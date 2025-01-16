@@ -53,7 +53,7 @@
                 android:layout_below="@id/topic_name_label"
                 android:layout_marginTop="17dp"
                 android:background="@null"
-                android:textCursorDrawable="@drawable/core_edit_cursor"
+                android:textCursorDrawable="@drawable/common_edit_cursor"
                 android:textColorHint="#999999"
                 android:textAlignment="viewStart"
                 android:hint="@string/community_edit_tips_input"

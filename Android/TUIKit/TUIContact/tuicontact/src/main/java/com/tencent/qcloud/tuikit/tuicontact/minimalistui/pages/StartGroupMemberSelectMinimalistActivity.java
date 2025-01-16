@@ -52,26 +52,26 @@ public class StartGroupMemberSelectMinimalistActivity extends BaseMinimalistLigh
         init();
     }
 
-    private ArrayList<String> getMembersNameCard() {
-        if (mMembers.size() == 0) {
+    private ArrayList<String> getMembersDisplayName() {
+        if (mMembers.isEmpty()) {
             return new ArrayList<>();
         }
 
         ArrayList<String> nameCards = new ArrayList<>();
         for (int i = 0; i < mMembers.size(); i++) {
-            nameCards.add(mMembers.get(i).getNameCard());
+            nameCards.add(mMembers.get(i).getDisplayName());
         }
         return nameCards;
     }
 
     private ArrayList<String> getMembersUserId() {
-        if (mMembers.size() == 0) {
+        if (mMembers.isEmpty()) {
             return new ArrayList<>();
         }
 
         ArrayList<String> userIds = new ArrayList<>();
         for (int i = 0; i < mMembers.size(); i++) {
-            userIds.add(mMembers.get(i).getAccount());
+            userIds.add(mMembers.get(i).getUserId());
         }
         return userIds;
     }
@@ -81,7 +81,7 @@ public class StartGroupMemberSelectMinimalistActivity extends BaseMinimalistLigh
 
         String groupId = getIntent().getStringExtra(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.GROUP_ID);
         if (TextUtils.isEmpty(groupId)) {
-            groupId = getIntent().getStringExtra(TUIConstants.TUIGroup.GROUP_ID);
+            groupId = getIntent().getStringExtra(TUIConstants.TUIContact.GROUP_ID);
         }
         String title = getIntent().getStringExtra(TUIContactConstants.Selection.TITLE);
         if (TextUtils.isEmpty(title)) {
@@ -158,13 +158,15 @@ public class StartGroupMemberSelectMinimalistActivity extends BaseMinimalistLigh
             public void onSelectChanged(ContactItemBean contact, boolean selected) {
                 if (selected) {
                     GroupMemberInfo memberInfo = new GroupMemberInfo();
-                    memberInfo.setAccount(contact.getId());
-                    memberInfo.setIconUrl(contact.getAvatarUrl());
-                    memberInfo.setNameCard(TextUtils.isEmpty(contact.getNickName()) ? contact.getId() : contact.getNickName());
+                    memberInfo.setUserId(contact.getId());
+                    memberInfo.setFaceUrl(contact.getAvatarUrl());
+                    memberInfo.setNameCard(contact.getNameCard());
+                    memberInfo.setFriendRemark(contact.getRemark());
+                    memberInfo.setNickName(contact.getNickName());
                     mMembers.add(memberInfo);
                 } else {
                     for (int i = mMembers.size() - 1; i >= 0; i--) {
-                        if (mMembers.get(i).getAccount().equals(contact.getId())) {
+                        if (mMembers.get(i).getUserId().equals(contact.getId())) {
                             mMembers.remove(i);
                         }
                     }
@@ -190,12 +192,12 @@ public class StartGroupMemberSelectMinimalistActivity extends BaseMinimalistLigh
         Intent i = new Intent();
         List<String> friendIdList = new ArrayList<>();
         for (GroupMemberInfo memberInfo : mMembers) {
-            friendIdList.add(memberInfo.getAccount());
+            friendIdList.add(memberInfo.getUserId());
         }
         i.putExtra(TUIContactConstants.Selection.LIST, (Serializable) friendIdList);
         i.putExtra(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.DATA_LIST, (Serializable) friendIdList);
-        i.putStringArrayListExtra(TUIContactConstants.Selection.USER_NAMECARD_SELECT, getMembersNameCard());
-        i.putStringArrayListExtra(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.USER_NAME_CARD_SELECT, getMembersNameCard());
+        i.putStringArrayListExtra(TUIContactConstants.Selection.USER_NAMECARD_SELECT, getMembersDisplayName());
+        i.putStringArrayListExtra(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.USER_NAME_CARD_SELECT, getMembersDisplayName());
         i.putStringArrayListExtra(TUIContactConstants.Selection.USER_ID_SELECT, getMembersUserId());
         i.putStringArrayListExtra(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.USER_ID_SELECT, getMembersUserId());
         i.putExtras(getIntent());
@@ -214,12 +216,12 @@ public class StartGroupMemberSelectMinimalistActivity extends BaseMinimalistLigh
         @NonNull
         @Override
         public SelectedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new SelectedViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.forward_contact_selector_item, parent, false));
+            return new SelectedViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_forward_contact_selector_item, parent, false));
         }
 
         @Override
         public void onBindViewHolder(@NonNull SelectedViewHolder holder, int position) {
-            GlideEngine.loadImage(holder.userIconView, mMembers.get(position).getIconUrl());
+            GlideEngine.loadImage(holder.userIconView, mMembers.get(position).getFaceUrl());
         }
 
         @Override

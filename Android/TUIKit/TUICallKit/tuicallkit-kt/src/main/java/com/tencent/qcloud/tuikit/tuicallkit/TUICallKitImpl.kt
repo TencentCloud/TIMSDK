@@ -24,6 +24,7 @@ import com.tencent.qcloud.tuikit.tuicallkit.data.OfflinePushInfoConfig
 import com.tencent.qcloud.tuikit.tuicallkit.data.User
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.CallingBellFeature
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.CallingKeepAliveFeature
+import com.tencent.qcloud.tuikit.tuicallkit.extensions.CallingVibratorFeature
 import com.tencent.qcloud.tuikit.tuicallkit.extensions.NotificationFeature
 import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
@@ -36,6 +37,7 @@ import com.tencent.qcloud.tuikit.tuicallkit.view.component.incomingview.Incoming
 
 class TUICallKitImpl private constructor(context: Context) : TUICallKit(), ITUINotification {
     private val context: Context
+    private var callingVibratorFeature: CallingVibratorFeature? = null
     private var callingBellFeature: CallingBellFeature? = null
     private var callingKeepAliveFeature: CallingKeepAliveFeature? = null
     private val mainHandler: Handler = Handler(Looper.getMainLooper())
@@ -254,6 +256,7 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit(), ITUIN
 
         if (Constants.EVENT_TUICALLKIT_CHANGED == key) {
             if (Constants.EVENT_START_FEATURE == subKey) {
+                callingVibratorFeature = CallingVibratorFeature(context)
                 callingBellFeature = CallingBellFeature(context)
                 callingKeepAliveFeature = CallingKeepAliveFeature(context)
             } else if (Constants.EVENT_START_ACTIVITY == subKey) {

@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceSessionImpl;
 import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.Contacts.DefaultContactsActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ParticipantSelector {
@@ -27,10 +27,10 @@ public class ParticipantSelector {
 
     private IParticipantSelection getParticipantSelection() {
         Class<?> activity = ConferenceSessionImpl.sharedInstance().mContactsActivity;
+        String simpleName = DefaultContactsActivity.class.getSimpleName();
         if (activity != null) {
-            String simpleName = activity.getSimpleName();
-            return new CustomSelector(simpleName);
+            simpleName = activity.getSimpleName();
         }
-        return null;
+        return new CustomSelector(simpleName);
     }
 }

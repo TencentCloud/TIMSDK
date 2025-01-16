@@ -122,7 +122,7 @@ public class MinimalistUIService implements TUIInitializer, ITUIService, ITUIExt
 
     private void initExtension() {
         TUICore.registerExtension(TUIConstants.TUIContact.Extension.FriendProfileItem.MINIMALIST_EXTENSION_ID, this);
-        TUICore.registerExtension(TUIConstants.TUIGroup.Extension.GroupProfileItem.MINIMALIST_EXTENSION_ID, this);
+        TUICore.registerExtension(TUIConstants.TUIContact.Extension.GroupProfileItem.MINIMALIST_EXTENSION_ID, this);
     }
 
     public void initMessage() {
@@ -210,7 +210,7 @@ public class MinimalistUIService implements TUIInitializer, ITUIService, ITUIExt
     public List<TUIExtensionInfo> onGetExtension(String extensionID, Map<String, Object> param) {
         if (TextUtils.equals(extensionID, TUIConstants.TUIContact.Extension.FriendProfileItem.MINIMALIST_EXTENSION_ID)) {
             return getMinimalistFriendProfileExtension(param);
-        } else if (TextUtils.equals(extensionID, TUIConstants.TUIGroup.Extension.GroupProfileItem.MINIMALIST_EXTENSION_ID)) {
+        } else if (TextUtils.equals(extensionID, TUIConstants.TUIContact.Extension.GroupProfileItem.MINIMALIST_EXTENSION_ID)) {
             return getMinimalistGroupProfileExtension(param);
         }
         return null;
@@ -242,7 +242,7 @@ public class MinimalistUIService implements TUIInitializer, ITUIService, ITUIExt
         chatExtension.setWeight(400);
         chatExtension.setIcon(R.drawable.chat_contact_profile_item_extension_message_icon);
         chatExtension.setText(getAppContext().getString(R.string.chat_contact_profile_message));
-        String groupID = getOrDefault(param, TUIConstants.TUIGroup.Extension.GroupProfileItem.GROUP_ID, null);
+        String groupID = getOrDefault(param, TUIConstants.TUIContact.Extension.GroupProfileItem.GROUP_ID, null);
         chatExtension.setExtensionListener(new TUIExtensionEventListener() {
             @Override
             public void onClicked(Map<String, Object> param) {

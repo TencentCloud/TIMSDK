@@ -52,6 +52,7 @@ dependencies {
     implementation 'io.noties.markwon:linkify:4.6.2'
     implementation 'io.noties.markwon:ext-tables:4.6.2'
 
+    api project(':timcommon')
     api project(':tuichat')
     api project(':tuicontact')
 }

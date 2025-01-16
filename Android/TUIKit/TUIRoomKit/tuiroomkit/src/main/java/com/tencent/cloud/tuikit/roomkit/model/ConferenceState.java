@@ -464,7 +464,7 @@ public class ConferenceState {
         }
         if (hasScreen) {
             UserEntity user = findUser(allUserList, userId);
-            if (user == null) {
+            if (user == null || allUserList.get(0).getVideoStreamType() == SCREEN_STREAM) {
                 return;
             }
             UserEntity screenUser = user.copy();

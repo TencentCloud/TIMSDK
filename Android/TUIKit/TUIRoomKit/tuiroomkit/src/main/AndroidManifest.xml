@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -18,9 +19,11 @@
 
         <activity
             android:name="com.tencent.cloud.tuikit.roomkit.ConferenceMainActivity"
-            android:configChanges="orientation|screenSize"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:supportsPictureInPicture="true"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            tools:targetApi="n" />
 
         <activity
             android:name="com.tencent.cloud.tuikit.roomkit.view.activity.CreateConferenceActivity"
@@ -65,9 +68,12 @@
 
         <activity
             android:name="com.tencent.cloud.tuikit.roomkit.view.page.RoomMainActivity"
-            android:configChanges="orientation|screenSize"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:supportsPictureInPicture="true"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            tools:targetApi="n" />
+
         <activity
             android:name="com.tencent.cloud.tuikit.roomkit.view.activity.InvitationReceivedActivity"
             android:launchMode="singleTask"
@@ -97,6 +103,11 @@
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name="com.tencent.cloud.tuikit.roomkit.view.page.widget.SpeechToText.SpeechToTextActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name="com.tencent.cloud.tuikit.roomkit.view.page.widget.Contacts.DefaultContactsActivity"
             android:configChanges="orientation|screenSize"
             android:launchMode="singleTask"
             android:theme="@style/Theme.AppCompat.NoActionBar" />

@@ -104,7 +104,6 @@ public class SetConferenceDetailView extends FrameLayout {
         initConferenceDurationView();
         initConferenceTimeZoneView();
         mSelectScheduleParticipantView = findViewById(R.id.tuiroomkit_select_schedule_participant);
-        mSelectScheduleParticipantView.setVisibility(ConferenceSessionImpl.sharedInstance().mContactsActivity == null ? GONE : VISIBLE);
     }
 
     public void initConferenceNameView() {

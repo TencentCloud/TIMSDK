@@ -29,7 +29,7 @@ public class ForwardContactSelectorAdapter extends RecyclerView.Adapter<Recycler
 
     @Override
     public ContactViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ContactViewHolder(LayoutInflater.from(context).inflate(R.layout.forward_contact_selector_item, parent, false));
+        return new ContactViewHolder(LayoutInflater.from(context).inflate(R.layout.contact_forward_contact_selector_item, parent, false));
     }
 
     @Override

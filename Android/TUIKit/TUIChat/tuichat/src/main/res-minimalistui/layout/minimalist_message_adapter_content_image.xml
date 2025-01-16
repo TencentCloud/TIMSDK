@@ -1,22 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView
-        android:id="@+id/content_image_iv"
+    <com.tencent.qcloud.tuikit.timcommon.component.RoundFrameLayout
+        android:id="@+id/image_round_container"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:clickable="false"
-        android:scaleType="fitCenter" />
+        android:layout_height="wrap_content">
+
+        <com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView
+            android:id="@+id/content_image_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clickable="false"
+            android:foreground="#0F000000"
+            android:scaleType="fitCenter" />
+
+        <FrameLayout
+            android:id="@+id/progress_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#80333333"
+            android:visibility="gone">
+
+            <com.tencent.qcloud.tuikit.tuichat.component.progress.ChatRingProgressBar
+                android:id="@+id/file_progress_bar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:id="@+id/file_progress_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="0%"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/file_download_icon"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_gravity="center"
+                android:background="@drawable/chat_progress_download_icon"
+                android:scaleType="centerInside"
+                android:visibility="gone" />
+
+        </FrameLayout>
+    </com.tencent.qcloud.tuikit.timcommon.component.RoundFrameLayout>
 
     <ImageView
         android:id="@+id/video_play_btn"
         android:layout_width="43dp"
         android:layout_height="43dp"
-        android:clickable="false"
         android:layout_gravity="center"
+        android:clickable="false"
         android:src="@drawable/chat_minimalist_play_icon" />
 
     <com.tencent.qcloud.tuikit.timcommon.minimalistui.widget.message.TimeInLineTextLayout

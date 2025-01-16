@@ -1,7 +1,7 @@
 package com.tencent.cloud.tuikit.roomkit.view.page;
 
-import static com.tencent.cloud.tuikit.engine.common.TUICommonDefine.Error.ROOM_ID_NOT_EXIST;
 import static com.tencent.cloud.tuikit.engine.common.TUICommonDefine.Error.SUCCESS;
+import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomKitUIEvent.ENTER_PIP_MODE;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_CONFERENCE;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_CONFERENCE_ERROR;
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_CONFERENCE_INFO;
@@ -10,10 +10,17 @@ import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY
 import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventConstant.KEY_CONFERENCE_STARTED;
 
 import android.app.Activity;
+import android.app.AppOpsManager;
+import android.app.PictureInPictureParams;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Rational;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +30,7 @@ import android.view.WindowManager;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -33,21 +41,30 @@ import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
 import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
+import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatWindow.VideoPlaying.RoomVideoFloatView;
 import com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.view.EnterConferencePasswordView;
 import com.tencent.cloud.tuikit.roomkit.viewmodel.ConferenceMainViewModel;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.util.TUIBuild;
+import com.trtc.tuikit.common.system.ContextProvider;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ConferenceMainFragment extends Fragment {
+public class ConferenceMainFragment extends Fragment implements ConferenceEventCenter.RoomKitUIEventResponder {
     private static final String TAG = "ConferenceMainFm";
 
     private       FragmentActivity            mActivity;
     private       OnBackPressedCallback       mBackPressedCallback;
     private final ConferenceMainViewModel     mViewModel = new ConferenceMainViewModel(this);
     private       EnterConferencePasswordView mPasswordPopView;
+
+    private ViewGroup                      mRootViewGroup;
+    private RoomVideoFloatView             mPipFloatView;
+    private ConferenceMainView             mConferenceMainView;
+    private PictureInPictureParams.Builder mPictureInPictureParamsBuilder;
 
     public void startConference(ConferenceDefine.StartConferenceParams startConferenceParams) {
         if (ConferenceController.sharedInstance().getRoomController().isInRoom()) {
@@ -71,8 +88,9 @@ public class ConferenceMainFragment extends Fragment {
                 Map<String, Object> param = new HashMap<>(3);
                 param.put(KEY_CONFERENCE_INFO, roomInfo);
                 param.put(KEY_CONFERENCE_ERROR, error);
-                param.put(KEY_CONFERENCE_MESSAGE, message);
+                param.put(KEY_CONFERENCE_MESSAGE, transErrorMessage(error, message));
                 TUICore.notifyEvent(KEY_CONFERENCE, KEY_CONFERENCE_STARTED, param);
+                showErrorToast(error);
             }
         });
     }
@@ -101,9 +119,9 @@ public class ConferenceMainFragment extends Fragment {
                     Map<String, Object> param = new HashMap<>(3);
                     param.put(KEY_CONFERENCE_INFO, roomInfo);
                     param.put(KEY_CONFERENCE_ERROR, error);
-                    param.put(KEY_CONFERENCE_MESSAGE, message);
+                    param.put(KEY_CONFERENCE_MESSAGE, transErrorMessage(error, message));
                     TUICore.notifyEvent(KEY_CONFERENCE, KEY_CONFERENCE_JOINED, param);
-                    RoomToast.toastLongMessageCenter(error == ROOM_ID_NOT_EXIST ? getString(R.string.tuiroomkit_room_not_exit) : message);
+                    showErrorToast(error);
                     onDismiss();
                 }
             }
@@ -149,7 +167,12 @@ public class ConferenceMainFragment extends Fragment {
                     mPasswordPopView.enableJoinRoomButton(true);
                     RoomToast.toastShortMessageCenter(getContext().getString(R.string.tuiroomkit_room_password_error));
                 } else {
-                    RoomToast.toastLongMessageCenter(message);
+                    Map<String, Object> param = new HashMap<>(3);
+                    param.put(KEY_CONFERENCE_INFO, roomInfo);
+                    param.put(KEY_CONFERENCE_ERROR, error);
+                    param.put(KEY_CONFERENCE_MESSAGE, transErrorMessage(error, message));
+                    TUICore.notifyEvent(KEY_CONFERENCE, KEY_CONFERENCE_JOINED, param);
+                    showErrorToast(error);
                     onDismiss();
                 }
             }
@@ -174,6 +197,7 @@ public class ConferenceMainFragment extends Fragment {
 
         interceptBackPressed();
         keepScreenOn(true);
+        ConferenceEventCenter.getInstance().subscribeUIEvent(ENTER_PIP_MODE, this);
         return view;
     }
 
@@ -181,6 +205,9 @@ public class ConferenceMainFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel.init();
+        mRootViewGroup = (ViewGroup) view;
+        mConferenceMainView = new ConferenceMainView(getContext());
+        mRootViewGroup.addView(mConferenceMainView);
     }
 
     @Override
@@ -198,6 +225,57 @@ public class ConferenceMainFragment extends Fragment {
             window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         } else {
             window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    void enterPipMode() {
+        if (TUIBuild.getVersionInt() < Build.VERSION_CODES.O) {
+            return;
+        }
+
+        AppOpsManager appOps = (AppOpsManager) getContext().getSystemService(Context.APP_OPS_SERVICE);
+        if (AppOpsManager.MODE_ALLOWED != appOps.checkOpNoThrow(AppOpsManager.OPSTR_PICTURE_IN_PICTURE, getContext().getApplicationInfo().uid, getContext().getPackageName())) {
+            getContext().startActivity(new Intent("android.settings.PICTURE_IN_PICTURE_SETTINGS", Uri.parse("package:" + getContext().getPackageName())));
+            return;
+        }
+
+        if (mPictureInPictureParamsBuilder == null) {
+            mPictureInPictureParamsBuilder = new PictureInPictureParams.Builder();
+        }
+
+        int floatViewWidth =
+                getResources().getDimensionPixelSize(R.dimen.tuiroomkit_room_video_float_view_width);
+        int floatViewHeight =
+                getResources().getDimensionPixelSize(R.dimen.tuiroomkit_room_video_float_view_height);
+
+        Rational aspectRatio = new Rational(floatViewWidth, floatViewHeight);
+        mPictureInPictureParamsBuilder.setActions(new ArrayList<>());
+        mPictureInPictureParamsBuilder.setAspectRatio(aspectRatio).build();
+
+        mActivity.enterPictureInPictureMode(mPictureInPictureParamsBuilder.build());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onNotifyUIEvent(String key, Map<String, Object> params) {
+        if (ENTER_PIP_MODE.equals(key)) {
+            enterPipMode();
+        }
+    }
+
+    @Override
+    public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode);
+        ConferenceController.sharedInstance().getViewState().isInPictureInPictureMode.set(isInPictureInPictureMode);
+        if (isInPictureInPictureMode) {
+            mConferenceMainView.setVisibility(View.GONE);
+            mPipFloatView = new RoomVideoFloatView(ContextProvider.getApplicationContext());
+            mRootViewGroup.addView(mPipFloatView);
+            mPipFloatView.setVisibility(View.VISIBLE);
+        } else {
+            mRootViewGroup.removeView(mPipFloatView);
+            mConferenceMainView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -244,6 +322,62 @@ public class ConferenceMainFragment extends Fragment {
         mBackPressedCallback.remove();
         mBackPressedCallback = null;
         mActivity = null;
+        mRootViewGroup.removeView(mPipFloatView);
         keepScreenOn(false);
+        ConferenceEventCenter.getInstance().unsubscribeUIEvent(ENTER_PIP_MODE, this);
+    }
+
+    private String transErrorMessage(TUICommonDefine.Error error, String message) {
+        String errorMessage = "";
+        switch (error) {
+            case ROOM_ID_NOT_EXIST:
+                errorMessage = getString(R.string.tuiroomkit_room_not_exit);
+                break;
+            case ROOM_ID_OCCUPIED:
+                errorMessage = getString(R.string.tuiroomkit_room_id_is_occupied);
+                break;
+            case ROOM_USER_FULL:
+                errorMessage = getString(R.string.tuiroomkit_room_is_full);
+                break;
+            case ROOM_NAME_INVALID:
+                errorMessage = getString(R.string.tuiroomkit_room_name_is_invalid);
+                break;
+            case OPERATION_INVALID_BEFORE_ENTER_ROOM:
+                errorMessage = getString(R.string.tuiroomkit_use_function_need_enter_room);
+                break;
+            case OPERATION_NOT_SUPPORTED_IN_CURRENT_ROOM_TYPE:
+                errorMessage = getString(R.string.tuiroomkit_is_not_supported_in_room_type);
+                break;
+            case ALREADY_IN_OTHER_ROOM:
+                errorMessage = getString(R.string.tuiroomkit_already_in_another_room);
+                break;
+            default:
+                break;
+        }
+        if (!TextUtils.isEmpty(errorMessage)) {
+            Log.e(TAG, errorMessage);
+            return errorMessage;
+        }
+        return message;
+    }
+
+    private void showErrorToast(TUICommonDefine.Error error) {
+        String errorMessage = "";
+        switch (error) {
+            case ROOM_ID_NOT_EXIST:
+                errorMessage = getString(R.string.tuiroomkit_room_not_exit);
+                break;
+            case ROOM_ID_OCCUPIED:
+                errorMessage = getString(R.string.tuiroomkit_room_id_is_occupied);
+                break;
+            case ROOM_USER_FULL:
+                errorMessage = getString(R.string.tuiroomkit_room_is_full);
+                break;
+            default:
+                break;
+        }
+        if (!TextUtils.isEmpty(errorMessage)) {
+            RoomToast.toastLongMessageCenter(errorMessage);
+        }
     }
 }

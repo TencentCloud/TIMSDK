@@ -139,8 +139,6 @@ public class ScheduleController {
             return;
         }
         updateConferenceInfoInternal(newInfo, oldInfo, callback);
-        addAttendeesByAdmin(newInfo, oldInfo);
-        removeAttendeesByAdmin(newInfo, oldInfo);
     }
 
     public void refreshRequiredConferences(TUIRoomDefine.ActionCallback callback) {
@@ -323,12 +321,6 @@ public class ScheduleController {
         if (newInfo.scheduleEndTime != oldInfo.scheduleEndTime) {
             modifyFlagList.add(TUIConferenceListManager.ConferenceModifyFlag.SCHEDULE_END_TIME);
         }
-        if (modifyFlagList.isEmpty()) {
-            if (callback != null) {
-                callback.onSuccess();
-            }
-            return;
-        }
         Log.d(TAG, "updateConferenceInfo conferenceId=" + newInfo.basicRoomInfo.roomId);
         mConferenceListManager.updateConferenceInfo(newInfo.transferToEngineData(), modifyFlagList, new TUIRoomDefine.ActionCallback() {
             @Override
@@ -337,6 +329,8 @@ public class ScheduleController {
                 if (callback != null) {
                     callback.onSuccess();
                 }
+                addAttendeesByAdmin(newInfo, oldInfo);
+                removeAttendeesByAdmin(newInfo, oldInfo);
             }
 
             @Override
@@ -345,6 +339,8 @@ public class ScheduleController {
                 if (callback != null) {
                     callback.onError(error, message);
                 }
+                addAttendeesByAdmin(newInfo, oldInfo);
+                removeAttendeesByAdmin(newInfo, oldInfo);
             }
         });
     }

@@ -17,9 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:alpha="0.95"
-        android:background="@drawable/alert_bg"
+        android:background="@drawable/common_dialog_react_bg"
         android:orientation="vertical">
-
 
     </LinearLayout>
 
@@ -29,7 +28,7 @@
         android:layout_height="56dp"
         android:layout_below="@+id/layout_actions"
         android:layout_marginTop="12dp"
-        android:background="@drawable/alert_bg"
+        android:background="@drawable/common_dialog_react_bg"
         android:gravity="center"
         android:text="@string/cancel"
         android:textColor="#147AFF"

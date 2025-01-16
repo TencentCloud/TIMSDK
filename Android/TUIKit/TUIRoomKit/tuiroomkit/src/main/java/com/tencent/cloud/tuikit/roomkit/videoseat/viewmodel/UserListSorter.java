@@ -1,24 +1,22 @@
 package com.tencent.cloud.tuikit.roomkit.videoseat.viewmodel;
 
-import android.text.TextUtils;
-
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.videoseat.Constants;
 
-import java.text.Collator;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Sort by priority:
- * 1. Screen sharing users; (speaker mode-screen sharing)
- * 2. There are more than three users in the room, and there is only one video user, video user; (speaker mode - personal video show)
- * 3. Room owner;
- * 4. Myself;
- * 5. Compare userName (Pinyin for Chinese);
- * 6. UserName is the same, compare userId;
+ * 1. Selected user;
+ * 2. Screen sharing users; (speaker mode-screen sharing)
+ * 3. There are more than three users in the room, and there is only one video user, video user; (speaker mode - personal video show)
+ * 4. Room owner;
+ * 5. Myself;
+ * 6. User has camera and audio;
+ * 7. User has camera;
+ * 8. User has audio;
  */
 public class UserListSorter {
     private UserSortComparator mUserSortComparator;
@@ -88,59 +86,57 @@ public class UserListSorter {
         return videoUserNum == 1;
     }
 
-    private class UserSortComparator implements Comparator<UserEntity> {
-        private Collator mChineseCollator;
-
-        public UserSortComparator() {
-            mChineseCollator = Collator.getInstance(Locale.CHINESE);
-        }
+    private static class UserSortComparator implements Comparator<UserEntity> {
+        private static final int LESSER  = -1;
+        private static final int EQUAL   = 0;
+        private static final int GREATER = 1;
 
         /**
          * Sorting priority:
-         * 1. selected user;
+         * 1. Selected user;
          * 2. Screen sharing user;
          * 3. Room owner;
          * 4. Myself;
-         * 5. Compare userName (Pinyin for Chinese);
-         * 6. UserName is the same, compare userId;
+         * 5. User has camera and audio;
+         * 6. User has camera;
+         * 7. User has audio;
          */
         @Override
         public int compare(UserEntity o1, UserEntity o2) {
             if (o1 == null || o2 == null) {
-                return -1;
+                return EQUAL;
             }
             if (o1.isSelected()) {
-                return -1;
+                return LESSER;
             }
             if (o2.isSelected()) {
-                return 1;
+                return GREATER;
             }
             if (o1.isScreenShareAvailable()) {
-                return -1;
+                return LESSER;
             }
             if (o2.isScreenShareAvailable()) {
-                return 1;
+                return GREATER;
             }
             if (o1.getRole() == TUIRoomDefine.Role.ROOM_OWNER) {
-                return -1;
+                return LESSER;
             }
             if (o2.getRole() == TUIRoomDefine.Role.ROOM_OWNER) {
-                return 1;
+                return GREATER;
             }
             if (o1.isSelf()) {
-                return -1;
+                return LESSER;
             }
             if (o2.isSelf()) {
-                return 1;
+                return GREATER;
             }
-
-            if (TextUtils.isEmpty(o1.getUserName()) || TextUtils.isEmpty(o2.getUserName())) {
-                return -1;
+            if (o1.isCameraAvailable() != o2.isCameraAvailable()) {
+                return o1.isCameraAvailable() ? LESSER : GREATER;
             }
-            if (o1.getUserName().equals(o2.getUserName())) {
-                return o1.getUserId().compareTo(o2.getUserId());
+            if (o1.isAudioAvailable() != o2.isAudioAvailable()) {
+                return o1.isAudioAvailable() ? LESSER : GREATER;
             }
-            return mChineseCollator.compare(o1.getUserName(), o2.getUserName());
+            return EQUAL;
         }
     }
 

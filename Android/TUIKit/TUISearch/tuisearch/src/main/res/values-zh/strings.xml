@@ -17,7 +17,6 @@
     <string name="ui_at_all">[@所有人]</string>
     <string name="ui_at_me">[有人@我]</string>
     <string name="ui_at_all_me">[@所有人][有人@我]</string>
-    <string name="open_file_tips">选择要打开此文件的应用</string>
 
     <string name="custom_msg">[自定义消息]</string>
     <string name="custom_emoji">[动画表情]</string>

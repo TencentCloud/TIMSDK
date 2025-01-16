@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/core_bg_color"
+    android:orientation="vertical">
+
+    <com.tencent.qcloud.tuikit.timcommon.component.TitleBarLayout
+        android:id="@+id/friend_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/page_title_height" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/friend_detail_area"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:background="#FFFFFF"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/page_margin">
+
+                <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView
+                    android:id="@+id/friend_icon"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="5.3dp"
+                    android:layout_marginTop="-12dp"
+                    android:layout_marginEnd="15.3dp"
+                    android:scaleType="centerCrop" />
+
+                <TextView
+                    android:id="@+id/friend_nick_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/friend_icon"
+                    android:layout_toEndOf="@id/friend_icon"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:textSize="17sp"
+                    tools:text="Lee" />
+
+                <TextView
+                    android:id="@+id/friend_account_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/friend_nick_name"
+                    android:layout_alignStart="@id/friend_nick_name"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/contact_account_tag"
+                    android:textDirection="locale"
+                    android:textSize="12.5sp" />
+
+                <TextView
+                    android:id="@+id/friend_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/friend_nick_name"
+                    android:layout_alignTop="@+id/friend_account_tag"
+                    android:layout_toEndOf="@id/friend_account_tag"
+                    android:gravity="center_vertical"
+                    android:textSize="12.5sp"
+                    tools:text="99618" />
+
+                <TextView
+                    android:id="@+id/friend_signature_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/friend_account_tag"
+                    android:layout_alignStart="@id/friend_account_tag"
+                    android:layout_marginTop="3.8dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/contact_signature_tag"
+                    android:textDirection="locale"
+                    android:textSize="12.5sp" />
+
+
+                <TextView
+                    android:id="@+id/friend_signature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/friend_signature_tag"
+                    android:layout_toEndOf="@id/friend_signature_tag"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:textSize="12.5sp"
+                    tools:text="Believe" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/add_friend_button"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="0.68dp"
+                android:background="@drawable/contact_btn_bg_color"
+                android:gravity="center"
+                android:text="@string/chat_add_friend"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="?attr/core_primary_color"
+                android:textSize="16.3sp"
+                tools:visibility="visible"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/friend_settings_area"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:orientation="vertical">
+
+                <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
+                    android:id="@+id/remark"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone"
+                    app:canNav="true"
+                    app:name="@string/profile_remark"
+                    tools:visibility="visible" />
+
+                <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
+                    android:id="@+id/msg_rev_opt"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone"
+                    app:isSwitch="true"
+                    app:name="@string/profile_msgrev_opt" />
+
+                <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
+                    android:id="@+id/chat_to_top"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:visibility="gone"
+                    app:isSwitch="true"
+                    app:isTop="true"
+                    app:name="@string/chat_to_top" />
+
+                <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
+                    android:id="@+id/chat_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:visibility="visible"
+                    app:canNav="true"
+                    app:name="@string/profile_chat_background"
+                    tools:visibility="visible" />
+
+                <com.tencent.qcloud.tuikit.timcommon.component.LineControllerView
+                    android:id="@+id/blackList"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone"
+                    app:isSwitch="true"
+                    app:name="@string/profile_black" />
+
+                <LinearLayout
+                    android:id="@+id/extension_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/btn_clear_chat_history"
+                    android:layout_width="match_parent"
+                    android:layout_height="53.7dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/contact_btn_bg_color"
+                    android:gravity="center"
+                    android:text="@string/profile_clear_message"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textColor="?attr/core_error_tip_color"
+                    android:textSize="16.3sp"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/btn_delete"
+                    android:layout_width="match_parent"
+                    android:layout_height="53.7dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="0.68dp"
+                    android:background="@drawable/contact_btn_bg_color"
+                    android:gravity="center"
+                    android:text="@string/profile_delete_friend"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textColor="?attr/core_error_tip_color"
+                    android:textSize="16.3sp"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <LinearLayout
+                    android:id="@+id/warning_extension_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

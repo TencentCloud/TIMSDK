@@ -223,7 +223,7 @@
     <string name="TUIKitErrorSVRGroupSuperNotAllowQuit">لا يسمح بهذا النوع من المجموعات بخروج مالك المجموعة بنفسه.</string>
     <string name="TUIKitErrorSVRGroupNotFound">المجموعة غير موجودة</string>
     <string name="TUIKitErrorSVRGroupJsonParseFailed">فشل تحليل حزمة JSON، يرجى التحقق من صيغة الحزمة إذا كانت تتوافق مع صيغة JSON</string>
-    <string name="TUIKitErrorSVRGroupInvalidId">معرف المستخدم الذي يقوم بالعملية غير صالح، يرجى التحقق من صحة معرف المستخدم الذي يقوم بالعملية</string>
+    <string name="TUIKitErrorSVRGroupInvalidId">عضو في المجموعة بالفعل</string>
     <string name="TUIKitErrorSVRGroupAllreadyMember">المستخدم الذي تم دعوته للانضمام إلى المجموعة هو بالفعل عضو في المجموعة</string>
     <string name="TUIKitErrorSVRGroupFullMemberCount">المجموعة ممتلئة، لا يمكن إضافة المستخدم المطلوب في الطلب إلى المجموعة</string>
     <string name="TUIKitErrorSVRGroupInvalidGroupId">معرف المجموعة غير صالح، يرجى التحقق من صحة معرف المجموعة</string>

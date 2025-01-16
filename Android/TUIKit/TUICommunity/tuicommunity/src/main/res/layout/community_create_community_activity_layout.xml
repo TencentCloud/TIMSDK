@@ -131,7 +131,7 @@
                 android:hint="@string/community_edit_tips_input"
                 android:maxLength="20"
                 android:textColorHint="#999999"
-                android:textCursorDrawable="@drawable/core_edit_cursor"
+                android:textCursorDrawable="@drawable/common_edit_cursor"
                 android:textSize="16sp" />
 
             <View
@@ -163,7 +163,7 @@
                 android:maxLength="60"
                 android:padding="12dp"
                 android:textColorHint="#999999"
-                android:textCursorDrawable="@drawable/core_edit_cursor"
+                android:textCursorDrawable="@drawable/common_edit_cursor"
                 android:textSize="16sp" />
 
             <com.tencent.qcloud.tuikit.tuicommunity.component.TextCountView

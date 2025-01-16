@@ -54,7 +54,7 @@ public class TUIFoldedConversationFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mBaseView = inflater.inflate(R.layout.folded_fragment, container, false);
+        mBaseView = inflater.inflate(R.layout.conversation_folded_fragment, container, false);
         initView();
         return mBaseView;
     }

@@ -174,7 +174,7 @@ public class ChatFlowReactView extends RecyclerView implements ReactPreviewView 
             StringBuilder stringBuilder = new StringBuilder();
             int index = 0;
             for (UserBean userBean : userBeans) {
-                stringBuilder.append(userBean.getDisplayString());
+                stringBuilder.append(userBean.getDisplayName());
                 index++;
                 if (index != userBeans.size()) {
                     stringBuilder.append("、");

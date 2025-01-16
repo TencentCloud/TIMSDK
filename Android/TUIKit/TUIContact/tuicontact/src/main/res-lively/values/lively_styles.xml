@@ -7,6 +7,8 @@
         <item name="contact_black_list_icon">@drawable/contact_black_list_icon_lively</item>
 
         <item name="contact_chat_extension_title_bar_more_menu">@drawable/contact_chat_extension_title_bar_more_menu_light</item>
+        <item name="group_add_icon">@drawable/group_add_icon_lively</item>
+        <item name="group_chat_extension_title_bar_more_menu">@drawable/group_chat_extension_title_bar_more_menu_lively</item>
 
     </style>
 

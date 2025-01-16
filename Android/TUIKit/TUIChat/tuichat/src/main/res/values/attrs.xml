@@ -16,13 +16,4 @@
         <attr name="duration_max" />
     </declare-styleable>
 
-
-
-    <declare-styleable name="SynthesizedImageView">
-        <attr name="synthesized_image_bg" format="color" />
-        <attr name="synthesized_default_image" format="reference" />
-        <attr name="synthesized_image_size" format="dimension" />
-        <attr name="synthesized_image_gap" format="dimension" />
-    </declare-styleable>
-
 </resources>

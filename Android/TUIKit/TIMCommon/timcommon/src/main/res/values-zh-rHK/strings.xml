@@ -10,7 +10,8 @@
     <string name="date_second_short">秒</string>
     <string name="date_yesterday">昨天</string>
     <string name="chat_time_today">今天</string>
-
+    <string name="sure">確定</string>
+    <string name="cancel">取消</string>
     <string name="setting">設置中</string>
     <string name="setting_fail">設置失敗！</string>
     <string name="setting_success">設置成功！</string>

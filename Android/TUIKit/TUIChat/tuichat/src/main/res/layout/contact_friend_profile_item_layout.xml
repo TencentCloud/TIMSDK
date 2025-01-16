@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/item_button"
+        android:layout_width="match_parent"
+        android:layout_height="53.76dp"
+        android:background="@drawable/contact_btn_bg_color"
+        android:text="@string/profile_chat"
+        android:textColor="?attr/core_primary_color"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:textSize="16.32sp"
+        android:textStyle="normal"
+        android:textAllCaps="false" />
+</FrameLayout>

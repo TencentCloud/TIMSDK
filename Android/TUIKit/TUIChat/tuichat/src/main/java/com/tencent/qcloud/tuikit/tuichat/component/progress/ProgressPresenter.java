@@ -11,13 +11,17 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ProgressPresenter {
-    private static final String TAG = ProgressPresenter.class.getSimpleName();
+    private static final String TAG = "ProgressPresenter";
+
+    public static final int MAX_PROGRESS = 100;
+    public static final int MIN_PROGRESS = 0;
 
     private static final class ProgressPresenterHolder {
         private static final ProgressPresenter instance = new ProgressPresenter();
     }
 
     private final Map<String, List<WeakReference<ProgressListener>>> progressListenerMap = new ConcurrentHashMap<>();
+    private final Map<String, Integer> progressMap = new ConcurrentHashMap<>();
 
     public static ProgressPresenter getInstance() {
         return ProgressPresenterHolder.instance;
@@ -38,10 +42,15 @@ public class ProgressPresenter {
         }
         WeakReference<ProgressListener> weakReference = new WeakReference<>(listener);
         list.add(weakReference);
+        Integer progress = presenter.progressMap.get(progressId);
+        if (progress != null) {
+            ThreadUtils.runOnUiThread(() -> listener.onProgress(progress));
+        }
     }
 
     public static void updateProgress(String progressId, int progress) {
         ProgressPresenter presenter = ProgressPresenter.getInstance();
+        presenter.progressMap.put(progressId, progress);
         List<WeakReference<ProgressListener>> referenceList = presenter.progressListenerMap.get(progressId);
         if (referenceList != null && !referenceList.isEmpty()) {
             Iterator<WeakReference<ProgressListener>> iterator = referenceList.listIterator();
@@ -55,15 +64,20 @@ public class ProgressPresenter {
         } else {
             presenter.progressListenerMap.remove(progressId);
         }
+        if (progress == MAX_PROGRESS) {
+            presenter.progressMap.remove(progressId);
+        }
     }
 
     public static void unregisterProgressListener(String progressId, ProgressListener listener) {
         Log.i(TAG, "unregisterProgressListener id : " + progressId + ", listener : " + listener);
+        ProgressPresenter presenter = ProgressPresenter.getInstance();
+        presenter.progressMap.remove(progressId);
         if (TextUtils.isEmpty(progressId) || listener == null) {
             return;
         }
 
-        List<WeakReference<ProgressListener>> list = ProgressPresenter.getInstance().progressListenerMap.get(progressId);
+        List<WeakReference<ProgressListener>> list = presenter.progressListenerMap.get(progressId);
         if (list == null) {
             return;
         }
@@ -75,6 +89,15 @@ public class ProgressPresenter {
             }
         }
         list.remove(remove);
+    }
+
+    public static int getProgress(String progressId) {
+        ProgressPresenter presenter = ProgressPresenter.getInstance();
+        Integer progress = presenter.progressMap.get(progressId);
+        if (progress != null) {
+            return progress;
+        }
+        return MIN_PROGRESS;
     }
 
     public interface ProgressListener {

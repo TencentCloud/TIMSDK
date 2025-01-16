@@ -49,6 +49,7 @@ public class ImageSelectMinimalistActivity extends BaseMinimalistLightActivity {
     public static final String SELECTED = "selected";
     public static final String PLACEHOLDER = "placeholder";
     public static final String NEED_DOWLOAD_LOCAL = "needdowmload";
+    public static final String CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL = "chat/conversation/background/default/url";
 
     private int defaultSpacing;
 
@@ -134,7 +135,7 @@ public class ImageSelectMinimalistActivity extends BaseMinimalistLightActivity {
         }
 
         if (selected.isDefault()) {
-            selected.setLocalPath(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL);
+            selected.setLocalPath(CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL);
             setResult(selected);
             ToastUtil.toastShortMessage(getResources().getString(R.string.setting_success));
             finish();

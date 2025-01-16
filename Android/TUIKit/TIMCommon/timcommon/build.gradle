@@ -42,7 +42,7 @@ dependencies {
     plugin-build-End*/
 
     def projects = this.rootProject.getAllprojects().stream().map { project -> project.name }.collect()
-    api projects.contains("tuicore") ? project(':tuicore') : "com.tencent.liteav.tuikit:tuicore:8.3.6498"
+    api projects.contains("tuicore") ? project(':tuicore') : "com.tencent.liteav.tuikit:tuicore:8.4.6667"
 
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.google.code.gson:gson:2.9.1'

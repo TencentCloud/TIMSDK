@@ -3,15 +3,12 @@
     <string name="new_friend">新的聯繫人</string>
     <string name="group">我的群聊</string>
     <string name="blacklist">黑名單</string>
-    <string name="contact_count">%d位聯繫人</string>
     <string name="contact_title">通訊錄</string>
 
-    <string name="no_friend_apply">暫無好友申請</string>
     <string name="at_all">所有人</string>
 
     <string name="success">成功</string>
     <string name="contact_add_failed">添加失敗</string>
-    <string name="contact_add_success">添加成功</string>
     <string name="have_be_friend">對方已是您的好友</string>
     <string name="friend_limit">您的好友數已達系統上限</string>
     <string name="other_friend_limit">對方的好友數已達系統上限</string>
@@ -19,7 +16,6 @@
     <string name="forbid_add_friend">對方已禁止加好友</string>
     <string name="set_in_blacklist">您已被被對方設置為黑名單</string>
     <string name="wait_agree_friend">等待好友審核同意</string>
-    <string name="send_request">加群請求已發送</string>
     <string name="contact_add_more_send_request_text">發送</string>
     <string name="contact_search">搜索</string>
 
@@ -30,35 +26,23 @@
 
     <string name="request_agree">同意</string>
     <string name="request_accepted">已接受</string>
-    <string name="request_waiting">等待驗證</string>
     <string name="profile_detail">詳細資料</string>
     <string name="profile_remark_edit">修改備註</string>
     <string name="contact_friend_remark">備註</string>
     <string name="contact_add_friend_remark">備註</string>
-    <string name="contact_friend_group">分組</string>
     <string name="contact_set_add_wording">請填寫驗證信息</string>
     <string name="contact_set_remark_and_group">請填寫備註</string>
     <string name="contact_add_wording">驗證信息：</string>
-    <string name="contact_my_friend">我的朋友</string>
     <string name="contact_modify_remark_rule">僅限中文、字母、數字和下劃線</string>
-    <string name="contact_profile_title_edit">編輯</string>
     <string name="contact_add_more_info">詳情</string>
 
-    <string name="profile_id">賬號</string>
-    <string name="profile_add_wording">驗證消息</string>
     <string name="profile_remark">備註名</string>
     <string name="profile_black">加入黑名單</string>
     <string name="profile_chat">發送消息</string>
-    <string name="profile_voice_chat">語音通話</string>
-    <string name="profile_video_chat">視頻通話</string>
     <string name="profile_clear_message">清除聊天記錄</string>
     <string name="profile_delete_friend">刪除好友</string>
     <string name="profile_chat_background">設置當前聊天背景</string>
     <string name="chat_background_title">更換背景</string>
-
-    <string name="contact_profile_message">發送消息</string>
-    <string name="contact_profile_audio_call">語音通話</string>
-    <string name="contact_profile_video_call">視頻通話</string>
 
     <string name="contact_signature_tag">個性簽名：</string>
     <string name="contact_no_status">暫無個性簽名</string>
@@ -68,8 +52,6 @@
 
     <string name="select_chat">請選擇聊天對象</string>
 
-    <string name="clear_msg_tip">確認清除聊天記錄？</string>
-    <string name="contact_delete_friend_tip">確認刪除聯繫人？</string>
     <string name="tips_empty_group_member">請選擇群成員</string>
     <string name="tips_empty_group_type">請選擇加群方式</string>
 
@@ -87,14 +69,11 @@
     <string name="create_chat_room">創建聊天室</string>
     <string name="create_private_group">創建討論組</string>
     <string name="create_community">創建社群</string>
-    <string name="hint_add_user_id">請輸入ID</string>
     <string name="hint_search_user_id">搜索用戶ID</string>
     <string name="hint_search_group_id">搜索群組ID</string>
-    <string name="hint_add_wording">請輸入驗證消息</string>
     <string name="contact_add_friend_default_validation">我是%s</string>
     <string name="contact_add">添加</string>
     <string name="user_id">對方ID</string>
-    <string name="add_wording">驗證消息</string>
     <string name="create_group">創建群組</string>
     <string name="contact_create">創建</string>
     <string name="contact_next_step">下一步</string>
@@ -118,7 +97,6 @@
     <string name="contact_community">社群</string>
     <string name="contact_i_know">我知道了</string>
     <string name="contact_no_more_reminders">不再提醒</string>
-    <string name="contact_im_flagship">旗艦版</string>
     <string name="contact_buying_guidelines">價格說明</string>
     <string name="contact_im_flagship_edition_update_tip">%s功能為IM旗艦版功能，購買旗艦版套餐包後可使用，詳見價格說明。</string>
 
@@ -152,4 +130,93 @@
     <string name="group_type_content_title">詳見產品文檔</string>
     <string name="group_type_content_url">產品文檔</string>
     <string name="group_type_content_button">查看產品文檔</string>
+
+
+    <string name="group_id">群ID</string>
+    <string name="group_name">群聊名稱</string>
+    <string name="group_icon">修改群頭像</string>
+    <string name="group_notice">群公告</string>
+    <string name="group_notice_empty_tip">暫無群公告。</string>
+    <string name="group_members">群成員</string>
+    <string name="group_type">群類型</string>
+    <string name="group_member_info">詳情</string>
+    <string name="group_delete">刪除</string>
+    <string name="group_set_admin">設置為管理員</string>
+    <string name="group_plus_add_group_member">+ 添加成員</string>
+    <string name="remove_group_member">移除成員</string>
+    <string name="join_group_type">主動加群方式</string>
+    <string name="invite_group_type">邀請進群方式</string>
+    <string name="in_group_nick_name">我的群昵稱</string>
+    <string name="dissolve">解散該群</string>
+    <string name="clear_message">清除聊天記錄</string>
+    <string name="modify_group_notice">修改群公告</string>
+    <string name="modify_nick_name_in_goup">修改我的群昵稱</string>
+    <string name="group_edit">編輯</string>
+    <string name="group_modify_remark_rule">僅限中文、字母、數字和下劃線</string>
+    <string name="group_clear_message">清除聊天記錄</string>
+    <string name="group_detail">群聊詳情</string>
+    <string name="group_apply_members">群申請</string>
+    <string name="group_remove_member">移出群聊</string>
+    <string name="modify_group_name_success">修改群名稱成功</string>
+    <string name="modify_group_notice_success">修改群公告成功</string>
+    <string name="exit_group">退出群聊</string>
+    <string name="modify_nickname_success">修改昵稱成功</string>
+    <string name="group_profile_message">發送消息</string>
+    <string name="group_profile_audio_call">語音通話</string>
+    <string name="group_profile_video_call">視頻通話</string>
+    <string name="search_call_hint">輸入群成員名稱</string>
+    <string name="modify_icon_fail">修改群頭像失敗</string>
+    <string name="modify_icon_suc">修改群頭像成功</string>
+    <string name="chat_room">聊天室</string>
+    <string name="chat_room_tip">加入聊天室為自動審批，暫不支持修改</string>
+    <string name="community_group">社群</string>
+    <string name="dismiss_group_tip">您確認解散該群?</string>
+    <string name="quit_group_tip">您確認退出該群？</string>
+    <string name="clear_group_msg_tip">確認清除聊天記錄？</string>
+    <string name="private_group">討論組</string>
+    <string name="public_group">公開群</string>
+    <string name="request_wait">邀請成功，等待對方接受</string>
+    <string name="remove">移除</string>
+    <string name="remove_member">移除成員</string>
+    <string name="remove_tip_suc">刪除成員成功</string>
+    <string name="remove_tip_fail">刪除成員失敗: </string>
+    <string name="invite_suc">邀請成員成功</string>
+    <string name="invite_fail">邀請成員失敗:</string>
+    <string name="remove_fail_tip">移除成員失敗</string>
+    <string name="manager">管理</string>
+    <string name="group_manager">群管理</string>
+    <string name="invite">邀請</string>
+
+    <string name="forbid_invite">禁止邀請</string>
+    <string name="group_invite_type">邀請進群方式</string>
+    <string name="group_validation_message">驗證消息</string>
+    <string name="group_group_application_detail_title">詳情</string>
+    <string name="join_group_tip">您已被邀請進群: </string>
+    <string name="joined_tip">您已加入群: </string>
+    <string name="reject_join_tip">您被拒絕加入群: </string>
+    <string name="kick_group">您已被踢出群: </string>
+    <string name="dismiss_tip_before">您所在的群</string>
+    <string name="dismiss_tip_after">已解散</string>
+    <string name="get_system_notice">收到自定義系統通知: </string>
+    <string name="group_account_tag">ID：</string>
+    <string name="group_view_more_group_members">查看更多群成員</string>
+    <string name="group_set_manager">設置管理員</string>
+    <string name="group_mute_all">全員禁言</string>
+    <string name="group_cancel_mute_label">取消禁言</string>
+    <string name="group_mute_tip">全員禁言開啟後，只允許群主和管理員發言。</string>
+    <string name="group_add_mute_member_tip">添加需要禁言的群成員</string>
+    <string name="group_owner_label">群主</string>
+    <string name="group_manager_label">管理員</string>
+    <string name="group_member_label">成員</string>
+    <string name="group_add_manager_count_label">管理員（%d）</string>
+    <string name="group_add_manager_label">添加管理員</string>
+    <string name="group_remove_manager_label">取消管理員</string>
+    <string name="group_remove_manager_tip">成功取消管理員身份。</string>
+
+    <string name="group_over_limit_tip">最多只能選擇%d個。</string>
+    <string name="group_transfer_group_owner">轉讓群主</string>
+    <string name="group_not_support_set_manager">當前類型群聊不支持設置管理員。</string>
+    <string name="group_not_support_mute_member">當前類型群聊不支持禁言指定群成員。</string>
+    <string name="group_you">你</string>
+
 </resources>

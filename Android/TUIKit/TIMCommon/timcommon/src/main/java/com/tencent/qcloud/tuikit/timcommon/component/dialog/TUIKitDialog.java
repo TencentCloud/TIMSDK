@@ -50,17 +50,17 @@ public class TUIKitDialog {
     }
 
     public TUIKitDialog builder() {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.view_dialog, null);
-        mBackgroundLayout = (LinearLayout) view.findViewById(R.id.ll_background);
-        mMainLayout = (LinearLayout) view.findViewById(R.id.ll_alert);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.common_dialog_view_layout, null);
+        mBackgroundLayout = view.findViewById(R.id.ll_background);
+        mMainLayout = view.findViewById(R.id.ll_alert);
         mMainLayout.setVerticalGravity(View.GONE);
-        mTitleTv = (TextView) view.findViewById(R.id.tv_title);
+        mTitleTv = view.findViewById(R.id.tv_title);
         mTitleTv.setVisibility(View.GONE);
-        mCancelButton = (Button) view.findViewById(R.id.btn_neg);
+        mCancelButton = view.findViewById(R.id.btn_neg);
         mCancelButton.setVisibility(View.GONE);
-        mSureButton = (Button) view.findViewById(R.id.btn_pos);
+        mSureButton = view.findViewById(R.id.btn_pos);
         mSureButton.setVisibility(View.GONE);
-        mLineImg = (ImageView) view.findViewById(R.id.img_line);
+        mLineImg = view.findViewById(R.id.img_line);
         mLineImg.setVisibility(View.GONE);
 
         dialog = new Dialog(mContext, R.style.TUIKit_AlertDialogStyle);

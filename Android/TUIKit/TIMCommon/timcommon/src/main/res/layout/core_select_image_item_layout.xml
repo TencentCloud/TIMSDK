@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:background="@drawable/trans_bg"
+        android:background="@drawable/common_trans_bg"
         app:corner_radius="8dp">
 
         <com.tencent.qcloud.tuikit.timcommon.component.gatherimage.SynthesizedImageView

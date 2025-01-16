@@ -51,9 +51,6 @@ project(':tuiconversation').projectDir = new File(settingsDir, '../TUIKit/TUICon
 include ':tuisearch'
 project(':tuisearch').projectDir = new File(settingsDir, '../TUIKit/TUISearch/tuisearch')
 
-include ':tuigroup'
-project(':tuigroup').projectDir = new File(settingsDir, '../TUIKit/TUIGroup/tuigroup')
-
 include ':tuicallkit-kt'
 project(':tuicallkit-kt').projectDir = new File(settingsDir, '../TUIKit/TUICallKit/tuicallkit-kt')
 

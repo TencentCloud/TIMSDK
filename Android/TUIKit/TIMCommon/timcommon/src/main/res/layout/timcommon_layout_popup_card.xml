@@ -45,14 +45,14 @@
 
     <EditText
         android:id="@+id/popup_card_edit"
-        android:background="@drawable/core_edit_text_bg"
+        android:background="@drawable/common_edit_text_bg"
         android:textSize="@dimen/core_popup_card_edit_text_size"
         android:paddingStart="@dimen/core_popup_card_edit_padding_left_right"
         android:paddingEnd="@dimen/core_popup_card_edit_padding_left_right"
         android:textAlignment="viewStart"
         android:layout_marginStart="@dimen/core_popup_card_padding"
         android:layout_marginEnd="@dimen/core_popup_card_padding"
-        android:textCursorDrawable="@drawable/core_edit_cursor"
+        android:textCursorDrawable="@drawable/common_edit_cursor"
         android:layout_width="match_parent"
         android:layout_height="@dimen/core_popup_card_edit_height"/>
 

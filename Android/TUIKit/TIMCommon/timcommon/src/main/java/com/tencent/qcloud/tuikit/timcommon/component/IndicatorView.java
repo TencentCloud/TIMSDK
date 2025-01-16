@@ -21,7 +21,7 @@ public class IndicatorView extends LinearLayout {
     private ArrayList<ImageView> mImageViews;
     private Bitmap bmpSelect;
     private Bitmap bmpNormal;
-    private int mHeight = 16;
+    private int mHeight = 6;
     private int mMaxHeight;
     private AnimatorSet mPlayByInAnimatorSet;
     private AnimatorSet mPlayByOutAnimatorSet;
@@ -40,23 +40,19 @@ public class IndicatorView extends LinearLayout {
     }
 
     public void init(int count) {
-        mImageViews = new ArrayList<ImageView>();
+        mImageViews = new ArrayList<>();
         this.removeAllViews();
         for (int i = 0; i < count; i++) {
-            RelativeLayout rl = new RelativeLayout(mContext);
             LayoutParams params = new LinearLayout.LayoutParams(mMaxHeight, mMaxHeight);
-            RelativeLayout.LayoutParams layoutParams =
-                new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
             ImageView imageView = new ImageView(mContext);
+            params.setMarginStart(12);
+            params.setMarginEnd(12);
             if (i == 0) {
                 imageView.setImageBitmap(bmpSelect);
-                rl.addView(imageView, layoutParams);
             } else {
                 imageView.setImageBitmap(bmpNormal);
-                rl.addView(imageView, layoutParams);
             }
-            this.addView(rl, params);
+            this.addView(imageView, params);
             mImageViews.add(imageView);
         }
     }

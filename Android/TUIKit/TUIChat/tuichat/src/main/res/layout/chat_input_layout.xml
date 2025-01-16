@@ -43,7 +43,7 @@
             android:minHeight="@dimen/chat_input_editor_min_height"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:textCursorDrawable="@drawable/my_cursor"
+            android:textCursorDrawable="@drawable/common_edit_cursor"
             android:padding="5dp" />
 
         <Button

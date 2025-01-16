@@ -7,6 +7,7 @@ import com.tencent.imsdk.v2.V2TIMCreateGroupMemberInfo;
 import com.tencent.imsdk.v2.V2TIMFriendAddApplication;
 import com.tencent.imsdk.v2.V2TIMFriendApplication;
 import com.tencent.imsdk.v2.V2TIMFriendApplicationResult;
+import com.tencent.imsdk.v2.V2TIMFriendCheckResult;
 import com.tencent.imsdk.v2.V2TIMFriendInfo;
 import com.tencent.imsdk.v2.V2TIMFriendOperationResult;
 import com.tencent.imsdk.v2.V2TIMGroupApplication;
@@ -26,6 +27,7 @@ import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.BuildConfig;
+import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuicontact.R;
@@ -41,6 +43,7 @@ import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ContactProvider {
     private static final String TAG = ContactProvider.class.getSimpleName();
@@ -323,7 +326,7 @@ public class ContactProvider {
                     groupInfo.setId(result.getGroupInfo().getGroupID());
                     groupInfo.setFaceUrl(result.getGroupInfo().getFaceUrl());
                     groupInfo.setGroupName(result.getGroupInfo().getGroupName());
-                    groupInfo.setMemberCount(result.getGroupInfo().getMemberCount());
+                    groupInfo.setGroupMemberCount(result.getGroupInfo().getMemberCount());
                     groupInfo.setGroupType(result.getGroupInfo().getGroupType());
                     groupInfos.add(groupInfo);
                 }
@@ -516,7 +519,7 @@ public class ContactProvider {
         for (int i = 0; i < groupInfo.getMemberDetails().size(); i++) {
             GroupMemberInfo groupMemberInfo = groupInfo.getMemberDetails().get(i);
             V2TIMCreateGroupMemberInfo v2TIMCreateGroupMemberInfo = new V2TIMCreateGroupMemberInfo();
-            v2TIMCreateGroupMemberInfo.setUserID(groupMemberInfo.getAccount());
+            v2TIMCreateGroupMemberInfo.setUserID(groupMemberInfo.getUserId());
             v2TIMCreateGroupMemberInfoList.add(v2TIMCreateGroupMemberInfo);
         }
 

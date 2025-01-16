@@ -10,11 +10,13 @@
 
     <application>
         <activity
-            android:name="com.tencent.qcloud.tuikit.tuichat.component.imagevideoscan.ImageVideoScanActivity"
+            android:name="com.tencent.qcloud.tuikit.tuichat.component.imagevideobrowse.ImageVideoBrowseActivity"
             android:launchMode="singleTask"
             android:configChanges="screenSize|keyboardHidden|orientation" />
 
-
+        <activity
+            android:name="com.tencent.qcloud.tuikit.tuichat.classicui.page.FriendProfileActivity"
+            android:screenOrientation="portrait" />
         <!-- **************** Classic UI Start **************** -->
         <activity
             android:name="com.tencent.qcloud.tuikit.tuichat.classicui.page.MessageReplyDetailActivity"
@@ -43,6 +45,10 @@
             android:name="com.tencent.qcloud.tuikit.tuichat.component.camera.CameraActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name="com.tencent.qcloud.tuikit.tuichat.classicui.page.GroupInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.tencent.qcloud.tuikit.tuichat.classicui.page.GroupNoticeActivity"
+            android:screenOrientation="portrait" />
         <!-- **************** Classic UI End **************** -->
 
 
@@ -76,8 +82,17 @@
             android:name="com.tencent.qcloud.tuikit.tuichat.minimalistui.page.TUIForwardChatMinimalistActivity"
             android:screenOrientation="portrait" />
 
-        <!-- **************** Minimalist UI End **************** -->
+        <activity android:name="com.tencent.qcloud.tuikit.tuichat.minimalistui.page.GroupInfoMinimalistActivity"
+            android:screenOrientation="portrait" />
 
+
+        <activity
+            android:name="com.tencent.qcloud.tuikit.tuichat.minimalistui.page.FriendProfileMinimalistActivity"
+            android:screenOrientation="portrait" />
+
+        <activity android:name="com.tencent.qcloud.tuikit.tuichat.minimalistui.page.GroupNoticeMinimalistActivity"
+            android:screenOrientation="portrait" />
+        <!-- **************** Minimalist UI End **************** -->
 
     </application>
 

@@ -25,6 +25,7 @@ import com.tencent.qcloud.tuikit.tuiconversation.R;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.DraftInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
+import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.config.TUIConversationConfig;
 import com.tencent.qcloud.tuikit.tuiconversation.config.minimalistui.TUIConversationConfigMinimalist;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
@@ -51,6 +52,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
     protected TextView atAllTv;
     protected TextView atMeTv;
     protected TextView draftTv;
+    protected TextView riskTv;
     private boolean showFoldedStyle = true;
     protected TextView foldGroupNameTv;
     protected TextView foldGroupNameDivider;
@@ -74,6 +76,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
         atMeTv = rootView.findViewById(R.id.conversation_at_me);
         atAllTv = rootView.findViewById(R.id.conversation_at_all);
         draftTv = rootView.findViewById(R.id.conversation_draft);
+        riskTv = rootView.findViewById(R.id.conversation_risk);
         foldGroupNameTv = rootView.findViewById(R.id.fold_group_name);
         foldGroupNameDivider = rootView.findViewById(R.id.fold_group_name_divider);
         disturbView = rootView.findViewById(R.id.not_disturb);
@@ -133,6 +136,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
             atAllTv.setVisibility(View.GONE);
             atMeTv.setVisibility(View.GONE);
             draftTv.setVisibility(View.GONE);
+            riskTv.setVisibility(View.GONE);
         }
 
         if (!conversation.isGroup() && TUIConversationConfigMinimalist.isShowUserOnlineStatusIcon()) {
@@ -186,7 +190,6 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
     }
 
     private void setLastMessageAndStatus(ConversationInfo conversation) {
-        draftTv.setVisibility(View.GONE);
         DraftInfo draftInfo = conversation.getDraft();
         String draftText = "";
         if (draftInfo != null) {
@@ -202,18 +205,27 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
                 TUIConversationLog.e("ConversationCommonHolder", " getDraftJsonMap error ");
             }
         }
+
+        atAllTv.setVisibility(View.GONE);
+        atMeTv.setVisibility(View.GONE);
+        draftTv.setVisibility(View.GONE);
+        riskTv.setVisibility(View.GONE);
         if (draftInfo != null) {
             messageText.setText(FaceManager.emojiJudge(draftText));
             timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(draftInfo.getDraftTime() * 1000)));
         } else {
-            TUIMessageBean lasTUIMessageBean = conversation.getLastTUIMessageBean();
-            if (lasTUIMessageBean != null) {
-                String displayString = ConversationPresenter.getMessageDisplayString(lasTUIMessageBean);
-                messageText.setText(Html.fromHtml(displayString));
-                messageText.setTextColor(rootView.getResources().getColor(R.color.list_bottom_text_bg));
-            }
-            if (conversation.getLastMessage() != null) {
-                timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(conversation.getLastMessageTime() * 1000)));
+            if (TUIConversationUtils.hasRiskContent(conversation.getLastMessage())) {
+                riskTv.setVisibility(View.VISIBLE);
+            } else {
+                TUIMessageBean lasTUIMessageBean = conversation.getLastTUIMessageBean();
+                if (lasTUIMessageBean != null) {
+                    String displayString = ConversationPresenter.getMessageDisplayString(lasTUIMessageBean);
+                    messageText.setText(Html.fromHtml(displayString));
+                    messageText.setTextColor(rootView.getResources().getColor(R.color.list_bottom_text_bg));
+                }
+                if (conversation.getLastMessage() != null) {
+                    timelineText.setText(DateTimeUtil.getTimeFormatText(new Date(conversation.getLastMessageTime() * 1000)));
+                }
             }
         }
 
@@ -311,7 +323,5 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
 
         messageText.setText("");
         timelineText.setText("");
-        atAllTv.setVisibility(View.GONE);
-        atMeTv.setVisibility(View.GONE);
     }
 }

@@ -18,14 +18,6 @@
     <string name="ui_at_all">[@All]</string>
     <string name="ui_at_me">[Someone @ me]</string>
     <string name="ui_at_all_me">[@All][Someone @ me]</string>
-    <string name="open_file_tips">Select an app to open the file</string>
-    <string name="date_year_short">YYYY</string>
-    <string name="date_month_short">MM</string>
-    <string name="date_day_short">DD</string>
-    <string name="date_hour_short">HH</string>
-    <string name="date_minute_short">MM</string>
-    <string name="date_second_short">SS</string>
-    <string name="date_yesterday">Yesterday</string>
     <string name="custom_msg">[Custom Messages]</string>
     <string name="custom_emoji">[Animated Sticker]</string>
     <string name="picture_extra">[Image]</string>

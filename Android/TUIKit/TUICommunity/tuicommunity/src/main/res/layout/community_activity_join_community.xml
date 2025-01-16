@@ -52,7 +52,7 @@
                 android:inputType="text"
                 android:textColorHint="#999999"
                 android:hint="@string/community_search_community_id"
-                android:textCursorDrawable="@drawable/core_edit_cursor"
+                android:textCursorDrawable="@drawable/common_edit_cursor"
                 android:textColor="#000000"
                 android:textSize="14sp" />
 

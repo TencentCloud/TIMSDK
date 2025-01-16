@@ -186,7 +186,7 @@ public class CustomerServiceProfileLayout extends LinearLayout implements View.O
                 .builder()
                 .setCancelable(true)
                 .setCancelOutside(true)
-                .setTitle(getContext().getString(com.tencent.qcloud.tuikit.tuicontact.R.string.clear_msg_tip))
+                .setTitle(getContext().getString(com.tencent.qcloud.tuikit.tuichat.R.string.clear_msg_tip))
                 .setDialogWidth(0.75f)
                 .setPositiveButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.sure),
                     new OnClickListener() {
@@ -194,7 +194,7 @@ public class CustomerServiceProfileLayout extends LinearLayout implements View.O
                         public void onClick(View v) {
                             Map<String, Object> hashMap = new HashMap<>();
                             hashMap.put(TUIConstants.TUIContact.FRIEND_ID, mId);
-                            TUICore.notifyEvent(TUIConstants.TUIContact.EVENT_USER, TUIConstants.TUIContact.EVENT_SUB_KEY_CLEAR_MESSAGE, hashMap);
+                            TUICore.notifyEvent(TUIConstants.TUIContact.EVENT_USER, TUIConstants.TUIContact.EVENT_SUB_KEY_CLEAR_C2C_MESSAGE, hashMap);
                         }
                     })
                 .setNegativeButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.cancel),

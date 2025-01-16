@@ -215,7 +215,7 @@ public class TUIConversationFragmentContainer extends Fragment {
         mViewPager.setCurrentItem(selectedPosition);
         mViewPager.registerOnPageChangeCallback(changeCallback);
         selectedColor = getResources().getColor(TUIThemeManager.getAttrResId(getContext(), R.attr.conversation_tab_selected));
-        mConversationTabLayout.setTabTextColors(getResources().getColor(R.color.black), selectedColor);
+        mConversationTabLayout.setTabTextColors(getResources().getColor(com.tencent.qcloud.tuikit.timcommon.R.color.black), selectedColor);
         adapter.notifyDataSetChanged();
         // mViewPager.setUserInputEnabled(false);
         mediator =
@@ -412,7 +412,7 @@ public class TUIConversationFragmentContainer extends Fragment {
                 if (tab.getPosition() == position) {
                     titileView.setTextColor(selectedColor);
                 } else {
-                    titileView.setTextColor(getResources().getColor(R.color.black));
+                    titileView.setTextColor(getResources().getColor(com.tencent.qcloud.tuikit.timcommon.R.color.black));
                 }
             }
         }

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cl_user_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.utils.widget.ImageFilterView
+        android:id="@+id/room_ifv_list_user_avatar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/tuiroomkit_head"
+        app:round="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/room_tv_list_user_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:singleLine="true"
+        android:textColor="@color/tuiroomkit_color_text_light_grey"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/room_ifv_list_user_avatar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.utils.widget.ImageFilterView
+        android:id="@+id/room_ifv_list_user_role"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="2dp"
+        app:layout_constraintStart_toStartOf="@+id/room_tv_list_user_name"
+        app:layout_constraintTop_toBottomOf="@+id/room_tv_list_user_name" />
+
+    <TextView
+        android:id="@+id/room_tv_list_user_role"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tuiroomkit_master"
+        android:textColor="@color/tuiroomkit_color_owner_name"
+        android:textSize="12sp"
+        android:layout_marginStart="2dp"
+        app:layout_constraintStart_toEndOf="@+id/room_ifv_list_user_role"
+        app:layout_constraintTop_toTopOf="@+id/room_ifv_list_user_role"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

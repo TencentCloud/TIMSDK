@@ -13,8 +13,10 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import com.tencent.qcloud.tuicore.ServiceInitializer
+import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuicore.util.ScreenUtil
 import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
+import com.tencent.qcloud.tuikit.tuicallkit.data.Constants
 import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
 import com.tencent.qcloud.tuikit.tuicallkit.view.CallKitActivity
 import com.tencent.qcloud.tuikit.tuicallkit.view.root.BaseCallView
@@ -103,6 +105,7 @@ class FloatWindowService : Service() {
         screenWidth = ScreenUtil.getScreenWidth(applicationContext)
         if (null != callView) {
             windowManager!!.addView(callView, windowLayoutParams)
+            TUICore.notifyEvent(Constants.EVENT_VIEW_STATE_CHANGED, Constants.EVENT_FLOAT_VIEW, HashMap())
             callView!!.setOnTouchListener(FloatingListener())
         }
     }

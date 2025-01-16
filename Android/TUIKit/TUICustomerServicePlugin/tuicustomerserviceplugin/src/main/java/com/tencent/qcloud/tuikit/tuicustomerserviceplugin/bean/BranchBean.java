@@ -41,7 +41,7 @@ public class BranchBean implements Serializable {
         this.tail = tail;
     }
 
-    public static class Item {
+    public static class Item implements Serializable {
         private String content;
         private String description;
 

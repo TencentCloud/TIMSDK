@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.utils.widget.ImageFilterView;
 
+import com.tencent.cloud.tuikit.roomkit.ConferenceDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.common.utils.ImageLoader;
 import com.tencent.cloud.tuikit.roomkit.model.data.UserState;
@@ -28,8 +29,7 @@ public class SelectScheduleParticipantView extends FrameLayout implements Partic
     private ImageFilterView mIvSecondAttendee;
     private ImageFilterView mIvThirdAttendee;
 
-    private final Context mContext;
-
+    private final Context             mContext;
     private final ParticipantSelector mParticipantSelector = new ParticipantSelector();
 
     private ScheduleConferenceStateHolder mStateHolder;
@@ -91,9 +91,9 @@ public class SelectScheduleParticipantView extends FrameLayout implements Partic
             return participants;
         }
         for (UserState.UserInfo userInfo : mStateHolder.mAttendeeData.getList()) {
-            User user = new User();
-            user.userId = userInfo.userId;
-            user.userName = userInfo.userName;
+            ConferenceDefine.User user = new ConferenceDefine.User();
+            user.id = userInfo.userId;
+            user.name = userInfo.userName;
             user.avatarUrl = userInfo.avatarUrl;
             participants.selectedList.add(user);
         }
