@@ -36,11 +36,7 @@ extension TUICallKitService {
         guard let param = param else {
             return nil
         }
-        
-        if param.isEmpty {
-            return nil
-        }
-        
+                
         if method == TUICore_TUICallingService_EnableFloatWindowMethod {
             guard let enableFloatWindow = param[TUICore_TUICallingService_EnableFloatWindowMethod_EnableFloatWindow] as? Bool else {
                 return nil
@@ -88,30 +84,8 @@ extension TUICallKitService {
             } fail: { code, message in
                 
             }
-        } else if method == TUICore_TUICallingService_SetAudioPlaybackDeviceMethod {
-            let key = TUICore_TUICallingService_SetAudioPlaybackDevice_AudioPlaybackDevice
-            guard let value = param[key] as? UInt else {
-                return nil
-            }
-            let audioPlaybackDevice: TUIAudioPlaybackDevice
-            switch value {
-            case TUIAudioPlaybackDevice.earpiece.rawValue:
-                audioPlaybackDevice = .earpiece
-            default:
-                audioPlaybackDevice = .speakerphone
-            }
-            
-            TUICallState.instance.audioDevice.value = audioPlaybackDevice
-        } else if method == TUICore_TUICallingService_SetIsMicMuteMethod {
-            guard let isMicMute = param[TUICore_TUICallingService_SetIsMicMuteMethod_IsMicMute] as? Bool else {
-                return nil
-            }
-            
-            if isMicMute {
-                CallEngineManager.instance.openMicrophone(false)
-            } else {
-                CallEngineManager.instance.closeMicrophone(false)
-            }
+        } else {
+            CallEngineManager.instance.voipDataSyncHandler.onCall(method, param: param)
         }
         
         return nil

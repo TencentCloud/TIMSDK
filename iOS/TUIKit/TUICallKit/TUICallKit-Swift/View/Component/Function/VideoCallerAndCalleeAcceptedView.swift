@@ -10,6 +10,10 @@ import SnapKit
 
 class VideoCallerAndCalleeAcceptedView: UIView {
     
+    let isCameraOpenObserver = Observer()
+    let isMicMuteObserver = Observer()
+    let audioDeviceObserver = Observer()
+
     lazy var muteMicBtn: BaseControlButton = {
         let titleKey = TUICallState.instance.isMicMute.value ? "TUICallKit.muted" : "TUICallKit.unmuted"
         let btn = BaseControlButton.create(frame: CGRect.zero,
@@ -83,6 +87,15 @@ class VideoCallerAndCalleeAcceptedView: UIView {
         return btn
     }()
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        registerObserveState()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     // MARK: UI Specification Processing
     private var isViewReady: Bool = false
     override func didMoveToWindow() {
@@ -199,5 +212,22 @@ class VideoCallerAndCalleeAcceptedView: UIView {
         if let image = TUICallKitCommon.getBundleImage(name: open ? "icon_camera_on" : "icon_camera_off") {
             closeCameraBtn.updateImage(image: image)
         }
+    }
+    
+    func registerObserveState() {
+        TUICallState.instance.isCameraOpen.addObserver(isCameraOpenObserver) { [weak self] newValue, _ in
+            guard let self = self else { return }
+            self.updateCloseCameraBtn(open: TUICallState.instance.isCameraOpen.value)
+        }
+        
+        TUICallState.instance.isMicMute.addObserver(isMicMuteObserver, closure: { [weak self] newValue, _ in
+            guard let self = self else { return }
+            self.updateMuteAudioBtn(mute: newValue)
+        })
+        
+        TUICallState.instance.audioDevice.addObserver(audioDeviceObserver, closure: { [weak self] newValue, _ in
+            guard let self = self else { return }
+            self.updateChangeSpeakerBtn(isSpeaker: newValue == .speakerphone)
+        })
     }
 }

@@ -82,7 +82,7 @@
     self.maskView.layer.borderWidth = kScale390(1);
     self.maskView.layer.borderColor = [UIColor tui_colorWithHex:@"#DDDDDD"].CGColor;
     self.maskView.layer.cornerRadius = kScale390(16);
-    [self addSubview:self.maskView];
+    [self.contentView addSubview:self.maskView];
 
     _title = [[UILabel alloc] init];
     _title.font = [UIFont systemFontOfSize:16];

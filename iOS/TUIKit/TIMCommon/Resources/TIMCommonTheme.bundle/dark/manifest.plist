@@ -138,5 +138,7 @@
 	<string>#FFFFFF</string>
 	<key>chat_highlight_link_color</key>
 	<string>#6495ED</string>
+	<key>chat_nav_more_menu_img</key>
+	<string>chat_nav_more_menu.png</string>
 </dict>
 </plist>

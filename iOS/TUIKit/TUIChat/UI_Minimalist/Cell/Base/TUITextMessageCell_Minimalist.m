@@ -30,6 +30,7 @@
         self.textView.tuiTextViewDelegate = self;
         self.bubbleView.userInteractionEnabled = YES;
         [self.bubbleView addSubview:self.textView];
+        [self.container bringSubviewToFront:self.msgStatusView];
         self.bottomContainer = [[UIView alloc] init];
         [self.contentView addSubview:self.bottomContainer];
 

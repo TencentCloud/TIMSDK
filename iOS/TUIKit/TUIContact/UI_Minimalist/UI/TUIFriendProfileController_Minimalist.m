@@ -32,6 +32,7 @@
 @property BOOL modified;
 @property V2TIMUserFullInfo *userFullInfo;
 @property TUINaviBarIndicatorView *titleView;
+@property (nonatomic, strong) UIScrollView *scrollView;
 @property(nonatomic, strong) TUIFriendProfileHeaderView_Minimalist *headerView;
 @end
 
@@ -50,10 +51,16 @@
     [super viewDidLoad];
     [self addLongPressGesture];
 
+    self.scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
+    self.scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [self.view addSubview:self.scrollView];
+    
     self.userFullInfo = self.friendProfile.userFullInfo;
-    CGRect rect = self.view.bounds;
-    self.tableView = [[UITableView alloc] initWithFrame:rect style:UITableViewStyleGrouped];
-    [self.view addSubview:self.tableView];
+    self.tableView = [[UITableView alloc] initWithFrame:self.scrollView.bounds style:UITableViewStyleGrouped];
+    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [self.scrollView addSubview:self.tableView];
+    self.scrollView.contentSize = self.tableView.bounds.size;
+
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     if (@available(iOS 15.0, *)) {

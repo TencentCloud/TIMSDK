@@ -623,11 +623,13 @@
                        }
                       if (placeholderCellData) {
                           NSInteger row = [self.uiMsgs indexOfObject:placeholderCellData];
-                          [self replaceUIMsg:uiMsg atIndex:row];
-                          [self.dataSource dataProviderDataSourceChange:self
-                                                               withType:TUIMessageBaseDataProviderDataSourceChangeTypeReload
-                                                                atIndex:row
-                                                              animation:NO];
+                          if (row != NSNotFound) {
+                              [self replaceUIMsg:uiMsg atIndex:row];
+                              [self.dataSource dataProviderDataSourceChange:self
+                                                                   withType:TUIMessageBaseDataProviderDataSourceChangeTypeReload
+                                                                    atIndex:row
+                                                                  animation:NO];
+                          }
                       }
                       else {
                           if (dateMsg) {
@@ -1171,6 +1173,9 @@ static const int kOfflinePushVersion = 1;
         pushInfo.AndroidSound = TUIConfig.defaultConfig.enableCustomRing ? @"private_ring" : nil;
         pushInfo.AndroidHuaWeiCategory = @"IM";
         pushInfo.AndroidVIVOCategory = @"IM";
+        pushInfo.AndroidHonorImportance = @"NORMAL";
+        pushInfo.iOSInterruptionLevel = @"time-sensitive";
+        pushInfo.enableIOSBackgroundNotification = NO;
     }
 
     if ([self isGroupCommunity:conversationData.groupType groupID:conversationData.groupID] ||

@@ -253,19 +253,39 @@
 }
 
 - (void)onAgreeFriend {
-    [self.pendency agree];
+    __weak typeof(self)weakSelf = self;
+    [self.pendency agreeWithSuccess:^{
+        [weakSelf.navigationController popViewControllerAnimated:YES];
+    } failure:^(int code, NSString * _Nonnull msg) {
+        
+    }];
 }
 
 - (void)onRejectFriend {
-    [self.pendency reject];
+    __weak typeof(self)weakSelf = self;
+    [self.pendency rejectWithSuccess:^{
+        [weakSelf.navigationController popViewControllerAnimated:YES];
+    } failure:^(int code, NSString * _Nonnull msg) {
+        
+    }];
 }
 
 - (void)onAgreeGroup {
-    [self.groupPendency accept];
+    __weak typeof(self)weakSelf = self;
+    [self.groupPendency agreeWithSuccess:^{
+        [weakSelf.navigationController popViewControllerAnimated:YES];
+    } failure:^(int code, NSString * _Nonnull msg) {
+        
+    }];;
 }
 
 - (void)onRejectGroup {
-    [self.groupPendency reject];
+    __weak typeof(self)weakSelf = self;
+    [self.groupPendency rejectWithSuccess:^{
+        [weakSelf.navigationController popViewControllerAnimated:YES];
+    } failure:^(int code, NSString * _Nonnull msg) {
+        
+    }];
 }
 
 - (UIView *)toastView {

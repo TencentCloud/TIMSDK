@@ -87,9 +87,7 @@
         path = TUIContactImagePath(imageName);
     } else if ([bundleName isEqualToString:TUISearchBundle]) {
         path = TUISearchImagePath(imageName);
-    } else if ([bundleName isEqualToString:TUIGroupBundle]) {
-        path = TUIGroupImagePath(imageName);
-    }
+    } 
     if (path) {
         return [UIImage d_imageWithImageLight:path dark:[NSString stringWithFormat:@"%@_dark", path]];
     }

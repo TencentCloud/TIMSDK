@@ -319,11 +319,11 @@
 - (UIView *)datePicker {
     if (_datePicker == nil) {
         UIView *cover = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, UIScreen.mainScreen.bounds.size.height)];
-        cover.backgroundColor = TUIGroupDynamicColor(@"group_modify_view_bg_color", @"#0000007F");
+        cover.backgroundColor = TUIContactDynamicColor(@"group_modify_view_bg_color", @"#0000007F");
         [cover addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideDatePicker)]];
 
         UIView *menuView = [[UIView alloc] init];
-        menuView.backgroundColor = TUIGroupDynamicColor(@"group_modify_container_view_bg_color", @"#FFFFFF");
+        menuView.backgroundColor = TUIContactDynamicColor(@"group_modify_container_view_bg_color", @"#FFFFFF");
         menuView.frame = CGRectMake(0, UIScreen.mainScreen.bounds.size.height - 340, UIScreen.mainScreen.bounds.size.width, 40);
         [cover addSubview:menuView];
 
@@ -352,7 +352,7 @@
         if (@available(iOS 13.4, *)) {
             picker.preferredDatePickerStyle = UIDatePickerStyleWheels;
         }
-        picker.backgroundColor = TUIGroupDynamicColor(@"group_modify_container_view_bg_color", @"#FFFFFF");
+        picker.backgroundColor = TUIContactDynamicColor(@"group_modify_container_view_bg_color", @"#FFFFFF");
         picker.datePickerMode = UIDatePickerModeDate;
         picker.frame = CGRectMake(0, CGRectGetMaxY(menuView.frame), cover.bounds.size.width, 300);
         [cover addSubview:picker];

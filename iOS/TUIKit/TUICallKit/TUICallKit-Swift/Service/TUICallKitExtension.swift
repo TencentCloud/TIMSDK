@@ -17,14 +17,14 @@ class TUICallKitExtension: NSObject, TUIExtensionProtocol {
     func launchCall(type: TUICallMediaType, groupID: String, pushVC: UINavigationController, isClassic: Bool) {
         if !groupID.isEmpty {
             var requestParam: [String: Any] = [:]
-            requestParam[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_GroupID] = groupID
-            requestParam[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_Name] =
-            TUIGlobalization.getLocalizedString(forKey: "Make-a-call", bundle: TIMCommonLocalizableBundle)
-            let viewControllerKey = isClassic ? TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_Classic :
-            TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_Minimalist
+            requestParam[TUICore_TUIContactObjectFactory_SelectGroupMemberVC_GroupID] = groupID
+            requestParam[TUICore_TUIContactObjectFactory_SelectGroupMemberVC_Name] =
+            TUIGlobalization.getLocalizedString(forKey: "Make-a-call", bundle: TUIKitLocalizableBundle)
+            let viewControllerKey = isClassic ? TUICore_TUIContactObjectFactory_SelectGroupMemberVC_Classic :
+            TUICore_TUIContactObjectFactory_SelectGroupMemberVC_Minimalist
             pushVC.push(viewControllerKey, param: requestParam) { [weak self] responseData in
                 guard let self = self else { return }
-                guard let modelList = responseData[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_ResultUserList]
+                guard let modelList = responseData[TUICore_TUIContactObjectFactory_SelectGroupMemberVC_ResultUserList]
                         as? [AnyObject] else { return }
                 let userIDs: [String] = modelList.compactMap { $0.userId }
                 self.startCall(groupID: groupID, userIDs: userIDs, callingType: type)
@@ -100,7 +100,7 @@ class TUICallKitExtension: NSObject, TUIExtensionProtocol {
             return getFriendProfileActionMenuExtensionForClassicContact(param: param)
         } else if extensionID == TUICore_TUIContactExtension_FriendProfileActionMenu_MinimalistExtensionID {
             return getFriendProfileActionMenuExtensionForMinimalistContact(param: param)
-        } else if extensionID == TUICore_TUIGroupExtension_GroupInfoCardActionMenu_MinimalistExtensionID {
+        } else if extensionID == TUICore_TUIContactExtension_GroupInfoCardActionMenu_MinimalistExtensionID {
             return getGroupInfoCardActionMenuExtensionForMinimalistGroup(param: param)
         } else {
             return nil
@@ -266,7 +266,7 @@ class TUICallKitExtension: NSObject, TUIExtensionProtocol {
         guard let param = param else { return nil }
         
         var result: [TUIExtensionInfo] = []
-        guard let filterVideoCall = param[TUICore_TUIGroupExtension_GroupInfoCardActionMenu_FilterVideoCall] as? Bool else { return nil }
+        guard let filterVideoCall = param[TUICore_TUIContactExtension_GroupInfoCardActionMenu_FilterVideoCall] as? Bool else { return nil }
         if !filterVideoCall {
             let videoInfo = TUIExtensionInfo()
             videoInfo.weight = 100
@@ -275,8 +275,8 @@ class TUICallKitExtension: NSObject, TUIExtensionProtocol {
             videoInfo.text = TUICoreDefineConvert.getTIMCommonLocalizableString(key: "TUIKitVideo")
             videoInfo.onClicked = {[weak self] param in
                 guard let self = self else { return }
-                guard let pushVC = param[TUICore_TUIGroupExtension_GroupInfoCardActionMenu_PushVC] as? UINavigationController else { return }
-                guard let groupID = param[TUICore_TUIGroupExtension_GroupInfoCardActionMenu_GroupID] as? String else { return }
+                guard let pushVC = param[TUICore_TUIContactExtension_GroupInfoCardActionMenu_PushVC] as? UINavigationController else { return }
+                guard let groupID = param[TUICore_TUIContactExtension_GroupInfoCardActionMenu_GroupID] as? String else { return }
                 if !groupID.isEmpty {
                     self.launchCall(type: .video, groupID: groupID, pushVC: pushVC, isClassic: false)
                 }
@@ -284,7 +284,7 @@ class TUICallKitExtension: NSObject, TUIExtensionProtocol {
             result.append(videoInfo)
         }
         
-        guard let filterAudioCall = param[TUICore_TUIGroupExtension_GroupInfoCardActionMenu_FilterAudioCall] as? Bool else { return nil }
+        guard let filterAudioCall = param[TUICore_TUIContactExtension_GroupInfoCardActionMenu_FilterAudioCall] as? Bool else { return nil }
         if !filterAudioCall {
             let audioInfo = TUIExtensionInfo()
             audioInfo.weight = 200
@@ -293,8 +293,8 @@ class TUICallKitExtension: NSObject, TUIExtensionProtocol {
             audioInfo.text = TUICoreDefineConvert.getTIMCommonLocalizableString(key: "TUIKitAudio")
             audioInfo.onClicked = {[weak self] param in
                 guard let self = self else { return }
-                guard let pushVC = param[TUICore_TUIGroupExtension_GroupInfoCardActionMenu_PushVC] as? UINavigationController else { return }
-                guard let groupID = param[TUICore_TUIGroupExtension_GroupInfoCardActionMenu_GroupID] as? String else { return }
+                guard let pushVC = param[TUICore_TUIContactExtension_GroupInfoCardActionMenu_PushVC] as? UINavigationController else { return }
+                guard let groupID = param[TUICore_TUIContactExtension_GroupInfoCardActionMenu_GroupID] as? String else { return }
                 if !groupID.isEmpty {
                     self.launchCall(type: .audio, groupID: groupID, pushVC: pushVC, isClassic: false)
                 }

@@ -162,11 +162,23 @@
       @strongify(self);
       [self dismissViewControllerAnimated:NO
                                completion:^{
-                                 TUIFriendRequestViewController_Minimalist *frc = [[TUIFriendRequestViewController_Minimalist alloc] init];
-                                 frc.profile = cellModel.userInfo;
-
+                                  NSString *userID = cellModel.userInfo.userID.length >0
+                                                     ?cellModel.userInfo.userID : @"";
+                                  TUICommonContactCellData_Minimalist *friendContactData = self.viewModel.contactMap[userID];
+                                  UIViewController *targetViewController = nil;
+                                  if (friendContactData) {
+                                      TUIFriendProfileController_Minimalist *vc = [[TUIFriendProfileController_Minimalist alloc] init];
+                                      vc.friendProfile = friendContactData.friendProfile;
+                                      targetViewController = vc;
+                                  }
+                                  else {
+                                      TUIFriendRequestViewController_Minimalist *frc = [[TUIFriendRequestViewController_Minimalist alloc] init];
+                                      frc.profile = cellModel.userInfo;
+                                      targetViewController = frc;
+                                  }
+          
                                  TUIFloatViewController *bfloatVC = [[TUIFloatViewController alloc] init];
-                                 [bfloatVC appendChildViewController:(id)frc topMargin:kScale390(87.5)];
+                                 [bfloatVC appendChildViewController:(id)targetViewController topMargin:kScale390(87.5)];
                                  [bfloatVC.topGestureView setTitleText:TIMCommonLocalizableString(Info)
                                                           subTitleText:@""
                                                            leftBtnText:TIMCommonLocalizableString(TUIKitCreateCancel)
@@ -207,9 +219,9 @@
 
       [self dismissViewControllerAnimated:YES
                                completion:^{
-                                 NSDictionary *param = @{TUICore_TUIGroupObjectFactory_GetGroupRequestViewControllerMethod_GroupInfoKey : cellModel.groupInfo};
-                                 UIViewController *vc = [TUICore createObject:TUICore_TUIGroupObjectFactory_Minimalist
-                                                                          key:TUICore_TUIGroupObjectFactory_GetGroupRequestViewControllerMethod
+                                 NSDictionary *param = @{TUICore_TUIContactObjectFactory_GetGroupRequestViewControllerMethod_GroupInfoKey : cellModel.groupInfo};
+                                 UIViewController *vc = [TUICore createObject:TUICore_TUIContactObjectFactory_Minimalist
+                                                                          key:TUICore_TUIContactObjectFactory_GetGroupRequestViewControllerMethod
                                                                         param:param];
 
                                  TUIFloatViewController *bfloatVC = [[TUIFloatViewController alloc] init];

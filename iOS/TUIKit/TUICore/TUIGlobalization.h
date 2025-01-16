@@ -22,8 +22,6 @@
 
 #define TUIContactLocalizableString(key) [TUIGlobalization getLocalizedStringForKey:@"" #key "" bundle:TUIContactLocalizableBundle]
 
-#define TUIGroupLocalizableString(key) [TUIGlobalization getLocalizedStringForKey:@"" #key "" bundle:TUIGroupLocalizableBundle]
-
 #define TUISearchLocalizableString(key) [TUIGlobalization getLocalizedStringForKey:@"" #key "" bundle:TUISearchLocalizableBundle]
 
 #define TIMCommonLocalizableString(key) [TUIGlobalization getLocalizedStringForKey:@"" #key "" bundle:TIMCommonLocalizableBundle]

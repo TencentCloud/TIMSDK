@@ -7,9 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-
+typedef void (^IAlbumPickerCallback)(NSDictionary *param);
 @protocol IAlbumPicker <NSObject>
-- (void)pickMediaWithCaller:(UIViewController *)caller;
+- (void)pickMediaWithCaller:(UIViewController *)caller
+        originalMediaPicked:(IAlbumPickerCallback)mediaPicked
+           progressCallback:(IAlbumPickerCallback)progressCallback
+           finishedCallback:(IAlbumPickerCallback)finishedCallback;
 @end
 
 
@@ -21,7 +24,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 + (void)registerAdvancedAlbumPicker:(id<IAlbumPicker>)albumPicker;
-+ (void)pickMediaWithCaller:(UIViewController *)caller;
++ (void)pickMediaWithCaller:(UIViewController *)caller
+        originalMediaPicked:(IAlbumPickerCallback)mediaPicked
+           progressCallback:(IAlbumPickerCallback)progressCallback
+           finishedCallback:(IAlbumPickerCallback)finishedCallback;
+
 @end
 
 NS_ASSUME_NONNULL_END

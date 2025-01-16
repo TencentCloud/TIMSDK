@@ -12,7 +12,7 @@
 #import "TUIChatConfig.h"
 #import "TUIChatDefine.h"
 #import "TUIGroupChatViewController_Minimalist.h"
-
+#import "TUIGroupInfoController_Minimalist.h"
 @interface TUIChatObjectFactory_Minimalist () <TUIObjectProtocol>
 
 @end
@@ -34,6 +34,9 @@
 - (id)onCreateObject:(NSString *)method param:(nullable NSDictionary *)param {
     if ([method isEqualToString:TUICore_TUIChatObjectFactory_ChatViewController_Minimalist]) {
         return [self createChatViewControllerParam:param];
+    }
+    else if ([method isEqualToString:TUICore_TUIContactObjectFactory_GetGroupInfoVC_Minimalist]) {
+        return [self createGroupInfoController:[param tui_objectForKey:TUICore_TUIContactObjectFactory_GetGroupInfoVC_GroupID asClass:NSString.class]];
     }
     return nil;
 }
@@ -90,6 +93,12 @@
     chatVC.highlightKeyword = highlightKeyword;
     chatVC.locateMessage = locateMessage;
     return chatVC;
+}
+
+- (UIViewController *)createGroupInfoController:(NSString *)groupID {
+    TUIGroupInfoController_Minimalist *vc = [[TUIGroupInfoController_Minimalist alloc] init];
+    vc.groupId = groupID;
+    return vc;
 }
 
 @end

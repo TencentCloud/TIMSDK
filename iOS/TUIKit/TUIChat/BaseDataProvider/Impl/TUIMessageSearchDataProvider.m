@@ -8,7 +8,7 @@
 
 #import "TUIMessageSearchDataProvider.h"
 #import "TUIMessageBaseDataProvider+ProtectedAPI.h"
-
+#import "TUIChatMediaSendingManager.h"
 typedef void (^LoadSearchMsgSucceedBlock)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg, NSArray<TUIMessageCellData *> *newMsgs);
 typedef void (^LoadMsgSucceedBlock)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg, BOOL isFirstLoad, NSArray<TUIMessageCellData *> *newUIMsgs);
 
@@ -233,6 +233,19 @@ typedef void (^LoadMsgSucceedBlock)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg
               }
               return;
           }
+        
+            //add media placeholder celldata
+            if (self.conversationModel.conversationID.length > 0) {
+                NSMutableArray<TUIChatMediaTask *> * tasks = [TUIChatMediaSendingManager.sharedInstance
+                                                              findPlaceHolderListByConversationID:self.conversationModel.conversationID];
+                for (TUIChatMediaTask * task in tasks) {
+                    if (task.placeHolderCellData) {
+                        [uiMsgs addObject:task.placeHolderCellData];
+                    }
+                    
+                }
+            }
+
           [self getGroupMessageReceipts:msgs
               uiMsgs:uiMsgs
               succ:^{
@@ -335,6 +348,10 @@ typedef void (^LoadMsgSucceedBlock)(BOOL isOlderNoMoreMsg, BOOL isNewerNoMoreMsg
          * If the current message list has not pulled the last message, ignore the new message;
          * If it is processed at this time, it will cause new messages to be added to the history list, resulting in the problem of position confusion.
          */
+        return;
+    }
+    if (self.dataSource.isDataSourceConsistent == NO ) {
+        self.isNewerNoMoreMsg = NO;
         return;
     }
 

@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TUIContactService_Minimalist : NSObject
+@interface TUIContactService_Minimalist : NSObject <TUIServiceProtocol>
 
 + (TUIContactService_Minimalist *)shareInstance;
 

@@ -80,7 +80,7 @@ class InviteUserButton: UIView {
     }
     
     func tui_valueCallback(param: [AnyHashable: Any]) {
-        guard let selectUserList = param[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_ResultUserList] as? [TUIUserModel] else { return }
+        guard let selectUserList = param[TUICore_TUIContactObjectFactory_SelectGroupMemberVC_ResultUserList] as? [TUIUserModel] else { return }
         if selectUserList.count > 0 {
             return
         }

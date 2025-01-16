@@ -29,16 +29,18 @@
     [AlbumPicker sharedInstance].advancedAlbumPicker = albumPicker;
 }
 
-+ (void)pickMediaWithCaller:(UIViewController *)caller  {
++ (void)pickMediaWithCaller:(UIViewController *)caller
+        originalMediaPicked:(IAlbumPickerCallback)mediaPicked
+           progressCallback:(IAlbumPickerCallback)progressCallback
+           finishedCallback:(IAlbumPickerCallback)finishedCallback {
     id<IAlbumPicker> albumPicker = nil;
     if ([AlbumPicker sharedInstance].advancedAlbumPicker) {
         albumPicker = [AlbumPicker sharedInstance].advancedAlbumPicker;
     }
     
     if (albumPicker && [albumPicker respondsToSelector:@selector
-                        (pickMediaWithCaller:)]) {
-        [albumPicker pickMediaWithCaller:caller];
+                        (pickMediaWithCaller:originalMediaPicked:progressCallback:finishedCallback:)]) {
+        [albumPicker pickMediaWithCaller:caller originalMediaPicked:mediaPicked progressCallback:progressCallback finishedCallback:finishedCallback];
     }
 }
-
 @end

@@ -235,7 +235,7 @@
     self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4];
 
     _container = [[UIView alloc] initWithFrame:CGRectMake(0, Screen_Height, kContainerWidth, kContainerHeight)];
-    _container.backgroundColor = TUIGroupDynamicColor(@"group_modify_container_view_bg_color", @"#FFFFFF");
+    _container.backgroundColor = TUIContactDynamicColor(@"group_modify_container_view_bg_color", @"#FFFFFF");
     _container.layer.cornerRadius = 8;
     [_container.layer setMasksToBounds:YES];
     [self addSubview:_container];
@@ -245,7 +245,7 @@
 
     _title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, _container.frame.size.width, titleHeight)];
     _title.font = [UIFont fontWithName:@"PingFangSC-Medium" size:17];
-    _title.textColor = TUIGroupDynamicColor(@"group_modify_title_color", @"#000000");
+    _title.textColor = TUIContactDynamicColor(@"group_modify_title_color", @"#000000");
     _title.textAlignment = NSTextAlignmentCenter;
     [_container addSubview:_title];
 
@@ -260,8 +260,8 @@
     _content = [[UITextField alloc] initWithFrame:CGRectMake(contentMargin, contentY, contentWidth, contentheight)];
     _content.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
     _content.delegate = self;
-    _content.backgroundColor = TUIGroupDynamicColor(@"group_modify_input_bg_color", @"#F5F5F5");
-    _content.textColor = TUIGroupDynamicColor(@"group_modify_input_text_color", @"#000000");
+    _content.backgroundColor = TUIContactDynamicColor(@"group_modify_input_bg_color", @"#F5F5F5");
+    _content.textColor = TUIContactDynamicColor(@"group_modify_input_text_color", @"#000000");
     [_content setFont:[UIFont systemFontOfSize:16]];
     [_content.layer setMasksToBounds:YES];
     [_content.layer setCornerRadius:4.0f];
@@ -282,7 +282,7 @@
     [_container addSubview:_content];
 
     _descLabel = [[UILabel alloc] initWithFrame:CGRectMake(_content.frame.origin.x, CGRectGetMaxY(_content.frame) + 17, contentWidth, 20)];
-    _descLabel.textColor = TUIGroupDynamicColor(@"group_modify_desc_color", @"#888888");
+    _descLabel.textColor = TUIContactDynamicColor(@"group_modify_desc_color", @"#888888");
     _descLabel.font = [UIFont systemFontOfSize:13.0];
     _descLabel.numberOfLines = 0;
     _descLabel.text = @"desc";
@@ -301,7 +301,7 @@
 
     _closeBtn = [[UIButton alloc] initWithFrame:CGRectMake(_container.frame.size.width - 24 - 20, 0, 24, 24)];
     _closeBtn.mm__centerY(_title.mm_centerY);
-    [_closeBtn setImage:[UIImage imageNamed:TUIGroupImagePath(@"ic_close_poppings")] forState:UIControlStateNormal];
+    [_closeBtn setImage:[UIImage imageNamed:TUIContactImagePath(@"ic_close_poppings")] forState:UIControlStateNormal];
     [_closeBtn addTarget:self action:@selector(didCancel:) forControlEvents:UIControlEventTouchUpInside];
     [_container addSubview:_closeBtn];
 }
@@ -420,10 +420,10 @@
 
 - (void)enableConfirmButton:(BOOL)enable {
     if (enable) {
-        _confirm.backgroundColor = TUIGroupDynamicColor(@"group_modify_confirm_enable_bg_color", @"147AFF");
+        _confirm.backgroundColor = TUIContactDynamicColor(@"group_modify_confirm_enable_bg_color", @"147AFF");
         _confirm.enabled = YES;
     } else {
-        _confirm.backgroundColor = [TUIGroupDynamicColor(@"group_modify_confirm_enable_bg_color", @"147AFF") colorWithAlphaComponent:0.3];
+        _confirm.backgroundColor = [TUIContactDynamicColor(@"group_modify_confirm_enable_bg_color", @"147AFF") colorWithAlphaComponent:0.3];
         _confirm.enabled = NO;
     }
 }
@@ -874,32 +874,54 @@
 }
 
 - (void)accept {
+    [self agreeWithSuccess:nil failure:nil];
+}
+- (void)reject {
+    [self rejectWithSuccess:nil failure:nil];
+}
+
+
+- (void)agreeWithSuccess:(TUIGroupPendencyCellDataSuccessCallback)success
+                 failure:(TUIGroupPendencyCellDataFailureCallback)failure {
     [[V2TIMManager sharedInstance] acceptGroupApplication:_pendencyItem
         reason:TIMCommonLocalizableString(TUIKitAgreedByAdministor)
         succ:^{
-          [TUITool makeToast:TIMCommonLocalizableString(Have_been_sent)];
-          [[NSNotificationCenter defaultCenter] postNotificationName:TUIGroupPendencyCellData_onPendencyChanged object:nil];
+              [TUITool makeToast:TIMCommonLocalizableString(Have_been_sent)];
+              [[NSNotificationCenter defaultCenter] postNotificationName:
+               TUIGroupPendencyCellData_onPendencyChanged object:nil];
+              if (success) {
+                  success();
+              }
           ;
         }
         fail:^(int code, NSString *msg) {
-          [TUITool makeToastError:code msg:msg];
+            [TUITool makeToastError:code msg:msg];
+            if (failure) {
+                failure(code,msg);
+            }
         }];
     self.isAccepted = YES;
 }
-- (void)reject {
+
+- (void)rejectWithSuccess:(TUIGroupPendencyCellDataSuccessCallback)success
+                  failure:(TUIGroupPendencyCellDataFailureCallback)failure {
     [[V2TIMManager sharedInstance] refuseGroupApplication:_pendencyItem
         reason:TIMCommonLocalizableString(TUIkitDiscliedByAdministor)
         succ:^{
-          [TUITool makeToast:TIMCommonLocalizableString(Have_been_sent)];
-          [[NSNotificationCenter defaultCenter] postNotificationName:TUIGroupPendencyCellData_onPendencyChanged object:nil];
-          ;
+            [TUITool makeToast:TIMCommonLocalizableString(Have_been_sent)];
+            [[NSNotificationCenter defaultCenter] postNotificationName: TUIGroupPendencyCellData_onPendencyChanged object:nil];
+            if (success) {
+                success();
+            }
         }
         fail:^(int code, NSString *msg) {
           [TUITool makeToastError:code msg:msg];
+            if (failure) {
+                failure(code,msg);
+            }
         }];
     self.isRejectd = YES;
 }
-
 @end
 
 @implementation TUIGroupPendencyCell
@@ -1568,9 +1590,9 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
         _avatarImage = DefaultAvatarImage;
 
         if ([_genderString isEqualToString:TIMCommonLocalizableString(Male)]) {
-            _genderIconImage = TUIGroupCommonBundleImage(@"male");
+            _genderIconImage = TUIContactCommonBundleImage(@"male");
         } else if ([_genderString isEqualToString:TIMCommonLocalizableString(Female)]) {
-            _genderIconImage = TUIGroupCommonBundleImage(@"female");
+            _genderIconImage = TUIContactCommonBundleImage(@"female");
         } else {
             _genderIconImage = nil;
         }
@@ -1662,9 +1684,9 @@ NSString *kTopConversationListChangedNotification = @"kTopConversationListChange
     [[RACObserve(data, genderString) takeUntil:self.rac_prepareForReuseSignal] subscribeNext:^(NSString *x) {
       @strongify(self);
       if ([x isEqualToString:TIMCommonLocalizableString(Male)]) {
-          self.genderIcon.image = TUIGroupCommonBundleImage(@"male");
+          self.genderIcon.image = TUIContactCommonBundleImage(@"male");
       } else if ([x isEqualToString:TIMCommonLocalizableString(Female)]) {
-          self.genderIcon.image = TUIGroupCommonBundleImage(@"female");
+          self.genderIcon.image = TUIContactCommonBundleImage(@"female");
       } else {
           self.genderIcon.image = nil;
       }

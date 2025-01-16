@@ -759,7 +759,7 @@
 "TIMAppTabBarItemMessageText" = "消息";
 "TIMAppTabBarItemContactText" = "通讯录";
 "TIMAppTabBarItemMeText"      = "设置";
-"TIMAppTabBarItemMessageText_mini" = "聊天";
+"TIMAppTabBarItemMessageText_mini" = "消息";
 "TIMAppTabBarItemContactText_mini" = "联系人";
 "TIMAppTabBarItemSettingText_mini" = "设置";
 "TIMAppTabBarItemCallsRecordText_mini" = "通话记录";

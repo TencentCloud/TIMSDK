@@ -1,0 +1,81 @@
+//
+//  Localized.strings
+//  TUICallKit
+//
+//  Created by reneechai on 2024/10/28.
+//  Copyright © 2024 Tencent. All rights reserved.
+//
+
+"TUICallKit.inviteToVideoCall" = "邀請你視頻通話";
+"TUICallKit.inviteToAudioCall" = "邀請你語音通話";
+"TUICallKit.waitAccept" = "等待對方接受邀請";
+"TUICallKit.accept" = "已接通";
+"TUICallKit.Group.inviteToGroupCall" = "邀請你加入多人通話";
+"TUICallKit.Group.waitAccept" = "等待接聽";
+"TUICallKit.determine" = "確定";
+"TUICallKit.lineBusy" = "對方忙";
+"TUICallKit.userHangup" = "\%@ 結束通話";
+"TUICallKit.userReject" = "\%@ 拒絕了通話請求";
+"TUICallKit.otherPartyHangup" = "對方已掛斷，通話結束";
+"TUICallKit.otherPartyReject" = "對方拒絕了通話請求";
+"TUICallKit.otherPartyNoResponse" = "對方未響應";
+
+"TUICallKit.switchCamera" = "翻轉";
+"TUICallKit.blurBackground" = "模糊背景";
+"TUICallKit.hangup" = "掛斷";
+"TUICallKit.decline" = "拒接";
+"TUICallKit.switchToAudio" = "切換到語音通話";
+"TUICallKit.answer" = "接聽";
+"TUICallKit.yournetworkpoor" = "己方網絡不佳";
+"TUICallKit.calleeTip" = "參與通話的還有：";
+"TUICallKit.FloatingWindow.waitAccept" = "等待接聽";
+
+"TUICallKit.User.Exceed.Limit" = "暫支持最多9人通話。如需多人會議，請使用TUIRoom";
+"TUICallKit.UnableToRestartTheCall" = "正在通話中，無法再次發起";
+
+"TUICallKit.purchased" = "您當前未購買音視頻通話能力套餐，請前往IM 控制台開通免費體驗或加購正式版";
+"TUICallKit.support" = "您當前購買的音視頻通話能力套餐不支持該功能，建議您升級套餐類型";
+"TUICallKit.ErrorInPeerBlacklist" = "發起通話失敗，用戶在黑名單中，禁止發起！";
+"TUICallKit.ErrorInvalidLogin" = "登錄失敗,請重新登錄";
+"TUICallKit.ErrorParameterInvalid" = "參數錯誤";
+"TUICallKit.ErrorRequestRefused" = "當前狀態不支持調用";
+"TUICallKit.ErrorRequestRepeated" = "當前方法正在執行中，請勿重複調用"; 
+"TUICallKit.ErrorSceneNotSupport" = "當前通話場景，不支持該功能";
+
+"TUICallKit.FailedToGetCameraPermission.Title" = "相機權限未開啟";
+"TUICallKit.FailedToGetCameraPermission.Tips" = "無法使用視頻通話功能，點擊\"去開啟\"打開相機權限";
+"TUICallKit.FailedToGetCameraPermission.Later" = "以後再說";
+"TUICallKit.FailedToGetCameraPermission.Enable" = "去開啟";
+
+"TUICallKit.FailedToGetMicrophonePermission.Title" = "麥克風權限未開啟";
+"TUICallKit.FailedToGetMicrophonePermission.Tips" = "無法使用發送音視頻通話功能，點擊\"去開啟\"打開麥克風權限";
+"TUICallKit.FailedToGetMicrophonePermission.Later" = "以後再說";
+"TUICallKit.FailedToGetMicrophonePermission.Enable" = "去開啟";
+
+"TUICallKit.have.new.invitation" = "您有一個新的通話";
+
+"TUICallKit.Recents.all" = "所有通話";
+"TUICallKit.Recents.missed" = "未接通話";
+"TUICallKit.Recents.calls" = "通話記錄";
+"TUICallKit.Recents.clear" = "清除";
+"TUICallKit.Recents.done" = "完成";
+"TUICallKit.Recents.delete" = "刪除";
+"TUICallKit.Recents.addUser" = "添加成員";
+"TUICallKit.Recents.clear.all" = "清除所有記錄";
+"TUICallKit.Recents.clear.cancel" = "取消";
+"TUICallKit.Recents.incoming" = "來電";
+"TUICallKit.Recents.outgoing" = "去電";
+
+"TUICallKit.unmuted" = "麥克風已開";
+"TUICallKit.muted" = "麥克風已關";
+"TUICallKit.speakerPhone" = "揚聲器已開";
+"TUICallKit.earpiece" = "揚聲器已關";
+"TUICallKit.cameraOn" = "攝像頭已開";
+"TUICallKit.cameraOff" = "攝像頭已關";
+
+"TUICallKit.JoinGroupView.title" = "\%d人正在\%@";
+"TUICallKit.JoinGroupView.join" = "加入";
+"TUICallKit.JoinGroupView.audioCall" = "語音通話";
+"TUICallKit.JoinGroupView.videoCall" = "視頻通話";
+
+"TUICallKit.OtherParty.NetworkLowQuality" = "當前通話對方網絡不佳";

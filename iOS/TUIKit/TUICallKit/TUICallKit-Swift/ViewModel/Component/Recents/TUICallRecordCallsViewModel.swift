@@ -172,11 +172,11 @@ class TUICallRecordCallsViewModel {
         }
         
         if !groupId.isEmpty {
-            let param: [String: Any] = [TUICore_TUIGroupObjectFactory_GetGroupInfoVC_GroupID: groupId]
+            let param: [String: Any] = [TUICore_TUIContactObjectFactory_GetGroupInfoVC_GroupID: groupId]
             if TUICallKitRecordCallsUIStyle.classic == recordCallsUIStyle {
-                navigationController.push(TUICore_TUIGroupObjectFactory_GetGroupInfoVC_Classic, param: param, forResult: nil)
+                navigationController.push(TUICore_TUIContactObjectFactory_GetGroupInfoVC_Classic, param: param, forResult: nil)
             } else {
-                navigationController.push(TUICore_TUIGroupObjectFactory_GetGroupInfoVC_Minimalist, param: param, forResult: nil)
+                navigationController.push(TUICore_TUIContactObjectFactory_GetGroupInfoVC_Minimalist, param: param, forResult: nil)
             }
         } else if !userId.isEmpty {
             getUserOrFriendProfileVCWithUserID(userId: userId) { viewController in

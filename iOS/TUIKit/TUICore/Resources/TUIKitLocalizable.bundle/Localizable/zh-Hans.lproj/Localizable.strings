@@ -241,7 +241,7 @@
 "TUIKitErrorSVRGroupNotFound" = "群组不存在";
 "TUIKitErrorSVRGroupJsonParseFailed" = "解析 JSON 包体失败，请检查包体的格式是否符合 JSON 格式。";
 "TUIKitErrorSVRGroupInvalidId" = "发起操作的 Identifier 非法，请检查发起操作的用户 Identifier 是否填写正确。";
-"TUIKitErrorSVRGroupAllreadyMember" = "被邀请加入的用户已经是群成员。";
+"TUIKitErrorSVRGroupAllreadyMember" = "已经是群成员。";
 "TUIKitErrorSVRGroupFullMemberCount" = "群已满员，无法将请求中的用户加入群组";
 "TUIKitErrorSVRGroupInvalidGroupId" = "群组 ID 非法，请检查群组 ID 是否填写正确。";
 "TUIKitErrorSVRGroupRejectFromThirdParty" = "App 后台通过第三方回调拒绝本次操作。";

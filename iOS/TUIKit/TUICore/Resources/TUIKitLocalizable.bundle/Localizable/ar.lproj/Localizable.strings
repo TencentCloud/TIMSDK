@@ -251,7 +251,7 @@
 "TUIKitErrorSVRGroupNotFound" = "المجموعة غير موجودة.";
 "TUIKitErrorSVRGroupJsonParseFailed" = "فشل تحليل حزمة JSON، يرجى التحقق من تنسيق الحزمة.";
 "TUIKitErrorSVRGroupInvalidId" = "معرف المستخدم الذي يقوم بالعملية غير صالح، يرجى التحقق من صحة معرف المستخدم الذي يقوم بالعملية.";
-"TUIKitErrorSVRGroupAllreadyMember" = "المستخدم الذي تمت دعوته للانضمام إلى المجموعة هو بالفعل عضو في المجموعة.";
+"TUIKitErrorSVRGroupAllreadyMember" = "عضو في المجموعة بالفعل";
 "TUIKitErrorSVRGroupFullMemberCount" = "المجموعة مكتملة العدد، لا يمكن إضافة المستخدمين المحددين في الطلب إلى المجموعة.";
 "TUIKitErrorSVRGroupInvalidGroupId" = "معرف المجموعة غير صالح، يرجى التحقق من صحة معرف المجموعة.";
 "TUIKitErrorSVRGroupRejectFromThirdParty" = "تم رفض العملية من قبل خلفية التطبيق من خلال رد فعل طرف ثالث.";

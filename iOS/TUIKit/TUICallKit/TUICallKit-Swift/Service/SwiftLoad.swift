@@ -27,7 +27,7 @@ extension NSObject {
                                   object: TUICallKitExtension.instance)
         TUICore.registerExtension(TUICore_TUIContactExtension_FriendProfileActionMenu_MinimalistExtensionID,
                                   object: TUICallKitExtension.instance)
-        TUICore.registerExtension(TUICore_TUIGroupExtension_GroupInfoCardActionMenu_MinimalistExtensionID,
+        TUICore.registerExtension(TUICore_TUIContactExtension_GroupInfoCardActionMenu_MinimalistExtensionID,
                                   object: TUICallKitExtension.instance)
         
         TUICore.registerExtension(TUICore_TUIChatExtension_ChatViewTopArea_ClassicExtensionID,

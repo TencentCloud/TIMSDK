@@ -18,6 +18,10 @@ class SingleCallVideoLayout: UIView {
     
     let selfCallStatusObserver = Observer()
     let isCameraOpenObserver = Observer()
+    let enableBlurBackgroundObserver = Observer()
+    let remoteUserListObserver = Observer()
+
+    var remoteHadInit = false
     var isLocalPreViewLarge: Bool = true
     
     var localPreView: VideoView {
@@ -55,12 +59,16 @@ class SingleCallVideoLayout: UIView {
     deinit {
         TUICallState.instance.selfUser.value.callStatus.removeObserver(selfCallStatusObserver)
         TUICallState.instance.isCameraOpen.removeObserver(isCameraOpenObserver)
+        TUICallState.instance.enableBlurBackground.removeObserver(enableBlurBackgroundObserver)
+        TUICallState.instance.remoteUserList.removeObserver(remoteUserListObserver)
     }
     
     // MARK: Register TUICallState Observer && Update UI
     func registerObserveState() {
         callStatusChanged()
         cameraStateChanged()
+        enableBlurBackgroundStateChange()
+        remoteUserListChange()
     }
     
     func callStatusChanged() {
@@ -91,6 +99,25 @@ class SingleCallVideoLayout: UIView {
         }
     }
     
+    
+    func enableBlurBackgroundStateChange() {
+        TUICallState.instance.enableBlurBackground.addObserver(enableBlurBackgroundObserver) { [weak self] newValue, _ in
+            guard let self = self else { return }
+            if newValue == true && self.isLocalPreViewLarge == false {
+                switchPreview()
+            }
+        }
+    }
+    
+    func remoteUserListChange() {
+        TUICallState.instance.remoteUserList.addObserver(remoteUserListObserver) { [weak self] newValue, _ in
+            guard let self = self else { return }
+            if !remoteHadInit && TUICallState.instance.selfUser.value.callStatus.value == .accept {
+                self.initRemotePreView()
+                self.setBeginAcceptPreview()}
+        }
+    }
+    
     // MARK: update UI
     func switchPreview() {
         if isLocalPreViewLarge {
@@ -118,6 +145,7 @@ class SingleCallVideoLayout: UIView {
         UIView.animate(withDuration: 0.3) {
             self.localPreView.frame = kCallKitSingleSmallVideoViewFrame
             self.remotePreView.frame = kCallKitSingleLargeVideoViewFrame
+            self.localPreView.isHidden = TUICallState.instance.isCameraOpen.value ? false : true
         } completion: { finished in
             self.sendSubviewToBack(self.remotePreView)
         }
@@ -170,6 +198,7 @@ class SingleCallVideoLayout: UIView {
         remotePreView.delegate = self
         remotePreView.isHidden = true
         addSubview(self.remotePreView)
+        remoteHadInit = true
         
         CallEngineManager.instance.startRemoteView(user: remoteUser, videoView: remotePreView)
     }

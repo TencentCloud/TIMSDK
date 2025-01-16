@@ -37,7 +37,69 @@
 #pragma mark - Public API
 - (void)selectPhoto {
     if ([AlbumPicker sharedInstance].advancedAlbumPicker) {
-        [[AlbumPicker sharedInstance].advancedAlbumPicker pickMediaWithCaller:self.presentViewController];
+        __weak typeof(self) weakSelf = self;
+        __strong typeof(weakSelf.listener) strongListener = weakSelf.listener;
+        [[AlbumPicker sharedInstance].advancedAlbumPicker pickMediaWithCaller:self.presentViewController originalMediaPicked:^(NSDictionary *param) {
+            if (param) {
+                NSString * type = param[@"type"];
+                if ([type isEqualToString:@"image"]) {
+                    // image do nothing
+                }
+                else if ([type isEqualToString:@"video"]) {
+                    TUIMessageCellData *placeHolderCellData = param[@"placeHolderCellData"];
+                    if ([strongListener respondsToSelector:@selector(sendPlaceHolderUIMessage:)]) {
+                        [strongListener sendPlaceHolderUIMessage:placeHolderCellData];
+                    }
+                    TUIChatMediaTask * task = [[TUIChatMediaTask alloc] init];
+                    task.placeHolderCellData = placeHolderCellData;
+                    task.msgID = placeHolderCellData.msgID;
+                    task.conversationID = weakSelf.conversationID;
+                    if (placeHolderCellData.msgID.length > 0) {
+                        [TUIChatMediaSendingManager.sharedInstance addMediaTask: task forKey:placeHolderCellData.msgID];
+                    }
+                }
+                else {
+                    // do nothing
+                }
+            }
+        } progressCallback:^(NSDictionary *param) {
+            NSLog(@"%@,strongListener:%@",param,strongListener);
+        } finishedCallback:^(NSDictionary *param) {
+            if (param) {
+                V2TIMMessage * message = param[@"message"];
+                NSString * type = param[@"type"];
+                if ([type isEqualToString:@"image"]) {
+                    if ([strongListener respondsToSelector:@selector(sendMessage:placeHolderCellData:)]) {
+                        [strongListener sendMessage:message placeHolderCellData:nil];
+                    }
+                }
+                else if ([type isEqualToString:@"video"]) {
+                    TUIMessageCellData *placeHolderCellData = param[@"placeHolderCellData"];
+                    if (placeHolderCellData.msgID.length > 0) {
+                        [TUIChatMediaSendingManager.sharedInstance removeMediaTaskForKey:placeHolderCellData.msgID];
+                    }
+                    BOOL canSendByCurrentPage = NO;
+                    for (id<TUIChatMediaDataListener> currentVC in TUIChatMediaSendingManager.sharedInstance.mediaSendingControllers) {
+                        if ([currentVC.currentConversationID isEqualToString:self.conversationID]&&
+                            [currentVC respondsToSelector:@selector(sendMessage:placeHolderCellData:)]) {
+                            if (currentVC.isPageAppears) {
+                                [currentVC sendMessage:message placeHolderCellData:placeHolderCellData];
+                                canSendByCurrentPage = YES;
+                                break;
+                            }
+                        }
+                    }
+                    if (!canSendByCurrentPage) {
+                        if ([strongListener respondsToSelector:@selector(sendMessage:placeHolderCellData:)]) {
+                            [strongListener sendMessage:message placeHolderCellData:placeHolderCellData];
+                        }
+                    }
+                }
+                else {
+                    // do nothing
+                }
+            }
+        }];
     }
     else {
         //defalut AlbumPicker
@@ -139,13 +201,21 @@
 
 - (void)takeVideo {
     if ([MultimediaRecorder sharedInstance].advancedVideoRecorder) {
-//        [[MultimediaRecorder sharedInstance].advancedVideoRecorder setConfig:
-//         @"{\"theme_color\": \"#00FF00\",\"max_record_duration_ms\": \"8000\"}"];
         [[MultimediaRecorder sharedInstance].advancedVideoRecorder recordVideoWithCaller:self.presentViewController successBlock:^(NSURL * _Nonnull uri) {
             if (uri) {
                 if ([uri.pathExtension.lowercaseString isEqualToString:@"mp4"]) {
                     [self handleVideoPick:YES message:nil videoUrl:uri];
                     return;
+                }
+                else if ([self isImageURL:uri]){
+                    NSData *imageData = [NSData dataWithContentsOfURL:uri];
+                    UIImage *photo = [UIImage imageWithData:imageData];
+                    NSString *path = [TUIKit_Image_Path stringByAppendingString:[TUITool genImageName:nil]];
+                    [[NSFileManager defaultManager] createFileAtPath:path
+                                                            contents:UIImagePNGRepresentation(photo) attributes:nil];
+                    if ([self.listener respondsToSelector:@selector(onProvideImage:)]) {
+                        [self.listener onProvideImage:path];
+                    }
                 }
                 else {
                     [self transcodeIfNeed:YES message:nil videoUrl:uri];
@@ -189,6 +259,11 @@
     [self.presentViewController presentViewController:picker animated:YES completion:nil];
 }
 
+- (BOOL)isImageURL:(NSURL *)url {
+    NSArray *imageExtensions = @[@"jpg", @"jpeg", @"png", @"gif", @"bmp", @"tiff", @"webp", @"heic"];
+    NSString *pathExtension = url.pathExtension.lowercaseString;
+    return [imageExtensions containsObject:pathExtension];
+}
 #pragma mark - Private Do task
 - (void)handleImagePick:(BOOL)succ message:(NSString *)message imageData:(NSData *)imageData {
     static NSDictionary *imageFormatExtensionMap = nil;
@@ -218,35 +293,38 @@
       }
 
       UIImage *image = [UIImage imageWithData:imageData];
-      NSData *data = imageData;
+      NSData *data = UIImageJPEGRepresentation(image, 1);
       NSString *path = [TUIKit_Image_Path stringByAppendingString:[TUITool genImageName:nil]];
       NSString *extenionName = [imageFormatExtensionMap objectForKey:@(image.sd_imageFormat)];
       if (extenionName.length > 0) {
           path = [path stringByAppendingPathExtension:extenionName];
       }
 
+        
+      int32_t imageFormatSizeMax = 28 * 1024 * 1024;
+
+      if (image.sd_imageFormat == SDImageFormatGIF) {
+          imageFormatSizeMax = 10 * 1024 * 1024;
+      }
+     
+      if (imageData.length > imageFormatSizeMax) {
+         if ([self.listener respondsToSelector:@selector(onProvideFileError:)]) {
+             [self.listener onProvideFileError:TIMCommonLocalizableString(TUIKitImageSizeCheckLimited)];
+         }
+         return;
+      }
+    
       if (image.sd_imageFormat != SDImageFormatGIF) {
           UIImage *newImage = image;
           UIImageOrientation imageOrientation = image.imageOrientation;
-          if (imageOrientation != UIImageOrientationUp || imageData.length > 28 * 1024 * 1024) {
-              CGFloat aspectRatio = MIN(1920 / image.size.width, 1920 / image.size.height);
-              CGFloat aspectWidth = image.size.width * aspectRatio;
-              CGFloat aspectHeight = image.size.height * aspectRatio;
-
-              UIGraphicsBeginImageContext(CGSizeMake(aspectWidth, aspectHeight));
-              [image drawInRect:CGRectMake(0, 0, aspectWidth, aspectHeight)];
-              newImage = UIGraphicsGetImageFromCurrentImageContext();
-              UIGraphicsEndImageContext();
-          }
+          CGFloat aspectRatio = MIN(1920 / image.size.width, 1920 / image.size.height);
+          CGFloat aspectWidth = image.size.width * aspectRatio;
+          CGFloat aspectHeight = image.size.height * aspectRatio;
+          UIGraphicsBeginImageContext(CGSizeMake(aspectWidth, aspectHeight));
+          [image drawInRect:CGRectMake(0, 0, aspectWidth, aspectHeight)];
+          newImage = UIGraphicsGetImageFromCurrentImageContext();
+          UIGraphicsEndImageContext();
           data = UIImageJPEGRepresentation(newImage, 0.75);
-      }
-      else {
-          if (imageData.length > 10 * 1024 * 1024) {
-              if ([self.listener respondsToSelector:@selector(onProvideFileError:)]) {
-                  [self.listener onProvideFileError:TIMCommonLocalizableString(TUIKitImageSizeCheckLimited)];
-              }
-              return;
-          }
       }
 
       [[NSFileManager defaultManager] createFileAtPath:path contents:data attributes:nil];

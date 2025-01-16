@@ -10,6 +10,7 @@
 #import <TIMCommon/TIMCommonModel.h>
 #import <TUICore/TUICore.h>
 #import "TUIC2CChatViewController.h"
+#import "TUIGroupInfoController.h"
 
 @interface TUIChatExtensionObserver () <TUIExtensionProtocol>
 
@@ -32,6 +33,8 @@
 
 + (void)registerFriendProfileActionMenuExtension {
     [TUICore registerExtension:TUICore_TUIContactExtension_FriendProfileActionMenu_ClassicExtensionID object:TUIChatExtensionObserver.shareInstance];
+
+    [TUICore registerExtension:TUICore_TUIChatExtension_NavigationMoreItem_ClassicExtensionID object:TUIChatExtensionObserver.shareInstance];
 }
 
 #pragma mark - TUIExtensionProtocol
@@ -42,7 +45,11 @@
 
     if ([extensionID isEqualToString:TUICore_TUIContactExtension_FriendProfileActionMenu_ClassicExtensionID]) {
         return [self getFriendProfileActionMenuExtensionForClassicContact:param];
-    } else {
+    }
+    else if ([extensionID isEqualToString:TUICore_TUIChatExtension_NavigationMoreItem_ClassicExtensionID]) {
+        return [self getNavigationMoreItemExtensionForClassicChat:param];
+    }
+    else {
         return nil;
     }
 }
@@ -72,5 +79,27 @@
       }
     };
     return @[ info ];
+}
+
+- (NSArray<TUIExtensionInfo *> *)getNavigationMoreItemExtensionForClassicChat:(NSDictionary *)param {
+    if (![param isKindOfClass:NSDictionary.class]) {
+        return nil;
+    }
+    NSString *groupID = [param tui_objectForKey:TUICore_TUIChatExtension_NavigationMoreItem_GroupID asClass:NSString.class];
+    if (groupID.length > 0) {
+        TUIExtensionInfo *info = [[TUIExtensionInfo alloc] init];
+        info.icon = TIMCommonBundleThemeImage(@"chat_nav_more_menu_img", @"chat_nav_more_menu");
+        info.onClicked = ^(NSDictionary *_Nonnull param) {
+          UINavigationController *pushVC = [param tui_objectForKey:TUICore_TUIChatExtension_NavigationMoreItem_PushVC asClass:UINavigationController.class];
+          if (pushVC) {
+              TUIGroupInfoController *vc = [[TUIGroupInfoController alloc] init];
+              vc.groupId = groupID;
+              [pushVC pushViewController:vc animated:YES];
+          }
+        };
+        return @[ info ];
+    } else {
+        return nil;
+    }
 }
 @end

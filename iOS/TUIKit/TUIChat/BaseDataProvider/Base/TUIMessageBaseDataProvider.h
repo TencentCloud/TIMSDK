@@ -71,6 +71,7 @@ typedef NS_ENUM(NSUInteger, TUIMessageBaseDataProviderDataSourceChangeType) {
  */
 - (nullable TUIMessageCellData *)dataProvider:(TUIMessageBaseDataProvider *)dataProvider CustomCellDataFromNewIMMessage:(V2TIMMessage *)msg;
 
+- (BOOL)isDataSourceConsistent;
 @end
 
 /**
@@ -83,7 +84,7 @@ typedef NS_ENUM(NSUInteger, TUIMessageBaseDataProviderDataSourceChangeType) {
 @interface TUIMessageBaseDataProvider : NSObject
 
 @property(nonatomic, weak) id<TUIMessageBaseDataProviderDataSource> dataSource;
-
+@property(nonatomic, strong, readonly) TUIChatConversationModel *conversationModel;
 @property(nonatomic, strong, readonly) NSArray<TUIMessageCellData *> *uiMsgs;
 @property(nonatomic, strong, readonly) NSDictionary<NSString *, NSNumber *> *heightCache;
 @property(nonatomic, assign, readonly) BOOL isLoadingData;

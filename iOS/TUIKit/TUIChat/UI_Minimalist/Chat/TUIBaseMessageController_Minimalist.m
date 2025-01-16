@@ -160,6 +160,9 @@ typedef NSNumber * HeightNumber;
                                              selector:@selector(applicationEnterBackground)
                                                  name:UIApplicationDidEnterBackgroundNotification
                                                object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onReceivedSendMessageRequest:) name:TUIChatSendMessageNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onReceivedSendMessageWithoutUpdateUIRequest:) name:TUIChatSendMessageWithoutUpdateUINotification object:nil];
+
 }
 
 - (TUIMessageCellConfig_Minimalist *)messageCellConfig {
@@ -243,6 +246,9 @@ typedef NSNumber * HeightNumber;
     [self.messageDataProvider clearUIMsgList];
     [self.tableView reloadData];
     [self.tableView layoutIfNeeded];
+    if (self.indicatorView.isAnimating) {
+        [self.indicatorView stopAnimating];
+    }
 }
 
 - (void)reloadAndScrollToBottomOfMessage:(NSString *)messageID needScroll:(BOOL)isNeedScroll {
@@ -331,7 +337,8 @@ typedef NSNumber * HeightNumber;
         toConversation:self.conversationData
         willSendBlock:^(BOOL isReSend, TUIMessageCellData *_Nonnull dateUIMsg) {
           @strongify(self);
-          if ([cellData isKindOfClass:[TUIVideoMessageCellData class]]) {
+          if ([cellData isKindOfClass:[TUIVideoMessageCellData class]]||
+              [cellData isKindOfClass:[TUIImageMessageCellData class]]) {
               dispatch_async(dispatch_get_main_queue(), ^{
                   [self scrollToBottom:YES];
               });
@@ -464,6 +471,42 @@ typedef NSNumber * HeightNumber;
                                                       }];
 }
 
+- (void)onReceivedSendMessageRequest:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    if (!userInfo) {
+        return;
+    }
+    V2TIMMessage *message = [userInfo objectForKey:TUICore_TUIChatService_SendMessageMethod_MsgKey];
+    TUIMessageCellData *cellData = [userInfo objectForKey:TUICore_TUIChatService_SendMessageMethod_PlaceHolderUIMsgKey];
+    if (cellData && !message) {
+        [self sendPlaceHolderUIMessage:cellData];
+    } else if (message) {
+        [self sendMessage:message placeHolderCellData:cellData];
+    }
+}
+
+- (void)onReceivedSendMessageWithoutUpdateUIRequest:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    if (userInfo == nil) {
+        return;
+    }
+    V2TIMMessage *message = [userInfo objectForKey:TUICore_TUIChatService_SendMessageMethodWithoutUpdateUI_MsgKey];
+    if (message == nil) {
+        return;
+    }
+    TUISendMessageAppendParams *param = [TUISendMessageAppendParams new];
+    param.isOnlineUserOnly = YES;
+    [TUIMessageDataProvider sendMessage:message
+                         toConversation:self.conversationData
+                           appendParams:param
+                               Progress:nil
+                              SuccBlock:^{
+        NSLog(@"send message without updating UI succeed");
+    }
+                              FailBlock:^(int code, NSString *desc) {
+        NSLog(@"send message without updating UI failed, code: %d, desc: %@", code, desc);
+    }];
+}
 #pragma mark - TUINotificationProtocol
 - (void)onNotifyEvent:(NSString *)key subKey:(NSString *)subKey object:(id)anObject param:(NSDictionary *)param {
     if ([key isEqualToString:TUICore_TUIPluginNotify] && [subKey isEqualToString:TUICore_TUIPluginNotify_DidChangePluginViewSubKey]) {
@@ -516,6 +559,17 @@ typedef NSNumber * HeightNumber;
 
 static NSMutableArray *lastMsgIndexs = nil;
 static NSMutableArray *reloadMsgIndexs = nil;
+- (BOOL)isDataSourceConsistent {
+    NSInteger dataSourceCount = self.messageDataProvider.uiMsgs.count;
+    NSInteger tableViewCount = [self.tableView numberOfRowsInSection:0];
+
+    if (dataSourceCount != tableViewCount) {
+        NSLog(@"Data source and UI are inconsistent: Data source count = %ld, Table view count = %ld", (long)dataSourceCount, (long)tableViewCount);
+        return NO;
+    }
+    return YES;
+}
+
 - (void)dataProviderDataSourceWillChange:(TUIMessageDataProvider *)dataProvider {
     [self.tableView beginUpdates];
 

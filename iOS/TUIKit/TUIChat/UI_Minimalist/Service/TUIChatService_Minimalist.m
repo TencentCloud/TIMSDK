@@ -80,7 +80,30 @@
 - (id)onCall:(NSString *)method param:(nullable NSDictionary *)param {
     if ([method isEqualToString:TUICore_TUIChatService_GetDisplayStringMethod]) {
         return [self getDisplayString:param[TUICore_TUIChatService_GetDisplayStringMethod_MsgKey]];
-    } else if ([method isEqualToString:TUICore_TUIChatService_SetChatExtensionMethod]) {
+    }
+    else if ([method isEqualToString:TUICore_TUIChatService_SendMessageMethod]) {
+        V2TIMMessage *message = [param tui_objectForKey:TUICore_TUIChatService_SendMessageMethod_MsgKey asClass:V2TIMMessage.class];
+        TUIMessageCellData *cellData = [param tui_objectForKey:TUICore_TUIChatService_SendMessageMethod_PlaceHolderUIMsgKey asClass:TUIMessageCellData.class];
+        if (!message && !cellData) {
+            return nil;
+        }
+        NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+        if (message) {
+            [userInfo setObject:message forKey:TUICore_TUIChatService_SendMessageMethod_MsgKey];
+        }
+        if (cellData) {
+            [userInfo setObject:cellData forKey:TUICore_TUIChatService_SendMessageMethod_PlaceHolderUIMsgKey];
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:TUIChatSendMessageNotification object:nil userInfo:userInfo];
+    } else if ([method isEqualToString:TUICore_TUIChatService_SendMessageMethodWithoutUpdateUI]) {
+        V2TIMMessage *message = [param tui_objectForKey:TUICore_TUIChatService_SendMessageMethodWithoutUpdateUI_MsgKey asClass:V2TIMMessage.class];
+        if (message == nil) {
+            return nil;
+        }
+        NSDictionary *userInfo = @{TUICore_TUIChatService_SendMessageMethodWithoutUpdateUI_MsgKey : message};
+        [[NSNotificationCenter defaultCenter] postNotificationName:TUIChatSendMessageWithoutUpdateUINotification object:nil userInfo:userInfo];
+    }
+    else if ([method isEqualToString:TUICore_TUIChatService_SetChatExtensionMethod]) {
         [param enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSNumber *obj, BOOL *_Nonnull stop) {
           if (![key isKindOfClass:NSString.class] || ![obj isKindOfClass:NSNumber.class]) {
               return;

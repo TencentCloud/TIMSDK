@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <TIMCommon/TUIMessageCellData.h>
+#import "TUIChatMediaSendingManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -40,13 +41,17 @@ typedef void (^TUIChatMediaDataProviderResultCallback)(BOOL success, NSString *_
 - (void)onProvideFile:(NSString *)fileUrl filename:(NSString *)filename fileSize:(NSInteger)fileSize;
 - (void)onProvideFileError:(NSString *)errorMessage;
 
+- (NSString *)currentConversationID;
+- (BOOL)isPageAppears;
+- (void)sendPlaceHolderUIMessage:(TUIMessageCellData *)cellData;
+- (void)sendMessage:(V2TIMMessage *)message placeHolderCellData:(TUIMessageCellData *)placeHolderCellData;
 @end
 
 @interface TUIChatMediaDataProvider : NSObject <TUIChatMediaDataProtocol>
 
 @property(nonatomic, weak) UIViewController *presentViewController;
 @property(nonatomic, weak) id<TUIChatMediaDataListener> listener;
-
+@property(nonatomic, copy) NSString *conversationID;
 @end
 
 NS_ASSUME_NONNULL_END

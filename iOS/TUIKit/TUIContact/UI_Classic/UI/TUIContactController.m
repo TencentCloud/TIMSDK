@@ -186,14 +186,24 @@
     add.onSelect = ^(TUIFindContactCellModel *cellModel) {
       @strongify(self);
       if (cellModel.type == TUIFindContactTypeC2C) {
-          TUIFriendRequestViewController *frc = [[TUIFriendRequestViewController alloc] init];
-          frc.profile = cellModel.userInfo;
-          [self.navigationController popViewControllerAnimated:NO];
-          [self.navigationController pushViewController:frc animated:YES];
+          NSString *userID = cellModel.userInfo.userID.length >0
+                             ?cellModel.userInfo.userID : @"";
+          TUICommonContactCellData *friendContactData = self.viewModel.contactMap[userID];
+          if (friendContactData) {
+            TUIFriendProfileController *vc = [[TUIFriendProfileController alloc] init];
+            vc.friendProfile = friendContactData.friendProfile;
+            [self.navigationController pushViewController:(UIViewController *)vc animated:YES];
+          }
+          else {
+              TUIFriendRequestViewController *frc = [[TUIFriendRequestViewController alloc] init];
+              frc.profile = cellModel.userInfo;
+              [self.navigationController popViewControllerAnimated:NO];
+              [self.navigationController pushViewController:frc animated:YES];
+          }
       } else {
-          NSDictionary *param = @{TUICore_TUIGroupObjectFactory_GetGroupRequestViewControllerMethod_GroupInfoKey : cellModel.groupInfo};
-          UIViewController *vc = [TUICore createObject:TUICore_TUIGroupObjectFactory
-                                                   key:TUICore_TUIGroupObjectFactory_GetGroupRequestViewControllerMethod
+          NSDictionary *param = @{TUICore_TUIContactObjectFactory_GetGroupRequestViewControllerMethod_GroupInfoKey : cellModel.groupInfo};
+          UIViewController *vc = [TUICore createObject:TUICore_TUIContactObjectFactory
+                                                   key:TUICore_TUIContactObjectFactory_GetGroupRequestViewControllerMethod
                                                  param:param];
           [self.navigationController pushViewController:vc animated:YES];
       }

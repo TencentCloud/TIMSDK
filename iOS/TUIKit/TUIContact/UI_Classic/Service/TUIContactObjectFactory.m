@@ -13,6 +13,13 @@
 #import "TUIFriendProfileController.h"
 #import "TUIGroupCreateController.h"
 #import "TUIUserProfileController.h"
+#import "TUIGroupMemberController.h"
+#import <TIMCommon/TIMDefine.h>
+#import <TUICore/NSDictionary+TUISafe.h>
+#import <TUICore/TUIGlobalization.h>
+#import <TUICore/TUIThemeManager.h>
+#import "TUIGroupRequestViewController.h"
+#import "TUISelectGroupMemberViewController.h"
 
 @interface TUIContactObjectFactory () <TUIObjectProtocol>
 @end
@@ -70,6 +77,31 @@
         void (^succ)(UIViewController *vc) = [param objectForKey:TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_SuccKey];
         V2TIMFail fail = [param objectForKey:TUICore_TUIContactObjectFactory_GetUserOrFriendProfileVCMethod_FailKey];
         [self createUserOrFriendProfileVCWithUserID:userID succBlock:succ failBlock:fail];
+    }
+    else if ([method isEqualToString:TUICore_TUIContactObjectFactory_GetGroupMemberVCMethod]) {
+        NSString *groupId = [param objectForKey:@"groupID"];
+        V2TIMGroupInfo *groupInfo = [param objectForKey:@"groupInfo"];
+        TUIGroupMemberController *membersController = [[TUIGroupMemberController alloc] init];
+        membersController.groupId = groupId;
+        membersController.groupInfo = groupInfo;
+        return membersController;
+    }
+    else if ([method isEqualToString:TUICore_TUIContactObjectFactory_GetGroupRequestViewControllerMethod]) {
+        return  [self createGroupRequestViewController:[param tui_objectForKey:TUICore_TUIContactObjectFactory_GetGroupRequestViewControllerMethod_GroupInfoKey
+                                                                   asClass:V2TIMGroupInfo.class]];
+    } else if ([method isEqualToString:TUICore_TUIContactObjectFactory_GetGroupInfoVC_Classic]) {
+        return [self createGroupInfoController:[param tui_objectForKey:TUICore_TUIContactObjectFactory_GetGroupInfoVC_GroupID asClass:NSString.class]];
+    } else if ([method isEqualToString:TUICore_TUIContactObjectFactory_SelectGroupMemberVC_Classic]) {
+        NSString *groupID = [param tui_objectForKey:TUICore_TUIContactObjectFactory_SelectGroupMemberVC_GroupID asClass:NSString.class];
+        NSString *title = [param tui_objectForKey:TUICore_TUIContactObjectFactory_SelectGroupMemberVC_Name asClass:NSString.class];
+        NSNumber *optionalStyleNum = [param tui_objectForKey:TUICore_TUIContactObjectFactory_SelectGroupMemberVC_OptionalStyle asClass:NSNumber.class];
+        NSArray *selectedUserIDList = [param tui_objectForKey:TUICore_TUIContactObjectFactory_SelectGroupMemberVC_SelectedUserIDList asClass:NSArray.class];
+
+        return [self createSelectGroupMemberViewController:groupID
+                                                              name:title
+                                                     optionalStyle:[optionalStyleNum integerValue]
+                                                selectedUserIDList:selectedUserIDList
+                                                          userData:@""];
     }
     return nil;
 }
@@ -207,4 +239,44 @@
                                              fail:fail];
 }
 
+
+#pragma mark - TUIObjectProtocol - groupInfo
+
+- (UIViewController *)createGroupRequestViewController:(V2TIMGroupInfo *)groupInfo {
+    TUIGroupRequestViewController *vc = [[TUIGroupRequestViewController alloc] init];
+    vc.groupInfo = groupInfo;
+    return vc;
+}
+
+- (UIViewController *)createGroupInfoController:(NSString *)groupID {
+
+    return nil;
+}
+
+- (UIViewController *)createSelectGroupMemberViewController:(NSString *)groupID
+                                                       name:(NSString *)name
+                                              optionalStyle:(TUISelectMemberOptionalStyle)optionalStyle {
+    return [self createSelectGroupMemberViewController:groupID name:name optionalStyle:optionalStyle selectedUserIDList:@[]];
+}
+
+- (UIViewController *)createSelectGroupMemberViewController:(NSString *)groupID
+                                                       name:(NSString *)name
+                                              optionalStyle:(TUISelectMemberOptionalStyle)optionalStyle
+                                         selectedUserIDList:(NSArray *)userIDList {
+    return [self createSelectGroupMemberViewController:groupID name:name optionalStyle:optionalStyle selectedUserIDList:@[] userData:@""];
+}
+
+- (UIViewController *)createSelectGroupMemberViewController:(NSString *)groupID
+                                                       name:(NSString *)name
+                                              optionalStyle:(TUISelectMemberOptionalStyle)optionalStyle
+                                         selectedUserIDList:(NSArray *)userIDList
+                                                   userData:(NSString *)userData {
+    TUISelectGroupMemberViewController *vc = [[TUISelectGroupMemberViewController alloc] init];
+    vc.groupId = groupID;
+    vc.name = name;
+    vc.optionalStyle = optionalStyle;
+    vc.selectedUserIDList = userIDList;
+    vc.userData = userData;
+    return vc;
+}
 @end

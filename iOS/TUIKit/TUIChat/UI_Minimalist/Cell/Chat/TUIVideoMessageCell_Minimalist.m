@@ -66,6 +66,15 @@
     [super fillWithData:data];
     self.videoData = data;
     _thumb.image = nil;
+    BOOL hasRiskContent = self.messageData.innerMessage.hasRiskContent;
+    if (hasRiskContent) {
+        self.thumb.image = TIMCommonBundleThemeImage(@"", @"icon_security_strike");
+        self.thumb.contentMode = UIViewContentModeScaleAspectFill;
+        self.play.hidden = YES;
+        self.indicator.hidden = YES;
+        self.animateCircleView.hidden = YES;
+        return;
+    }
     if (data.thumbImage == nil) {
         [data downloadThumb];
     }
@@ -139,13 +148,23 @@
 - (void)updateConstraints {
      
     [super updateConstraints];
+    BOOL hasRiskContent = self.messageData.innerMessage.hasRiskContent;
+    if (hasRiskContent ) {
+        [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.container).mas_offset(12);
+            make.size.mas_equalTo(CGSizeMake(150, 150));
+            make.centerX.mas_equalTo(self.container);
+        }];
+    }
+    else {
+        [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(self.container.mas_height);
+            make.width.mas_equalTo(self.container);
+            make.leading.mas_equalTo(self.container.mas_leading);
+            make.top.mas_equalTo(self.container);
+        }];
+    }
 
-    [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(self.container.mas_height);
-        make.width.mas_equalTo(self.container);
-        make.leading.mas_equalTo(self.container.mas_leading);
-        make.top.mas_equalTo(self.container);
-    }];
     
     [self.play mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(TVideoMessageCell_Play_Size);
@@ -237,6 +256,10 @@
 + (CGSize)getContentSize:(TUIMessageCellData *)data {
     NSAssert([data isKindOfClass:TUIVideoMessageCellData.class], @"data must be kind of TUIVideoMessageCellData");
     TUIVideoMessageCellData *videoCellData = (TUIVideoMessageCellData *)data;
+    BOOL hasRiskContent = videoCellData.innerMessage.hasRiskContent;
+    if (hasRiskContent) {
+        return CGSizeMake(150, 150);
+    }
     
     CGSize size = CGSizeZero;
     BOOL isDir = NO;

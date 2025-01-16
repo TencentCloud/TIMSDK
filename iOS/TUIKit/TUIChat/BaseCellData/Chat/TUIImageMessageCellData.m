@@ -180,11 +180,14 @@
         [TUITool asyncDecodeImage:path
                          complete:^(NSString *path, UIImage *image) {
                            dispatch_async(dispatch_get_main_queue(), ^{
-                             if (![path tui_containsString:@".gif"] || (image.sd_imageFormat != SDImageFormatGIF)) {
+                             if (![path tui_containsString:@".gif"] || (image.sd_imageFormat != SDImageFormatGIF) ) {
                                  /**
                                   * The gif image is too large to be cached in memory
+                                  * Only cache images less than 1M
                                   */
-                                 [[SDImageCache sharedImageCache] storeImageToMemory:image forKey:cacheKey];
+                                 if (image.sd_imageData.length < 1 * 1024 * 1024) {
+                                     [[SDImageCache sharedImageCache] storeImageToMemory:image forKey:cacheKey];
+                                 }
                              }
                              finishBlock(image);
                            });

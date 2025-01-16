@@ -147,17 +147,21 @@
         [self.superview convertRect:self.targetCell.container.frame fromView:self.targetCell];
         
         if (CGRectContainsPoint(frame, touchPoint)) {
-            UITextView *textView = [self.targetCell valueForKey:@"textView"];
-            if (CGRectContainsPoint(containerFrame,touchPoint)) {
-                if (textView && [textView isKindOfClass:UITextView.class] && !textView.isSelectable) {
-                    [textView selectAll:self];
+            if ([self.targetCell respondsToSelector:@selector(textView)]) {
+                UITextView *textView = [self.targetCell valueForKey:@"textView"];
+                if (CGRectContainsPoint(containerFrame,touchPoint)) {
+                    if (textView && [textView isKindOfClass:UITextView.class] && !textView.isSelectable) {
+                        [textView selectAll:self];
+                    }
+                    return textView;
+                }else {
+                    if (textView && [textView isKindOfClass:UITextView.class]) {
+                        [textView selectAll:nil];
+                        [self hideWithAnimation];
+                    }
                 }
-                return textView;
-            }else {
-                if (textView && [textView isKindOfClass:UITextView.class]) {
-                    [textView selectAll:nil];
-                    [self hideWithAnimation];
-                }
+            } else {
+                [self hideWithAnimation];
             }
             return [super hitTest:point withEvent:event];
         }

@@ -254,6 +254,9 @@
     [self.messageDataProvider clearUIMsgList];
     [self.tableView reloadData];
     [self.tableView layoutIfNeeded];
+    if (self.indicatorView.isAnimating) {
+        [self.indicatorView stopAnimating];
+    }
 }
 
 - (void)reloadAndScrollToBottomOfMessage:(NSString *)messageID needScroll:(BOOL)isNeedScroll {
@@ -340,7 +343,8 @@
                          toConversation:self.conversationData
                           willSendBlock:^(BOOL isReSend, TUIMessageCellData *_Nonnull dateUIMsg) {
         @strongify(self);
-        if ([cellData isKindOfClass:[TUIVideoMessageCellData class]]) {
+        if ([cellData isKindOfClass:[TUIVideoMessageCellData class]]||
+            [cellData isKindOfClass:[TUIImageMessageCellData class]]) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self scrollToBottom:YES];
             });
@@ -583,6 +587,16 @@
     return [TUIMessageCellConfig getCustomMessageCellDataClass:businessID];
 }
 
+- (BOOL)isDataSourceConsistent {
+    NSInteger dataSourceCount = self.messageDataProvider.uiMsgs.count;
+    NSInteger tableViewCount = [self.tableView numberOfRowsInSection:0];
+
+    if (dataSourceCount != tableViewCount) {
+        NSLog(@"Data source and UI are inconsistent: Data source count = %ld, Table view count = %ld", (long)dataSourceCount, (long)tableViewCount);
+        return NO;
+    }
+    return YES;
+}
 - (void)dataProviderDataSourceWillChange:(TUIMessageDataProvider *)dataProvider {
     [self.tableView beginUpdates];
 }

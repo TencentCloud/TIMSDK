@@ -45,6 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(readonly) NSUInteger pendencyCnt;
 
+@property(readonly) NSDictionary *contactMap;
+
 - (void)loadContacts;
 
 - (void)loadFriendApplication;

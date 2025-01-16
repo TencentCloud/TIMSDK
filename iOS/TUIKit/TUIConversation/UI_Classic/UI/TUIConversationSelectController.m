@@ -370,12 +370,12 @@ static NSString *const Id = @"con";
       }
     };
     NSDictionary *param = @{
-        TUICore_TUIGroupService_CreateGroupMethod_GroupTypeKey : GroupType_Meeting,
-        TUICore_TUIGroupService_CreateGroupMethod_OptionKey : @(V2TIM_GROUP_ADD_ANY),
-        TUICore_TUIGroupService_CreateGroupMethod_ContactsKey : contacts,
-        TUICore_TUIGroupService_CreateGroupMethod_CompletionKey : createGroupCompletion
+        TUICore_TUIContactService_CreateGroupMethod_GroupTypeKey : GroupType_Meeting,
+        TUICore_TUIContactService_CreateGroupMethod_OptionKey : @(V2TIM_GROUP_ADD_ANY),
+        TUICore_TUIContactService_CreateGroupMethod_ContactsKey : contacts,
+        TUICore_TUIContactService_CreateGroupMethod_CompletionKey : createGroupCompletion
     };
-    [TUICore callService:TUICore_TUIGroupService method:TUICore_TUIGroupService_CreateGroupMethod param:param];
+    [TUICore callService:TUICore_TUIContactService method:TUICore_TUIContactService_CreateGroupMethod param:param];
 }
 
 #pragma mark - UITableViewDelegate, UITableViewDataSource

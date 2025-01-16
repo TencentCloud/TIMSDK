@@ -241,6 +241,14 @@ typedef enum : NSUInteger {
 
 - (instancetype)initWithPendency:(V2TIMGroupApplication *)args;
 
+typedef void (^TUIGroupPendencyCellDataSuccessCallback)(void);
+typedef void (^TUIGroupPendencyCellDataFailureCallback)(int code, NSString *msg);
+
+- (void)agreeWithSuccess:(TUIGroupPendencyCellDataSuccessCallback)success
+                 failure:(TUIGroupPendencyCellDataFailureCallback)failure;
+
+- (void)rejectWithSuccess:(TUIGroupPendencyCellDataSuccessCallback)success
+                  failure:(TUIGroupPendencyCellDataFailureCallback)failure;
 - (void)accept;
 - (void)reject;
 

@@ -89,6 +89,8 @@
     NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:atStr];
     NSDictionary *attributeDict = @{NSForegroundColorAttributeName : [UIColor d_systemRedColor]};
     [attributeString setAttributes:attributeDict range:NSMakeRange(0, attributeString.length)];
+    BOOL hasRiskContent = conv.lastMessage.hasRiskContent;
+    BOOL isRevoked = (conv.lastMessage.status == V2TIM_MSG_STATUS_LOCAL_REVOKED);
 
     /**
      * If there is a draft box, the draft box information will be displayed first
@@ -129,7 +131,12 @@
         if (lastMsgStr.length == 0) {
             return nil;
         }
-        [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:lastMsgStr]];
+        if (hasRiskContent && !isRevoked) {
+            [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:lastMsgStr
+                                                                                    attributes:@{NSForegroundColorAttributeName : RGB(233, 68, 68)}]];
+        } else {
+            [attributeString appendAttributedString:[[NSAttributedString alloc] initWithString:lastMsgStr]];
+        }
     }
 
     /**

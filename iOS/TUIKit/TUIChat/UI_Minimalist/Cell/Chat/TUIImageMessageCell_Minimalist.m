@@ -50,6 +50,12 @@
     [super fillWithData:data];
     self.imageData = data;
     _thumb.image = nil;
+    BOOL hasRiskContent = self.messageData.innerMessage.hasRiskContent;
+    if (hasRiskContent) {
+        self.thumb.image = TIMCommonBundleThemeImage(@"", @"icon_security_strike");
+        self.progress.hidden = YES;
+        return;
+    }
     if (data.thumbImage == nil) {
         [data downloadImage:TImage_Type_Thumb];
     }
@@ -106,13 +112,22 @@
 
     CGFloat topMargin = 0;
     CGFloat height = self.container.mm_h;
-    
-    [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(height);
-        make.width.mas_equalTo(self.container.mas_width);
-        make.top.mas_equalTo(self.container).mas_offset(topMargin);
-        make.leading.mas_equalTo(self.container);
-    }];
+    BOOL hasRiskContent = self.messageData.innerMessage.hasRiskContent;
+    if (hasRiskContent ) {
+        [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.container).mas_offset(12);
+            make.size.mas_equalTo(CGSizeMake(150, 150));
+            make.centerX.mas_equalTo(self.container);
+        }];
+    }
+    else {
+        [self.thumb mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(height);
+            make.width.mas_equalTo(self.container.mas_width);
+            make.top.mas_equalTo(self.container).mas_offset(topMargin);
+            make.leading.mas_equalTo(self.container);
+        }];
+    }
     
     [self.progress mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.container);
@@ -205,7 +220,11 @@
 + (CGSize)getContentSize:(TUIMessageCellData *)data {
     NSAssert([data isKindOfClass:TUIImageMessageCellData.class], @"data must be kind of TUIImageMessageCellData");
     TUIImageMessageCellData *imageCellData = (TUIImageMessageCellData *)data;
-    
+    BOOL hasRiskContent = imageCellData.innerMessage.hasRiskContent;
+    if (hasRiskContent) {
+        return CGSizeMake(150, 150);
+    }
+
     CGSize size = CGSizeZero;
     BOOL isDir = NO;
     if (![imageCellData.path isEqualToString:@""] && [[NSFileManager defaultManager] fileExistsAtPath:imageCellData.path isDirectory:&isDir]) {

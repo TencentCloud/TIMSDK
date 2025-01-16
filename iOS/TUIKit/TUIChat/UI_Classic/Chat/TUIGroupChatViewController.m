@@ -357,14 +357,14 @@
         [self.inputController reset];
         __weak typeof(self) weakSelf = self;
         NSMutableDictionary *param = [NSMutableDictionary dictionary];
-        param[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_GroupID] = self.conversationData.groupID;
-        param[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_Name] = TIMCommonLocalizableString(TUIKitAtSelectMemberTitle);
-        param[TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_OptionalStyle] = @(1);
+        param[TUICore_TUIContactObjectFactory_SelectGroupMemberVC_GroupID] = self.conversationData.groupID;
+        param[TUICore_TUIContactObjectFactory_SelectGroupMemberVC_Name] = TIMCommonLocalizableString(TUIKitAtSelectMemberTitle);
+        param[TUICore_TUIContactObjectFactory_SelectGroupMemberVC_OptionalStyle] = @(1);
         [self.navigationController
-            pushViewController:TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_Classic
+            pushViewController:TUICore_TUIContactObjectFactory_SelectGroupMemberVC_Classic
                          param:param
                      forResult:^(NSDictionary *_Nonnull param) {
-                       NSArray<TUIUserModel *> *modelList = [param tui_objectForKey:TUICore_TUIGroupObjectFactory_SelectGroupMemberVC_ResultUserList
+                       NSArray<TUIUserModel *> *modelList = [param tui_objectForKey:TUICore_TUIContactObjectFactory_SelectGroupMemberVC_ResultUserList
                                                                             asClass:NSArray.class];
                        NSMutableString *atText = [[NSMutableString alloc] init];
                        for (int i = 0; i < modelList.count; i++) {

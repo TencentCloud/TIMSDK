@@ -15,4 +15,11 @@
 #import "TUIContactSelectController_Minimalist.h"
 #import "TUIFindContactViewController_Minimalist.h"
 
+#import "TUIGroupManageController_Minimalist.h"
+#import "TUIGroupMemberController_Minimalist.h"
+#import "TUIGroupRequestViewController_Minimalist.h"
+#import "TUISearchGroupViewController_Minimalist.h"
+#import "TUISelectGroupMemberViewController_Minimalist.h"
+#import "TUISettingAdminController_Minimalist.h"
+
 #endif /* TUIContact_Minimalist_h */

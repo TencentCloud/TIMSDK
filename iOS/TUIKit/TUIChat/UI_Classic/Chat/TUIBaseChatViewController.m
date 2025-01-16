@@ -62,10 +62,11 @@ static CGRect gCustomTopViewRect;
 @property(nonatomic, strong) TUINaviBarIndicatorView *titleView;
 @property(nonatomic, strong) TUIMessageMultiChooseView *multiChooseView;
 @property(nonatomic, assign) BOOL responseKeyboard;
+@property(nonatomic, assign) BOOL isPageAppears;
+
 @property(nonatomic, strong) TUIChatDataProvider *dataProvider;
 
 @property(nonatomic, assign) BOOL firstAppear;
-
 @property(nonatomic, copy) NSString *mainTitle;
 
 @property(nonatomic, strong) UIImageView *backgroudView;
@@ -86,6 +87,7 @@ static CGRect gCustomTopViewRect;
                                                  selector:@selector(reloadTopViewsAndMessagePage)
                                                      name:TUICore_TUIChatExtension_ChatViewTopArea_ChangedNotification
                                                    object:nil];
+        [TUIChatMediaSendingManager.sharedInstance addCurrentVC:self];
 
     }
     return self;
@@ -211,6 +213,7 @@ static CGRect gCustomTopViewRect;
     [super viewDidAppear:animated];
 
     self.responseKeyboard = YES;
+    self.isPageAppears = YES;
     if (self.firstAppear) {
         [self loadDraft];
         self.firstAppear = NO;
@@ -225,6 +228,8 @@ static CGRect gCustomTopViewRect;
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.responseKeyboard = NO;
+    self.isPageAppears = NO;
+
     [self openMultiChooseBoard:NO];
     [self.messageController enableMultiSelectedMode:NO];
 }
@@ -485,7 +490,6 @@ static CGRect gCustomTopViewRect;
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onFriendInfoChanged:) name:@"FriendInfoChangedNotification" object:nil];
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(appWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
     [TUICore registerEvent:TUICore_TUIContactNotify subKey:TUICore_TUIContactNotify_UpdateConversationBackgroundImageSubKey object:self];
-    [TUICore registerEvent:TUICore_TUIGroupNotify subKey:TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey object:self];
 }
 
 #pragma mark - Extension
@@ -758,11 +762,6 @@ static CGRect gCustomTopViewRect;
         [self.messageController clearUImsg];
     } else if ([key isEqualToString:TUICore_TUIContactNotify] && [subKey isEqualToString:TUICore_TUIContactNotify_UpdateConversationBackgroundImageSubKey]) {
         NSString *conversationID = param[TUICore_TUIContactNotify_UpdateConversationBackgroundImageSubKey_ConversationID];
-        if (IS_NOT_EMPTY_NSSTRING(conversationID)) {
-            [self updateBackgroundImageUrlByConversationID:conversationID];
-        }
-    } else if ([key isEqualToString:TUICore_TUIGroupNotify] && [subKey isEqualToString:TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey]) {
-        NSString *conversationID = param[TUICore_TUIGroupNotify_UpdateConversationBackgroundImageSubKey_ConversationID];
         if (IS_NOT_EMPTY_NSSTRING(conversationID)) {
             [self updateBackgroundImageUrlByConversationID:conversationID];
         }
@@ -1485,11 +1484,15 @@ static CGRect gCustomTopViewRect;
 }
 
 #pragma mark - Media Provider
+- (void)sendPlaceHolderUIMessage:(TUIMessageCellData *)cellData {
+    [self.messageController sendPlaceHolderUIMessage:cellData];
+}
 - (TUIChatMediaDataProvider *)mediaProvider {
     if (_mediaProvider == nil) {
         _mediaProvider = [[TUIChatMediaDataProvider alloc] init];
         _mediaProvider.listener = self;
         _mediaProvider.presentViewController = self;
+        _mediaProvider.conversationID = _conversationData.conversationID;
     }
     return _mediaProvider;
 }
@@ -1533,6 +1536,14 @@ static CGRect gCustomTopViewRect;
 
 - (void)onProvideFileError:(NSString *)errorMessage {
     [TUITool makeToast:errorMessage];
+}
+
+- (NSString *)currentConversationID {
+    return self.conversationData.conversationID;
+}
+
+- (BOOL)isPageAppears {
+    return self.responseKeyboard;
 }
 
 @end

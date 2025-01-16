@@ -26,6 +26,8 @@ class GroupCallerAndCalleeAcceptedView: UIView {
     
     let isCameraOpenObserver = Observer()
     let showLargeViewUserIdObserver = Observer()
+    let isMicMuteObserver = Observer()
+    let audioDeviceObserver = Observer()
     
     var isShowLittleContainerView  = false
     var panGestureBeganY = 0.0
@@ -191,6 +193,16 @@ class GroupCallerAndCalleeAcceptedView: UIView {
                 self.restoreExpansion()
             }
         }
+        
+        TUICallState.instance.isMicMute.addObserver(isMicMuteObserver, closure: { [weak self] newValue, _ in
+            guard let self = self else { return }
+            self.updateMuteAudioBtn(mute: newValue)
+        })
+        
+        TUICallState.instance.audioDevice.addObserver(audioDeviceObserver, closure: { [weak self] newValue, _ in
+            guard let self = self else { return }
+            self.updateChangeSpeakerBtn(isSpeaker: newValue == .speakerphone)
+        })
     }
     
     // MARK: Action Event
@@ -373,5 +385,4 @@ class GroupCallerAndCalleeAcceptedView: UIView {
         maskLayer.path = path.cgPath
         containerView.layer.mask = maskLayer
     }
-    
 }

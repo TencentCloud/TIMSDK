@@ -15,4 +15,10 @@
 #import "TUIContactSelectController.h"
 #import "TUIFindContactViewController.h"
 
+#import "TUIGroupRequestViewController.h"
+#import "TUISearchGroupViewController.h"
+#import "TUISelectGroupMemberViewController.h"
+#import "TUISettingAdminController.h"
+
+
 #endif /* TUIContact_h */

@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TUIContactService : NSObject
+@interface TUIContactService : NSObject <TUIServiceProtocol>
 
 + (TUIContactService *)shareInstance;
 

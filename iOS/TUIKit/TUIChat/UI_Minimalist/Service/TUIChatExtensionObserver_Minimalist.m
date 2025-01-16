@@ -23,8 +23,10 @@
 + (void)load {
     [TUICore registerExtension:TUICore_TUIContactExtension_FriendProfileActionMenu_MinimalistExtensionID
                         object:TUIChatExtensionObserver_Minimalist.shareInstance];
-    [TUICore registerExtension:TUICore_TUIGroupExtension_GroupInfoCardActionMenu_MinimalistExtensionID
+    [TUICore registerExtension:TUICore_TUIContactExtension_GroupInfoCardActionMenu_MinimalistExtensionID
                         object:TUIChatExtensionObserver_Minimalist.shareInstance];
+    [TUICore registerExtension:TUICore_TUIChatExtension_NavigationMoreItem_MinimalistExtensionID object:TUIChatExtensionObserver_Minimalist.shareInstance];
+
 }
 
 static id gShareinstance = nil;
@@ -44,7 +46,7 @@ static id gShareinstance = nil;
 
     if ([extensionID isEqualToString:TUICore_TUIContactExtension_FriendProfileActionMenu_MinimalistExtensionID]) {
         return [self getFriendProfileActionMenuExtensionForMinimalistContact:param];
-    } else if ([extensionID isEqualToString:TUICore_TUIGroupExtension_GroupInfoCardActionMenu_MinimalistExtensionID]) {
+    } else if ([extensionID isEqualToString:TUICore_TUIContactExtension_GroupInfoCardActionMenu_MinimalistExtensionID]) {
         return [self getGroupInfoCardActionMenuActionMenuExtensionForMinimalistContact:param];
     } else {
         return nil;
@@ -91,8 +93,8 @@ static id gShareinstance = nil;
     ;
     info.icon = TUIDynamicImage(@"", TUIThemeModuleContact_Minimalist, [UIImage imageNamed:TUIContactImagePath_Minimalist(@"contact_info_message")]);
     info.onClicked = ^(NSDictionary *_Nonnull actionParam) {
-      NSString *groupID = [actionParam tui_objectForKey:TUICore_TUIGroupExtension_GroupInfoCardActionMenu_GroupID asClass:NSString.class];
-      UINavigationController *pushVC = [actionParam tui_objectForKey:TUICore_TUIGroupExtension_GroupInfoCardActionMenu_PushVC
+      NSString *groupID = [actionParam tui_objectForKey:TUICore_TUIContactExtension_GroupInfoCardActionMenu_GroupID asClass:NSString.class];
+      UINavigationController *pushVC = [actionParam tui_objectForKey:TUICore_TUIContactExtension_GroupInfoCardActionMenu_PushVC
                                                              asClass:UINavigationController.class];
       if (groupID.length > 0 && pushVC) {
           TUIChatConversationModel *conversationModel = [[TUIChatConversationModel alloc] init];

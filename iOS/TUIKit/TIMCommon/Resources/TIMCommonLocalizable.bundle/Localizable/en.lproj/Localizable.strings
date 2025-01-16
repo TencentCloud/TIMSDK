@@ -757,11 +757,11 @@
 "TIMAppMainTitle" = "TencentCloud·IM";
 "TIMAppMainConnectingTitle" = "Connecting…";
 "TIMAppMainDisconnectTitle" = "Disconnected";
-"TIMAppTabBarItemMessageText" = "Message";
+"TIMAppTabBarItemMessageText" = "Messages";
 "TIMAppTabBarItemContactText" = "Contacts";
 "TIMAppTabBarItemMeText"      = "Settings";
-"TIMAppTabBarItemMessageText_mini" = "Chats";
-"TIMAppTabBarItemContactText_mini" = "Contact";
+"TIMAppTabBarItemMessageText_mini" = "Messages";
+"TIMAppTabBarItemContactText_mini" = "Contacts";
 "TIMAppTabBarItemSettingText_mini" = "Settings";
 "TIMAppTabBarItemCallsRecordText_mini" = "Calls";
 "TIMAppChat" = "Chat";
