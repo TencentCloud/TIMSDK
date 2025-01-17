@@ -21,10 +21,4 @@ Pod::Spec.new do |spec|
   spec.resource_bundle = {
     "#{spec.module_name}_Privacy" => '**/ImSDKForVision_Plus.xcframework/xros-arm64/ImSDKForVision_Plus.framework/PrivacyInfo.xcprivacy'
   }
-  spec.pod_target_xcconfig = {
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
-  }
-  spec.user_target_xcconfig = { 
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
-  } 
 end
