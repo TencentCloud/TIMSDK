@@ -16,7 +16,7 @@
 #import <TUICore/TUIThemeManager.h>
 #import "TUIVoiceToTextDataProvider.h"
 
-@interface TUIVoiceToTextView ()
+@interface TUIVoiceToTextView ()<TUITextViewDelegate>
 
 @property(nonatomic, copy) NSString *text;
 @property(nonatomic, copy) NSString *tips;
@@ -155,6 +155,8 @@
     self.textView.editable = NO;
     self.textView.textAlignment = isRTL() ? NSTextAlignmentRight : NSTextAlignmentLeft;
     self.textView.font = [UIFont systemFontOfSize:16];
+    self.textView.tuiTextViewDelegate = self;
+    [self.textView disableHighlightLink];
     self.textView.textColor = TUIVoiceToTextDynamicColor(@"convert_voice_text_view_text_color", @"#000000");
     [self addSubview:self.textView];
     self.textView.hidden = YES;

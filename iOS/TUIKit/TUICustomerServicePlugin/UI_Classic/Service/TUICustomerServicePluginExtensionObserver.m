@@ -139,7 +139,7 @@ static id _instance = nil;
         return nil;
     }
     TUIExtensionInfo *info = [[TUIExtensionInfo alloc] init];
-    info.icon = TUIContactBundleThemeImage(@"chat_nav_more_menu_img", @"chat_nav_more_menu");
+    info.icon = TIMCommonBundleThemeImage(@"chat_nav_more_menu_img", @"chat_nav_more_menu");
     info.weight = 200;
     info.onClicked = ^(NSDictionary *_Nonnull param) {
         UINavigationController *nav = [param tui_objectForKey:TUICore_TUIChatExtension_NavigationMoreItem_PushVC

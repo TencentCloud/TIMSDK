@@ -16,7 +16,7 @@
 #import <TUICore/TUIThemeManager.h>
 #import "TUITranslationDataProvider.h"
 
-@interface TUITranslationView ()
+@interface TUITranslationView ()<TUITextViewDelegate>
 
 @property(nonatomic, copy) NSString *text;
 @property(nonatomic, copy) NSString *tips;
@@ -157,6 +157,8 @@
     self.textView.scrollEnabled = NO;
     self.textView.editable = NO;
     self.textView.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
+    self.textView.tuiTextViewDelegate = self;
+    [self.textView disableHighlightLink];
     [self addSubview:self.textView];
     self.textView.hidden = YES;
     self.textView.userInteractionEnabled = NO;
