@@ -3,15 +3,20 @@ import { writeResult } from "../pages/SearchTestPage";
 import {
   V2TIMFriendSearchParam,
   V2TIMManager,
+  V2TIMUserSearchParam,
+  V2TIMUserSearchResult,
   V2TIMFriendInfoResult,
-  V2TIMGroupSearchParam,
   V2TIMGroupInfo,
-  V2TIMGroupMemberSearchParam,
+  V2TIMGroupSearchParam,
+  V2TIMGroupSearchResult,
   V2TIMGroupMemberFullInfo,
+  V2TIMGroupMemberSearchParam,
+  V2TIMGroupMemberSearchResult,
   V2TIMMessageSearchResult,
   V2TIMMessageSearchParam,
   V2TIMKeywordListMatchType,
   V2TIMMessageSearchResultItem,
+  V2TIMGender,
 } from "@tencentcloud/imsdk";
 
 @Observed
@@ -52,6 +57,26 @@ export class SearchInfo {
 export let searchInfo = new SearchInfo();
 
 export class SearchTestInterfaces {
+  static searchUsers() {
+    const searchParam: V2TIMUserSearchParam = {
+      gender: V2TIMGender.V2TIM_GENDER_UNKNOWN,
+      // minBirthday: 0,
+      // maxBirthday:1730774350,
+      keywordList: ["abc"],
+      keywordListMatchType: V2TIMKeywordListMatchType.V2TIM_KEYWORD_LIST_MATCH_TYPE_OR,
+      searchCount: 20,
+      searchCursor: "",
+    };
+    V2TIMManager.getInstance()
+      .searchUsers(searchParam)
+      .then((result: V2TIMUserSearchResult) => {
+        writeResult("searchUsers succeeded", result);
+      })
+      .catch((error: Error) => {
+        writeResult("searchUsers failed", error.code, error.message);
+      });
+  }
+
   static searchFriends() {
     const searchParam: V2TIMFriendSearchParam = {
       keywordList: [searchInfo.keyword1, searchInfo.keyword2],
@@ -85,6 +110,23 @@ export class SearchTestInterfaces {
       });
   }
 
+  static searchCloudGroups() {
+    const searchParam: V2TIMGroupSearchParam = {
+      keywordList: ["啊"],
+      keywordListMatchType: V2TIMKeywordListMatchType.V2TIM_KEYWORD_LIST_MATCH_TYPE_OR,
+      searchCount: 20,
+      searchCursor: "",
+    };
+    V2TIMManager.getGroupManager()
+      .searchCloudGroups(searchParam)
+      .then((result: V2TIMGroupSearchResult) => {
+        writeResult("searchCloudGroups succeeded", result);
+      })
+      .catch((error: Error) => {
+        writeResult("searchCloudGroups failed", error.code, error.message);
+      });
+  }
+
   static searchGroupMembers() {
     const searchParam: V2TIMGroupMemberSearchParam = {
       groupIDList: [searchInfo.groupID1, searchInfo.groupID2],
@@ -101,6 +143,23 @@ export class SearchTestInterfaces {
       })
       .catch((error: Error) => {
         writeResult("searchGroupMembers failed", error.code, error.message);
+      });
+  }
+
+  static searchCloudGroupMembers() {
+    const searchParam: V2TIMGroupMemberSearchParam = {
+      keywordList: ["a"],
+      keywordListMatchType: V2TIMKeywordListMatchType.V2TIM_KEYWORD_LIST_MATCH_TYPE_OR,
+      searchCount: 20,
+      searchCursor: "",
+    };
+    V2TIMManager.getGroupManager()
+      .searchCloudGroupMembers(searchParam)
+      .then((result: V2TIMGroupMemberSearchResult) => {
+        writeResult("searchCloudGroupMembers succeeded", result);
+      })
+      .catch((error: Error) => {
+        writeResult("searchCloudGroupMembers failed", error.code, error.message);
       });
   }
 

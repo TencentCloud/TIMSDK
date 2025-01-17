@@ -54,6 +54,7 @@ export struct SearchTestPage {
 
       Scroll() {
         Column({ space: 4 }) {
+          DemoButton("searchUsers", SearchTestInterfaces.searchUsers)
 
           Row({ space: 4 }) {
             TextInput({ placeholder: "keyword1" }).onChange((v) => searchInfo.keyword1 = v).demoTextInputStyle()
@@ -89,6 +90,7 @@ export struct SearchTestPage {
           }.DemoRowStyle()
 
           DemoButton("searchGroups", SearchTestInterfaces.searchGroups)
+          DemoButton("searchCloudGroups", SearchTestInterfaces.searchCloudGroups)
           Divider()
           Row({ space: 4 }) {
             TextInput({ placeholder: "groupID1" }).onChange((v) => searchInfo.groupID1 = v).demoTextInputStyle()
@@ -115,6 +117,7 @@ export struct SearchTestPage {
           }.DemoRowStyle()
 
           DemoButton("searchGroupMembers", SearchTestInterfaces.searchGroupMembers)
+          DemoButton("searchCloudGroupMembers", SearchTestInterfaces.searchCloudGroupMembers)
           Divider()
 
           Row({ space: 4 }) {

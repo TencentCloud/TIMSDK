@@ -54,7 +54,10 @@ export class BaseTestInterfaces {
         // Test.log('logListener', logLevel, logContent);
       },
     };
-    V2TIMManager.getInstance().initSDK(getContext(), SDKAPPID, sdkConfig);
+
+    // V2TIMManager.getInstance().initSDK(getContext(), SDKAPPID, sdkConfig);
+    V2TIMManager.getInstance().initSDK(getContext().getApplicationContext(), SDKAPPID, sdkConfig);
+
     Prompt.showToast({ message: "initSDK" });
   }
 

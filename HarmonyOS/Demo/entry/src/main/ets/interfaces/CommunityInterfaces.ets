@@ -6,6 +6,7 @@ import {
   V2TIMGroupType,
   V2TIMCreateGroupInfo,
   V2TIMCreateGroupMemberInfo,
+  V2TIMGroupAddOpt,
   V2TIMGroupInfo,
   V2TIMTopicOperationResult,
   V2TIMTopicInfoResult,
@@ -96,6 +97,19 @@ export class CommunityTestInterfaces {
     topicInfo.topicID = `@TGS#_@TGS#cQORJIIM62C4@TOPIC#_${topicSuffix}`;
     topicInfo.topicName = "32145";
     topicInfo.topicFaceURL = "32145";
+
+    // 私密话题测试
+    // communityInfo.communityGroupID = "@TGS#_@TGS#cUOWGKIM62CF";
+    // topicInfo.topicID = "";
+    // topicInfo.topicType = "Private"
+    // topicInfo.topicAddOpt = V2TIMGroupAddOpt.V2TIM_GROUP_ADD_AUTH
+    // topicInfo.topicApproveOpt = V2TIMGroupAddOpt.V2TIM_GROUP_ADD_ANY
+    // topicInfo.memberMaxCount = 20
+    // const memberList: V2TIMCreateGroupMemberInfo[] = [
+    //   { userID: "xixi" },
+    // ];
+    // topicInfo.memberList = memberList;
+
     V2TIMManager.getCommunityManager()
       .createTopicInCommunity(communityInfo.communityGroupID, topicInfo)
       .then((result: string) => {

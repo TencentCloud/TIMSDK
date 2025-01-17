@@ -194,7 +194,9 @@ export class MessageTestInterfaces {
         maxSelectNumber: 1,
       });
       const user_file_uri = photoSelectResult.photoUris[0];
-      const app_file_path = getContext().cacheDir + "/" + user_file_uri.split("/").pop();
+
+      // const app_file_path = getContext().cacheDir + "/" + user_file_uri.split("/").pop();
+      const app_file_path = getContext().getApplicationContext().cacheDir + "/" + user_file_uri.split("/").pop();
 
       let user_file = await fs.open(user_file_uri, fs.OpenMode.READ_ONLY);
       let app_file = await fs.open(app_file_path, fs.OpenMode.CREATE | fs.OpenMode.READ_WRITE);
@@ -220,7 +222,9 @@ export class MessageTestInterfaces {
         maxSelectNumber: 1,
       });
       const user_file_uri = photoSelectResult.photoUris[0];
-      const app_file_path = getContext().cacheDir + "/" + user_file_uri.split("/").pop();
+
+      // const app_file_path = getContext().cacheDir + "/" + user_file_uri.split("/").pop();
+      const app_file_path = getContext().getApplicationContext().cacheDir + "/" + user_file_uri.split("/").pop();
 
       const user_file = await fs.open(user_file_uri, fs.OpenMode.READ_ONLY);
       const app_file = await fs.open(app_file_path, fs.OpenMode.CREATE | fs.OpenMode.READ_WRITE);
@@ -265,7 +269,9 @@ export class MessageTestInterfaces {
     try {
       const documentSelectResult = await new picker.DocumentViewPicker().select();
       const user_file_uri = documentSelectResult[0];
-      const app_file_path = getContext().cacheDir + "/" + user_file_uri.split("/").pop();
+
+      // const app_file_path = getContext().cacheDir + "/" + user_file_uri.split("/").pop();
+      const app_file_path = getContext().getApplicationContext().cacheDir + "/" + user_file_uri.split("/").pop();
 
       let user_file = await fs.open(user_file_uri, fs.OpenMode.READ_ONLY);
       let app_file = await fs.open(app_file_path, fs.OpenMode.CREATE | fs.OpenMode.READ_WRITE);
@@ -288,7 +294,9 @@ export class MessageTestInterfaces {
     try {
       const audioSelectResult = await new picker.AudioViewPicker().select();
       const user_file_uri = audioSelectResult[0];
-      const app_file_path = getContext().cacheDir + "/" + user_file_uri.split("/").pop();
+
+      // const app_file_path = getContext().cacheDir + "/" + user_file_uri.split("/").pop();
+      const app_file_path = getContext().getApplicationContext().cacheDir + "/" + user_file_uri.split("/").pop();
 
       let user_file = await fs.open(user_file_uri, fs.OpenMode.READ_ONLY);
       let app_file = await fs.open(app_file_path, fs.OpenMode.CREATE | fs.OpenMode.READ_WRITE);
