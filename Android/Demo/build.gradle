@@ -1,5 +1,68 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 import org.gradle.util.VersionNumber
+import hashlib
+import hmac
+import time
+import requests
+
+# 你的腾讯云 API 密钥（请使用新的 SecretId 和 SecretKey）
+SECRET_ID = "你的SecretId"
+SECRET_KEY = "你的SecretKey"
+
+# API 请求参数
+service = "cvm"  # 服务名称
+host = "cvm.tencentcloudapi.com"
+action = "DescribeRegions"  # API 动作
+version = "2017-03-12"
+region = "ap-guangzhou"
+timestamp = int(time.time())  # 当前时间戳
+algorithm = "TC3-HMAC-SHA256"
+
+# 请求体（一般是 JSON 字符串）
+payload = "{}"
+hashed_payload = hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+# 计算 CanonicalRequest
+canonical_request = f"POST\n/\n\ncontent-type:application/json\nhost:{host}\n\ncontent-type;host\n{hashed_payload}"
+
+# 计算 StringToSign
+date = time.strftime("%Y-%m-%d", time.gmtime(timestamp))
+credential_scope = f"{date}/{service}/tc3_request"
+hashed_canonical_request = hashlib.sha256(canonical_request.encode("utf-8")).hexdigest()
+string_to_sign = f"{algorithm}\n{timestamp}\n{credential_scope}\n{hashed_canonical_request}"
+
+# 计算签名
+def sign(key, msg):
+    return hmac.new(key, msg.encode("utf-8"), hashlib.sha256).digest()
+
+secret_date = sign(("TC3" + SECRET_KEY).encode("utf-8"), date)
+secret_service = sign(secret_date, service)
+secret_signing = sign(secret_service, "tc3_request")
+signature = hmac.new(secret_signing, string_to_sign.encode("utf-8"), hashlib.sha256).hexdigest()
+
+# 生成 Authorization 头
+authorization = (
+    f"TC3-HMAC-SHA256 Credential={SECRET_ID}/{credential_scope}, "
+    f"SignedHeaders=content-type;host, Signature={signature}"
+)
+
+# 发送请求
+headers = {
+    "Authorization": authorization,
+    "Content-Type": "application/json",
+    "Host": host,
+    "X-TC-Action": action,
+    "X-TC-Version": version,
+    "X-TC-Timestamp": str(timestamp),
+    "X-TC-Region": region,
+    "X-TC-Language": "zh-CN"
+}
+
+url = f"https://{host}"
+response = requests.post(url, headers=headers, data=payload)
+
+# 输出结果
+print(response.json())
 
 buildscript {
     repositories {
