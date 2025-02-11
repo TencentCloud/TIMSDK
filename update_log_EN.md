@@ -1,6 +1,10 @@
 English | [简体中文](./版本历史.md)
 
 # TIMSDK
+## 8.4.6675 @2025.02.11 - Enhanced Version
+### SDK
+- Fixed the problem of abnormal paging group member list.
+
 ## 8.4.6667 @2025.01.15 - Enhanced Version
 ### SDK
 
