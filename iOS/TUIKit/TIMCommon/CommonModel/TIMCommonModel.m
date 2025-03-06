@@ -378,9 +378,16 @@
     [self hide];
 }
 
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    if ([text isEqualToString:@"\n"]) {
-        [textView resignFirstResponder];
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSString *currentText = textField.text;
+    NSString *updatedText = [currentText stringByReplacingCharactersInRange:range withString:string];
+    if (_data.inputLength > 0) {
+        if (updatedText.length > _data.inputLength) {
+            return NO;
+        }
+    }
+    if ([string isEqualToString:@"\n"]) {
+        [textField resignFirstResponder];
         return NO;
     }
     return YES;
