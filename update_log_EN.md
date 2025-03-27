@@ -20,7 +20,6 @@ English | [简体中文](./版本历史.md)
 ### TUIKit & Demo
 - Multimedia plugin now supports image editing
 
-
 ## 8.4.6675 @2025.02.11 - Enhanced Version
 ### SDK
 - Fixed the problem of abnormal paging group member list.
