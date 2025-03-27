@@ -154,7 +154,25 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 8.4.6675 @2025.02.11
+## Latest Enhanced Version 8.5.6864 @2025.03.27
 ### SDK
-- Fixed the problem of abnormal paging group member list.
+- Added support for iOS LiveActivity
+- Added support for binding device accounts to IM accounts
+- Added support for end-to-end message troubleshooting
+- Added randomized domains for long connections
+- Completed Swift-related data reporting
+- Improved Flutter-related data reporting
+- Added support for modifying topic types after creation
+- Optimized long connection routing rotation strategy
+- Completed read status reporting for the last message in conversations
+- Fixed inaccurate mute duration field in group member profiles
+- Fixed issue where setting custom fields on merged forwarded messages would create new conversations
+- Fixed incorrect account login state after switching accounts during network disconnection
+- Fixed inability to set custom fields for friends on HarmonyOS platform
+- Fixed inaccurate state synchronization for iOS offline push notifications
+- Fixed occasional incorrect ordering in conversation lists
+
+### TUIKit & Demo
+- Multimedia plugin now supports image editing
+
 
