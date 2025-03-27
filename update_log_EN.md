@@ -1,6 +1,26 @@
 English | [简体中文](./版本历史.md)
 
 # TIMSDK
+## 8.5.6864 @2025.03.27 - Enhanced Version
+### SDK
+- Added support for iOS LiveActivity
+- Added support for binding device accounts to IM accounts
+- Added support for end-to-end message troubleshooting
+- Added randomized domains for long connections
+- Added support for modifying topic types after creation
+- Optimized long connection routing rotation strategy
+- Completed read status reporting for the last message in conversations
+- Fixed inaccurate mute duration field in group member profiles
+- Fixed issue where setting custom fields on merged forwarded messages would create new conversations
+- Fixed incorrect account login state after switching accounts during network disconnection
+- Fixed inability to set custom fields for friends on HarmonyOS platform
+- Fixed inaccurate state synchronization for iOS offline push notifications
+- Fixed occasional incorrect ordering in conversation lists
+
+### TUIKit & Demo
+- Multimedia plugin now supports image editing
+
+
 ## 8.4.6675 @2025.02.11 - Enhanced Version
 ### SDK
 - Fixed the problem of abnormal paging group member list.
