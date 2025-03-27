@@ -160,8 +160,6 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 - Added support for binding device accounts to IM accounts
 - Added support for end-to-end message troubleshooting
 - Added randomized domains for long connections
-- Completed Swift-related data reporting
-- Improved Flutter-related data reporting
 - Added support for modifying topic types after creation
 - Optimized long connection routing rotation strategy
 - Completed read status reporting for the last message in conversations
