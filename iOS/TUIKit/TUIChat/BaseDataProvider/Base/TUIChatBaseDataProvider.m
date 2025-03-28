@@ -10,6 +10,8 @@
 #import <TUICore/TUIThemeManager.h>
 #import "TUIChatBaseDataProvider.h"
 #import "TUIMessageBaseDataProvider.h"
+#import <TUICore/TUILogin.h>
+#import "TUIChatDefine.h"
 
 #define Input_SendBtn_Key @"Input_SendBtn_Key"
 #define Input_SendBtn_Title @"Input_SendBtn_Title"
@@ -221,4 +223,36 @@ static NSArray *gCustomInputBtnInfo = nil;
         }];
 }
 
++ (void)insertLocalTipsMessage:(NSString *)content chatID:(NSString *)chatID isGroup:(BOOL)isGroup  {
+    NSDictionary *dic = @{
+        @"version" : @(1),
+        BussinessID : @"local_tips",
+        @"content" : content.length>0?content:@""
+    };
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
+    V2TIMMessage *msg = [[V2TIMManager sharedInstance] createCustomMessage:data];
+    if (msg == nil) {
+        return;
+    }
+    NSString *messageID = nil;
+    NSString *senderID = [TUILogin getUserID];
+    if (isGroup) {
+        NSString *groupID = chatID.length>0?chatID:@"";
+        messageID = [V2TIMManager.sharedInstance insertGroupMessageToLocalStorage:msg to:groupID sender:senderID succ:^{
+            NSDictionary *userInfo = @{@"message" : msg,@"needScrollToBottom":@"1"};
+            [[NSNotificationCenter defaultCenter] postNotificationName:TUIChatInsertMessageWithoutUpdateUINotification object:nil userInfo:userInfo];
+        } fail:^(int code, NSString *desc) {
+            
+        }];
+    }
+    else {
+        NSString *userID = chatID.length>0?chatID:@"";
+        messageID =  [V2TIMManager.sharedInstance insertC2CMessageToLocalStorage:msg to:userID sender:senderID succ:^{
+            NSDictionary *userInfo = @{@"message" : msg,@"needScrollToBottom":@"1"};
+            [[NSNotificationCenter defaultCenter] postNotificationName:TUIChatInsertMessageWithoutUpdateUINotification object:nil userInfo:userInfo];
+        } fail:^(int code, NSString *desc) {
+            
+        }];
+    }
+}
 @end

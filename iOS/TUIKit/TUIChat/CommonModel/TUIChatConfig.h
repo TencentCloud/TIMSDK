@@ -42,9 +42,13 @@ typedef NS_OPTIONS(NSInteger, TUIChatInputBarMoreMenuItem) {
  */
 - (TUIChatInputBarMoreMenuItem)inputBarShouldHideItemsInMoreMenuOfModel:(TUIChatConversationModel *)model;
 /**
- *  Implement this method to add new items to the more menu of the specified model.
+ *  Implement this method to add new items to the more menu of the specified model only for the classic version.
  */
-- (NSArray<TUICustomActionSheetItem *> *)inputBarShouldAddNewItemsToMoreMenuOfModel:(TUIChatConversationModel *)model;
+- (NSArray<TUIInputMoreCellData *> *)inputBarShouldAddNewItemsToMoreMenuOfModel:(TUIChatConversationModel *)model;
+/**
+ *  Implement this method to add new items to the more list of the specified model only for the minimalist version.
+ */
+- (NSArray<TUICustomActionSheetItem *> *)inputBarShouldAddNewItemsToMoreListOfModel:(TUIChatConversationModel *)model;
 @end
 
 @protocol TUIChatShortcutViewDataSource <NSObject>

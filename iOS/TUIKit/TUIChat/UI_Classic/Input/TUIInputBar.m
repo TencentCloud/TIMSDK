@@ -287,12 +287,14 @@
           self.recordView = nil;
         });
     } else {
+        /// TUICallKit may need some time to stop all services, so remove UI immediately then stop the recorder.
+        if (_recordView) {
+            [self.recordView removeFromSuperview];
+            self.recordView = nil;
+        }
         dispatch_queue_t main_queue = dispatch_get_main_queue();
         dispatch_async(main_queue, ^{
           @strongify(self);
-          /// TUICallKit may need some time to stop all services, so remove UI immediately then stop the recorder.
-          [self.recordView removeFromSuperview];
-          self.recordView = nil;
           dispatch_async(main_queue, ^{
             [self.recorder stop];
             NSString *path = self.recorder.recordedFilePath;

@@ -669,7 +669,7 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
     }
 
     NSString *businessID = param[BussinessID];
-    if (businessID.length > 0 && [businessID isKindOfClass:[NSString class]]) {
+    if ([businessID isKindOfClass:[NSString class]] && businessID.length > 0) {
         return businessID;
     } else {
         if ([param.allKeys containsObject:BussinessID_CustomerService]) {

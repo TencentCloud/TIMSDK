@@ -413,8 +413,11 @@
     if (status <= self.status) {
         return;
     }
-    _msgStatusView.hidden = NO;
-    _msgStatusView.image = nil;
+    if (self.messageData.showReadReceipt && self.messageData.direction == MsgDirectionOutgoing && self.messageData.innerMessage.needReadReceipt &&
+        (self.messageData.innerMessage.userID || self.messageData.innerMessage.groupID)) {
+        _msgStatusView.hidden = NO;
+        _msgStatusView.image = nil;
+    }
     if (_msgStatusView.isAnimating) {
         [_msgStatusView stopAnimating];
         _msgStatusView.animationImages = nil;

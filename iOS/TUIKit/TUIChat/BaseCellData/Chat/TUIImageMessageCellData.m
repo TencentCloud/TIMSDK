@@ -180,7 +180,11 @@
         [TUITool asyncDecodeImage:path
                          complete:^(NSString *path, UIImage *image) {
                            dispatch_async(dispatch_get_main_queue(), ^{
+                               NSLog(@"image.sd_imageFormat: %ld path:%@ image.sd_imageData.length :%lu",(long)image.sd_imageFormat,path,(unsigned long)image.sd_imageData.length);
                              if (![path tui_containsString:@".gif"] || (image.sd_imageFormat != SDImageFormatGIF) ) {
+                                     [[SDImageCache sharedImageCache] storeImageToMemory:image forKey:cacheKey];
+                             }
+                             else {
                                  /**
                                   * The gif image is too large to be cached in memory
                                   * Only cache images less than 1M

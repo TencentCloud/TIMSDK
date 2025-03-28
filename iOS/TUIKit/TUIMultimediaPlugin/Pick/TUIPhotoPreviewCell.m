@@ -200,7 +200,17 @@
             }];
         } progressHandler:nil networkAccessAllowed:NO];
     } else {
-        self.asset = model.asset;
+        if (model.type == TUIAssetMediaTypePhoto && model.editImage != nil) {
+            self.imageView.image = model.editImage;
+            [self resizeSubviews];
+            
+            self.progressView.hidden = YES;
+            if (self.imageProgressUpdateBlock) {
+                self.imageProgressUpdateBlock(1);
+            }
+        } else {
+            self.asset = model.asset;
+        }
     }
 }
 
@@ -413,14 +423,15 @@
         self.player = nil;
     }
     //有编辑时,优先使用编辑的url 和 Image
-    if (self.model.editurl) {
+    if (self.model.editImage && self.model.type == TUIAssetMediaTypePhoto) {
+        self.cover = self.model.editImage;
+    } else if (self.model.editurl) {
         if (self.model.editImage) {
             self.cover = self.model.editImage;
         }
         AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:self.model.editurl];
         [self configPlayerWithItem:playerItem];
-    }
-    else {
+    } else {
         if (self.model && self.model.asset) {
             [[TUIImageManager defaultManager] getPhotoWithAsset:self.model.asset completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
                 BOOL iCloudSyncFailed = !photo && [TUICommonTools isICloudSyncError:info[PHImageErrorKey]];

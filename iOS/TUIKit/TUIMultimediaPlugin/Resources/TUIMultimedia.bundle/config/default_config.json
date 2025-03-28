@@ -11,5 +11,10 @@
   "support_video_edit_graffiti": "true",
   "support_video_edit_paster": "true",
   "support_video_edit_subtitle": "true",
-  "support_video_edit_bgm": "true"
+  "support_video_edit_bgm": "true",
+  "support_picture_edit_graffiti": "true",
+  "support_picture_edit_mosaic": "true",
+  "support_picture_edit_paster": "true",
+  "support_picture_edit_subtitle": "true",
+  "support_picture_edit_crop": "true"
 }

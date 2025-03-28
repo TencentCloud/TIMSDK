@@ -40,13 +40,20 @@
 }
 
 - (void)agree {
-    [self agreeWithSuccess:nil failure:nil];
+    [self agreeWithSuccess:^{
+        //Success
+    } failure:^(int code, NSString * _Nonnull msg) {
+        //failure
+    }];
 }
 
 - (void)reject {
-    [self rejectWithSuccess:nil failure:nil];
+    [self rejectWithSuccess:^{
+        //Success
+    } failure:^(int code, NSString * _Nonnull msg) {
+        //failure
+    }];
 }
-
 
 - (void)agreeWithSuccess:(TUICommonPendencyCellDataSuccessCallback)success failure:(TUICommonPendencyCellDataFailureCallback)failure {
     [[V2TIMManager sharedInstance] acceptFriendApplication:_application

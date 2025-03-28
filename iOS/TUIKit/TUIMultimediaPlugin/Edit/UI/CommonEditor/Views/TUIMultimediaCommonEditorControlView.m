@@ -1,12 +1,11 @@
 // Copyright (c) 2024 Tencent. All rights reserved.
-// Author: rickwrwang
+// Author: eddardliu
 
 #import "TUIMultimediaCommonEditorControlView.h"
 #import <Masonry/Masonry.h>
 #import <TUICore/TUIThemeManager.h>
 #import "TUIMultimediaPlugin/NSArray+Functional.h"
 #import "TUIMultimediaPlugin/TUIMultimediaCircleProgressView.h"
-#import "TUIMultimediaPlugin/TUIMultimediaColorPanel.h"
 #import "TUIMultimediaPlugin/TUIMultimediaCommon.h"
 #import "TUIMultimediaPlugin/TUIMultimediaDrawView.h"
 #import "TUIMultimediaPlugin/TUIMultimediaImageUtil.h"
@@ -18,20 +17,18 @@
 #import "TUIMultimediaPlugin/TUIMultimediaTabPanel.h"
 #import "TUIMultimediaPlugin/TUIMultimediaConfig.h"
 #import "TUIMultimediaPlugin/TUIMultimediaConstant.h"
+#import "TUIMultimediaPlugin/TUIMultimediaGeometry.h"
+#import "TUIMultimediaPlugin/TUIMultimediaCropControlView.h"
+#import "TUIMultimediaPlugin/TUIMultimediaDrawCtrlView.h"
 
-#define FunctionButtonSize CGSizeMake(28, 28)
-#define FunctionButtonImageEdgeInsets UIEdgeInsetsMake(0, 0, 0, 0)
-#define FunctionButtonColorNormal TUIMultimediaPluginDynamicColor(@"editor_func_btn_normal_color", @"#FFFFFF")
-#define FunctionButtonColorDisabled TUIMultimediaPluginDynamicColor(@"editor_func_btn_disabled_color", @"#4D4D4D")
-#define FunctionButtonColorPressed TUIMultimediaPluginDynamicColor(@"editor_func_btn_pressed_color", @"#7F7F7F")
-#define FunctionButtonColorSelected [[TUIMultimediaConfig sharedInstance] getThemeColor]
+#define FUNCTION_BUTTON_SIZE CGSizeMake(28, 28)
+#define BUTTON_SEND_SIZE CGSizeMake(60, 28)
 
-#define BtnSendSize CGSizeMake(60, 28)
-
-@interface TUIMultimediaCommonEditorControlView () <TUIMultimediaStickerViewDelegate, UIGestureRecognizerDelegate, TUIMultimediaDrawViewDelegate, TUIMultimediaColorPanelDelegate> {
+@interface TUIMultimediaCommonEditorControlView () <TUIMultimediaStickerViewDelegate, UIGestureRecognizerDelegate, TUIMultimediaDrawCtrlViewDelegate, TUIMultimediaCropControlDelegate> {
     TUIMultimediaCommonEditorConfig *_config;
     UIStackView *_stkViewButtons;
-    UIButton *_btnDraw;
+    UIButton *_btnDrawGraffiti;
+    UIButton *_btnDrawMosaic;
     UIButton *_btnMusic;
     UIButton *_btnSubtitle;
     UIButton *_btnPaster;
@@ -42,15 +39,17 @@
     NSMutableArray<TUIMultimediaStickerView *> *_stickerViewList;
     TUIMultimediaStickerView *_lastSelectedStickerView;
     UIView *_editContainerView;
+    
     TUIMultimediaDrawView *_drawView;
-    TUIMultimediaColorPanel *_colorPanel;
-    UIButton *_btnRedo;
-    UIButton *_btnUndo;
-    UIView *_drawCtrlView;
+    TUIMultimediaDrawCtrlView *_drawCtrlView;
     
     UIView *_generateView;
     TUIMultimediaCircleProgressView *_progressView;
     UIButton *_btnGenerateCancel;
+    
+    BOOL _isStartCrop;
+    NSInteger _previewRotationAngle;
+    TUIMultimediaCropControlView* _cropControlView;
 }
 
 @end
@@ -64,6 +63,7 @@
     if (self != nil) {
         _config = config;
         _sourceType = SOURCE_TYPE_RECORD;
+        _isStartCrop = NO;
         _stickerViewList = [NSMutableArray array];
         [self initUI];
     }
@@ -88,6 +88,85 @@
     [_editContainerView addSubview:vsub];
 }
 
+#pragma mark crop function
+- (void)previewScale:(CGFloat) scale center:(CGPoint)center {
+    if (_isStartCrop) {
+        return;
+    }
+    
+    CGFloat width = _previewView.frame.size.width * scale;
+    CGFloat height = _previewView.frame.size.height * scale;
+    
+    CGFloat left = center.x - (center.x - _previewView.frame.origin.x) * scale;
+    CGFloat top = center.y - (center.y - _previewView.frame.origin.y) * scale;
+    _previewView.frame = CGRectMake(left, top, width, height);
+    
+    for (UIView *subview in _editContainerView.subviews) {
+        if ([subview isKindOfClass:[TUIMultimediaStickerView class]]) {
+            TUIMultimediaStickerView* stickView = (TUIMultimediaStickerView*)subview;
+            [stickView scale:scale];
+        }
+    }
+    
+    if (_cropControlView != nil) {
+        [_cropControlView changeResetButtonStatus];
+    }
+}
+
+- (void)previewMove:(CGPoint)offset {
+    if (_isStartCrop) {
+        return;
+    }
+    _previewView.frame = CGRectMake(_previewView.frame.origin.x + offset.x,
+                                    _previewView.frame.origin.y + offset.y,
+                                    _previewView.frame.size.width,
+                                    _previewView.frame.size.height);
+    if (_cropControlView != nil) {
+        [_cropControlView changeResetButtonStatus];
+    }
+}
+
+
+- (void)previewRotation90:(CGPoint)center {
+    _previewRotationAngle = (_previewRotationAngle + 90 + 360) % 360;
+    float radians = _previewRotationAngle * M_PI / 180;
+    int newTop = center.y - center.x + _previewView.frame.origin.x;
+    int newLeft = center.x + center.y - _previewView.frame.origin.y - _previewView.frame.size.height;
+    
+    _editContainerView.transform = CGAffineTransformMakeRotation(radians);
+    _previewView.transform = CGAffineTransformMakeRotation(radians);
+    _previewView.frame = CGRectMake(newLeft, newTop, _previewView.frame.size.width, _previewView.frame.size.height);
+    
+    if (_cropControlView != nil) {
+        [_cropControlView changeResetButtonStatus];
+    }
+}
+
+- (void)previewRotationToZero {
+    _previewRotationAngle = 0;
+    _editContainerView.transform = CGAffineTransformMakeRotation(0);
+    _previewView.transform = CGAffineTransformMakeRotation(0);
+}
+
+- (void)previewAdjustToLimitRect {
+    NSLog(@"preview adjust to limit rect");
+    double scaleLimitX = _previewLimitRect.size.width * 1.0f / _previewView.frame.size.width;
+    double scaleLimitY = _previewLimitRect.size.height * 1.0f / _previewView.frame.size.height;
+    double scaleLimit = MAX(scaleLimitX, scaleLimitY);
+    if (scaleLimit > 1.0f) {
+        [self previewScale:scaleLimit center:CGPointMake(CGRectGetMidX(_previewView.frame), CGRectGetMidY(_previewView.frame))];
+    }
+    
+    
+    int maxLeft = _previewLimitRect.origin.x;
+    int minLeft = _previewLimitRect.size.width + _previewLimitRect.origin.x - _previewView.frame.size.width;
+    int left = MAX(MIN(_previewView.frame.origin.x , maxLeft), minLeft);
+    int maxTop = _previewLimitRect.origin.y;
+    int minTop = _previewLimitRect.size.height + _previewLimitRect.origin.y - _previewView.frame.size.height;
+    int top = MAX(MIN(_previewView.frame.origin.y , maxTop), minTop);
+    _previewView.frame = CGRectMake(left, top, _previewView.frame.size.width, _previewView.frame.size.height);
+}
+
 #pragma mark UI init
 - (void)initUI {
     self.backgroundColor = UIColor.blackColor;
@@ -97,6 +176,7 @@
     
     [self initFuncitonBtnStackView];
     [self initGraffitiFunction];
+    [self initMosaicFunction];
     [self initPasterFunciton];
     [self initSubtitleFunciton];
     [self initBGMFunction];
@@ -116,30 +196,33 @@
     [_stkViewButtons mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self).inset(10);
         make.bottom.equalTo(self.mas_safeAreaLayoutGuideBottom);
-        make.height.mas_equalTo(FunctionButtonSize.height);
+        make.height.mas_equalTo(FUNCTION_BUTTON_SIZE.height);
     }];
 }
 
 - (void) initGraffitiFunction {
-    if (!_config.drawEnabled) {
+    if (!_config.drawGraffitiEnabled) {
         return;
     }
     
-    _btnDraw = [self addFunctionIconButtonWithImage:TUIMultimediaPluginBundleThemeImage(@"editor_scrawl_img", @"modify_scrawl")
-                                    onTouchUpInside:@selector(onBtnDrawClicked)];
+    _btnDrawGraffiti = [self addFunctionIconButtonWithImage:TUIMultimediaPluginBundleThemeImage(@"editor_scrawl_img", @"modify_scrawl")
+                                    onTouchUpInside:@selector(onBtnDrawGraffitiClicked)];
     
     [self initEditContainerView];
-    
-    _drawView = [[TUIMultimediaDrawView alloc] init];
-    [_editContainerView addSubview:_drawView];
-    _drawView.delegate = self;
-    _drawView.userInteractionEnabled = NO;
-    [_drawView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(_previewView);
-    }];
-    UITapGestureRecognizer *drawTapRec = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapDrawView:)];
-    [_drawView addGestureRecognizer:drawTapRec];
     [self initDrawCtrlView];
+}
+
+- (void) initMosaicFunction {
+    if (!_config.drawMosaicEnabled) {
+        return;
+    }
+    
+    _btnDrawMosaic = [self addFunctionIconButtonWithImage:TUIMultimediaPluginBundleThemeImage(@"edit_mosaic_img", @"edit_mosaic")
+                                    onTouchUpInside:@selector(onBtnDrawMosaicClicked)];
+    
+    [self initEditContainerView];
+    [self initDrawCtrlView];
+    _drawCtrlView.drawView.mosaciOriginalImage = _mosaciOriginalImage;
 }
 
 - (void) initPasterFunciton {
@@ -176,70 +259,41 @@
     
     _btnCrop = [self addFunctionIconButtonWithImage:TUIMultimediaPluginBundleThemeImage(@"editor_crop_img", @"modify_crop")
                                     onTouchUpInside:@selector(onBtnCropClicked)];
+    [self initCropCtrlView];
+}
+
+- (void)initCropCtrlView {
+    if (_cropControlView != nil) {
+        return;
+    }
+    
+    _cropControlView = [[TUIMultimediaCropControlView alloc] initWithFrame:self.frame editorControl:self];
+    [self addSubview:_cropControlView];
+    _cropControlView.hidden = YES;
+    [_cropControlView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self);
+    }];
+    _cropControlView.delegate = self;
 }
 
 - (void)initDrawCtrlView {
-    _drawCtrlView = [[UIView alloc] init];
+    if (_drawCtrlView != nil) {
+        return;
+    }
+    
+    _drawCtrlView = [[TUIMultimediaDrawCtrlView alloc] init];
     [self addSubview:_drawCtrlView];
-    _drawCtrlView.backgroundColor = TUIMultimediaPluginDynamicColor(@"editor_draw_panel_bg_color", @"#3333337F");
-    _drawCtrlView.hidden = YES;
-    
-    _colorPanel = [[TUIMultimediaColorPanel alloc] init];
-    _colorPanel.delegate = self;
-    [_drawCtrlView addSubview:_colorPanel];
-    
-    UIImage *imgUndo = TUIMultimediaPluginBundleThemeImage(@"editor_undo_img", @"undo");
-    UIImage *imgRedo = TUIMultimediaPluginBundleThemeImage(@"editor_redo_img", @"redo");
-    _btnUndo = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_drawCtrlView addSubview:_btnUndo];
-    _btnUndo.enabled = NO;
-    [_btnUndo addTarget:self action:@selector(onBtnUndoClicked) forControlEvents:UIControlEventTouchUpInside];
-    [_btnUndo setImage:[TUIMultimediaImageUtil imageFromImage:imgUndo withTintColor:FunctionButtonColorNormal] forState:UIControlStateNormal];
-    [_btnUndo setImage:[TUIMultimediaImageUtil imageFromImage:imgUndo withTintColor:FunctionButtonColorDisabled] forState:UIControlStateDisabled];
-    _btnRedo = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_drawCtrlView addSubview:_btnRedo];
-    _btnRedo.enabled = NO;
-    [_btnRedo addTarget:self action:@selector(onBtnRedoClicked) forControlEvents:UIControlEventTouchUpInside];
-    [_btnRedo setImage:[TUIMultimediaImageUtil imageFromImage:imgRedo withTintColor:FunctionButtonColorNormal] forState:UIControlStateNormal];
-    [_btnRedo setImage:[TUIMultimediaImageUtil imageFromImage:imgRedo withTintColor:FunctionButtonColorDisabled] forState:UIControlStateDisabled];
-    
-    TUIMultimediaSplitter *sph = [[TUIMultimediaSplitter alloc] init];
-    [_drawCtrlView addSubview:sph];
-    sph.axis = UILayoutConstraintAxisHorizontal;
-    TUIMultimediaSplitter *spv = [[TUIMultimediaSplitter alloc] init];
-    [_drawCtrlView addSubview:spv];
-    spv.axis = UILayoutConstraintAxisVertical;
-    
     [_drawCtrlView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self);
         make.top.equalTo(_stkViewButtons).offset(-50);
         make.bottom.equalTo(self);
     }];
-    [_btnRedo mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(_drawCtrlView).inset(5);
-        make.centerY.equalTo(_colorPanel);
-        make.size.mas_equalTo(CGSizeMake(30, 30));
-    }];
-    [_btnUndo mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(_colorPanel);
-        make.right.equalTo(_btnRedo.mas_left).inset(20);
-        make.size.mas_equalTo(CGSizeMake(30, 30));
-    }];
-    [_colorPanel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.equalTo(_drawCtrlView).inset(5);
-        make.right.equalTo(_btnUndo.mas_left).inset(10);
-        make.height.mas_equalTo(32);
-    }];
-    [sph mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(_drawCtrlView).inset(3);
-        make.top.equalTo(_colorPanel.mas_bottom).inset(5);
-        make.height.mas_equalTo(5);
-    }];
-    [spv mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(_drawCtrlView).inset(3);
-        make.bottom.equalTo(sph.mas_top).inset(3);
-        make.left.equalTo(_colorPanel.mas_right).inset(3);
-        make.width.mas_equalTo(5);
+    _drawCtrlView.drawEnable = NO;
+    _drawCtrlView.delegate = self;
+    
+    [_editContainerView addSubview:_drawCtrlView.drawView];
+    [_drawCtrlView.drawView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(_previewView);
     }];
 }
 
@@ -268,14 +322,14 @@
         [_stkViewButtons removeFromSuperview];
         [self addSubview:_btnSend];
         [_btnSend mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(BtnSendSize);
+            make.size.mas_equalTo(BUTTON_SEND_SIZE);
             make.right.equalTo(self).inset(20);
             make.bottom.equalTo(self.mas_safeAreaLayoutGuideBottom);
         }];
     } else {
         [_stkViewButtons addArrangedSubview:_btnSend];
         [_btnSend mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(BtnSendSize);
+            make.size.mas_equalTo(BUTTON_SEND_SIZE);
         }];
     }
     
@@ -348,65 +402,63 @@
 - (UIButton *)addFunctionIconButtonWithImage:(UIImage *)img onTouchUpInside:(SEL)sel {
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_stkViewButtons addArrangedSubview:btn];
-    UIImage *imgNormal = [TUIMultimediaImageUtil imageFromImage:img withTintColor:FunctionButtonColorNormal];
-    UIImage *imgDisabled = [TUIMultimediaImageUtil imageFromImage:img withTintColor:FunctionButtonColorDisabled];
-    UIImage *imgPressed = [TUIMultimediaImageUtil imageFromImage:img withTintColor:FunctionButtonColorPressed];
-    UIImage *imgSelected = [TUIMultimediaImageUtil imageFromImage:img withTintColor:FunctionButtonColorSelected];
+    UIImage *imgNormal = [TUIMultimediaImageUtil imageFromImage:img withTintColor:
+                          TUIMultimediaPluginDynamicColor(@"editor_func_btn_normal_color", @"#FFFFFF")];
+    UIImage *imgDisabled = [TUIMultimediaImageUtil imageFromImage:img withTintColor:
+                            TUIMultimediaPluginDynamicColor(@"editor_func_btn_disabled_color", @"#6D6D6D")];
+    UIImage *imgPressed = [TUIMultimediaImageUtil imageFromImage:img withTintColor:
+                           TUIMultimediaPluginDynamicColor(@"editor_func_btn_pressed_color", @"#7F7F7F")];
+    UIImage *imgSelected = [TUIMultimediaImageUtil imageFromImage:img withTintColor:
+                            [[TUIMultimediaConfig sharedInstance] getThemeColor]];
     [btn setImage:imgNormal forState:UIControlStateNormal];
     [btn setImage:imgDisabled forState:UIControlStateDisabled];
     [btn setImage:imgPressed forState:UIControlStateHighlighted];
     [btn setImage:imgSelected forState:UIControlStateSelected];
-    [btn setImageEdgeInsets:FunctionButtonImageEdgeInsets];
+    [btn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
     [btn addTarget:self action:sel forControlEvents:UIControlEventTouchUpInside];
     
     [btn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(FunctionButtonSize);
+        make.size.mas_equalTo(FUNCTION_BUTTON_SIZE);
     }];
     return btn;
 }
 
 #pragma mark Internal Functions
-- (void)flushRedoUndoState {
-    if (_drawView != nil) {
-        _btnUndo.enabled = _drawView.canUndo;
-        _btnRedo.enabled = _drawView.canRedo;
-    }
-}
-
-- (void)setDrawEnabled:(BOOL)drawEnabled {
-    if (!_config.drawEnabled) {
+- (void)setDrawEnabled:(BOOL)drawGraffitiEnabled {
+    if (!_config.drawGraffitiEnabled) {
         return;
     }
     _lastSelectedStickerView.selected = NO;
     _lastSelectedStickerView = nil;
-    _btnDraw.selected = drawEnabled;
-    _drawView.userInteractionEnabled = drawEnabled;
-    _drawCtrlView.hidden = !drawEnabled;
+    _btnDrawGraffiti.selected = drawGraffitiEnabled;
+    if(drawGraffitiEnabled) {
+        _btnDrawMosaic.selected = NO;
+    }
+    _drawCtrlView.drawMode = GRAFFITI;
+    _drawCtrlView.drawEnable = drawGraffitiEnabled;
     for (TUIMultimediaStickerView *v in _stickerViewList) {
-        v.userInteractionEnabled = !drawEnabled;
+        v.userInteractionEnabled = !drawGraffitiEnabled;
     }
 }
 
-#pragma mark - UIGestureRecognizer actions
-- (void)onTapContainerView:(UITapGestureRecognizer *)rec {
+- (void)setDrawMosaicEnabled:(BOOL)drawMosaicEnabled {
+    if (!_config.drawMosaicEnabled) {
+        return;
+    }
     _lastSelectedStickerView.selected = NO;
     _lastSelectedStickerView = nil;
-}
-
-- (void)onTapDrawView:(UITapGestureRecognizer *)rec {
-    if (_drawCtrlView.hidden) {
-        _drawCtrlView.hidden = NO;
-        _stkViewButtons.hidden = NO;
-    } else {
-        _drawCtrlView.hidden = YES;
-        _stkViewButtons.hidden = YES;
+    _btnDrawMosaic.selected = drawMosaicEnabled;
+    if(drawMosaicEnabled) {
+        _btnDrawGraffiti.selected = NO;
+    }
+    _drawCtrlView.drawMode = MOSAIC;
+    _drawCtrlView.drawEnable = drawMosaicEnabled;
+    for (TUIMultimediaStickerView *v in _stickerViewList) {
+        v.userInteractionEnabled = !drawMosaicEnabled;
     }
 }
 
-#pragma mark - Actions
-- (void)onBtnSendClicked {
-    [self setDrawEnabled:NO];
-    // 贴纸和字幕
+- (NSArray<TUIMultimediaSticker *> *)getStickers {
     NSArray<TUIMultimediaSticker *> *stickers = [_stickerViewList tui_multimedia_map:^TUIMultimediaSticker *(TUIMultimediaStickerView *v) {
         [v resignFirstResponder];
         TUIMultimediaSticker *sticker = [[TUIMultimediaSticker alloc] init];
@@ -415,19 +467,41 @@
         return sticker;
     }];
     
-    // 涂鸦
-    if (_drawView != nil && _drawView.pathList.count > 0) {
-        TUIMultimediaSticker *drawSticker = [[TUIMultimediaSticker alloc] init];
-        drawSticker.image = [TUIMultimediaImageUtil imageFromView:_drawView];
-        drawSticker.frame = _drawView.frame;
+    TUIMultimediaSticker *drawSticker = _drawCtrlView != nil ? _drawCtrlView.drawSticker : nil;
+    if (drawSticker != nil) {
         stickers = [NSArray tui_multimedia_arrayWithArray:stickers append:@[ drawSticker ]];
     }
-    
-    [_delegate onCommonEditorControlViewComplete:self stickers:stickers];
+    return  stickers;
 }
+
+- (void) clearAllStaticker {
+    if (_drawCtrlView != nil) {
+        [_drawCtrlView clearAllDraw];
+    }
+    
+    for (TUIMultimediaStickerView *v in _stickerViewList) {
+        [v removeFromSuperview];
+    }
+    [_stickerViewList removeAllObjects];
+}
+
+#pragma mark - UIGestureRecognizer actions
+- (void)onTapContainerView:(UITapGestureRecognizer *)rec {
+    _lastSelectedStickerView.selected = NO;
+    _lastSelectedStickerView = nil;
+}
+
+#pragma mark - Actions
+- (void)onBtnSendClicked {
+    [self setDrawEnabled:NO];
+    [self setDrawMosaicEnabled:NO];
+    [_delegate onCommonEditorControlViewComplete:self stickers:[self getStickers]];
+}
+
 - (void)onBtnCancelClicked {
     [_delegate onCommonEditorControlViewCancel:self];
 }
+
 - (void)onBtnSubtitleClicked {
     [_delegate onCommonEditorControlViewNeedModifySubtitle:[[TUIMultimediaSubtitleInfo alloc] init]
                                                   callback:^(TUIMultimediaSubtitleInfo *subtitle, BOOL isOk) {
@@ -436,21 +510,31 @@
         }
     }];
     [self setDrawEnabled:NO];
+    [self setDrawMosaicEnabled:NO];
     _lastSelectedStickerView.selected = NO;
     _lastSelectedStickerView = nil;
 }
 - (void)onBtnPasterClicked {
     [_delegate onCommonEditorControlViewNeedAddPaster:self];
     [self setDrawEnabled:NO];
+    [self setDrawMosaicEnabled:NO];
     _lastSelectedStickerView.selected = NO;
     _lastSelectedStickerView = nil;
 }
-- (void)onBtnDrawClicked {
-    [self setDrawEnabled:!_btnDraw.selected];
+
+- (void)onBtnDrawGraffitiClicked {
+    [self setDrawEnabled:!_btnDrawGraffiti.selected];
+    _drawCtrlView.drawMode = GRAFFITI;
+}
+
+- (void)onBtnDrawMosaicClicked {
+    [self setDrawMosaicEnabled:!_btnDrawMosaic.selected];
+    _drawCtrlView.drawMode = MOSAIC;
 }
 
 - (void)onBtnMusicClicked {
     [self setDrawEnabled:NO];
+    [self setDrawMosaicEnabled:NO];
     [_delegate onCommonEditorControlViewNeedEditMusic:self];
     _lastSelectedStickerView.selected = NO;
     _lastSelectedStickerView = nil;
@@ -458,17 +542,11 @@
 
 - (void)onBtnCropClicked {
     [self setDrawEnabled:NO];
-    // TODO:crop
-}
-
-- (void)onBtnUndoClicked {
-    [_drawView undo];
-    [self flushRedoUndoState];
-}
-
-- (void)onBtnRedoClicked {
-    [_drawView redo];
-    [self flushRedoUndoState];
+    [self setDrawMosaicEnabled:NO];
+    [_cropControlView show];
+    _drawCtrlView.drawEnable = NO;
+    _stkViewButtons.hidden = YES;
+    _btnCancel.hidden = YES;
 }
 
 - (void)onBtnGenerateCancelClicked {
@@ -481,19 +559,22 @@
 - (BOOL)modifyButtonsHidden {
     return _stkViewButtons.hidden;
 }
+
 - (void)setModifyButtonsHidden:(BOOL)modifyButtonsHidden {
     _stkViewButtons.hidden = modifyButtonsHidden;
 }
+
 - (void)setPreviewSize:(CGSize)previewSize {
     _previewSize = previewSize;
     if (previewSize.width == 0 || previewSize.height == 0) {
         return;
     }
-    [_previewView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.center.equalTo(self);
-        make.width.equalTo(self);
-        make.height.equalTo(_previewView.mas_width).multipliedBy(previewSize.height / previewSize.width);
-    }];
+    
+    int width = self.frame.size.width;
+    int height = previewSize.height / previewSize.width * width;
+    _previewView.frame = CGRectMake(0,0, width, height);
+    _previewView.center = self.center;
+    _previewLimitRect = _previewView.frame;
 }
 
 - (BOOL)isGenerating {
@@ -524,6 +605,41 @@
     }
 }
 
+-(void)setMosaciOriginalImage:(UIImage *)mosaciOriginalImage {
+    _mosaciOriginalImage = mosaciOriginalImage;
+    if (_drawCtrlView) {
+        _drawCtrlView.drawView.mosaciOriginalImage = mosaciOriginalImage;
+    }
+}
+
+#pragma mark - TUIMultimediaCropControlDelegate protocol
+
+- (void)onCancelCrop {
+    [self previewRotationToZero];
+    self.previewSize =  _previewSize;
+    _stkViewButtons.hidden = NO;
+    _btnCancel.hidden = NO;
+}
+
+- (void)onConfirmCrop:(CGRect)cropRect {
+    CGFloat cropX = (cropRect.origin.x - _previewView.frame.origin.x) / _previewView.frame.size.width;
+    CGFloat cropY = (cropRect.origin.y - _previewView.frame.origin.y) / _previewView.frame.size.height;
+    CGFloat cropWidth = cropRect.size.width / _previewView.frame.size.width;
+    CGFloat cropHeight = cropRect.size.height / _previewView.frame.size.height;
+    CGRect normalizedCropRect = CGRectMake(cropX, cropY, cropWidth, cropHeight);
+    
+    CGFloat rotationAngle = _previewRotationAngle;
+    if ((_previewRotationAngle + 360) % 360 != 0) {
+        _previewView.hidden = YES;
+    }
+    [self previewRotationToZero];
+    
+    [_delegate onCommonEditorControlViewCrop:rotationAngle normalizedCropRect:normalizedCropRect stickers:[self getStickers]];
+    _stkViewButtons.hidden = NO;
+    _btnCancel.hidden = NO;
+    [self clearAllStaticker];
+}
+
 #pragma mark - TUIMultimediaStickerViewDelegate protocol
 - (void)onStickerViewSelected:(TUIMultimediaStickerView *)v {
     [_editContainerView bringSubviewToFront:v];
@@ -546,7 +662,6 @@
             if (isOk) {
                 vsub.subtitleInfo = newInfo;
             }
-            
             vsub.hidden = NO;
         }];
     }
@@ -555,41 +670,32 @@
 - (void)onStickerViewSizeChanged:(TUIMultimediaStickerView *)v {
 }
 
-#pragma mark - TUIMultimediaDrawViewDelegate
-- (void)drawViewPathListChanged:(TUIMultimediaDrawView *)v {
-    [self flushRedoUndoState];
-}
-- (void)drawViewDrawStarted:(TUIMultimediaDrawView *)v {
-    _stkViewButtons.hidden = YES;
-    _drawCtrlView.hidden = YES;
-}
-- (void)drawViewDrawEnded:(TUIMultimediaDrawView *)v {
-    _stkViewButtons.hidden = NO;
-    _drawCtrlView.hidden = NO;
-}
-#pragma mark - TUIMultimediaColorPanelDelegate protocol
-- (void)onColorPanel:(TUIMultimediaColorPanel *)panel selectColor:(UIColor *)color {
-    _drawView.color = color;
+#pragma mark -  TUIMultimediaDrawCtrlViewDelegate
+- (void)onIsDrawCtrlViewDrawing:(BOOL)Hidden {
+    _stkViewButtons.hidden = Hidden;
 }
 @end
 
+#pragma mark -  TUIMultimediaCommonEditorConfig
 @implementation TUIMultimediaCommonEditorConfig
 + (instancetype)configForVideoEditor {
     TUIMultimediaCommonEditorConfig *config = [[TUIMultimediaCommonEditorConfig alloc] init];
     config.pasterEnabled = [[TUIMultimediaConfig sharedInstance] isSupportVideoEditPaster];
     config.subtitleEnabled = [[TUIMultimediaConfig sharedInstance] isSupportVideoEditSubtitle];
-    config.drawEnabled = [[TUIMultimediaConfig sharedInstance] isSupportVideoEditGraffiti];
+    config.drawGraffitiEnabled = [[TUIMultimediaConfig sharedInstance] isSupportVideoEditGraffiti];
     config.musicEditEnabled = [[TUIMultimediaConfig sharedInstance] isSupportVideoEditBGM];
     config.cropEnabled = NO;
+    config.drawMosaicEnabled = NO;
     return config;
 }
-+ (instancetype)configForPhotoEditor {
++ (instancetype)configForPictureEditor {
     TUIMultimediaCommonEditorConfig *config = [[TUIMultimediaCommonEditorConfig alloc] init];
-    config.pasterEnabled = NO;
-    config.subtitleEnabled = NO;
-    config.drawEnabled = NO;
+    config.pasterEnabled = [[TUIMultimediaConfig sharedInstance] isSupportPictureEditPaster];
+    config.subtitleEnabled = [[TUIMultimediaConfig sharedInstance] isSupportPictureEditSubtitle];
+    config.drawGraffitiEnabled = [[TUIMultimediaConfig sharedInstance] isSupportPictureEditGraffiti];
+    config.drawMosaicEnabled = [[TUIMultimediaConfig sharedInstance] isSupportPictureEditMosaic];
+    config.cropEnabled = [[TUIMultimediaConfig sharedInstance] isSupportPictureEditCrop];
     config.musicEditEnabled = NO;
-    config.cropEnabled = NO;
     return config;
 }
 @end

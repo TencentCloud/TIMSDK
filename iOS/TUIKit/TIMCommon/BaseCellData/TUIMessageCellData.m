@@ -125,11 +125,19 @@
 }
 
 - (CGSize)msgStatusSize {
-    if (self.direction == MsgDirectionOutgoing) {
-        return CGSizeMake(54, 14);
-    } else {
-        return CGSizeMake(38, 14);
+    if (self.showReadReceipt && self.innerMessage.needReadReceipt &&
+        (self.innerMessage.userID || self.innerMessage.groupID)) {
+        if (self.direction == MsgDirectionOutgoing) {
+            return CGSizeMake(54, 14);
+        } else {
+            return CGSizeMake(38, 14);
+        }
     }
+    else {
+        //The community type does not require read receipt markers, only the time is needed.
+        return CGSizeMake(26, 14);
+    }
+
 }
 
 - (NSDictionary *)messageModifyUserInfos {

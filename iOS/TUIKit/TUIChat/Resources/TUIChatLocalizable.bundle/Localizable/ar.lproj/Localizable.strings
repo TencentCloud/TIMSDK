@@ -11,9 +11,9 @@
 "TUIChatCallRejectInCaller" = "تم رفضه من الطرف الآخر";
 "TUIChatCallRejectInCallee" = "تم الرفض";
 "TUIChatCallTimeoutInCaller" = "لا يوجد رد من الطرف الآخر";
-"TUIChatCallTimeoutInCallee" = "تم الإلغاء من الطرف الآخر";
+"TUIChatCallTimeoutInCallee" = "انتهاء الاتصال بالوقت المحدد";
 "TUIChatCallLinebusyInCaller" = "الطرف الآخر مشغول";
-"TUIChatCallLinebusyInCallee" = "تم الإلغاء من الطرف الآخر";
+"TUIChatCallLinebusyInCallee" = "الخط مشغول عند الطرف الآخر";
 "TUIChatCallSend" = "بدء المكالمة";
 "TUIChatCallAccept" = "قبول المكالمة";
 "TUIChatCallSwitchToAudio" = "تحويل الفيديو إلى صوت";

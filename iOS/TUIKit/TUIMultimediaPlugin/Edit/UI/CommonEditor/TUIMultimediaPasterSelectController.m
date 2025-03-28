@@ -1,5 +1,5 @@
 // Copyright (c) 2024 Tencent. All rights reserved.
-// Author: rickwrwang
+// Author: eddardliu
 
 #import "TUIMultimediaPasterSelectController.h"
 #import <Masonry/Masonry.h>
@@ -38,6 +38,7 @@
 - (void)onPasterSelected:(UIImage *)image {
     [_delegate pasterSelectController:self onPasterSelected:image];
 }
+
 - (void)pasterSelectView:(TUIMultimediaPasterSelectView *)v needAddCustomPaster:(TUIMultimediaPasterGroupConfig *)group completeCallback:(void (^)(void))callback {
     _picker = [[TUIMultimediaImagePicker alloc] init];
     @weakify(self);
@@ -59,6 +60,7 @@
     };
     [_picker presentOn:self];
 }
+
 - (void)pasterSelectView:(TUIMultimediaPasterSelectView *)v
     needDeleteCustomPasterInGroup:(TUIMultimediaPasterGroupConfig *)group
                             index:(NSInteger)index

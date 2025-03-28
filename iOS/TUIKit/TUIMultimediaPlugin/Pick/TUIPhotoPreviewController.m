@@ -22,7 +22,7 @@
     UICollectionViewFlowLayout *_layout;
     UIView *_naviBar;
     UIButton *_backButton;
-UIButton *_selectButton;
+    UIButton *_selectButton;
     UILabel *_indexLabel;
     
     UIView *_toolBar;
@@ -170,7 +170,7 @@ UIButton *_selectButton;
     _editPhotoButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _editPhotoButton.backgroundColor = [UIColor clearColor];
     [_editPhotoButton addTarget:self action:@selector(onEditPhotoButtonClick) forControlEvents:UIControlEventTouchUpInside];
-    _editPhotoButton.titleLabel.font = [UIFont systemFontOfSize:13];
+    _editPhotoButton.titleLabel.font = [UIFont systemFontOfSize:16];
     [_editPhotoButton setTitle:self.multiMediaNavVC.editImageBtnTitleStr forState:UIControlStateNormal];
     [_editPhotoButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
@@ -436,40 +436,69 @@ UIButton *_selectButton;
 - (void)onEditPhotoButtonClick {
     __weak typeof(self) weakSelf = self;
     TUIAssetModel * model = [self getCurrentSelectedModel];
-    if (model) {
-        if (model.type == TUIAssetMediaTypeVideo) {
-            [[TUIImageManager defaultManager] requestVideoURLWithAsset:model.asset success:^(NSURL *videoURL) {
-                void (^editMediaBlock)(void) = ^(void) {
-                    NSURL *formatUrl = videoURL;
-                    if (model.editurl) {
-                        formatUrl = model.editurl;
-                    }
-                    [[TUIMultimediaProcessor shareInstance] editMedia:weakSelf url:formatUrl complete:^(NSURL * _Nonnull uri) {
-                        NSLog(@"transcode url is %@",videoURL);
+    if (!model) {
+        return;
+    }
+    
+    if (model.type == TUIAssetMediaTypeVideo) {
+        [[TUIImageManager defaultManager] requestVideoURLWithAsset:model.asset success:^(NSURL *videoURL) {
+            void (^editVideoBlock)(void) = ^(void) {
+                NSURL *formatUrl = videoURL;
+                if (model.editurl) {
+                    formatUrl = model.editurl;
+                }
+                [[TUIMultimediaProcessor shareInstance] editVideo:weakSelf url:formatUrl complete:^(NSURL * _Nullable uri) {
+                    NSLog(@"transcode url is %@",videoURL);
+                    if (uri != nil) {
                         [self replaceCurrentSelectedModel:uri];
-                    }];
-                    };
-                dispatch_async(dispatch_get_main_queue(), editMediaBlock);
-                NSLog(@"%@",videoURL);
-            } failure:^(NSDictionary *info) {
-                
-            }];
-        }
-        else {
-            [[TUIImageManager defaultManager] getPhotoWithAsset:model.asset photoWidth:100 completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
-                
-            }];
+                    }
+                }];
+                };
+            dispatch_async(dispatch_get_main_queue(), editVideoBlock);
+            NSLog(@"%@",videoURL);
+        } failure:^(NSDictionary *info) {
+            
+        }];
+    }
+    else if (model.type == TUIAssetMediaTypePhoto) {
+        if (model.editImage != nil) {
+            [self editPictureOnMainQueue:model.editImage];
+        } else {
+            [[TUIImageManager defaultManager] getOriginalPhotoDataWithAsset:model.asset
+            progressHandler:nil
+            completion:^(NSData *data, NSDictionary *info, BOOL isDegraded) {
+                    if (!isDegraded) {
+                        UIImage *img = [UIImage imageWithData:data];
+                        [self editPictureOnMainQueue:img];
+                    }
+                }];
         }
     }
 }
+
+- (void)editPictureOnMainQueue:(UIImage*) image {
+    __weak typeof(self) weakSelf = self;
+    void (^editPictureBlock)(void) = ^(void) {
+        [[TUIMultimediaProcessor shareInstance] editPicture:weakSelf picture:image complete:^(UIImage * _Nullable picture) {
+            if (picture != nil) {
+                [self replaceCurrentSelectedPhotoModel:picture];
+            }
+        }];
+        };
+    dispatch_async(dispatch_get_main_queue(), editPictureBlock);
+}
+
 - (void)onProvideVideo:(NSURL *)videoURL
                snapshot:(NSString *)snapshotUrl
                duration:(NSInteger)duration {
     
     V2TIMMessage *message = [[V2TIMManager sharedInstance] createVideoMessage:videoURL.path type:videoURL.path.pathExtension duration:(int)duration snapshotPath:snapshotUrl];
     NSDictionary *param = @{TUICore_TUIChatService_SendMessageMethod_MsgKey : message};
-    [TUICore callService:TUICore_TUIChatService method:TUICore_TUIChatService_SendMessageMethod param:param];
-    
+    NSString *entranceName = [TIMConfig isClassicEntrance]?
+                                TUICore_TUIChatService:TUICore_TUIChatService_Minimalist;
+    [TUICore callService:entranceName
+                  method:TUICore_TUIChatService_SendMessageMethod param:param];
+
 }
 - (TUIAssetModel *)getCurrentSelectedModel {
     TUIAssetModel *model = self.assetModels[self.currentShowIndex];
@@ -486,6 +515,21 @@ UIButton *_selectButton;
         [_collectionView reloadData];
         [self refreshNaviBarAndBottomBarState];
     }
+}
+
+- (void)replaceCurrentSelectedPhotoModel:(UIImage *)image {
+    TUIAssetModel * model = [self getCurrentSelectedModel];
+    if (model == nil || model.type != TUIAssetMediaTypePhoto) {
+        return;
+    }
+    
+    model.editImage = image;
+    if (self.refreshAssetBlock) {
+        self.refreshAssetBlock(model);
+    }
+    [_selectedScrollView freshPhoto : model];
+    [_collectionView reloadData];
+    [self refreshNaviBarAndBottomBarState];
 }
 
 - (void)onOriginalPhotoButtonClick {
@@ -628,7 +672,7 @@ UIButton *_selectButton;
         _originalPhotoButton.hidden = NO;
         if (_isSelectOriginalPhoto) _originalPhotoLabel.hidden = NO;
     }
-    if (model.type == TUIAssetMediaTypeVideo) {
+    if (model.type == TUIAssetMediaTypeVideo || model.type == TUIAssetMediaTypePhoto) {
         [_editPhotoButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     }
     else {

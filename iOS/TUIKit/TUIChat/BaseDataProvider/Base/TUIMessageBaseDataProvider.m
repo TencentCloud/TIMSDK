@@ -1044,6 +1044,9 @@
 }
 
 - (void)onGroupMessagePinned:(NSString *)groupID message:(V2TIMMessage *)message isPinned:(BOOL)isPinned opUser:(V2TIMGroupMemberInfo *)opUser {
+    if (![groupID isEqualToString:self.conversationModel.groupID]) {
+        return;
+    }
     if (isPinned) {
         //add
         [self.groupPinList addObject:message];

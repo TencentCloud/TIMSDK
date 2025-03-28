@@ -8,16 +8,19 @@
 #import "TUIMultimediaAlbumPicker.h"
 
 @implementation TUIMultimediaAlbumPicker
-
-- (void)pickMediaWithCaller:(UIViewController *)caller {
+- (void)pickMediaWithCaller:(UIViewController *)caller originalMediaPicked:(IAlbumPickerCallback)mediaPicked progressCallback:(IAlbumPickerCallback)progressCallback finishedCallback:(IAlbumPickerCallback)finishedCallback
+{
     UIViewController * pushVC = caller;
-    TUIMultimediaNavController *imagePickerVc = [self createImagePickerVC];
+    TUIMultimediaNavController *imagePickerVc = [self createImagePickerVCoriginalMediaPicked:mediaPicked progressCallback:progressCallback finishedCallback:finishedCallback];
     if (pushVC && imagePickerVc) {
         [pushVC presentViewController:imagePickerVc animated:YES completion:nil];
     }
 }
 
-- (TUIMultimediaNavController *)createImagePickerVC {
+- (TUIMultimediaNavController *)createImagePickerVCoriginalMediaPicked:(IAlbumPickerCallback)originalMediaPicked
+    progressCallback:(IAlbumPickerCallback)progressCallback
+    finishedCallback:(IAlbumPickerCallback)finishedCallback {
+    
     TUIMultimediaNavController *imagePickerVc = [[TUIMultimediaNavController alloc] initWithMaxImagesCount:9 delegate:(id)self];
     imagePickerVc.modalPresentationStyle = 0;
     
@@ -32,14 +35,44 @@
         for (TUIAssetPickModel *model in models) {
             dispatch_group_enter(group);
             if ([[TUIImageManager defaultManager] isVideo:model.asset]) {
-                [self handleVideoAsset:model completion:^(BOOL limitedFlag) {
+                [self handleVideoAsset:model
+                originalMediaPicked:^(NSDictionary *param) {
+                    if (originalMediaPicked) {
+                        originalMediaPicked(param);
+                    }
+                }
+                progressCallback:^(NSDictionary *param) {
+                    if (progressCallback) {
+                        progressCallback(param);
+                    }
+                }
+                finishedCallback:^(NSDictionary *param) {
+                    if (finishedCallback) {
+                        finishedCallback(param);
+                    }
+                }
+                completion:^(BOOL limitedFlag) {
                     if (limitedFlag) {
                         hasFileSizeExceed = YES;
                     }
                     dispatch_group_leave(group);
                 }];
             } else {
-                [self handleImageAsset:model isSelectOriginalPhoto:isSelectOriginalPhoto  completion:^(BOOL limitedFlag) {
+                [self handleImageAsset:model
+                isSelectOriginalPhoto:isSelectOriginalPhoto
+                   originalMediaPicked:^(NSDictionary *param) {
+                    if (originalMediaPicked) {
+                        originalMediaPicked(param);
+                    }
+                } progressCallback:^(NSDictionary *param) {
+                    if (progressCallback) {
+                        progressCallback(param);
+                    }
+                } finishedCallback:^(NSDictionary *param) {
+                    if (finishedCallback) {
+                        finishedCallback(param);
+                    }
+                } completion:^(BOOL limitedFlag) {
                     if (limitedFlag) {
                         hasImageSizeExceed = YES;
                     }
@@ -57,8 +90,11 @@
     
     return imagePickerVc;
 }
-
-- (void)handleVideoAsset:(TUIAssetPickModel *)model completion:(void (^)(BOOL limitedFlag))completion {
+- (void)handleVideoAsset:(TUIAssetPickModel *)model
+     originalMediaPicked:(IAlbumPickerCallback)mediaPicked
+        progressCallback:(IAlbumPickerCallback)progressCallback
+        finishedCallback:(IAlbumPickerCallback)finishedCallback
+              completion:(void (^)(BOOL limitedFlag))completion {
     
     if (model.editurl) {
         //Edited; no transcoding needed, can be sent directly.
@@ -66,9 +102,10 @@
         NSString *snapshotPath = [[TUIImageManager defaultManager] genImagePath:snapaImage isVideoSnapshot:YES];
         NSInteger duration  = [[TUIImageManager defaultManager] getDurationWithVideoURL:model.editurl];
         V2TIMMessage *message = [[V2TIMManager sharedInstance] createVideoMessage:model.editurl.path type:model.editurl.path.pathExtension duration:(int)duration snapshotPath:snapshotPath];
-        NSDictionary *param = @{TUICore_TUIChatService_SendMessageMethod_MsgKey : message};
-        [TUICore callService:TUICore_TUIChatService method:TUICore_TUIChatService_SendMessageMethod param:param];
-
+        NSDictionary *param = @{@"message": message,@"type":@"video"};
+        if (finishedCallback) {
+            finishedCallback(param);
+        }
     }
     else {
         
@@ -82,18 +119,30 @@
                     // Show video snapshot on screen first
                     NSString *snapshotPath = [[TUIImageManager defaultManager] genImagePath:model.image isVideoSnapshot:YES];
                     TUIMessageCellData *placeHolderCellData = [TUIVideoMessageCellData placeholderCellDataWithSnapshotUrl:snapshotPath thubImage:model.image];
-                    NSDictionary *param = @{TUICore_TUIChatService_SendMessageMethod_PlaceHolderUIMsgKey : placeHolderCellData};
-                    [TUICore callService:TUICore_TUIChatService method:TUICore_TUIChatService_SendMessageMethod param:param];
-
+                    NSString *random = [NSString stringWithFormat:@"%u", arc4random()];
+                    placeHolderCellData.msgID = [NSString stringWithFormat:@"%@%@", snapshotPath, random];
+                    NSDictionary *param = @{@"placeHolderCellData" : placeHolderCellData,@"type":@"video"};
+                    if (mediaPicked) {
+                        mediaPicked(param);
+                    }
                     __weak typeof(self)weakSelf = self;
                     //Video transcoding and compression; replace the placeholder image after completion.
-                    [self getVideoOutputPathWithAsset:model.asset placeHolderCellData:placeHolderCellData complete:^(NSString *videoPath) {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            V2TIMMessage *message = [[V2TIMManager sharedInstance] createVideoMessage:videoPath type:videoPath.pathExtension duration:model.asset.duration snapshotPath:snapshotPath];
-                            NSDictionary *param = @{TUICore_TUIChatService_SendMessageMethod_MsgKey : message,
-                                                    TUICore_TUIChatService_SendMessageMethod_PlaceHolderUIMsgKey : placeHolderCellData};
-                            [TUICore callService:TUICore_TUIChatService method:TUICore_TUIChatService_SendMessageMethod param:param];
-                        });
+                    [self getVideoOutputPathWithAsset:model.asset placeHolderCellData:placeHolderCellData
+                                             progress:^(NSDictionary *param) {
+                                                if (progressCallback) {
+                                                    progressCallback(param);
+                                                }
+                        }
+                                             complete:^(NSString *videoPath) {
+                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                    V2TIMMessage *message = [[V2TIMManager sharedInstance] createVideoMessage:videoPath type:videoPath.pathExtension duration:model.asset.duration snapshotPath:snapshotPath];
+                                                    NSDictionary *param = @{@"message": message,
+                                                                            @"placeHolderCellData" : placeHolderCellData,
+                                                                            @"type":@"video"};
+                                                    if (finishedCallback) {
+                                                        finishedCallback(param);
+                                                    }
+                                                });
                     } failure:^(NSString *errorMessage, NSError *error) {
                         // Handle error if needed
                     }];
@@ -107,48 +156,51 @@
 
 - (void)handleImageAsset:(TUIAssetPickModel *)model
    isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto
+     originalMediaPicked:(IAlbumPickerCallback)mediaPicked
+        progressCallback:(IAlbumPickerCallback)progressCallback
+        finishedCallback:(IAlbumPickerCallback)finishedCallback
               completion:(void (^)(BOOL limitedFlag))completion {
+    if (model.editImage != nil) {
+        [self sendImageMessage:model.editImage finishedCallback:finishedCallback];
+        return;
+    }
+    
     [[TUIImageManager defaultManager] getAssetBytes:model.asset completion:^(NSInteger assetBytes) {
-        if (assetBytes > 200 * 1024 * 1024) {
+        if (assetBytes > 28 * 1024 * 1024) {
             completion(YES);
             return;
-        } else {
-            
-            if (isSelectOriginalPhoto) {
-                // original image:
-                [[TUIImageManager defaultManager] getOriginalPhotoDataWithAsset:model.asset progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
-                    progress = progress > 0.02 ? progress : 0.02;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        NSLog(@"%f",progress);
-                    });
-    #ifdef DEBUG
-                    NSLog(@"[TUIMultimediaNavController] getOriginalPhotoDataWithAsset:%f error:%@", progress, error);
-    #endif
-                } completion:^(NSData *data, NSDictionary *info, BOOL isDegraded) {
-                    if (!isDegraded) {
-                        UIImage *img = [UIImage imageWithData:data];
-                        NSString *imagePath = [[TUIImageManager defaultManager] genImagePath:img isVideoSnapshot:NO];
-                        V2TIMMessage *message = [[V2TIMManager sharedInstance] createImageMessage:imagePath];
-                        NSDictionary *param = @{TUICore_TUIChatService_SendMessageMethod_MsgKey : message};
-                        [TUICore callService:TUICore_TUIChatService method:TUICore_TUIChatService_SendMessageMethod param:param];
-                    }
-                }];
-            }
-            else {
-                //Not the original image.：
-                NSString *imagePath = [[TUIImageManager defaultManager] genImagePath:model.image isVideoSnapshot:NO];
-                V2TIMMessage *message = [[V2TIMManager sharedInstance] createImageMessage:imagePath];
-                NSDictionary *param = @{TUICore_TUIChatService_SendMessageMethod_MsgKey : message};
-                [TUICore callService:TUICore_TUIChatService method:TUICore_TUIChatService_SendMessageMethod param:param];
-            }
         }
-        completion(NO);
+        
+        if (mediaPicked) {
+            mediaPicked(nil);
+        }
+        
+        if (isSelectOriginalPhoto) {
+            [[TUIImageManager defaultManager] getOriginalPhotoDataWithAsset:model.asset
+                                                            progressHandler:nil
+                                                                 completion:^(NSData *data, NSDictionary *info, BOOL isDegraded) {
+                if (!isDegraded) {
+                    [self sendImageMessage:[UIImage imageWithData:data] finishedCallback:finishedCallback];
+                }
+            }];
+        } else {
+            [self sendImageMessage:model.image finishedCallback:finishedCallback];
+        }
     }];
 }
 
+- (void)sendImageMessage:(UIImage*) image finishedCallback:(IAlbumPickerCallback)finishedCallback{
+    NSString *imagePath = [[TUIImageManager defaultManager] genImagePath:image isVideoSnapshot:NO];
+    V2TIMMessage *message = [[V2TIMManager sharedInstance] createImageMessage:imagePath];
+    NSDictionary *param = @{@"message": message,@"type":@"image"};
+    if (finishedCallback != nil) {
+        finishedCallback(param);
+    }
+}
 
-
-- (void)getVideoOutputPathWithAsset:(PHAsset *)asset placeHolderCellData:(TUIMessageCellData *)placeHolderCellData complete:(void(^)(NSString *))completeBlock failure:(void (^)(NSString *errorMessage, NSError *error))failure {
+- (void)getVideoOutputPathWithAsset:(PHAsset *)asset placeHolderCellData:(TUIMessageCellData *)placeHolderCellData
+                           progress:(IAlbumPickerCallback)progressHandler
+                           complete:(void(^)(NSString *))completeBlock failure:(void (^)(NSString *errorMessage, NSError *error))failure {
     [[TUIImageManager defaultManager] requestVideoURLWithAsset:asset success:^(NSURL *videoURL) {
         NSNumber *videoBytes;
         [videoURL getResourceValue:&videoBytes forKey:NSURLFileSizeKey error:nil];
@@ -163,7 +215,7 @@
         }
         BOOL suportMultimedia = YES;
         if (suportMultimedia) {
-            [[TUIMultimediaProcessor shareInstance] transcodeMedia:videoURL complete:^(TranscodeResult *result) {
+            [[TUIMultimediaProcessor shareInstance] transcodeVideo:videoURL complete:^(TranscodeResult *result) {
                 NSLog(@"TUIMultimediaMediaProcessor complete %@ ",result.transcodeUri.path);
                 NSData *videoData = [NSData dataWithContentsOfURL:result.transcodeUri];
                 NSString *videoPath = [NSString stringWithFormat:@"%@%@_%u.mp4", TUIKit_Video_Path, [TUITool genVideoName:nil],arc4random()];
@@ -175,7 +227,14 @@
                 });
             } progress:^(float progress) {
                 NSLog(@"TUIMultimediaMediaProcessor videoTranscodingProgress %f ",progress);
-                placeHolderCellData.videoTranscodingProgress = progress;
+                placeHolderCellData.videoTranscodingProgress = progress;                
+                if (progressHandler) {
+                    NSNumber *numberValue = @(progress);
+                    NSDictionary *param = @{
+                        @"progress": numberValue
+                    };
+                    progressHandler(param);
+                }
             } ];
         }
         else {
@@ -204,8 +263,9 @@
 }
 
 - (void)showFileCheckToast:(BOOL)isFile {
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:isFile?TIMCommonLocalizableString(TUIKitFileSizeCheckSomeExceed):
-                             TIMCommonLocalizableString(TUIKitImageSizeChecSomeExceed)
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:isFile?
+                             TIMCommonLocalizableString(TUIKitFileSizeCheckLimited):
+                             TIMCommonLocalizableString(TUIKitImageSizeCheckLimited)
                                                                 message:nil preferredStyle:UIAlertControllerStyleAlert];
     [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Confirm) style:UIAlertActionStyleDefault handler:nil]];
     UIViewController *topViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
@@ -216,5 +276,6 @@
         [topViewController presentViewController:ac animated:YES completion:nil];
     });
 }
+
 @end
 

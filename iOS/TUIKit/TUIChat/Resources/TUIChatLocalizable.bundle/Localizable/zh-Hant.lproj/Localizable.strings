@@ -11,9 +11,9 @@
 "TUIChatCallRejectInCaller" = "對方已拒絕";
 "TUIChatCallRejectInCallee" = "已拒絕";
 "TUIChatCallTimeoutInCaller" = "對方無應答";
-"TUIChatCallTimeoutInCallee" = "對方已取消";
+"TUIChatCallTimeoutInCallee" = "超時無應答";
 "TUIChatCallLinebusyInCaller" = "對方忙線中";
-"TUIChatCallLinebusyInCallee" = "對方已取消";
+"TUIChatCallLinebusyInCallee" = "忙線未接聽";
 "TUIChatCallSend" = "發起通話";
 "TUIChatCallAccept" = "接聽通話";
 "TUIChatCallSwitchToAudio" = "視頻轉語音";

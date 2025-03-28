@@ -162,6 +162,7 @@ typedef NSNumber * HeightNumber;
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onReceivedSendMessageRequest:) name:TUIChatSendMessageNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onReceivedSendMessageWithoutUpdateUIRequest:) name:TUIChatSendMessageWithoutUpdateUINotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onReceivedInsertMessageWithoutUpdateUIRequest:) name:TUIChatInsertMessageWithoutUpdateUINotification object:nil];
 
 }
 
@@ -505,6 +506,41 @@ typedef NSNumber * HeightNumber;
     }
                               FailBlock:^(int code, NSString *desc) {
         NSLog(@"send message without updating UI failed, code: %d, desc: %@", code, desc);
+    }];
+}
+- (void)onReceivedInsertMessageWithoutUpdateUIRequest:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    if (userInfo == nil) {
+        return;
+    }
+    V2TIMMessage *message = [userInfo objectForKey:@"message"];
+    BOOL isNeedScrollToBottom = [userInfo objectForKey:@"needScrollToBottom"];
+    if (message == nil) {
+        return;
+    }
+    NSMutableArray *newUIMsgs = [self.messageDataProvider transUIMsgFromIMMsg:@[ message ]];
+    if (newUIMsgs.count == 0) {
+        return;
+    }
+    
+    TUIMessageCellData *newUIMsg = newUIMsgs.firstObject;
+    @weakify(self)
+    [self.messageDataProvider preProcessMessage:@[ newUIMsg ]
+                                       callback:^{
+        @strongify(self)
+        [UIView performWithoutAnimation:^{
+            [self.tableView beginUpdates];
+            @autoreleasepool {
+                for (TUIMessageCellData *uiMsg in newUIMsgs) {
+                    [self.messageDataProvider addUIMsg:uiMsg];
+                    [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.messageDataProvider.uiMsgs.count -1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+                }
+            }
+            [self.tableView endUpdates];
+            if (isNeedScrollToBottom) {
+               [self scrollToBottom:YES];
+            }
+        }];
     }];
 }
 #pragma mark - TUINotificationProtocol
@@ -1316,6 +1352,9 @@ static NSMutableArray *reloadMsgIndexs = nil;
 
 - (void)onJumpToRepliesDetailPage:(TUIMessageCellData *)data {
     TUIMessageCellData *copyData = [TUIMessageDataProvider getCellData:data.innerMessage];
+    if (!copyData) {
+        return;
+    }
     @weakify(self);
     [self.messageDataProvider preProcessMessage:@[ copyData ]
                                        callback:^{

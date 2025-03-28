@@ -538,8 +538,12 @@ static CGFloat itemMargin = 5;
             pickModel.asset = model.asset;
             if (model.editurl) {
                 pickModel.editurl = model.editurl;
+            }
+            
+            if (model.editImage) {
                 pickModel.editImage = model.editImage;
             }
+            
             [pickModels addObject:pickModel];
             if (pickModels.count != [self.collectionView getSelectedPhotoList].count) {
                 return;

@@ -1,11 +1,11 @@
 // Copyright (c) 2024 Tencent. All rights reserved.
-// Author: rickwrwang
+// Author: eddardliu
 
 #import "TUIMultimediaVideoEditorController.h"
 #import <Masonry/Masonry.h>
 #import <ReactiveObjC/RACEXTScope.h>
 #import <TUICore/TUIDefine.h>
-#import <TXLiteAVSDK_Professional/TXVideoEditer.h>x
+#import <TXLiteAVSDK_Professional/TXVideoEditer.h>
 #import <TXLiteAVSDK_Professional/TXVideoEditerTypeDef.h>
 #import "TUIMultimediaPlugin/NSArray+Functional.h"
 #import "TUIMultimediaPlugin/TUIMultimediaBGMEditController.h"
@@ -25,7 +25,7 @@ TUIMultimediaPasterSelectControllerDelegate,
 TUIMultimediaCommonEditorControlViewDelegate,
 TUIMultimediaBGMEditControllerDelegate> {
     TUIMultimediaPasterSelectController *_pasterSelectController;
-    TUIMultimediaCommonEditorControlView *_ctrlView;
+    TUIMultimediaCommonEditorControlView *_commonEditCtrlView;
     TXVideoEditer *_editor;
     NSString *_sourceVideoPath;
     TXVideoInfo *_videoInfo;
@@ -107,8 +107,8 @@ TUIMultimediaBGMEditControllerDelegate> {
 - (void)setSourceType:(int)sourceType {
     NSLog(@"setSourceType sourceType = %d",sourceType);
     _sourceType = sourceType;
-    if (_ctrlView != nil) {
-        _ctrlView.sourceType = sourceType;
+    if (_commonEditCtrlView != nil) {
+        _commonEditCtrlView.sourceType = sourceType;
     }
 }
 
@@ -120,28 +120,28 @@ TUIMultimediaBGMEditControllerDelegate> {
         NSString *title = [TUIMultimediaCommon localizedStringForKey:@"modify_load_assert_failed"];
         [self showAlertWithTitle:title message:@"" action:@"OK"];
     }
-    _ctrlView.previewSize = CGSizeMake(_videoInfo.width, _videoInfo.height);
+    _commonEditCtrlView.previewSize = CGSizeMake(_videoInfo.width, _videoInfo.height);
 }
 
 #pragma mark - UI Init
 
 - (void)initUI {
-    _ctrlView = [[TUIMultimediaCommonEditorControlView alloc] initWithConfig:TUIMultimediaCommonEditorConfig.configForVideoEditor];
-    [self.view addSubview:_ctrlView];
-    _ctrlView.backgroundColor = UIColor.blackColor;
-    _ctrlView.previewSize = CGSizeMake(_videoInfo.width, _videoInfo.height);
-    _ctrlView.sourceType = _sourceType;
-    _ctrlView.delegate = self;
+    _commonEditCtrlView = [[TUIMultimediaCommonEditorControlView alloc] initWithConfig:TUIMultimediaCommonEditorConfig.configForVideoEditor];
+    [self.view addSubview:_commonEditCtrlView];
+    _commonEditCtrlView.backgroundColor = UIColor.blackColor;
+    _commonEditCtrlView.previewSize = CGSizeMake(_videoInfo.width, _videoInfo.height);
+    _commonEditCtrlView.sourceType = _sourceType;
+    _commonEditCtrlView.delegate = self;
     
     TXPreviewParam *param = [[TXPreviewParam alloc] init];
-    param.videoView = _ctrlView.previewView;
+    param.videoView = _commonEditCtrlView.previewView;
     param.renderMode = PREVIEW_RENDER_MODE_FILL_EDGE;
     _editor = [[TXVideoEditer alloc] initWithPreview:param];
     [self tryReloadVideoAsset];
     _editor.previewDelegate = self;
     _editor.generateDelegate = self;
     
-    [_ctrlView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [_commonEditCtrlView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
 }
@@ -163,7 +163,7 @@ TUIMultimediaBGMEditControllerDelegate> {
 - (void)onGenerateProgress:(float)progress {
     NSLog(@"TUIMultimediaVideoEditorController onGenerateProgress progress  = %f",progress);
     if (progress - _lastGenerateProgress > 0.01f || progress == 1.0f) {
-        _ctrlView.progressBarProgress = progress;
+        _commonEditCtrlView.progressBarProgress = progress;
         _lastGenerateProgress = progress;
     }
 }
@@ -193,8 +193,8 @@ TUIMultimediaBGMEditControllerDelegate> {
     }];
     [_editor setPasterList:pasterList];
     
-    _ctrlView.isGenerating = YES;
-    [self.view bringSubviewToFront:_ctrlView];
+    _commonEditCtrlView.isGenerating = YES;
+    [self.view bringSubviewToFront:_commonEditCtrlView];
     if (_resultVideoPath == nil || _resultVideoPath.length == 0) {
         _resultVideoPath = [self getOutFilePath];
     }
@@ -209,7 +209,7 @@ TUIMultimediaBGMEditControllerDelegate> {
 
 - (void)onCommonEditorControlViewNeedAddPaster:(TUIMultimediaCommonEditorControlView *)view {
     NSLog(@"onCommonEditorControlViewNeedAddPaster");
-    _ctrlView.modifyButtonsHidden = YES;
+    _commonEditCtrlView.modifyButtonsHidden = YES;
     [self presentViewController:_pasterSelectController animated:NO completion:nil];
 }
 
@@ -224,13 +224,13 @@ TUIMultimediaBGMEditControllerDelegate> {
     [self presentViewController:_subtitleEditController animated:NO completion:nil];
 }
 - (void)onCommonEditorControlViewNeedEditMusic:(TUIMultimediaCommonEditorControlView *)view {
-    _ctrlView.modifyButtonsHidden = YES;
+    _commonEditCtrlView.modifyButtonsHidden = YES;
     [self presentViewController:_musicController animated:NO completion:nil];
 }
 - (void)onCommonEditorControlViewCancelGenerate:(TUIMultimediaCommonEditorControlView *)view {
     [_editor cancelGenerate];
     TXPreviewParam *param = [[TXPreviewParam alloc] init];
-    param.videoView = _ctrlView.previewView;
+    param.videoView = _commonEditCtrlView.previewView;
     param.renderMode = PREVIEW_RENDER_MODE_FILL_EDGE;
     _editor = [[TXVideoEditer alloc] initWithPreview:param];
     [self tryReloadVideoAsset];
@@ -249,12 +249,12 @@ TUIMultimediaBGMEditControllerDelegate> {
 
 #pragma mark - TUIMultimediaPasterSelectControllerDelegate protocol
 - (void)pasterSelectController:(TUIMultimediaPasterSelectController *)c onPasterSelected:(UIImage *)image {
-    [_ctrlView addPaster:image];
-    _ctrlView.modifyButtonsHidden = NO;
+    [_commonEditCtrlView addPaster:image];
+    _commonEditCtrlView.modifyButtonsHidden = NO;
     [c.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 - (void)onPasterSelectControllerExit:(TUIMultimediaPasterSelectController *)c {
-    _ctrlView.modifyButtonsHidden = NO;
+    _commonEditCtrlView.modifyButtonsHidden = NO;
     [c.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 
@@ -278,12 +278,12 @@ TUIMultimediaBGMEditControllerDelegate> {
     } else {
         [_editor setVideoVolume:0];
     }
-    _ctrlView.musicEdited = bgmInfo.bgm != nil;
+    _commonEditCtrlView.musicEdited = bgmInfo.bgm != nil;
     
     _hasAudioEdited = (!bgmInfo.originAudio) || (bgmInfo.bgm != nil);
 }
 - (void)onBGMEditControllerExit:(nonnull TUIMultimediaBGMEditController *)c {
-    _ctrlView.modifyButtonsHidden = NO;
+    _commonEditCtrlView.modifyButtonsHidden = NO;
     [c.presentingViewController dismissViewControllerAnimated:NO completion:nil];
 }
 

@@ -14,13 +14,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TUIMultimediaProcessor : NSObject
 + (instancetype)shareInstance;
-- (void)editMedia:(UIViewController *)caller
+- (void)editVideo:(UIViewController *)caller
          url:(NSURL*) url
          complete:(void (^)(NSURL * url)) completion;
 
-- (void)transcodeMedia:(NSURL*) uri
+- (void)transcodeVideo:(NSURL*) uri
          complete:(void (^)(TranscodeResult* transcodeResult)) completeHandler
          progress:(void (^)(float progress))progressHandler;
+
+- (void)editPicture:(UIViewController *)caller
+            picture:(UIImage*) picture
+            complete:(void (^)(UIImage *picture)) completion;
 
 @end
 

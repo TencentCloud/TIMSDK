@@ -28,6 +28,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithPendency:(V2TIMFriendApplication *)application;
 
+typedef void (^TUICommonPendencyCellDataSuccessCallback)(void);
+typedef void (^TUICommonPendencyCellDataFailureCallback)(int code, NSString *msg);
+
+- (void)agreeWithSuccess:(TUICommonPendencyCellDataSuccessCallback)success
+                 failure:(TUICommonPendencyCellDataFailureCallback)failure;
+
+- (void)rejectWithSuccess:(TUICommonPendencyCellDataSuccessCallback)success
+                  failure:(TUICommonPendencyCellDataFailureCallback)failure;
+
 - (void)agree;
 - (void)reject;
 

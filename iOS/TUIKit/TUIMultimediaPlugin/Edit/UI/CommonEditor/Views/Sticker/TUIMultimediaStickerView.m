@@ -1,5 +1,5 @@
 // Copyright (c) 2024 Tencent. All rights reserved.
-// Author: rickwrwang
+// Author: eddardliu
 
 #import "TUIMultimediaStickerView.h"
 #import <TUICore/TUIThemeManager.h>
@@ -26,8 +26,8 @@
     UIPanGestureRecognizer *_btnTransformPanRec;
     UIImpactFeedbackGenerator *_impactGen;
 }
-
 @end
+
 @implementation TUIMultimediaStickerView
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -70,7 +70,7 @@
     _pinchRec.delegate = self;
     [self addGestureRecognizer:_pinchRec];
 
-    _rotationRec = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(onRotation:)];
+    _rotationRec = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(onGestureRotation:)];
     _rotationRec.delegate = self;
     [self addGestureRecognizer:_rotationRec];
 
@@ -123,7 +123,9 @@
         _rotation = _rawRotation;
     }
     self.transform = CGAffineTransformMakeRotation(_rotation);
+    NSLog(@"updateRotation %@",NSStringFromCGRect(self.frame));
 }
+
 #pragma mark - Actions
 - (void)onTap {
     if (!self.selected) {
@@ -131,27 +133,41 @@
         [_delegate onStickerViewSelected:self];
     }
 }
+
 - (void)onDoubleTap:(UITapGestureRecognizer *)rec {
     [_delegate onStickerViewShouldEdit:self];
 }
+
 - (void)onPan:(UIPanGestureRecognizer *)rec {
     CGPoint offset = [rec translationInView:self.superview];
     [rec setTranslation:CGPointZero inView:self.superview];
     // 平移
     self.center = Vec2AddVector(self.center, offset);
+    NSLog(@"onPan %@",NSStringFromCGRect(self.frame));
 }
+
+
 - (void)onPinch:(UIPinchGestureRecognizer *)rec {
     // pow用于加快放大/缩小速度，优化体验
     CGFloat scale = pow(rec.scale, 1.5);
     rec.scale = 1;
     CGSize raw = self.bounds.size;
     self.bounds = CGRectMake(0, 0, raw.width * scale, raw.height * scale);
+    NSLog(@"onPinch %@",NSStringFromCGRect(self.frame));
 }
-- (void)onRotation:(UIRotationGestureRecognizer *)rec {
+
+- (void)scale:(CGFloat) scale {
+    CGSize raw = self.bounds.size;
+    self.bounds = CGRectMake(0, 0, raw.width * scale, raw.height * scale);
+    self.center = CGPointMake(self.center.x * scale, self.center.y * scale);
+}
+
+- (void)onGestureRotation:(UIRotationGestureRecognizer *)rec {
     _rawRotation += rec.rotation;
     [self updateRotation];
     rec.rotation = 0;
 }
+
 - (void)onBtnTransformPan:(UIPanGestureRecognizer *)rec {
     CGPoint offset = [rec translationInView:self.superview];
     [rec setTranslation:CGPointZero inView:self.superview];
@@ -166,6 +182,7 @@
     _rawRotation += Vec2Degree(originV, newV);
     [self updateRotation];
 }
+
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
     if (CGRectContainsPoint(self.bounds, point)) {
         return YES;
@@ -182,6 +199,7 @@
 - (void)onBtnEditClicked {
     [_delegate onStickerViewShouldEdit:self];
 }
+
 - (void)onBtnDeleteClicked {
     [_delegate onStickerViewShouldDelete:self];
 }
@@ -190,9 +208,11 @@
 - (BOOL)editButtonHidden {
     return _hideEditButton;
 }
+
 - (void)setEditButtonHidden:(BOOL)hideEditButton {
     _hideEditButton = hideEditButton;
 }
+
 - (void)setContent:(UIView *)content {
     [_content removeFromSuperview];
     _content = content;
@@ -200,6 +220,14 @@
         return;
     }
     self.bounds = CGRectMake(0, 0, content.bounds.size.width + _contentMargin * 2, content.bounds.size.height + _contentMargin * 2);
+    
+    
+    
+//    [self mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.center.equalTo(self.superview);
+//    }];
+    
+    
     [self addSubview:content];
     [self bringSubviewToFront:_btnEdit];
     [self bringSubviewToFront:_btnTransform];
@@ -207,7 +235,10 @@
     [content mas_makeConstraints:^(MASConstraintMaker *make) {
       make.edges.equalTo(self).inset(_contentMargin);
     }];
+    
+
 }
+
 - (void)setSelected:(BOOL)selected {
     _selected = selected;
     _borderView.hidden = !selected;

@@ -65,7 +65,26 @@
 
 - (void)loadData {
     self.firstLoadData = YES;
-    [self getGroupInfo];
+    dispatch_group_t group = dispatch_group_create();
+    dispatch_group_enter(group);
+    [self getGroupInfo:^{
+      dispatch_group_leave(group);
+    }];
+
+    dispatch_group_enter(group);
+    [self getGroupMembers:^{
+      dispatch_group_leave(group);
+    }];
+
+    dispatch_group_enter(group);
+    [self getSelfInfoInGroup:^{
+      dispatch_group_leave(group);
+    }];
+
+    __weak typeof(self) weakSelf = self;
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+      [weakSelf setupData];
+    });
 }
 
 - (void)updateGroupInfo:(void (^)(void))callback {
@@ -104,18 +123,91 @@
     [V2TIMManager.sharedInstance setGroupInfo:info succ:succ fail:fail];
 }
 
-- (void)getGroupInfo {
-    @weakify(self);
+- (void)getGroupInfo:(dispatch_block_t)callback {
+    __weak typeof(self) weakSelf = self;
     [[V2TIMManager sharedInstance] getGroupsInfo:@[ self.groupID ]
         succ:^(NSArray<V2TIMGroupInfoResult *> *groupResultList) {
-          @strongify(self);
-          if (groupResultList.count == 1) {
-              self.groupInfo = groupResultList[0].info;
-              [self getGroupMembers];
+          weakSelf.groupInfo = groupResultList.firstObject.info;
+          if (callback) {
+              callback();
           }
         }
         fail:^(int code, NSString *msg) {
+          if (callback) {
+              callback();
+          }
             [self makeToastError:code msg:msg];
+        }];
+}
+
+- (void)getGroupMembers:(dispatch_block_t)callback {
+    __weak typeof(self) weakSelf = self;
+    [[V2TIMManager sharedInstance] getGroupMemberList:self.groupID
+        filter:V2TIM_GROUP_MEMBER_FILTER_ALL
+        nextSeq:0
+        succ:^(uint64_t nextSeq, NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
+          NSMutableArray *membersData = [NSMutableArray array];
+          for (V2TIMGroupMemberFullInfo *fullInfo in memberList) {
+              TUIGroupMemberCellData_Minimalist *data = [[TUIGroupMemberCellData_Minimalist alloc] init];
+              data.identifier = fullInfo.userID;
+              data.name = fullInfo.userID;
+              data.avatarUrl = fullInfo.faceURL;
+              data.showAccessory = YES;
+              if (fullInfo.nameCard.length > 0) {
+                  data.name = fullInfo.nameCard;
+              } else if (fullInfo.friendRemark.length > 0) {
+                  data.name = fullInfo.friendRemark;
+              } else if (fullInfo.nickName.length > 0) {
+                  data.name = fullInfo.nickName;
+              }
+              if ([fullInfo.userID isEqualToString:[V2TIMManager sharedInstance].getLoginUser]) {
+                  weakSelf.selfInfo = fullInfo;
+                  continue;
+              } else {
+                  [membersData addObject:data];
+              }
+          }
+          weakSelf.membersData = membersData;
+          if (callback) {
+              callback();
+          }
+        }
+        fail:^(int code, NSString *msg) {
+            weakSelf.membersData = [NSMutableArray arrayWithCapacity:1];
+            [self makeToastError:code msg:msg];
+          if (callback) {
+              callback();
+          }
+        }];
+}
+
+- (void)getSelfInfoInGroup:(dispatch_block_t)callback {
+    NSString *loginUserID = [[V2TIMManager sharedInstance] getLoginUser];
+    if (loginUserID.length == 0) {
+        if (callback) {
+            callback();
+        }
+        return;
+    }
+    __weak typeof(self) weakSelf = self;
+    [[V2TIMManager sharedInstance] getGroupMembersInfo:self.groupID
+        memberList:@[ loginUserID ]
+        succ:^(NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
+          for (V2TIMGroupMemberFullInfo *item in memberList) {
+              if ([item.userID isEqualToString:loginUserID]) {
+                  weakSelf.selfInfo = item;
+                  break;
+              }
+          }
+          if (callback) {
+              callback();
+          }
+        }
+        fail:^(int code, NSString *desc) {
+         [self makeToastError:code msg:desc];
+          if (callback) {
+              callback();
+          }
         }];
 }
 
@@ -139,41 +231,6 @@
     return data;
 }
 
-- (void)getGroupMembers {
-    @weakify(self);
-    [[V2TIMManager sharedInstance] getGroupMemberList:self.groupID
-        filter:V2TIM_GROUP_MEMBER_FILTER_ALL
-        nextSeq:0
-        succ:^(uint64_t nextSeq, NSArray<V2TIMGroupMemberFullInfo *> *memberList) {
-          @strongify(self);
-          NSMutableArray *membersData = [NSMutableArray array];
-          for (V2TIMGroupMemberFullInfo *fullInfo in memberList) {
-              TUIGroupMemberCellData_Minimalist *data = [[TUIGroupMemberCellData_Minimalist alloc] init];
-              data.identifier = fullInfo.userID;
-              data.name = fullInfo.userID;
-              data.avatarUrl = fullInfo.faceURL;
-              data.showAccessory = YES;
-              if (fullInfo.nameCard.length > 0) {
-                  data.name = fullInfo.nameCard;
-              } else if (fullInfo.friendRemark.length > 0) {
-                  data.name = fullInfo.friendRemark;
-              } else if (fullInfo.nickName.length > 0) {
-                  data.name = fullInfo.nickName;
-              }
-              if ([fullInfo.userID isEqualToString:[V2TIMManager sharedInstance].getLoginUser]) {
-                  self.selfInfo = fullInfo;
-                  continue;
-              } else {
-                  [membersData addObject:data];
-              }
-          }
-          self.membersData = membersData;
-          [self setupData];
-        }
-        fail:^(int code, NSString *msg) {
-            [self makeToastError:code msg:msg];
-        }];
-}
 
 - (void)setupData {
     NSMutableArray *dataList = [NSMutableArray array];

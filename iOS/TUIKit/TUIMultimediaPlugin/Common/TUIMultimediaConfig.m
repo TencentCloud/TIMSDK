@@ -89,6 +89,26 @@
     return [self getBoolFromDic:@"support_video_edit_bgm" defaultValue:YES];
 }
 
+- (BOOL)isSupportPictureEditMosaic {
+    return [self getBoolFromDic:@"support_picture_edit_mosaic" defaultValue:YES];
+}
+
+- (BOOL)isSupportPictureEditGraffiti {
+    return [self getBoolFromDic:@"support_picture_edit_graffiti" defaultValue:YES];
+}
+
+- (BOOL)isSupportPictureEditPaster {
+    return [self getBoolFromDic:@"support_picture_edit_paster" defaultValue:YES];
+}
+
+- (BOOL)isSupportPictureEditSubtitle {
+    return [self getBoolFromDic:@"support_picture_edit_subtitle" defaultValue:YES];
+}
+
+- (BOOL)isSupportPictureEditCrop {
+    return [self getBoolFromDic:@"support_picture_edit_crop" defaultValue:YES];
+}
+
 - (UIColor *)getThemeColor {
    return TIMCommonDynamicColor(@"primary_theme_color", @"#147AFF");
 }

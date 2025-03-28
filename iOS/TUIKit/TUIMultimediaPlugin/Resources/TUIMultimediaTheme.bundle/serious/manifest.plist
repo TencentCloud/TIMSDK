@@ -38,6 +38,12 @@
 	<string></string>
 	<key>editor_crop_img</key>
 	<string></string>
+	<key>editor_crop_cancel</key>
+	<string></string>
+	<key>editor_crop_rotation</key>
+	<string></string>
+	<key>editor_crop_confirm</key>
+	<string></string>
 	<key>editor_cancel_img</key>
 	<string></string>
 	<key>editor_undo_img</key>

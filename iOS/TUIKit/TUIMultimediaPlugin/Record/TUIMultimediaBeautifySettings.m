@@ -1,5 +1,5 @@
 // Copyright (c) 2024 Tencent. All rights reserved.
-// Author: rickwrwang
+// Author: eddardliu
 
 #import "TUIMultimediaBeautifySettings.h"
 #import <TXLiteAVSDK_Professional/TXUGCRecord.h>

@@ -9,7 +9,7 @@
 #import "TUIMultimediaVideoEditorController.h"
 #import "TUIMultimediaConfig.h"
 #import "TUIMultimediaRecordController.h"
-#import "TUIMultimediaPhotoEditorController.h"
+#import "TUIMultimediaPictureEditorController.h"
 #import "TUIMultimediaPlugin/TUIMultimediaConstant.h"
 
 @interface TUIMultimediaRecorder () <IMultimediaRecorder> {
@@ -51,11 +51,17 @@
         }
     };
     
-    __auto_type photoEditorVCCallback = ^(NSURL *outImageFile, int resultCode) {
-        if (PHOTO_EDIT_RESULT_CODE_CANCEL == resultCode || PHOTO_EDIT_RESULT_CODE_GENERATE_FAIL == resultCode || outImageFile == nil) {
+    __auto_type photoEditorVCCallback = ^(UIImage *outImage, int resultCode) {
+        if (PHOTO_EDIT_RESULT_CODE_CANCEL == resultCode || PHOTO_EDIT_RESULT_CODE_GENERATE_FAIL == resultCode || outImage == nil) {
             [navigation popViewControllerAnimated:YES];
         } else {
-            successBlock(outImageFile);
+            NSString *outFilePath = [self getPictureOutFilePath];
+            BOOL isSaveImageSuccess = [self saveImageAsJPEG:outImage filePath:outFilePath];
+            if (!isSaveImageSuccess) {
+                [navigation popViewControllerAnimated:YES];
+                return;
+            }
+            successBlock([NSURL fileURLWithPath:outFilePath]);
             [navigation popViewControllerAnimated:NO];
             [navigation popViewControllerAnimated:YES];
         }
@@ -69,10 +75,11 @@
           videoEditorController.sourceType = SOURCE_TYPE_RECORD;
           [navigation pushViewController:videoEditorController animated:YES];
       } else if (photo != nil) {
-          TUIMultimediaPhotoEditorController *photoEditorController = [[TUIMultimediaPhotoEditorController alloc] init];
-          photoEditorController.photo = photo;
-          photoEditorController.completeCallback = photoEditorVCCallback;
-          [navigation pushViewController:photoEditorController animated:YES];
+          NSLog(@"record editPicture enter");
+          TUIMultimediaPictureEditorController *pictureEditorController = [[TUIMultimediaPictureEditorController alloc] init];
+          pictureEditorController.srcPicture = photo;
+          pictureEditorController.completeCallback = photoEditorVCCallback;
+          [navigation pushViewController:pictureEditorController animated:YES];
       } else {
           [navigation popViewControllerAnimated:YES];
           return;
@@ -83,6 +90,24 @@
     recordController.resultCallback = recordVCEditCallback;
     recordController.isOnlySupportTakePhoto = isOnlySupportTakePhone;
     [navigation pushViewController:recordController animated:YES];
+}
+
+- (NSString *)getPictureOutFilePath {
+    NSDate *currentDate = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
+    NSString *currentDateString = [dateFormatter stringFromDate:currentDate];
+    NSString *outFileName = [NSString stringWithFormat:@"%@-%u-temp.jpg", currentDateString, arc4random()];
+    return [NSTemporaryDirectory() stringByAppendingPathComponent:outFileName];
+}
+
+- (BOOL)saveImageAsJPEG:(UIImage *)image filePath:(NSString *)filePath {
+    NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
+    BOOL success = [imageData writeToFile:filePath atomically:YES];
+    if (!success) {
+        NSLog(@"Failed to save image as JPEG file. filePath is %@", filePath);
+    }
+    return success;
 }
 
 @end

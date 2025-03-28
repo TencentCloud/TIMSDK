@@ -170,6 +170,7 @@
           }
         }
         fail:^(int code, NSString *msg) {
+            weakSelf.membersData = [NSMutableArray arrayWithCapacity:1];
             [self makeToastError:code msg:msg];
           if (callback) {
               callback();

@@ -180,8 +180,10 @@
         }completion:^(BOOL finished) {
             
         }];
-        self.delegateCell.messageData.messageContainerAppendSize = CGSizeMake(0, 0);
-        [self notifyReactionChanged];
+        if (!CGSizeEqualToSize(self.delegateCell.messageData.messageContainerAppendSize, CGSizeZero)) {
+            self.delegateCell.messageData.messageContainerAppendSize = CGSizeZero;
+            [self notifyReactionChanged];
+        }
     }
 }
 - (void)notifyReactionChanged {

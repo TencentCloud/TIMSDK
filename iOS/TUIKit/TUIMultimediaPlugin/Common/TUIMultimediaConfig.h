@@ -16,6 +16,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isSupportVideoEditPaster;
 - (BOOL)isSupportVideoEditSubtitle;
 - (BOOL)isSupportVideoEditBGM;
+- (BOOL)isSupportPictureEditMosaic;
+- (BOOL)isSupportPictureEditGraffiti;
+- (BOOL)isSupportPictureEditPaster;
+- (BOOL)isSupportPictureEditSubtitle;
+- (BOOL)isSupportPictureEditCrop;
 - (UIColor*)getThemeColor;
 - (int)getMaxRecordDurationMs;
 - (int)getMinRecordDurationMs;

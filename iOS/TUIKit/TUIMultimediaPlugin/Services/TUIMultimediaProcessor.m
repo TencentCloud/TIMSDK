@@ -1,10 +1,11 @@
 // Copyright (c) 2024 Tencent. All rights reserved.
-// Author: rickwrwang
+// Author: eddardliu
 
 #import <Foundation/Foundation.h>
 #import "TUIMultimediaProcessor.h"
 #import "TUIMultimediaPlugin/TUIMultimediaEncodeConfig.h"
 #import "TUIMultimediaPlugin/TUIMultimediaVideoEditorController.h"
+#import "TUIMultimediaPlugin/TUIMultimediaPictureEditorController.h"
 #import "TUIMultimediaPlugin/TUIMultimediaConfig.h"
 #import "TUIMultimediaPlugin/TUIMultimediaConstant.h"
 
@@ -44,17 +45,17 @@
     return self;
 }
 
-- (void)editMedia:(UIViewController *)caller
+- (void)editVideo:(UIViewController *)caller
          url:(NSURL*) url
          complete:(void (^)(NSURL * url)) completion {
-    NSLog(@"TUIMultimediaMediaProcessor editMedia url = %@", url.path);
+    NSLog(@"TUIMultimediaMediaProcessor editVideo url = %@", url.path);
     UINavigationController *callerNavigation = caller.navigationController;
     if (callerNavigation == nil) {
         callerNavigation = [[UINavigationController alloc] initWithRootViewController:caller];
     }
     
     __auto_type videoEditorCallback = ^(NSString *resultVideoPath, int resultCode) {
-      NSLog(@"editMedia callback videoPath = %@, resultCode = %d", resultVideoPath, resultCode);
+      NSLog(@"editVideo callback videoPath = %@, resultCode = %d", resultVideoPath, resultCode);
       [callerNavigation popViewControllerAnimated:YES];
       NSURL* transcodeUrl = nil;
       if (resultCode == VIDEO_EDIT_RESULT_CODE_GENERATE_SUCCESS && resultVideoPath != nil) {
@@ -70,10 +71,32 @@
     [callerNavigation pushViewController:editorController animated:YES];
 }
 
-- (void)transcodeMedia:(NSURL *)url
+- (void)editPicture:(UIViewController *)caller
+            picture:(UIImage*) picture
+            complete:(void (^)(UIImage * picture)) completion {
+    NSLog(@"edit picture. picture:%@", picture);
+    UINavigationController *callerNavigation = caller.navigationController;
+    if (callerNavigation == nil) {
+        callerNavigation = [[UINavigationController alloc] initWithRootViewController:caller];
+    }
+    
+    __auto_type pictureEditorCallback = ^(UIImage *outImage, int resultCode) {
+        NSLog(@"edit picture. call back output picture:%@, result code:%d", outImage, resultCode);
+      [callerNavigation popViewControllerAnimated:YES];
+      completion(outImage);
+    };
+    
+    TUIMultimediaPictureEditorController *editorController = [[TUIMultimediaPictureEditorController alloc] init];
+    editorController.srcPicture = picture;
+    editorController.completeCallback = pictureEditorCallback;
+    editorController.sourceType = SOURCE_TYPE_ALBUM;
+    [callerNavigation pushViewController:editorController animated:YES];
+}
+
+- (void)transcodeVideo:(NSURL *)url
                complete:(void (^)(TranscodeResult *transcodeResult))completeHandler
                progress:(void (^)(float progress))progressHandler {
-    NSLog(@"TUIMultimediaMediaProcessor transcodeMedia uri is %@", url.path);
+    NSLog(@"TUIMultimediaMediaProcessor transcodeVideo uri is %@", url.path);
     if (!url) {
         completeHandler(nil);
         return;
@@ -150,7 +173,6 @@
 }
 
 - (void)onGenerateProgress:(float)progress {
-    //NSLog(@"TUIMultimediaMediaProcessor onGenerateProgress source url is %@, progressis %f",_url.path, progress);
     if (_progressHandler) {
         _progressHandler(progress);
     }

@@ -1,16 +1,17 @@
 // Copyright (c) 2024 Tencent. All rights reserved.
-// Author: rickwrwang
+// Author: eddardliu
 
 #import "TUIMultimediaDrawView.h"
 #import <Masonry/Masonry.h>
 #import "TUIMultimediaPlugin/TUIMultimediaColorPanel.h"
 #import "TUIMultimediaPlugin/TUIMultimediaCommon.h"
 #import "TUIMultimediaPlugin/TUIMultimediaGeometry.h"
+#import "TUIMultimediaPlugin/TUIMultimediaMosaicDrawView.h"
+#import "TUIMultimediaPlugin/TUIMultimediaGraffitiDrawView.h"
 
 @interface TUIMultimediaDrawView () {
-    NSMutableArray<TUIMultimediaPath *> *_pathList;
-    NSMutableArray<TUIMultimediaPath *> *_redoPathList;
-    NSMutableArray<NSValue *> *_currentPath;
+    TUIMultimediaMosaicDrawView* _mosaciDrawView;
+    TUIMultimediaGraffitiDrawView* _graffitiDrawView;
 }
 
 @end
@@ -23,71 +24,72 @@
         UIPanGestureRecognizer *panRec = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onPan:)];
         panRec.maximumNumberOfTouches = 1;
         [self addGestureRecognizer:panRec];
-        _pathList = [NSMutableArray array];
-        _redoPathList = [NSMutableArray array];
-        _currentPath = [NSMutableArray array];
-        _color = UIColor.whiteColor;
-        _lineWidth = 4;
+                
+        _mosaciDrawView = [[TUIMultimediaMosaicDrawView alloc] initWithFrame:self.bounds];
+        [self addSubview:_mosaciDrawView];
+        [_mosaciDrawView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self);
+        }];
+        
+        _graffitiDrawView = [[TUIMultimediaGraffitiDrawView alloc] initWithFrame:self.bounds];
+        [self addSubview:_graffitiDrawView];
+        [_graffitiDrawView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self);
+        }];
     }
     return self;
 }
 
-- (void)addPath:(TUIMultimediaPath *)path {
-    [_pathList addObject:path];
-    [_redoPathList removeAllObjects];
-    [self setNeedsDisplay];
-    [_delegate drawViewPathListChanged:self];
-}
-
 - (BOOL)canUndo {
-    return _pathList.count != 0;
+    return _drawMode == GRAFFITI ? _graffitiDrawView.canUndo : _mosaciDrawView.canUndo;
 }
 
 - (BOOL)canRedo {
-    return _redoPathList.count != 0;
+    return _drawMode == GRAFFITI ? _graffitiDrawView.canRedo : _mosaciDrawView.canRedo;
+}
+
+- (void)clear {
+    [_graffitiDrawView clearGraffiti];
+    [_mosaciDrawView clearMosaic];
 }
 
 - (void)undo {
-    if (_pathList.count == 0) {
-        return;
+    if (_drawMode == GRAFFITI) {
+        [_graffitiDrawView undo];
+    } else {
+        [_mosaciDrawView undo];
     }
-    TUIMultimediaPath *path = [_pathList lastObject];
-    [_pathList removeLastObject];
-    [_redoPathList addObject:path];
-    [self setNeedsDisplay];
 }
 
 - (void)redo {
-    if (_redoPathList.count == 0) {
-        return;
+    if (_drawMode == GRAFFITI) {
+        [_graffitiDrawView redo];
+    } else {
+        [_mosaciDrawView redo];
     }
-    TUIMultimediaPath *path = [_redoPathList lastObject];
-    [_redoPathList removeLastObject];
-    [_pathList addObject:path];
-    [self setNeedsDisplay];
 }
 
 - (void)onPan:(UIPanGestureRecognizer *)rec {
     switch (rec.state) {
-        case UIGestureRecognizerStateBegan: {
+        case UIGestureRecognizerStateBegan:
+        case UIGestureRecognizerStateChanged: {
             CGPoint p = [rec locationInView:self];
-            [_currentPath addObject:@(p)];
+            if (_drawMode == MOSAIC) {
+                [_mosaciDrawView addPathPoint:p];
+            } else {
+                [_graffitiDrawView addPathPoint:p];
+            }
             [_delegate drawViewDrawStarted:self];
             break;
         }
-        case UIGestureRecognizerStateChanged: {
-            CGPoint p = [rec locationInView:self];
-            [_currentPath addObject:@(p)];
-            [self setNeedsDisplay];
-            break;
-        }
         case UIGestureRecognizerStateEnded: {
-            TUIMultimediaPath *path = [[TUIMultimediaPath alloc] init];
-            path.bezierPath = [self smoothBezierPathFromCurrentPoints];
-            path.color = _color;
-            [self addPath:path];
-            [_currentPath removeAllObjects];
+            if (_drawMode == MOSAIC) {
+                [_mosaciDrawView completeAddPoint];
+            } else {
+                [_graffitiDrawView completeAddPoint];
+            }
             [_delegate drawViewDrawEnded:self];
+            [_delegate drawViewPathListChanged:self];
             break;
         }
         default:
@@ -95,58 +97,16 @@
     }
 }
 
-// 生成平滑曲线
-- (UIBezierPath *)smoothBezierPathFromCurrentPoints {
-    UIBezierPath *path = [UIBezierPath bezierPath];
-    path.lineCapStyle = kCGLineCapRound;
-    path.lineJoinStyle = kCGLineJoinRound;
-    path.lineWidth = _lineWidth;
-    if (_currentPath.count <= 1) {
-        return path;
-    }
-    [path moveToPoint:_currentPath.firstObject.CGPointValue];
-    if (_currentPath.count == 2) {
-        [path addLineToPoint:_currentPath.lastObject.CGPointValue];
-        return path;
-    }
-    // 从第point2&point3开始，避免最前面一段不平滑
-    for (int i = 3; i < _currentPath.count; i++) {
-        CGPoint p = _currentPath[i].CGPointValue;
-        CGPoint prev = _currentPath[i - 1].CGPointValue;
-        CGPoint midPoint = Vec2Mul(Vec2AddVector(p, prev), 0.5);
-        [path addQuadCurveToPoint:midPoint controlPoint:prev];
-    }
-    [path addLineToPoint:_currentPath.lastObject.CGPointValue];
-    return path;
+- (NSInteger) pathCount {
+    return _mosaciDrawView.pathCount + _graffitiDrawView.pathCount;
 }
 
-- (void)drawRect:(CGRect)rect {
-    [super drawRect:rect];
-    for (TUIMultimediaPath *path in _pathList) {
-        [path.color set];
-        [path.bezierPath stroke];
-    }
-    [_color set];
-    [[self smoothBezierPathFromCurrentPoints] stroke];
+-(void) setMosaciOriginalImage:(UIImage *)mosaciOriginalImage {
+    _mosaciDrawView.originalImage = mosaciOriginalImage;
 }
 
-- (NSArray<TUIMultimediaPath *> *)pathList {
-    return _pathList;
+-(void) setColor:(UIColor *)color {
+    _graffitiDrawView.color = color;
 }
 
-@end
-
-@implementation TUIMultimediaPath
-- (instancetype)init {
-    self = [super init];
-    _bezierPath = [[UIBezierPath alloc] init];
-    _color = UIColor.clearColor;
-    return self;
-}
-- (instancetype)initWithPath:(UIBezierPath *)path color:(UIColor *)color {
-    self = [super init];
-    _bezierPath = path;
-    _color = color;
-    return self;
-}
 @end

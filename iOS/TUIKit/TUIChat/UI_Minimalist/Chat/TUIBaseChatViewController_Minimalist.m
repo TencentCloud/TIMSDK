@@ -498,8 +498,8 @@ static CGRect gCustomTopViewRect;
         self.conversationData.enableRecordVideo = !(tag & TUIChatInputBarMoreMenuItem_RecordVideo);
         self.conversationData.enableWelcomeCustomMessage = !(tag & TUIChatInputBarMoreMenuItem_CustomMessage);
     }
-    if (dataSource && [dataSource respondsToSelector:@selector(inputBarShouldAddNewItemsToMoreMenuOfModel:)]) {
-        NSArray *items = [dataSource inputBarShouldAddNewItemsToMoreMenuOfModel:self.conversationData];
+    if (dataSource && [dataSource respondsToSelector:@selector(inputBarShouldAddNewItemsToMoreListOfModel:)]) {
+        NSArray *items = [dataSource inputBarShouldAddNewItemsToMoreListOfModel:self.conversationData];
         if ([items isKindOfClass:NSArray.class]) {
             self.conversationData.customizedNewItemsInMoreMenu = items;
         }

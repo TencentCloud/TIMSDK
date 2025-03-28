@@ -1,5 +1,5 @@
 // Copyright (c) 2024 Tencent. All rights reserved.
-// Author: rickwrwang
+// Author: eddardliu
 
 #import <UIKit/UIKit.h>
 
@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic) CGFloat rotateAdsorptionLimitAngle;
 @property(weak, nullable, nonatomic) id<TUIMultimediaStickerViewDelegate> delegate;
 
+- (void)scale:(CGFloat) scale;
 @end
 
 @protocol TUIMultimediaStickerViewDelegate <NSObject>

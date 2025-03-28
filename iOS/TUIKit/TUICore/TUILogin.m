@@ -186,7 +186,11 @@ NSString *const TUILogoutFailNotification = @"TUILogoutFailNotification";
         [self logout:nil fail:nil];
         [[V2TIMManager sharedInstance] unInitSDK];
     }
+
     self.sdkAppID = sdkAppID;
+    self.userID = userID;
+    self.userSig = userSig;
+
     V2TIMSDKConfig *sdkConfig = [[V2TIMSDKConfig alloc] init];
     if (config != nil) {
         sdkConfig.logLevel = (V2TIMLogLevel)config.logLevel;
@@ -207,8 +211,6 @@ NSString *const TUILogoutFailNotification = @"TUILogoutFailNotification";
 
     [V2TIMManager.sharedInstance addIMSDKListener:self];
 
-    self.userID = userID;
-    self.userSig = userSig;
     [[V2TIMManager sharedInstance] callExperimentalAPI:@"getLoginAccountType" param:nil succ:^(NSObject *result) {
         int accountType = [((NSNumber *)result) intValue];
         [TUILogin.shareInstance loginImpl:accountType userID:userID userSig:userSig config:config succ:succ fail:fail];

@@ -22,7 +22,7 @@
     if (self) {
         _messageLabel = [[UILabel alloc] init];
         _messageLabel.textAlignment = NSTextAlignmentCenter;
-        _messageLabel.numberOfLines = 1;
+        _messageLabel.numberOfLines = 0;
         _messageLabel.backgroundColor = [UIColor clearColor];
         _messageLabel.layer.cornerRadius = 3;
         [_messageLabel.layer setMasksToBounds:YES];
@@ -49,7 +49,7 @@
     if(self.messageLabel.superview) {
         [self.messageLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.center.mas_equalTo(self.container);
-            make.size.mas_equalTo(self.messageLabel.frame.size);
+            make.leading.trailing.mas_equalTo(self.container);
         }];
     }
 }
@@ -96,7 +96,7 @@
     
     static CGSize maxSystemSize;
     if (CGSizeEqualToSize(maxSystemSize, CGSizeZero)) {
-        maxSystemSize = CGSizeMake(TSystemMessageCell_Text_Width_Max, MAXFLOAT);
+        maxSystemSize = CGSizeMake(Screen_Width, MAXFLOAT);
     }
     CGSize size = [systemCellData.attributedString.string textSizeIn:maxSystemSize font:systemCellData.contentFont];
     size.height += 10;

@@ -11,9 +11,9 @@
 "TUIChatCallRejectInCaller" = "Call declined by user";
 "TUIChatCallRejectInCallee" = "Declined";
 "TUIChatCallTimeoutInCaller" = "Call wasn't answered";
-"TUIChatCallTimeoutInCallee" = "Call canceled by caller";
+"TUIChatCallTimeoutInCallee" = "Call timeout";
 "TUIChatCallLinebusyInCaller" = "Line busy";
-"TUIChatCallLinebusyInCallee" = "Call canceled by caller";
+"TUIChatCallLinebusyInCallee" = "Line busy";
 "TUIChatCallSend" = "Start call";
 "TUIChatCallAccept" = "Answered";
 "TUIChatCallSwitchToAudio" = "Switch to audio call";

@@ -368,8 +368,14 @@ typedef NSDictionary *TUIChatCallingJsonData;
                 }
                 [mutableContent replaceCharactersInRange:NSMakeRange(mutableContent.length - 1, 1) withString:@" "];
             }
-            [mutableContent appendString:TUIChatLocalizableString(TUIChatGroupCallNoAnswer)];
+            
+            if (protocolType == TUICallProtocolTypeLineBusy) {
+                [mutableContent appendString:TUIChatLocalizableString(TUIChatCallLinebusyInCallee)];
+            } else {
+                [mutableContent appendString:TUIChatLocalizableString(TUIChatGroupCallNoAnswer)];
+            }
             display = [NSString stringWithString:mutableContent];
+            
         }
         // Group compatiable
         else if (protocolType == TUICallProtocolTypeReject) {
@@ -517,7 +523,7 @@ typedef NSDictionary *TUIChatCallingJsonData;
     if (businessID == nil || ![businessID isKindOfClass:NSString.class]) {
         return nil;
     }
-    if (![businessID isEqualToString:@"av_call"]) {
+    if (![businessID isEqualToString:@"av_call"] && ![businessID isEqualToString:@"rtc_call"] ) {
         return nil;
     }
 

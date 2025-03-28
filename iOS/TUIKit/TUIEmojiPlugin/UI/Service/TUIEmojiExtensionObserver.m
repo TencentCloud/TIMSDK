@@ -80,22 +80,25 @@ static id gShareInstance = nil;
 #pragma mark - TUIKitFetchReactNotification
 
 - (void)fetchReactListByCellDatas:(NSNotification *)notification {
-    
     NSArray<TUIMessageCellData *> *uiMsgs = notification.object;
-    
-    TUIEmojiMessageReactPreLoadProvider * preLoadProvider = [[TUIEmojiMessageReactPreLoadProvider alloc] init];
-    
-    [preLoadProvider getMessageReactions:uiMsgs maxUserCountPerReaction:5 succ:^{
-        for (TUIMessageCellData *cellData in uiMsgs) {
-            if (cellData.msgID) {
-                if (cellData.reactValueChangedCallback) {
-                    cellData.reactValueChangedCallback(cellData.reactdataProvider.reactArray);
+    TUIEmojiMessageReactPreLoadProvider *preLoadProvider = [[TUIEmojiMessageReactPreLoadProvider alloc] init];
+    NSInteger batchSize = 20;
+    NSInteger totalBatches = (uiMsgs.count + batchSize - 1) / batchSize;
+    for (NSInteger batchIndex = 0; batchIndex < totalBatches; batchIndex++) {
+        NSRange batchRange = NSMakeRange(batchIndex * batchSize, MIN(batchSize, uiMsgs.count - batchIndex * batchSize));
+        NSArray<TUIMessageCellData *> *batchMsgs = [uiMsgs subarrayWithRange:batchRange];
+        [preLoadProvider getMessageReactions:batchMsgs maxUserCountPerReaction:5 succ:^{
+            for (TUIMessageCellData *cellData in batchMsgs) {
+                if (cellData.msgID) {
+                    if (cellData.reactValueChangedCallback) {
+                        cellData.reactValueChangedCallback(cellData.reactdataProvider.reactArray);
+                    }
                 }
             }
-        }
-    } fail:^(int code, NSString *desc) {
-        
-    }];
+        } fail:^(int code, NSString *desc) {
+            NSLog(@"Error fetching reactions for batch %ld: %d - %@", (long)batchIndex, code, desc);
+        }];
+    }
 }
 #pragma mark - TUIExtensionProtocol
 - (BOOL)onRaiseExtension:(NSString *)extensionID parentView:(UIView *)parentView param:(nullable NSDictionary *)param {

@@ -1,5 +1,5 @@
 // Copyright (c) 2024 Tencent. All rights reserved.
-// Author: rickwrwang
+// Author: eddardliu
 
 #import <AVKit/AVKit.h>
 #import <UIKit/UIKit.h>

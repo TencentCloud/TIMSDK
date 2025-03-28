@@ -10,7 +10,7 @@
 #import <TIMCommon/TIMCommonModel.h>
 #import <TUICore/TUIGlobalization.h>
 #import <TUICore/TUITool.h>
-#import "UIView+TUIToast.h"
+#import <TUICore/UIView+TUIToast.h>
 
 @implementation TUICommonPendencyCellData_Minimalist
 
@@ -39,25 +39,54 @@
     return [self.identifier isEqual:object.identifier];
 }
 
+
 - (void)agree {
+    [self agreeWithSuccess:^{
+        //Success
+    } failure:^(int code, NSString * _Nonnull msg) {
+        //failure
+    }];
+}
+
+- (void)reject {
+    [self rejectWithSuccess:^{
+        //Success
+    } failure:^(int code, NSString * _Nonnull msg) {
+        //failure
+    }];
+}
+
+
+- (void)agreeWithSuccess:(TUICommonPendencyCellDataSuccessCallback)success failure:(TUICommonPendencyCellDataFailureCallback)failure {
     [[V2TIMManager sharedInstance] acceptFriendApplication:_application
         type:V2TIM_FRIEND_ACCEPT_AGREE_AND_ADD
         succ:^(V2TIMFriendOperationResult *result) {
+        if (success) {
+            success();
+        }
           [TUITool makeToast:TIMCommonLocalizableString(TUIKitFriendApplicationApproved)];
         }
         fail:^(int code, NSString *msg) {
           [TUITool makeToastError:code msg:msg];
+            if (failure) {
+                failure(code,msg);
+            }
         }];
 }
 
-- (void)reject {
+- (void)rejectWithSuccess:(TUICommonPendencyCellDataSuccessCallback)success failure:(TUICommonPendencyCellDataFailureCallback)failure {
     [[V2TIMManager sharedInstance] refuseFriendApplication:_application
         succ:^(V2TIMFriendOperationResult *result) {
-          [TUITool makeToast:TIMCommonLocalizableString(TUIKitFirendRequestRejected)];
+        if (success) {
+            success();
+        }
+            [TUITool makeToast:TIMCommonLocalizableString(TUIKitFirendRequestRejected)];
         }
         fail:^(int code, NSString *msg) {
-          [TUITool makeToastError:code msg:msg];
+            if (failure) {
+                failure(code,msg);
+            }
+            [TUITool makeToastError:code msg:msg];
         }];
 }
-
 @end

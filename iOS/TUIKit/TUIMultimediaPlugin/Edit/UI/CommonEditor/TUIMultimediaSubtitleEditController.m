@@ -1,5 +1,5 @@
 // Copyright (c) 2024 Tencent. All rights reserved.
-// Author: rickwrwang
+// Author: eddardliu
 
 #import "TUIMultimediaSubtitleEditController.h"
 #import "TUIMultimediaPlugin/NSArray+Functional.h"

@@ -76,5 +76,6 @@ typedef NS_ENUM(NSInteger, TUIChatSmallTongueType) {
 
 #define TUIChatSendMessageNotification @"TUIChatSendMessageNotification"
 #define TUIChatSendMessageWithoutUpdateUINotification @"TUIChatSendMessageWithoutUpdateUINotification"
+#define TUIChatInsertMessageWithoutUpdateUINotification @"TUIChatInsertMessageWithoutUpdateUINotification"
 
 #endif  // TUI_COMPONENTS_IOS_TUICHAT_COMMONMODEL_TUICHATDEFINE_H_

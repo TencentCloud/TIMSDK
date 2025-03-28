@@ -1,5 +1,5 @@
 // Copyright (c) 2024 Tencent. All rights reserved.
-// Author: rickwrwang
+// Author: eddardliu
 
 #import "TUIMultimediaSubtitleView.h"
 #import "TUIMultimediaPlugin/TUIMultimediaCommon.h"
@@ -49,7 +49,12 @@
 
 -(void)labeSizeToFit {
     _isSizeToFitingSubtitleInfo = YES;
-    _label.text = [NSString stringWithFormat:@"%C", [_subtitleInfo.wrappedText characterAtIndex:0]];
+    if (_subtitleInfo.wrappedText.length > 0) {
+        _label.text = [NSString stringWithFormat:@"%C", [_subtitleInfo.wrappedText characterAtIndex:0]];
+    } else {
+        NSLog(@"_subtitleInfo.wrappedText is empty or nil.");
+        _label.text = @""; 
+    }
     CGSize size = [_label sizeThatFits:CGSizeMake(MAXFLOAT, MAX_SUBTITLE_PASTER_HEIGH)];
     CGFloat singleLineTextHeight = size.height;
     

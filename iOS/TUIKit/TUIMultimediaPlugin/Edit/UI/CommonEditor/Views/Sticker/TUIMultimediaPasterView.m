@@ -1,5 +1,5 @@
 // Copyright (c) 2024 Tencent. All rights reserved.
-// Author: rickwrwang
+// Author: eddardliu
 
 #import "TUIMultimediaPasterView.h"
 #import "TUIMultimediaPlugin/TUIMultimediaCommon.h"
@@ -32,6 +32,7 @@
 - (UIImage *)paster {
     return _imgView.image;
 }
+
 - (void)setPaster:(UIImage *)paster {
     self.content = nil;
     _imgView.image = paster;
