@@ -356,33 +356,6 @@ export class BaseTestInterfaces {
     V2TIMManager.getInstance().callExperimentalAPI("setTestEnvironment", enable_test_environment);
   }
 
-  static setCustomServerInfo() {
-    let param: ESObject = {
-      serverPublicKey: "xxxxx",
-      longconnectionAddressList: [
-        {
-          ip: "119.147.179.186",
-          port: 80,
-        },
-        {
-          ip: "loginv6.im.qcloud.com",
-          port: 80,
-          isIPv6: true,
-        },
-      ] as ESObject,
-      shortconnectionAddressList: [
-        {
-          ip: "shortconn.im.qcloud.com",
-        },
-        {
-          ip: "shortconnv6.im.qcloud.com",
-          isIPv6: true,
-        },
-      ] as ESObject,
-    };
-    V2TIMManager.getInstance().callExperimentalAPI("setCustomServerInfo", JSON.stringify(param));
-  }
-
   // static getEnumKeys(enumName: ESObject) {
   //   const keys = Object.keys(enumName).filter(key => Number.isNaN(Number(key)));
   //   let result = new Array<string>();

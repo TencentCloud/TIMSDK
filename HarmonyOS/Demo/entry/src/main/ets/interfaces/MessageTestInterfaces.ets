@@ -244,7 +244,8 @@ export class MessageTestInterfaces {
       const thumbnail = await asset.getThumbnail();
 
       const imagePackerApi = image.createImagePacker();
-      const thumbnail_file_path = getContext().cacheDir + "/" + "thumbnail.jpg";
+      // const thumbnail_file_path = getContext().cacheDir + "/" + "thumbnail.jpg";
+      const thumbnail_file_path = getContext().getApplicationContext().cacheDir + "/" + "thumbnail.jpg";
       const thumbnail_file = await fs.open(thumbnail_file_path, fs.OpenMode.CREATE | fs.OpenMode.READ_WRITE);
       await imagePackerApi.packToFile(thumbnail, thumbnail_file.fd, {
         format: "image/jpeg",
