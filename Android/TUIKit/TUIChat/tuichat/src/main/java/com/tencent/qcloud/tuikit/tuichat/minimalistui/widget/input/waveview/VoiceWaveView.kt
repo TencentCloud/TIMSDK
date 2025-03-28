@@ -83,21 +83,21 @@ class VoiceWaveView @JvmOverloads constructor(
         attrs?.let {
             val typedArray = context.theme.obtainStyledAttributes(
                 attrs,
-                R.styleable.VoiceWaveView, 0, 0
+                R.styleable.ChatVoiceWaveView, 0, 0
             )
 
-            lineWidth = typedArray.getDimension(R.styleable.VoiceWaveView_lineWidth, 5f)
-            lineSpace = typedArray.getDimension(R.styleable.VoiceWaveView_lineSpace, 5f)
-            duration = typedArray.getInt(R.styleable.VoiceWaveView_duration, 200).toLong()
-            showGravity = typedArray.getInt(R.styleable.VoiceWaveView_android_gravity, Gravity.LEFT or Gravity.BOTTOM)
-            lineColor = typedArray.getInt(R.styleable.VoiceWaveView_lineColor, Color.BLUE)
-            val mode = typedArray.getInt(R.styleable.VoiceWaveView_waveMode, 0)
+            lineWidth = typedArray.getDimension(R.styleable.ChatVoiceWaveView_chat_voice_line_width, 5f)
+            lineSpace = typedArray.getDimension(R.styleable.ChatVoiceWaveView_chat_voice_line_space, 5f)
+            duration = typedArray.getInt(R.styleable.ChatVoiceWaveView_chat_voice_duration, 200).toLong()
+            showGravity = typedArray.getInt(R.styleable.ChatVoiceWaveView_android_gravity, Gravity.LEFT or Gravity.BOTTOM)
+            lineColor = typedArray.getInt(R.styleable.ChatVoiceWaveView_chat_voice_line_color, Color.BLUE)
+            val mode = typedArray.getInt(R.styleable.ChatVoiceWaveView_chat_voice_wave_mode, 0)
             when (mode) {
                 0 -> waveMode = WaveMode.UP_DOWN
                 1 -> waveMode = WaveMode.LEFT_RIGHT
             }
 
-            val lType = typedArray.getInt(R.styleable.VoiceWaveView_lineType, 0)
+            val lType = typedArray.getInt(R.styleable.ChatVoiceWaveView_chat_voice_line_type, 0)
             when (lType) {
                 0 -> lineType = LineType.BAR_CHART
                 1 -> lineType = LineType.LINE_GRAPH

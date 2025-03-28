@@ -94,7 +94,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ChatView extends LinearLayout implements IChatLayout {
-    private static final String TAG = ChatView.class.getSimpleName();
+    private static final String TAG = "ChatView";
 
     // Limit the number of messages forwarded one by one
     private static final int FORWARD_MSG_NUM_LIMIT = 30;
@@ -177,6 +177,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
             }
         }
     };
+    private ChatInputMoreListener chatInputMoreListener;
 
     public ChatView(Context context) {
         super(context);
@@ -713,7 +714,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
 
                 @Override
                 public void onGroupFaceUrlChanged(String faceUrl) {
-                    if (isActivityDestroyed()) {
+                    if (TUIUtil.isActivityDestroyed(getContext())) {
                         return;
                     }
                     Glide.with(getContext())
@@ -743,7 +744,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
 
                 @Override
                 public void onFriendNameChanged(String newName) {
-                    if (isActivityDestroyed()) {
+                    if (TUIUtil.isActivityDestroyed(getContext())) {
                         return;
                     }
                     ChatView.this.onFriendNameChanged(newName);
@@ -751,7 +752,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
 
                 @Override
                 public void onFriendFaceUrlChanged(String faceUrl) {
-                    if (isActivityDestroyed()) {
+                    if (TUIUtil.isActivityDestroyed(getContext())) {
                         return;
                     }
                     Glide.with(getContext())
@@ -763,16 +764,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
                 }
             });
         }
-    }
-
-    private boolean isActivityDestroyed() {
-        Context context = getContext();
-        if (context instanceof Activity) {
-            if (((Activity) context).isFinishing() || ((Activity) context).isDestroyed()) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private void loadApplyList() {
@@ -1092,12 +1083,13 @@ public class ChatView extends LinearLayout implements IChatLayout {
                 resetForwardState();
             }
         });
-        mInputView.setChatInputMoreListener(new ChatInputMoreListener() {
+        chatInputMoreListener = new ChatInputMoreListener() {
             @Override
             public String sendMessage(TUIMessageBean msg, IUIKitCallback<TUIMessageBean> callback) {
                 return ChatView.this.sendMessage(msg, false, callback);
             }
-        });
+        };
+        mInputView.setChatInputMoreListener(chatInputMoreListener);
     }
 
     private void displayBackToNewMessage(boolean display, String messageId, int count) {

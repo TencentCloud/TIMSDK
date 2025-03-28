@@ -51,7 +51,6 @@ import com.tencent.qcloud.tuikit.tuichat.config.minimalistui.TUIChatConfigMinima
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMessageRecyclerView;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.OnEmptySpaceClickListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.OnGestureScrollListener;
-import com.tencent.qcloud.tuikit.tuichat.minimalistui.interfaces.IMessageLayout;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.messagepopmenu.ChatPopActivity;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.messagepopmenu.ChatPopDataHolder;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
@@ -66,7 +65,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class MessageRecyclerView extends RecyclerView implements IMessageRecyclerView, IMessageLayout {
+public class MessageRecyclerView extends RecyclerView implements IMessageRecyclerView {
     private static final String TAG = MessageRecyclerView.class.getSimpleName();
 
     // Take a large enough offset to scroll to the bottom at one time
@@ -716,31 +715,18 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         });
     }
 
-    @Override
     public OnItemClickListener getOnItemClickListener() {
         return mAdapter.getOnItemClickListener();
     }
 
-    @Override
     public void setOnItemClickListener(OnItemClickListener listener) {
         mOnItemClickListener = listener;
         setAdapterListener();
     }
 
-    @Override
     public void setAdapter(MessageAdapter adapter) {
         super.setAdapter(adapter);
         mAdapter = adapter;
-    }
-
-    @Override
-    public List<ChatPopActivity.ChatPopMenuAction> getPopActions() {
-        return mPopActions;
-    }
-
-    @Override
-    public void addPopAction(ChatPopActivity.ChatPopMenuAction action) {
-        mMorePopActions.add(action);
     }
 
     public void loadMessageFinish() {

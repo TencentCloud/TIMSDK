@@ -26,6 +26,8 @@
     <color name="multimedia_plugin_record_beauty_type_text_color_normal">#99FFFFFF</color>
     <color name="multimedia_plugin_record_beauty_type_text_color_selected">#FFFFFFFF</color>
 
+    <color name="multimedia_plugin_transparent_black">#00FFFFFF</color>
+
     <color name="multimedia_plugin_picker_dark_color">#FF333333</color>
     <color name="multimedia_plugin_picker_dark_gray">#FF555555</color>
     <color name="multimedia_plugin_picker_light_gray">#FF999999</color>

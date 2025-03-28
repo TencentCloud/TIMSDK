@@ -350,7 +350,6 @@ public class CreateGroupActivity extends BaseLightActivity implements View.OnCli
             @Override
             public void onError(String module, int errCode, String errMsg) {
                 mCreating = false;
-                // mGroupMembers.remove(selfInfo);
                 if (errCode == TUIConstants.BuyingFeature.ERR_SDK_INTERFACE_NOT_SUPPORT || errCode == 11000) {
                     showNotSupportDialog();
                 }

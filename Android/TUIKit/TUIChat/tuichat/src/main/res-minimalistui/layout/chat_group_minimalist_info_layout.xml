@@ -289,7 +289,7 @@
                 android:layout_height="55dp"
                 android:layout_marginTop="1dp"
                 app:isSwitch="false"
-                app:name="@string/exit_group"
+                app:name="@string/dissolve"
                 tools:visibility="visible" />
 
             <LinearLayout

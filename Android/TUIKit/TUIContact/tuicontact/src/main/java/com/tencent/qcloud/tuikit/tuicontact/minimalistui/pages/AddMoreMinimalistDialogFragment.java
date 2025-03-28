@@ -74,7 +74,6 @@ public class AddMoreMinimalistDialogFragment extends DialogFragment implements I
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.contact_minimalist_add_friend_group_layout, container);
         presenter = new AddMorePresenter();
-        presenter.setAddMoreActivity(this);
 
         faceImgView = view.findViewById(R.id.friend_icon);
         titleTv = view.findViewById(R.id.title_tv);

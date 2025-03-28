@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuimultimediaplugin.common;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
@@ -16,6 +17,8 @@ import com.tencent.qcloud.tuicore.util.TUIBuild;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaPlugin;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -31,6 +34,7 @@ public class TUIMultimediaFileUtil {
     public static final String TAG = TUIMultimediaFileUtil.class.getSimpleName();
     public static final String ASSET_FILE_PREFIX = "file:///asset/";
     public static final String LOCAL_FILE_PREFIX = "/";
+    public static final String CONTENT_FILE_PREFIX = "content:";
 
     public static boolean isFileExists(String path) {
         try {
@@ -238,6 +242,8 @@ public class TUIMultimediaFileUtil {
             return decodeDrawableRes(path);
         } else if (path != null && path.startsWith(TUIMultimediaFileUtil.ASSET_FILE_PREFIX)) {
             return decodeAssetFile(path);
+        } else if (path != null && path.startsWith(TUIMultimediaFileUtil.CONTENT_FILE_PREFIX)) {
+          return readBitmapFromUrl(Uri.parse(path));
         } else {
             LiteavLog.i(TAG, "decodeBitmap " + path + " is not supported path");
             return null;
@@ -267,6 +273,44 @@ public class TUIMultimediaFileUtil {
         } catch (Exception e) {
             LiteavLog.e("PicturePasterItemInfo", "decode asset file error " + e.toString());
             return null;
+        }
+    }
+
+
+    public static boolean saveBmpToFile(Bitmap bmp, File file, CompressFormat format) {
+        if (null != bmp && null != file) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bmp.compress(format, 100, baos);
+            return writeToFile(baos.toByteArray(), file);
+        } else {
+            LiteavLog.e("DebugUtils", "bmp or file is null");
+            return false;
+        }
+    }
+
+    public static boolean writeToFile(byte[] data, File file) {
+        FileOutputStream fos = null;
+        boolean ret = false;
+
+        try {
+            fos = new FileOutputStream(file);
+            fos.write(data);
+            fos.flush();
+            ret = true;
+        } catch (IOException var8) {
+        } finally {
+            closeQuietly(fos);
+        }
+
+        return ret;
+    }
+
+    private static void closeQuietly(final Closeable closeable) {
+        try {
+            if (closeable != null) {
+                closeable.close();
+            }
+        } catch (IOException var2) {
         }
     }
 

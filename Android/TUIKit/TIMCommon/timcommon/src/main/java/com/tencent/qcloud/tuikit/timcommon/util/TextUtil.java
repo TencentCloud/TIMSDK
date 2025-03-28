@@ -14,10 +14,10 @@ import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 
@@ -127,6 +127,29 @@ public class TextUtil {
         @Override
         public void updateDrawState(@NonNull TextPaint ds) {
             ds.setColor(color);
+        }
+    }
+
+    public static class ForegroundColorClickableSpan extends ClickableSpan {
+        private final int color;
+        private final View.OnClickListener listener;
+
+        public ForegroundColorClickableSpan(int color, View.OnClickListener listener)  {
+            super();
+            this.color = color;
+            this.listener = listener;
+        }
+
+        @Override
+        public void updateDrawState(@NonNull TextPaint ds) {
+            ds.setColor(color);
+        }
+
+        @Override
+        public void onClick(@NonNull View widget) {
+            if (listener != null) {
+                listener.onClick(widget);
+            }
         }
     }
 }

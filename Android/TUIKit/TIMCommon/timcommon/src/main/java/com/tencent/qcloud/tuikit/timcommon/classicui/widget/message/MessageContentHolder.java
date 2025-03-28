@@ -33,6 +33,8 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.config.classicui.TUIConfigClassic;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -123,10 +125,8 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
     @Override
     public void layoutViews(final T msg, final int position) {
         Context context = itemView.getContext();
-        if (context instanceof Activity) {
-            if (((Activity) context).isDestroyed()) {
-                return;
-            }
+        if (TUIUtil.isActivityDestroyed(context)) {
+            return;
         }
 
         hasRiskContent = msg.hasRiskContent();

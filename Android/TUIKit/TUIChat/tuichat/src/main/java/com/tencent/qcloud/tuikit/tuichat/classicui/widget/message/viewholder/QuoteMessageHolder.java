@@ -102,6 +102,7 @@ public class QuoteMessageHolder extends TextMessageHolder {
 
         if (quoteMessageBean.isAbstractEnable()) {
             performMsgAbstract(quoteMessageBean);
+            senderNameTv.setVisibility(View.VISIBLE);
             quoteContentFrameLayout.setVisibility(View.VISIBLE);
         } else {
             senderNameTv.setVisibility(View.GONE);

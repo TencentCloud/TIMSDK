@@ -52,6 +52,7 @@
     <string name="multimedia_plugin_origin_audio">الصوت الأصلي</string>
     <string name="multimedia_plugin_send">إرسال</string>
     <string name="multimedia_plugin_done">تم</string>
+    <string name="multimedia_plugin_restore">اختزال</string>
     <string name="multimedia_plugin_zero">0</string>
     <string name="multimedia_plugin_zero_time">00:00</string>
     <string name="multimedia_plugin_local">محلي</string>

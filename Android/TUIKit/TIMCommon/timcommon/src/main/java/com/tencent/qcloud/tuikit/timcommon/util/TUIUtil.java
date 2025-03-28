@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.timcommon.util;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -67,5 +68,15 @@ public class TUIUtil {
 
     public static String identityHashCode(Object object) {
         return System.identityHashCode(object) + "";
+    }
+
+
+    public static boolean isActivityDestroyed(Context context) {
+        if (context instanceof Activity) {
+            if (((Activity) context).isFinishing() || ((Activity) context).isDestroyed()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -36,6 +36,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomEvaluationMessageBea
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomLinkMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomOrderMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MessageTypingBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.C2CChatEventListener;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.GroupChatEventListener;
@@ -658,6 +659,7 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
         addCustomMessageType(TUIChatConstants.BUSINESS_ID_CUSTOM_EVALUATION, CustomEvaluationMessageBean.class);
         addCustomMessageType(TUIChatConstants.BUSINESS_ID_CUSTOM_ORDER, CustomOrderMessageBean.class);
         addCustomMessageType(TUIChatConstants.BUSINESS_ID_CUSTOM_TYPING, MessageTypingBean.class);
+        addCustomMessageType(TUIChatConstants.BUSINESS_ID_LOCAL_TIPS, TipsMessageBean.class);
     }
 
     /**
@@ -870,4 +872,5 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
                 TUIConstants.TUIChat.Event.MessageDisplayString.KEY, TUIConstants.TUIChat.Event.MessageDisplayString.SUB_KEY_PROCESS_MESSAGE, param);
         });
     }
+
 }

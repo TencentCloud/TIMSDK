@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuicontact.presenter;
 
-import android.text.TextUtils;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
@@ -8,11 +7,8 @@ import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
-import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupMemberInfo;
-import com.tencent.qcloud.tuikit.tuicontact.interfaces.GroupEventListener;
 import com.tencent.qcloud.tuikit.tuicontact.interfaces.IGroupMemberLayout;
 import com.tencent.qcloud.tuikit.tuicontact.model.GroupInfoProvider;
 import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
@@ -30,26 +26,9 @@ public class GroupInfoPresenter {
     private GroupInfo groupInfo;
     private GroupMemberInfo selfGroupMemberInfo;
 
-    private GroupEventListener groupEventListener;
-
     public GroupInfoPresenter(IGroupMemberLayout layout) {
         this.layout = layout;
         provider = new GroupInfoProvider();
-    }
-
-    public void setGroupEventListener() {
-        groupEventListener = new GroupEventListener() {
-            @Override
-            public void onGroupInfoChanged(String groupID) {
-                GroupInfoPresenter.this.onGroupInfoChanged(groupID);
-            }
-
-            @Override
-            public void onGroupMemberCountChanged(String groupID) {
-                GroupInfoPresenter.this.onGroupCountChanged(groupID);
-            }
-        };
-        TUIContactService.getInstance().addGroupEventListener(groupEventListener);
     }
 
     public void setGroupInfo(GroupInfo groupInfo) {
@@ -112,18 +91,6 @@ public class GroupInfoPresenter {
         });
     }
 
-    private void onGroupInfoChanged(String groupID) {
-        if (groupInfo != null && TextUtils.equals(groupID, groupInfo.getId())) {
-            loadGroupInfo(groupID);
-        }
-    }
-
-    private void onGroupCountChanged(String groupID) {
-        if (groupInfo != null && TextUtils.equals(groupID, groupInfo.getId())) {
-            loadGroupInfo(groupID);
-        }
-    }
-
     public void getGroupMembers(GroupInfo groupInfo, final IUIKitCallback<GroupInfo> callBack) {
         provider.loadGroupMembers(groupInfo, groupInfo.getNextSeq(), new IUIKitCallback<GroupInfo>() {
             @Override
@@ -143,42 +110,6 @@ public class GroupInfoPresenter {
         });
     }
 
-    public void modifyGroupName(final String name) {
-        if (groupInfo == null) {
-            return;
-        }
-        provider.modifyGroupInfo(groupInfo, name, TUIContactConstants.Group.MODIFY_GROUP_NAME, new IUIKitCallback() {
-            @Override
-            public void onSuccess(Object data) {
-                layout.onGroupInfoModified(name, TUIContactConstants.Group.MODIFY_GROUP_NAME);
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                TUIContactLog.e("modifyGroupName", errCode + ":" + errMsg);
-                ToastUtil.toastLongMessage(errMsg);
-            }
-        });
-    }
-
-    public void modifyGroupNotice(final String notice) {
-        if (groupInfo == null) {
-            return;
-        }
-        provider.modifyGroupInfo(groupInfo, notice, TUIContactConstants.Group.MODIFY_GROUP_NOTICE, new IUIKitCallback() {
-            @Override
-            public void onSuccess(Object data) {
-                layout.onGroupInfoModified(notice, TUIContactConstants.Group.MODIFY_GROUP_NOTICE);
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                TUIContactLog.e("modifyGroupNotice", errCode + ":" + errMsg);
-                ToastUtil.toastLongMessage(errMsg);
-            }
-        });
-    }
-
     public String getNickName() {
         String nickName = "";
         GroupMemberInfo self = getSelfGroupMemberInfo();
@@ -186,92 +117,6 @@ public class GroupInfoPresenter {
             nickName = self.getNameCard();
         }
         return nickName == null ? "" : nickName;
-    }
-
-    public void modifyMyGroupNickname(final String nickname) {
-        provider.modifyMyGroupNickname(groupInfo, nickname, new IUIKitCallback() {
-            @Override
-            public void onSuccess(Object data) {
-                layout.onGroupInfoModified(nickname, TUIContactConstants.Group.MODIFY_MEMBER_NAME);
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                TUIContactLog.e("modifyMyGroupNickname", errCode + ":" + errMsg);
-                ToastUtil.toastLongMessage(errMsg);
-            }
-        });
-    }
-
-    public void deleteGroup(IUIKitCallback<Void> callback) {
-        if (groupInfo == null) {
-            return;
-        }
-        String groupId = groupInfo.getId();
-        provider.deleteGroup(groupId, new IUIKitCallback() {
-            @Override
-            public void onSuccess(Object data) {
-                ContactUtils.callbackOnSuccess(callback, null);
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                TUIContactLog.e("deleteGroup", errCode + ":" + errMsg);
-                ContactUtils.callbackOnError(callback, module, errCode, errMsg);
-            }
-        });
-    }
-
-    public void setTopConversation(String groupId, boolean isSetTop, IUIKitCallback<Void> callback) {
-        String conversationId = ContactUtils.getConversationIdByUserId(groupId, true);
-        provider.setTopConversation(conversationId, isSetTop, new IUIKitCallback<Void>() {
-            @Override
-            public void onSuccess(Void data) {
-                groupInfo.setTopChat(isSetTop);
-                ContactUtils.callbackOnSuccess(callback, null);
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                ContactUtils.callbackOnError(callback, module, errCode, errMsg);
-            }
-        });
-    }
-
-    public void quitGroup(IUIKitCallback<Void> callback) {
-        if (groupInfo == null) {
-            return;
-        }
-        String groupId = groupInfo.getId();
-        provider.quitGroup(groupId, new IUIKitCallback<Void>() {
-            @Override
-            public void onSuccess(Void data) {
-                ContactUtils.callbackOnSuccess(callback, null);
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                ContactUtils.callbackOnError(callback, module, errCode, errMsg);
-                TUIContactLog.e("quitGroup", errCode + ":" + errMsg);
-            }
-        });
-    }
-
-    public void modifyGroupInfo(int value, int type) {
-        if (groupInfo == null) {
-            return;
-        }
-        provider.modifyGroupInfo(groupInfo, value, type, new IUIKitCallback() {
-            @Override
-            public void onSuccess(Object data) {
-                layout.onGroupInfoModified(data, TUIContactConstants.Group.MODIFY_GROUP_JOIN_TYPE);
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastLongMessage("modifyGroupInfo fail :" + errCode + "=" + errMsg);
-            }
-        });
     }
 
     private void inviteGroupMembers(List<String> addMembers, IUIKitCallback<Object> callback) {
@@ -338,60 +183,6 @@ public class GroupInfoPresenter {
         });
     }
 
-    public void setGroupNotDisturb(GroupInfo groupInfo, boolean isChecked, IUIKitCallback<Void> callback) {
-        if (groupInfo == null) {
-            TUIContactLog.e(TAG, "mGroupInfo is NULL");
-            return;
-        }
-
-        provider.setGroupReceiveMessageOpt(groupInfo.getId(), !isChecked, new IUIKitCallback() {
-            @Override
-            public void onSuccess(Object data) {
-                groupInfo.setMessageReceiveOption(!isChecked);
-                ContactUtils.callbackOnSuccess(callback, null);
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                ContactUtils.callbackOnError(callback, module, errCode, errMsg);
-            }
-        });
-    }
-
-    public void setGroupFold(GroupInfo groupInfo, boolean isChecked, IUIKitCallback<Void> callback) {
-        if (groupInfo == null) {
-            TUIContactLog.e(TAG, "mGroupInfo is NULL");
-            return;
-        }
-
-        provider.setGroupFold(groupInfo.getId(), isChecked, new IUIKitCallback() {
-            @Override
-            public void onSuccess(Object data) {
-                groupInfo.setFolded(isChecked);
-                ContactUtils.callbackOnSuccess(callback, null);
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                ContactUtils.callbackOnError(callback, module, errCode, errMsg);
-            }
-        });
-    }
-
-    public void modifyGroupFaceUrl(String groupId, String faceUrl, IUIKitCallback<Void> callback) {
-        provider.modifyGroupFaceUrl(groupId, faceUrl, new IUIKitCallback<Void>() {
-            @Override
-            public void onSuccess(Void data) {
-                ContactUtils.callbackOnSuccess(callback, null);
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                ContactUtils.callbackOnError(callback, module, errCode, errMsg);
-            }
-        });
-    }
-
     public GroupMemberInfo getSelfGroupMemberInfo() {
         if (selfGroupMemberInfo != null) {
             return selfGroupMemberInfo;
@@ -415,10 +206,6 @@ public class GroupInfoPresenter {
 
     public boolean isSelf(String userId) {
         return provider.isSelf(userId);
-    }
-
-    public void transferGroupOwner(String groupId, String userId, IUIKitCallback<Void> callback) {
-        provider.transferGroupOwner(groupId, userId, callback);
     }
 
     public void setGroupManager(String groupId, String userId, IUIKitCallback<Void> callback) {

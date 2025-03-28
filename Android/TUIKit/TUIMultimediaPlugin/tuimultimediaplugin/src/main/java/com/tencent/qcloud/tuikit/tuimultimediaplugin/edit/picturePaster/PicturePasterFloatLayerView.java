@@ -28,7 +28,7 @@ public class PicturePasterFloatLayerView extends FloatLayerView {
         super(context);
         mContext = context;
         mFloatLayerViewGroup = floatLayerViewGroup;
-        mFloatLayerViewGroup.addOperationView(this);
+        mFloatLayerViewGroup.addFloatLayerView(this);
         setPasterType(PasterType.STATIC_PICTURE_PASTER);
         showDelete(true);
         showEdit(false);
@@ -63,7 +63,7 @@ public class PicturePasterFloatLayerView extends FloatLayerView {
     }
 
     private void onDeleted() {
-        mFloatLayerViewGroup.removeOperationView(this);
+        mFloatLayerViewGroup.removeFloatLayerView(this);
     }
 
     private void addObserve() {

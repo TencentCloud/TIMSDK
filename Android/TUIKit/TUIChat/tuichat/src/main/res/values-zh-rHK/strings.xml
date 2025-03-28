@@ -219,9 +219,9 @@
     <string name="chat_call_cancel_caller">已取消</string>
     <string name="chat_call_cancel_callee">對方已取消</string>
     <string name="chat_call_timeout_caller">對方無應答</string>
-    <string name="chat_call_timeout_callee">對方已取消</string>
+    <string name="chat_call_timeout_callee">超時無應答</string>
     <string name="chat_call_line_busy_caller">對方忙線中</string>
-    <string name="chat_call_line_busy_callee">對方已取消</string>
+    <string name="chat_call_line_busy_callee">忙線未接聽</string>
     <string name="chat_group_call_send">發起了群通話</string>
     <string name="chat_group_call_end">通話結束</string>
     <string name="chat_group_call_no_answer">未接聽</string>

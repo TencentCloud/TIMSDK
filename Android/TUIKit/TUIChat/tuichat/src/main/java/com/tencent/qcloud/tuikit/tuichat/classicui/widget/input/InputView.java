@@ -34,10 +34,10 @@ import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.ChatFace;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.ChatInputMoreListener;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnFaceInputListener;
 import com.tencent.qcloud.tuikit.timcommon.util.ActivityResultResolver;
-import com.tencent.qcloud.tuikit.timcommon.util.FaceUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
@@ -351,7 +351,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             if (selectedIndex != -1) {
                 String insertStr = TIMMentionEditText.TIM_MENTION_TAG + displayInputString;
                 String text = mTextInput.getText().insert(selectedIndex, insertStr).toString();
-                FaceUtil.handlerEmojiText(mTextInput, text, true);
+                FaceManager.handlerEmojiText(mTextInput, text, true);
                 mTextInput.setSelection(selectedIndex + insertStr.length());
             }
             showSoftInput();
@@ -445,7 +445,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             int selectedIndex = mTextInput.getSelectionEnd();
             if (selectedIndex != -1) {
                 String text = mTextInput.getText().insert(selectedIndex, displayInputString).toString();
-                FaceUtil.handlerEmojiText(mTextInput, text, true);
+                FaceManager.handlerEmojiText(mTextInput, text, true);
                 mTextInput.setSelection(selectedIndex + displayInputString.length());
             }
 
@@ -829,7 +829,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 int index = mTextInput.getSelectionStart();
                 Editable editable = mTextInput.getText();
                 editable.insert(index, emojiKey);
-                FaceUtil.handlerEmojiText(mTextInput, editable, true);
+                FaceManager.handlerEmojiText(mTextInput, editable, true);
             }
 
             @Override
@@ -930,7 +930,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 }
             }
             if (!TextUtils.equals(mInputContent, mTextInput.getText().toString())) {
-                FaceUtil.handlerEmojiText(mTextInput, mTextInput.getText(), true);
+                FaceManager.handlerEmojiText(mTextInput, mTextInput.getText(), true);
             }
         }
 
@@ -1242,8 +1242,8 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         replyPreviewBean = previewBean;
         String replyMessageAbstract = previewBean.getMessageAbstract();
         String msgTypeStr = ChatMessageParser.getMsgTypeStr(previewBean.getMessageType());
-        String text = previewBean.getMessageSender() + " : " + msgTypeStr + " " + replyMessageAbstract;
-        text = FaceUtil.emojiJudge(text);
+        CharSequence text = previewBean.getMessageSenderName() + " : " + msgTypeStr + " " + replyMessageAbstract;
+        text = FaceManager.emojiJudge(text);
         // If replying to a text message, the middle part of the file name is displayed in abbreviated form
         if (previewBean.isReplyMessage()) {
             isReplyModel = true;

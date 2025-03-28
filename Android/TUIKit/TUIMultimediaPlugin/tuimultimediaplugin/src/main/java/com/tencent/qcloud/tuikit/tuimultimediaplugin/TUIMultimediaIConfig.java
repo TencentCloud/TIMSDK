@@ -45,17 +45,33 @@ public class TUIMultimediaIConfig {
     @SerializedName("support_record_scroll_filter")
     private boolean mIsSupportRecordScrollFilter = true;
 
-    @SerializedName("support_edit_graffiti")
-    private boolean mIsSupportEditGraffiti = true;
+    @SerializedName("support_video_edit_graffiti")
+    private boolean mIsSupportVideoEditGraffiti = true;
 
-    @SerializedName("support_edit_paster")
-    private boolean mIsSupportEditPaster = true;
+    @SerializedName("support_video_edit_paster")
+    private boolean mIsSupportVideoEditPaster = true;
 
-    @SerializedName("support_edit_subtitle")
-    private boolean mIsSupportEditSubtitle = true;
+    @SerializedName("support_video_edit_subtitle")
+    private boolean mIsSupportVideoEditSubtitle = true;
 
-    @SerializedName("support_edit_bgm")
-    private boolean mIsSupportEditBGM = true;
+    @SerializedName("support_video_edit_bgm")
+    private boolean mIsSupportVideoEditBGM = true;
+
+    @SerializedName("support_picture_edit_graffiti")
+    private boolean mIsSupportPictureEditGraffiti = true;
+
+    @SerializedName("support_picture_edit_mosaic")
+    private boolean mIsSupportPictureEditMosaic = true;
+
+    @SerializedName("support_picture_edit_paster")
+    private boolean mIsSupportPictureEditPaster = true;
+
+    @SerializedName("support_picture_edit_subtitle")
+    private boolean mIsSupportPictureEditSubtitle = true;
+
+    @SerializedName("support_picture_edit_crop")
+    private boolean mIsSupportPictureEditCrop = true;
+
 
     private JsonObject mJsonObject;
 
@@ -102,21 +118,41 @@ public class TUIMultimediaIConfig {
 
     }
 
-    public boolean isSupportEditGraffiti() {
-        return getBoolFromJsonObject("support_edit_graffiti", mIsSupportEditGraffiti);
+    public boolean isSupportVideoEditGraffiti() {
+        return getBoolFromJsonObject("support_video_edit_graffiti", mIsSupportVideoEditGraffiti);
     }
 
-    public boolean isSupportEditPaster() {
-        return getBoolFromJsonObject("support_edit_paster", mIsSupportEditPaster);
+    public boolean isSupportVideoEditPaster() {
+        return getBoolFromJsonObject("support_video_edit_paster", mIsSupportVideoEditPaster);
     }
 
-    public boolean isSupportEditSubtitle() {
-        return getBoolFromJsonObject("support_edit_subtitle", mIsSupportEditSubtitle);
+    public boolean isSupportVideoEditSubtitle() {
+        return getBoolFromJsonObject("support_video_edit_subtitle", mIsSupportVideoEditSubtitle);
 
     }
 
-    public boolean isSupportEditBGM() {
-        return getBoolFromJsonObject("support_edit_bgm", mIsSupportEditBGM);
+    public boolean isSupportVideoEditBGM() {
+        return getBoolFromJsonObject("support_video_edit_bgm", mIsSupportVideoEditBGM);
+    }
+
+    public boolean isSupportPictureEditGraffiti() {
+        return getBoolFromJsonObject("support_picture_edit_graffiti", mIsSupportPictureEditGraffiti);
+    }
+
+    public boolean isSupportPictureEditMosaic() {
+        return getBoolFromJsonObject("support_picture_edit_mosaic", mIsSupportPictureEditMosaic);
+    }
+
+    public boolean isSupportPictureEditPaster() {
+        return getBoolFromJsonObject("support_picture_edit_paster", mIsSupportPictureEditPaster);
+    }
+
+    public boolean isSupportPictureEditSubtitle() {
+        return getBoolFromJsonObject("support_picture_edit_subtitle", mIsSupportPictureEditSubtitle);
+    }
+
+    public boolean isSupportPictureEditCrop() {
+        return getBoolFromJsonObject("support_picture_edit_crop", mIsSupportPictureEditCrop);
     }
 
     public int getThemeColor() {

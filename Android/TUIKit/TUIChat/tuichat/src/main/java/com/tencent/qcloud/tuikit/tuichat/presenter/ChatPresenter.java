@@ -11,10 +11,12 @@ import android.webkit.MimeTypeMap;
 import androidx.annotation.NonNull;
 import com.google.gson.Gson;
 import com.tencent.imsdk.BaseConstants;
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.push.OfflinePushExtInfo;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
@@ -34,6 +36,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.LocalTipsMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflinePushInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.UserStatusBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
@@ -137,7 +140,6 @@ public abstract class ChatPresenter {
         existsInstances.add(new WeakReference<>(this));
         provider = new ChatProvider();
         AIDenoiseSignatureManager.getInstance().updateSignature();
-
     }
 
     public abstract void initListener();
@@ -543,9 +545,9 @@ public abstract class ChatPresenter {
         isLoading = false;
     }
 
-    protected void addProcessingMessages(List<TUIMessageBean> data)  {
+    protected void addProcessingMessages(List<TUIMessageBean> data) {
         Map<String, TUIMessageBean> addProcessingMessages = new LinkedHashMap<>(processingMessages.size());
-        for (Map.Entry<String, TUIMessageBean> entry :processingMessages.entrySet()) {
+        for (Map.Entry<String, TUIMessageBean> entry : processingMessages.entrySet()) {
             TUIMessageBean messageBean = entry.getValue();
             if (messageBean != null) {
                 ChatInfo chatInfo = getChatInfo();
@@ -921,7 +923,7 @@ public abstract class ChatPresenter {
     private boolean isSameChat(ChatPresenter chatPresenter) {
         if (chatPresenter == null) {
             return false;
-            }
+        }
         if (chatPresenter == this) {
             return true;
         } else {
@@ -1137,6 +1139,38 @@ public abstract class ChatPresenter {
             addMessageToUI(message, true);
         }
         return msgId;
+    }
+
+    private String internalInsertMessage(TUIMessageBean message, String receiver, boolean isGroup) {
+        if (!TextUtils.isEmpty(receiver)) {
+            if (!TextUtils.equals(getChatInfo().getId(), receiver) || isGroup != TUIChatUtils.isGroupChat(getChatInfo().getType())) {
+                return null;
+            }
+        }
+        String messageID = provider.insertMessage(message, receiver, isGroup, new TUIValueCallback<TUIMessageBean>() {
+            @Override
+            public void onSuccess(TUIMessageBean object) {
+                message.setStatus(TUIMessageBean.MSG_STATUS_SEND_SUCCESS);
+                message.setSending(false);
+                ProgressPresenter.updateProgress(object.getId(), 100);
+                TUIChatLog.v(TAG, "sendMessage onSuccess:" + object.getId());
+                if (!safetyCall()) {
+                    TUIChatLog.w(TAG, "sendMessage unSafetyCall");
+                    return;
+                }
+
+                updateMessageInfo(message, IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE);
+                Map<String, Object> param = new HashMap<>();
+                param.put(TUIChatConstants.MESSAGE_BEAN, object);
+                TUICore.notifyEvent(TUIChatConstants.EVENT_KEY_MESSAGE_STATUS_CHANGED, TUIChatConstants.EVENT_SUB_KEY_MESSAGE_SEND, param);
+            }
+
+            @Override
+            public void onError(int errorCode, String errorMessage) {}
+        });
+        message.setId(messageID);
+        addMessageToUI(message, true);
+        return messageID;
     }
 
     private void updateMessageSendingStatus(TUIMessageBean message) {
@@ -1534,7 +1568,7 @@ public abstract class ChatPresenter {
     @NonNull
     private static OfflinePushInfo getOfflinePushInfo(TUIMessageBean message, boolean isGroup, String id, String offlineTitle) {
         OfflinePushExtInfo containerBean = new OfflinePushExtInfo();
-        containerBean.getBusinessInfo().setDesc(FaceManager.emojiJudge(message.getExtra()));
+        containerBean.getBusinessInfo().setDesc(FaceManager.emojiJudge(message.getExtra()).toString());
         containerBean.getBusinessInfo().setSenderId(message.getSender());
         containerBean.getBusinessInfo().setSenderNickName(TUIConfig.getSelfNickName());
         containerBean.getBusinessInfo().setFaceUrl(TUIConfig.getSelfFaceUrl());
@@ -2038,6 +2072,39 @@ public abstract class ChatPresenter {
             }
         }
         return null;
+    }
+
+    public static String insertLocalTipsMessage(String text, String chatID, boolean isGroup) {
+        LocalTipsMessage localTipsMessage = new LocalTipsMessage();
+        localTipsMessage.tips = text;
+        Gson gson = new Gson();
+        TUIMessageBean messageBean = ChatMessageBuilder.buildCustomMessage(gson.toJson(localTipsMessage), null, null);
+        return insertLocalMessage(messageBean, chatID, isGroup);
+    }
+
+    public static String insertLocalMessage(TUIMessageBean messageBean, String chatId, boolean isGroupChat) {
+        for (WeakReference<ChatPresenter> instance : existsInstances) {
+            ChatPresenter presenter = instance.get();
+            if (presenter != null) {
+                String messageID = presenter.internalInsertMessage(messageBean, chatId, isGroupChat);
+                if (messageID != null) {
+                    return messageID;
+                }
+            }
+        }
+
+        ChatProvider chatProvider = new ChatProvider();
+        return chatProvider.insertMessage(messageBean, chatId, isGroupChat, new TUIValueCallback<TUIMessageBean>() {
+            @Override
+            public void onSuccess(TUIMessageBean object) {
+                TUIChatLog.i(TAG, "insertMessage success");
+            }
+
+            @Override
+            public void onError(int errorCode, String errorMessage) {
+                TUIChatLog.i(TAG, "insertMessage failed, errorCode: " + errorCode + ", errorMessage: " + errorMessage);
+            }
+        });
     }
 
     static class MessageReadReportHandler extends Handler {

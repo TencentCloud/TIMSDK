@@ -113,8 +113,6 @@ public class GroupInfoMinimalistFragment extends Fragment {
                     String thumbnailUri = imageBean.getThumbnailUri();
                     TUIChatLog.d("GroupInfoMinimalistFragment", "onActivityResult backgroundUri = " + backgroundUri);
                     mChatBackgroundThumbnailUrl = thumbnailUri;
-                    HashMap<String, Object> param = new HashMap<>();
-                    param.put(TUIConstants.TUIChat.CHAT_ID, groupId);
                     String dataUri = thumbnailUri + "," + backgroundUri;
                     TUIChatService.getInstance().setChatBackground(groupId, dataUri);
                 }

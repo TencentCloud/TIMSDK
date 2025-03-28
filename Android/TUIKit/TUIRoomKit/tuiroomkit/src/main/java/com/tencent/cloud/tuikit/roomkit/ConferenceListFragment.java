@@ -1,9 +1,9 @@
 package com.tencent.cloud.tuikit.roomkit;
 
 import static com.tencent.cloud.tuikit.engine.common.TUICommonDefine.Error.ROOM_ID_NOT_EXIST;
-import static com.tencent.cloud.tuikit.roomkit.model.ConferenceConstant.KEY_ERROR;
-import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.LOCAL_USER_ENTER_ROOM;
-import static com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter.RoomEngineEvent.UPDATE_CONFERENCE_LIST;
+import static com.tencent.cloud.tuikit.roomkit.manager.constant.ConferenceConstant.KEY_ERROR;
+import static com.tencent.cloud.tuikit.roomkit.manager.eventcenter.ConferenceEventCenter.RoomEngineEvent.LOCAL_USER_ENTER_ROOM;
+import static com.tencent.cloud.tuikit.roomkit.manager.eventcenter.ConferenceEventCenter.RoomEngineEvent.UPDATE_CONFERENCE_LIST;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -17,9 +17,9 @@ import androidx.fragment.app.Fragment;
 
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.roomkit.model.ConferenceEventCenter;
-import com.tencent.cloud.tuikit.roomkit.model.controller.ScheduleController;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.ConferenceList.ScheduledConferenceListView;
+import com.tencent.cloud.tuikit.roomkit.manager.eventcenter.ConferenceEventCenter;
+import com.tencent.cloud.tuikit.roomkit.manager.ScheduleController;
+import com.tencent.cloud.tuikit.roomkit.view.schedule.conferencelist.ScheduledConferenceListView;
 
 import java.util.Map;
 

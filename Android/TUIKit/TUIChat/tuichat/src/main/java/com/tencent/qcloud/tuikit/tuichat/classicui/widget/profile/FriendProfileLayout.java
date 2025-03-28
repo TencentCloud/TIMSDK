@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class FriendProfileLayout extends LinearLayout {
-    private static final String TAG = FriendProfileLayout.class.getSimpleName();
+    private static final String TAG = "FriendProfileLayout";
 
     private TitleBarLayout mTitleBar;
     private ImageView mHeadImageView;
@@ -117,19 +117,19 @@ public class FriendProfileLayout extends LinearLayout {
             @Override
             public void onBlackListCheckResult(boolean isInBlackList) {
                 mAddBlackView.setChecked(isInBlackList);
-                if (FriendConfig.isShowBlock()) {
-                    mAddBlackView.setVisibility(VISIBLE);
+                if (!FriendConfig.isShowBlock()) {
+                    mAddBlackView.setVisibility(GONE);
                 }
-                if (isInBlackList && FriendConfig.isShowAlias()) {
-                    mRemarkView.setVisibility(VISIBLE);
+                if (!FriendConfig.isShowAlias()) {
+                    mRemarkView.setVisibility(GONE);
                 }
             }
 
             @Override
             public void onFriendCheckResult(boolean isFriend) {
                 if (isFriend) {
-                    if (FriendConfig.isShowDelete()) {
-                        deleteFriendBtn.setVisibility(VISIBLE);
+                    if (!FriendConfig.isShowDelete()) {
+                        deleteFriendBtn.setVisibility(GONE);
                     }
                     if (FriendConfig.isShowAlias()) {
                         mRemarkView.setVisibility(VISIBLE);
@@ -137,6 +137,7 @@ public class FriendProfileLayout extends LinearLayout {
                     friendSettingsArea.setVisibility(VISIBLE);
                     addFriendBtn.setVisibility(GONE);
                 } else {
+                    deleteFriendBtn.setVisibility(GONE);
                     friendSettingsArea.setVisibility(GONE);
                     if (FriendConfig.isShowAddFriend()) {
                         addFriendBtn.setVisibility(VISIBLE);
@@ -161,8 +162,8 @@ public class FriendProfileLayout extends LinearLayout {
             @Override
             public void onMessageHasNotificationCheckResult(boolean hasNotification) {
                 mMessageOptionView.setChecked(hasNotification);
-                if (FriendConfig.isShowMuteAndPin()) {
-                    mMessageOptionView.setVisibility(VISIBLE);
+                if (!FriendConfig.isShowMuteAndPin()) {
+                    mMessageOptionView.setVisibility(GONE);
                 }
             }
         });

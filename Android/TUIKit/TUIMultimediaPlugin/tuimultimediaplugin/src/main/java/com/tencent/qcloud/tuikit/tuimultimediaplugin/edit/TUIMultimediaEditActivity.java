@@ -18,19 +18,22 @@ public class TUIMultimediaEditActivity extends TUIMultimediaFullScreen {
         LiteavLog.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.multimedia_plugin_edit_activity);
-        startUpVideoEdit();
+        startUpMediaEdit();
     }
 
-    private void startUpVideoEdit() {
+    private void startUpMediaEdit() {
         Fragment fragment = null;
         Bundle bundle = getIntent().getExtras();
+        if (bundle == null) {
+            return;
+        }
 
-        TXVideoInfo videoInfo = TUIMultimediaEditorCore
+        TXVideoInfo videoInfo = TUIMultimediaVideoEditorCore
                 .getVideoFileInfo(this, bundle.getString(TUIMultimediaConstants.PARAM_NAME_EDIT_FILE_PATH));
 
-        if (TUIMultimediaEditorCore.isValidVideo(videoInfo)) {
+        if (TUIMultimediaVideoEditorCore.isValidVideo(videoInfo)) {
             fragment = new TUIMultimediaVideoEditFragment(this);
-            bundle.putFloat(TUIMultimediaConstants.PARAM_NAME_EDIT_FILE_RATIO, TUIMultimediaEditorCore.getVideoAspect(videoInfo));
+            bundle.putFloat(TUIMultimediaConstants.PARAM_NAME_EDIT_FILE_RATIO, TUIMultimediaVideoEditorCore.getVideoAspect(videoInfo));
         }
 
         if (fragment == null) {

@@ -75,6 +75,8 @@ public final class TUIConstants {
         public static final String EVENT_IMSDK_INIT_STATE_CHANGED = "eventIMSDKInitStateChanged";
         // Init
         public static final String EVENT_SUB_KEY_START_INIT = "eventSubKeyStartInit";
+        // Init success
+        public static final String EVENT_SUB_KEY_INIT_SUCCESS = "eventSubKeyInitSuccess";
         // Uint
         public static final String EVENT_SUB_KEY_START_UNINIT = "eventSubKeyStartUnInit";
         // Login success
@@ -594,7 +596,8 @@ public final class TUIConstants {
         public static final String METHOD_START_CALL = "startCall";
 
         public static final String CUSTOM_MESSAGE_BUSINESS_ID = "av_call";
-        public static final Double CALL_TIMEOUT_BUSINESS_ID = 1.0;
+        public static final String V3_CALL_BUSINESS_ID        = "rtc_call";
+        public static final Double CALL_TIMEOUT_BUSINESS_ID   = 1.0;
 
         public static final String CALL_ID = "callId";
         public static final String SENDER = "sender";

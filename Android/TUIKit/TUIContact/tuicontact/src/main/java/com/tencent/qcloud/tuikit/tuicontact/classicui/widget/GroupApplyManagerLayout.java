@@ -89,10 +89,6 @@ public class GroupApplyManagerLayout extends LinearLayout implements IGroupApply
         });
     }
 
-    public TitleBarLayout getTitleBar() {
-        return mTitleBar;
-    }
-
     public void updateItemData(GroupApplyInfo info) {
         mAdapter.updateItemData(info);
     }

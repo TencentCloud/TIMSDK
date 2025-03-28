@@ -365,11 +365,11 @@ public class ProfileMinamalistLayout extends FrameLayout implements View.OnClick
     }
 
     private void refreshFragmentUI() {
-        ConversationEventListener conversationEventListener = TUIConversationService.getInstance().getConversationEventListener();
-        if (conversationEventListener != null) {
-            conversationEventListener.refreshUserStatusFragmentUI();
-        } else {
-            DemoLog.e(TAG, "refreshFragmentUI conversationEventListener is null");
+        List<ConversationEventListener> conversationEventListenerList = TUIConversationService.getInstance().getConversationEventListenerList();
+        for (ConversationEventListener conversationEventListener : conversationEventListenerList) {
+            if (conversationEventListener != null) {
+                conversationEventListener.refreshUserStatusFragmentUI();
+            }
         }
 
         List<ContactEventListener> contactEventListenerList = TUIContactService.getInstance().getContactEventListenerList();

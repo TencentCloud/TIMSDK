@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="iconSize" format="dimension" />
-    <attr name="iconMargin" format="dimension" />
-    <attr name="iconSrc" format="reference" />
-    <attr name="iconLeft" format="reference" />
-    <attr name="iconRight" format="reference" />
-    <attr name="duration_max" format="integer" />
+    <attr name="chat_camera_icon_size" format="dimension" />
+    <attr name="chat_camera_icon_margin" format="dimension" />
+    <attr name="chat_camera_icon_src" format="reference" />
+    <attr name="chat_camera_icon_left" format="reference" />
+    <attr name="chat_camera_icon_right" format="reference" />
+    <attr name="chat_camera_duration_max" format="integer" />
 
-    <declare-styleable name="CameraView">
-        <attr name="iconSize" />
-        <attr name="iconMargin" />
-        <attr name="iconSrc" />
-        <attr name="iconLeft" />
-        <attr name="iconRight" />
-        <attr name="duration_max" />
+    <declare-styleable name="ChatCameraView">
+        <attr name="chat_camera_icon_size" />
+        <attr name="chat_camera_icon_margin" />
+        <attr name="chat_camera_icon_src" />
+        <attr name="chat_camera_icon_left" />
+        <attr name="chat_camera_icon_right" />
+        <attr name="chat_camera_duration_max" />
     </declare-styleable>
 
 </resources>

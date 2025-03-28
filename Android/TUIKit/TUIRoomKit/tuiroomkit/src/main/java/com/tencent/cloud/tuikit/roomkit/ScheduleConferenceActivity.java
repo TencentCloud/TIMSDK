@@ -4,7 +4,8 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.view.ScheduleConferenceView;
+import com.tencent.cloud.tuikit.roomkit.view.schedule.scheduleinfo.ScheduleConferenceView;
+
 
 public class ScheduleConferenceActivity extends AppCompatActivity {
     @Override

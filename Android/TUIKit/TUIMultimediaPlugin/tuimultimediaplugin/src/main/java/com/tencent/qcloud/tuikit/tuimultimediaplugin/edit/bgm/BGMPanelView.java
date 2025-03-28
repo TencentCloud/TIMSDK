@@ -8,6 +8,7 @@ import android.graphics.drawable.StateListDrawable;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,9 +23,8 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.tencent.liteav.base.util.LiteavLog;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.R;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaIConfig;
-import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaResourceUtils;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaData;
-import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.TUIMultimediaEditorCore;
+import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaResourceUtils;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.bgm.data.BGMInfo;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.bgm.data.BGMInfo.ItemPosition;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.bgm.data.BGMItem;
@@ -36,13 +36,17 @@ public class BGMPanelView extends RelativeLayout {
     private final String TAG = BGMPanelView.class.getSimpleName() + "_" + hashCode();
     private final Context mContext;
     private final BGMInfo mBGMInfo;
-    private final TUIMultimediaEditorCore mEditorCore;
     private final BGMManager mBGMManager;
     private final TUIMultimediaData<Boolean> mTuiDataBGMEnable = new TUIMultimediaData<>(null);
     private final TUIMultimediaData<ItemPosition> mTuiDataSelectedPosition = new TUIMultimediaData<>(null);
 
     private TabLayout mBGMTypeTabLayout;
     private BGMTypeAdapter mBGMTypeAdapter;
+    private CheckBox mBGMEnableCheckBox;
+    private ItemPosition mLastSelectedItemPosition;
+    private BGMEnableListener mBgmEnableListener;
+    private BGMEditListener mBGMEditListener;
+
     private final OnTabSelectedListener onTabSelectedListener = new OnTabSelectedListener() {
         @Override
         public void onTabSelected(Tab tab) {
@@ -61,14 +65,10 @@ public class BGMPanelView extends RelativeLayout {
         public void onTabReselected(Tab tab) {
         }
     };
-    private CheckBox mBGMEnableCheckBox;
-    private ItemPosition mLastSelectedItemPosition;
-    private BGMEnableListener mBgmEnableListener;
 
-    public BGMPanelView(Context context, TUIMultimediaEditorCore editorCore, BGMManager bgmManager) {
+    public BGMPanelView(Context context, BGMManager bgmManager) {
         super(context);
         mContext = context;
-        mEditorCore = editorCore;
         mBGMManager = bgmManager;
         mBGMInfo = mBGMManager.getBGMInfo();
     }
@@ -88,12 +88,12 @@ public class BGMPanelView extends RelativeLayout {
         super.onDetachedFromWindow();
     }
 
-    public void selectBGM(BGMEnableListener enableListener) {
-        mBgmEnableListener = enableListener;
-        showSelectedBGMItemView();
+    public void setBGMEditListener(BGMEditListener bgmEditListener) {
+        mBGMEditListener = bgmEditListener;
     }
 
-    private void showSelectedBGMItemView() {
+    public void showBGMPanel() {
+        setVisibility(View.VISIBLE);
         ItemPosition itemPosition = mTuiDataSelectedPosition.get();
         if (itemPosition == null) {
             return;
@@ -121,29 +121,38 @@ public class BGMPanelView extends RelativeLayout {
     private void intBGMEnableView() {
         mBGMEnableCheckBox = findViewById(R.id.bgm_enable);
         mBGMEnableCheckBox.setButtonDrawable(getCheckBoxButtonDrawable());
+        mBGMEnableCheckBox.setEnabled(false);
         mBGMEnableCheckBox.setChecked(false);
         mBGMEnableCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            mEditorCore.setBGMVolume(isChecked ? 1.0f : 0f);
+            if (mBGMEditListener != null) {
+                mBGMEditListener.onMuteBGM(!isChecked);
+            }
             mTuiDataBGMEnable.set(isChecked);
         });
 
         CheckBox sourceAudioEnableCheckBox = findViewById(R.id.source_sound_enable);
         sourceAudioEnableCheckBox.setOnCheckedChangeListener(
-                (buttonView, isChecked) -> mEditorCore.muteSourceAudio(!isChecked));
+                (buttonView, isChecked) -> {
+                    if (mBGMEditListener != null) {
+                        mBGMEditListener.onMuteSourceAudio(!isChecked);
+                    }
+                });
         sourceAudioEnableCheckBox.setButtonDrawable(getCheckBoxButtonDrawable());
     }
 
     private Drawable getCheckBoxButtonDrawable() {
         StateListDrawable stateListDrawable = new StateListDrawable();
 
-        Drawable selectedDrawable = ContextCompat.getDrawable(mContext, R.drawable.multimedia_plugin_edit_bgm_checkbox_selected);
+        Drawable selectedDrawable = ContextCompat
+                .getDrawable(mContext, R.drawable.multimedia_plugin_edit_bgm_checkbox_selected);
         DrawableCompat.setTint(selectedDrawable, TUIMultimediaIConfig.getInstance().getThemeColor());
 
-        Drawable unSelectedDrawable = ContextCompat.getDrawable(mContext, R.drawable.multimedia_plugin_edit_bgm_checkbox_unselected);
+        Drawable unSelectedDrawable = ContextCompat
+                .getDrawable(mContext, R.drawable.multimedia_plugin_edit_bgm_checkbox_unselected);
         DrawableCompat.setTint(unSelectedDrawable, TUIMultimediaIConfig.getInstance().getThemeColor());
 
-        stateListDrawable.addState(new int[] { android.R.attr.state_checked }, selectedDrawable);
-        stateListDrawable.addState(new int[] { -android.R.attr.state_checked }, unSelectedDrawable);
+        stateListDrawable.addState(new int[]{android.R.attr.state_checked}, selectedDrawable);
+        stateListDrawable.addState(new int[]{-android.R.attr.state_checked}, unSelectedDrawable);
         return stateListDrawable;
     }
 
@@ -173,9 +182,11 @@ public class BGMPanelView extends RelativeLayout {
         customTextView.setText(text);
         customTextView.setMaxLines(1);
         customTextView.setTextColor(
-                TUIMultimediaResourceUtils.getResources().getColor(R.color.multimedia_plugin_bgm_type_text_color_normal));
+                TUIMultimediaResourceUtils.getResources()
+                        .getColor(R.color.multimedia_plugin_bgm_type_text_color_normal));
 
-        float textSize = TUIMultimediaResourceUtils.getResources().getDimension(R.dimen.multimedia_plugin_common_tab_text_size);
+        float textSize = TUIMultimediaResourceUtils.getResources()
+                .getDimension(R.dimen.multimedia_plugin_common_tab_text_size);
         customTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
 
         String fontName = TUIMultimediaResourceUtils.getString(R.string.multimedia_plugin_common_font);
@@ -218,17 +229,19 @@ public class BGMPanelView extends RelativeLayout {
         if (bgmItem == null) {
             return;
         }
-
+        mBGMEnableCheckBox.setEnabled(true);
         TUIMultimediaData<String> tuiDataBGMFilePath = new TUIMultimediaData<>("");
-        tuiDataBGMFilePath.observe(mEditorCore::setBGMPath);
+        tuiDataBGMFilePath.observe(path -> {
+            if (mBGMEditListener != null) {
+                mBGMEditListener.onAddBGM(path);
+            }
+        });
         bgmItem.getBGMFilePath(tuiDataBGMFilePath);
 
         long bgmStatTime = bgmItem.startTime > 0 ? bgmItem.startTime : 0;
-
-        if (bgmStatTime < bgmItem.endTime) {
-            mEditorCore.setBGMStartTime(bgmStatTime, bgmItem.endTime);
-        } else {
-            mEditorCore.setBGMStartTime(bgmStatTime, Integer.MAX_VALUE);
+        long bgmEndTime = bgmItem.endTime > bgmStatTime ? bgmItem.endTime : Integer.MAX_VALUE;
+        if (mBGMEditListener != null) {
+            mBGMEditListener.onCutBGM(bgmStatTime, bgmEndTime);
         }
     }
 

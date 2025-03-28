@@ -42,6 +42,7 @@ public class TUIMultimediaRecordCore {
     private final TXUGCRecord mRecordSDK;
     private final RecordInfo mRecordInfo;
 
+    private TXBeautyManager mBeautyManager;
     private Bitmap mFilterBitmap;
     private VideoQuality mVideoQuality = VideoQuality.LOW;
     private Boolean mIsNeedEdit = true;
@@ -100,6 +101,7 @@ public class TUIMultimediaRecordCore {
         mRecordSDK.release();
         mRecordInfo.tuiDataRecordStatus.set(RecordStatus.IDLE);
         stopProcessTimer();
+        mBeautyManager = null;
     }
 
     public void startCameraPreview(TXCloudVideoView videoView) {
@@ -209,7 +211,7 @@ public class TUIMultimediaRecordCore {
 
     public void setBeautyStyleAndLevel(int style, float level) {
         LiteavLog.i(TAG, "set beauty style:" + style + " level:" + level);
-        TXBeautyManager beautyManager = mRecordSDK.getBeautyManager();
+        TXBeautyManager beautyManager = getBeautyManager();
         if (beautyManager == null) {
             return;
         }
@@ -217,14 +219,13 @@ public class TUIMultimediaRecordCore {
         if (style >= 3 || style < 0) {
             return;
         }
-
-        beautyManager.setBeautyLevel(level);
         beautyManager.setBeautyStyle(style);
+        beautyManager.setBeautyLevel(level);
     }
 
     public void setWhitenessLevel(float whitenessLevel) {
         LiteavLog.i(TAG, "set whiteness level:" + whitenessLevel);
-        TXBeautyManager beautyManager = mRecordSDK.getBeautyManager();
+        TXBeautyManager beautyManager = getBeautyManager();
         if (beautyManager != null) {
             beautyManager.setWhitenessLevel(whitenessLevel);
         }
@@ -232,7 +233,7 @@ public class TUIMultimediaRecordCore {
 
     public void setRuddyLevel(float ruddyLevel) {
         LiteavLog.i(TAG, "set ruddy level:" + ruddyLevel);
-        TXBeautyManager beautyManager = mRecordSDK.getBeautyManager();
+        TXBeautyManager beautyManager = getBeautyManager();
         if (beautyManager != null) {
             beautyManager.setRuddyLevel(ruddyLevel);
         }
@@ -240,7 +241,7 @@ public class TUIMultimediaRecordCore {
 
     public void setFilterAndStrength(Bitmap bitmap, int strength) {
         LiteavLog.i(TAG, "set filter bitmap:" + bitmap + " strength:" + strength);
-        TXBeautyManager beautyManager = mRecordSDK.getBeautyManager();
+        TXBeautyManager beautyManager = getBeautyManager();
         if (beautyManager == null) {
             return;
         }
@@ -337,5 +338,21 @@ public class TUIMultimediaRecordCore {
             mRecordProcessTimer.cancel();
             mRecordProcessTimer = null;
         }
+    }
+
+    private TXBeautyManager getBeautyManager() {
+        if (mBeautyManager != null) {
+            return mBeautyManager;
+        }
+
+        if (mRecordSDK == null) {
+            return null;
+        }
+
+        mBeautyManager = mRecordSDK.getBeautyManager();
+        if (mBeautyManager != null) {
+            mBeautyManager.setBeautyStyle(TXBeautyManager.TXBeautyStyleSmooth);
+        }
+        return mBeautyManager;
     }
 }

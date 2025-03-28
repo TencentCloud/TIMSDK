@@ -153,7 +153,9 @@ public class CallModel implements Cloneable, Serializable {
             businessIdForTimeout = (Double) businessIdObj;
         }
 
-        if (!TextUtils.equals(businessId, TUIConstants.TUICalling.CUSTOM_MESSAGE_BUSINESS_ID)
+        boolean isV2CallBusinessId = TextUtils.equals(businessId, TUIConstants.TUICalling.CUSTOM_MESSAGE_BUSINESS_ID);
+        boolean isV3CallBusinessId = TextUtils.equals(businessId, TUIConstants.TUICalling.V3_CALL_BUSINESS_ID);
+        if (!isV2CallBusinessId && !isV3CallBusinessId
             && Math.abs(businessIdForTimeout - TUIConstants.TUICalling.CALL_TIMEOUT_BUSINESS_ID) >= 0.000001) {
             return null;
         }
@@ -458,7 +460,11 @@ public class CallModel implements Cloneable, Serializable {
     private int parseDuration() {
         if (protocolType == CALL_PROTOCOL_TYPE_HANGUP) {
             // Hang up
-            return (int) Double.parseDouble(String.valueOf(jsonData.get("call_end")));
+            Object duration = jsonData.get("call_end");
+            if (duration == null) {
+                return 0;
+            }
+            return (int) Double.parseDouble(String.valueOf(duration));
         }
         return 0;
     }
@@ -531,7 +537,11 @@ public class CallModel implements Cloneable, Serializable {
                         mutableContent.delete(mutableContent.length() - 1, mutableContent.length());
                     }
                 }
-                mutableContent.append(context.getString(R.string.chat_group_call_no_answer));
+                if (protocolType == CALL_PROTOCOL_TYPE_LINE_BUSY) {
+                    mutableContent.append(context.getString(R.string.chat_call_line_busy_callee));
+                } else {
+                    mutableContent.append(context.getString(R.string.chat_group_call_no_answer));
+                }
                 display = mutableContent.toString();
             }
             // Group compatiable

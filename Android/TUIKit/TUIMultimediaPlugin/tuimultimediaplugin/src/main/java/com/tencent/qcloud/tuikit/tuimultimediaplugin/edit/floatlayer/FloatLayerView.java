@@ -18,16 +18,18 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.tencent.liteav.base.util.LiteavLog;
+import com.tencent.liteav.base.util.Size;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.R;
+import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaData;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaGraphComputerUtils;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaResourceUtils;
-import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaData;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.TUIMultimediaPasterInfo.PasterType;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class FloatLayerView extends View {
+    private final String TAG = FloatLayerView.class.getSimpleName() + "_" + hashCode();
 
     private static final int LEFT_TOP = 0;
     private static final int RIGHT_TOP = 1;
@@ -38,14 +40,14 @@ public class FloatLayerView extends View {
     private static final float MIN_SCALE = 0.02f;
     private static final float DEFAULT_SCALE = 1.0f;
     private static final float DEFAULT_DEGREE = 0;
-    private static final int DEFAULT_FRAME_PADDING = 10;
+    private static final int DEFAULT_FRAME_PADDING = 3;
     private static final int DEFAULT_FRAME_WIDTH = 1;
     private static final int DEFAULT_FRAME_COLOR = Color.WHITE;
     private static final int DEFAULT_DELETE_DRAWABLE_ID = R.drawable.multimedia_plugin_edit_floatlayer_delete;
     private static final int DEFAULT_EDIT_DRAWABLE_ID = R.drawable.multimedia_plugin_edit_floatlayer_edit;
     private static final int DEFAULT_ROTATION_DRAWABLE_ID = R.drawable.multimedia_plugin_edit_floatlayer_rotation;
     private static final int DRAWABLE_SIZE_DP = 25;
-    private final String TAG = FloatLayerView.class.getSimpleName() + "_" + hashCode();
+
     private final PointF mCenterPoint = new PointF();
     private final PointF mMoveSize = new PointF();
     private final Matrix mMatrix = new Matrix();
@@ -61,7 +63,7 @@ public class FloatLayerView extends View {
     private boolean mShowDelete = true;
     private boolean mShowEdit = true;
     private PasterType mPasterType;
-    private boolean isMeasured;
+    private boolean isMeasured = false;
     private Bitmap mBitmap;
     private int mViewWidth, mViewHeight;
     private float mDegree = DEFAULT_DEGREE;
@@ -80,17 +82,25 @@ public class FloatLayerView extends View {
     private Drawable mRotateDrawable;
     private Paint mPaint;
 
-    private int framePadding = DEFAULT_FRAME_PADDING;
-    private int frameColor = DEFAULT_FRAME_COLOR;
-    private int frameWidth = DEFAULT_FRAME_WIDTH;
-    private int offsetX;
-    private int offsetY;
+    private int mFramePadding = DEFAULT_FRAME_PADDING;
+    private int mFrameColor = DEFAULT_FRAME_COLOR;
+    private int mFrameWidth = DEFAULT_FRAME_WIDTH;
+    private int mOffsetX;
+    private int mOffsetY;
     private int mImageLeft;
     private int mImageTop;
     private int mImageWidth;
     private int mOperationIconSize = DRAWABLE_SIZE_DP;
     private Zoom touchDownZoom = Zoom.IMAGE_ZOOM;
     private boolean mCanTouch = true;
+
+    private Size mOriginParentSize;
+    private Size mLastParentPosition;
+
+    float mViewScaleX = 1.0f;
+    float mViewScaleY = 1.0f;
+
+    int mRotation = 0;
 
     public FloatLayerView(Context context) {
         super(context);
@@ -167,15 +177,15 @@ public class FloatLayerView extends View {
     }
 
     public void setPadding(int padding) {
-        framePadding = padding;
+        mFramePadding = padding;
     }
 
     public void setBorderWidth(int borderWidth) {
-        frameWidth = borderWidth;
+        mFrameWidth = borderWidth;
     }
 
     public void setBorderColor(int color) {
-        frameColor = getResources().getColor(color);
+        mFrameColor = getResources().getColor(color);
     }
 
     public void setEditIconResource(int resId) {
@@ -190,12 +200,12 @@ public class FloatLayerView extends View {
         mOperationIconSize = TUIMultimediaResourceUtils.dip2px(getContext(), DRAWABLE_SIZE_DP);
 
         DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
-        framePadding = (int) TypedValue.applyDimension(
+        mFramePadding = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, DEFAULT_FRAME_PADDING, metrics);
-        frameWidth = (int) TypedValue.applyDimension(
+        mFrameWidth = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, DEFAULT_FRAME_WIDTH, metrics);
 
-        frameColor = DEFAULT_FRAME_COLOR;
+        mFrameColor = DEFAULT_FRAME_COLOR;
         mScale = DEFAULT_SCALE;
         mDegree = DEFAULT_DEGREE;
 
@@ -205,10 +215,34 @@ public class FloatLayerView extends View {
 
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
-        mPaint.setColor(frameColor);
-        mPaint.setStrokeWidth(frameWidth);
+        mPaint.setColor(mFrameColor);
+        mPaint.setStrokeWidth(mFrameWidth);
         mPaint.setStyle(Paint.Style.STROKE);
 
+        transformDraw();
+    }
+
+    public void onParentSizeChange(Size parentSize) {
+        if (mOriginParentSize != null) {
+            if (mOriginParentSize.getWidth() != 0) {
+                mViewScaleX = parentSize.width * 1.0f / mOriginParentSize.getWidth();
+            }
+
+            if (mOriginParentSize.getHeight() != 0) {
+                mViewScaleY = parentSize.height * 1.0f / mOriginParentSize.getHeight();
+            }
+        }
+
+        float mViewScaleAddX = 1.0f;
+        float mViewScaleAddY = 1.0f;
+        if (mLastParentPosition != null) {
+            mViewScaleAddX = parentSize.width * 1.0f / mLastParentPosition.width;
+            mViewScaleAddY = parentSize.height * 1.0f / mLastParentPosition.height;
+        }
+        mLastParentPosition = new Size(parentSize.width, parentSize.height);
+
+        mCenterPoint.x = mCenterPoint.x * mViewScaleAddX;
+        mCenterPoint.y = mCenterPoint.y * mViewScaleAddY;
         transformDraw();
     }
 
@@ -216,11 +250,17 @@ public class FloatLayerView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         if (!isMeasured) {
-            ViewGroup mViewGroup = (ViewGroup) getParent();
-            if (null != mViewGroup) {
-                int parentWidth = mViewGroup.getWidth();
-                int parentHeight = mViewGroup.getHeight();
+            ViewGroup viewGroup = (ViewGroup) getParent();
+            if (null != viewGroup) {
+                int parentWidth = viewGroup.getWidth();
+                int parentHeight = viewGroup.getHeight();
                 mCenterPoint.set(parentWidth * 1.0f / 2, parentHeight * 1.0f / 2);
+
+                if (mOriginParentSize == null) {
+                    mOriginParentSize = new Size(parentWidth, parentHeight);
+                    mLastParentPosition = mOriginParentSize;
+                    LiteavLog.i(TAG, "viewGroup = " + viewGroup);
+                }
             }
             isMeasured = true;
             adjustLayout();
@@ -255,8 +295,8 @@ public class FloatLayerView extends View {
 
         int actualWidth = mViewWidth + mOperationIconSize;
         int actualHeight = mViewHeight + mOperationIconSize;
-        int newPaddingLeft = (int) (mCenterPoint.x - actualWidth / 2);
-        int newPaddingTop = (int) (mCenterPoint.y - actualHeight / 2);
+        int newPaddingLeft = (int) (mCenterPoint.x - actualWidth / 2.0);
+        int newPaddingTop = (int) (mCenterPoint.y - actualHeight / 2.0);
 
         if (mViewPaddingLeft != newPaddingLeft || mViewPaddingTop != newPaddingTop) {
             mViewPaddingLeft = newPaddingLeft;
@@ -277,6 +317,7 @@ public class FloatLayerView extends View {
             return;
         }
 
+        transformDraw();
         canvas.drawBitmap(mBitmap, mMatrix, mPaint);
         if (mTuiDataStatus.get() == Status.STATUS_SELECTED) {
             drawOuterFrame(canvas);
@@ -354,9 +395,7 @@ public class FloatLayerView extends View {
                         mTuiDataStatus.set(Status.STATUS_DELETE);
                         break;
                     case IMAGE_ZOOM:
-                        LiteavLog.i(TAG, "ACTION_UP2 mStatus = " + mTuiDataStatus.get());
                         if (mTuiDataStatus.get() == Status.STATUS_INIT) {
-                            LiteavLog.i(TAG, "ACTION_UP3 set mStatus STATUS_SELECTED ");
                             mTuiDataStatus.set(Status.STATUS_SELECTED);
                             break;
                         }
@@ -388,10 +427,8 @@ public class FloatLayerView extends View {
         int halfBitmapWidth = mBitmap.getWidth() / 2;
         int halfBitmapHeight = mBitmap.getHeight() / 2;
 
-        float bitmapToCenterDistance =
-                (float) Math.sqrt(halfBitmapWidth * halfBitmapWidth
-                        + halfBitmapHeight * halfBitmapHeight);
-
+        float bitmapToCenterDistance = TUIMultimediaGraphComputerUtils.distance4PointF(new PointF(0, 0),
+                new PointF(halfBitmapWidth * mViewScaleX, halfBitmapHeight * mViewScaleY));
         float moveToCenterDistance = TUIMultimediaGraphComputerUtils.distance4PointF(mCenterPoint, mCurMovePointF);
         float scale = moveToCenterDistance / bitmapToCenterDistance;
 
@@ -447,15 +484,18 @@ public class FloatLayerView extends View {
         if (mBitmap == null) {
             return;
         }
-        int bitmapWidth = (int) (mBitmap.getWidth() * mScale);
-        int bitmapHeight = (int) (mBitmap.getHeight() * mScale);
+
+        int bitmapWidth = (int) (mBitmap.getWidth() * mScale * mViewScaleX);
+        int bitmapHeight = (int) (mBitmap.getHeight() * mScale * mViewScaleY);
+        int framePadding = (int) (mFramePadding * Math.max(mViewScaleX, mViewScaleY));
         computeRect(-framePadding, -framePadding, bitmapWidth + framePadding,
                 bitmapHeight + framePadding, mDegree);
 
-        mMatrix.setScale(mScale, mScale);
+        LiteavLog.i(TAG, "mScale = " + mScale + " mViewScaleX = " + mViewScaleX + " mViewScaleY= " + mViewScaleY);
+        mMatrix.setScale(mScale * mViewScaleX, mScale * mViewScaleY);
         mMatrix.postRotate(mDegree % 360, bitmapWidth * 1.0f / 2, bitmapHeight * 1.0f / 2);
         mMatrix.postTranslate(
-                offsetX + mOperationIconSize * 1.0f / 2, offsetY + mOperationIconSize * 1.0f / 2);
+                mOffsetX + mOperationIconSize * 1.0f / 2, mOffsetY + mOperationIconSize * 1.0f / 2);
 
         adjustLayout();
     }
@@ -484,21 +524,21 @@ public class FloatLayerView extends View {
         Point viewCenterPoint = new Point(
                 (maxCoordinateX + minCoordinateX) / 2, (maxCoordinateY + minCoordinateY) / 2);
 
-        offsetX = mViewWidth / 2 - viewCenterPoint.x;
-        offsetY = mViewHeight / 2 - viewCenterPoint.y;
+        mOffsetX = mViewWidth / 2 - viewCenterPoint.x;
+        mOffsetY = mViewHeight / 2 - viewCenterPoint.y;
 
         int halfDrawableWidth = mOperationIconSize / 2;
         int halfDrawableHeight = mOperationIconSize / 2;
 
-        mLTPoint.x += (offsetX + halfDrawableWidth);
-        mRTPoint.x += (offsetX + halfDrawableWidth);
-        mRBPoint.x += (offsetX + halfDrawableWidth);
-        mLBPoint.x += (offsetX + halfDrawableWidth);
+        mLTPoint.x += (mOffsetX + halfDrawableWidth);
+        mRTPoint.x += (mOffsetX + halfDrawableWidth);
+        mRBPoint.x += (mOffsetX + halfDrawableWidth);
+        mLBPoint.x += (mOffsetX + halfDrawableWidth);
 
-        mLTPoint.y += (offsetY + halfDrawableHeight);
-        mRTPoint.y += (offsetY + halfDrawableHeight);
-        mRBPoint.y += (offsetY + halfDrawableHeight);
-        mLBPoint.y += (offsetY + halfDrawableHeight);
+        mLTPoint.y += (mOffsetY + halfDrawableHeight);
+        mRTPoint.y += (mOffsetY + halfDrawableHeight);
+        mRBPoint.y += (mOffsetY + halfDrawableHeight);
+        mLBPoint.y += (mOffsetY + halfDrawableHeight);
 
         mRotatePoint = locatePoint(mControlLocation);
         mEditPoint = locatePoint(mEditLocation);
@@ -524,20 +564,20 @@ public class FloatLayerView extends View {
         PointF controlPointF = new PointF(mRotatePoint);
 
         float distanceToControl = TUIMultimediaGraphComputerUtils.distance4PointF(touchPoint, controlPointF);
-        if (distanceToControl < mOperationIconSize / 2) {
+        if (distanceToControl < mOperationIconSize / 2.0) {
             return Zoom.ROTATE_ZOOM;
         }
 
         if (mShowEdit) {
             float disToEdit = TUIMultimediaGraphComputerUtils.distance4PointF(touchPoint, new PointF(mEditPoint));
-            if (disToEdit < mOperationIconSize / 2) {
+            if (disToEdit < mOperationIconSize / 2.0) {
                 return Zoom.EDIT_ZOOM;
             }
         }
 
         if (mShowDelete) {
             float disToDelete = TUIMultimediaGraphComputerUtils.distance4PointF(touchPoint, new PointF(mDeletePoint));
-            if (disToDelete < mOperationIconSize / 2) {
+            if (disToDelete < mOperationIconSize / 2.0) {
                 return Zoom.DELETE_ZOOM;
             }
         }

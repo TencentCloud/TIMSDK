@@ -127,6 +127,7 @@ public class TUIMultimediaRecordFragment extends Fragment {
     }
 
     private void editRecordFile(RecordResult recordResult) {
+        LiteavLog.i(TAG,"editRecordFile file path: " + recordResult.path);
         Fragment fragment;
         if (recordResult.type == TUIMultimediaConstants.RECORD_TYPE_PHOTO) {
             fragment = new TUIMultimediaPictureEditFragment(mContext);

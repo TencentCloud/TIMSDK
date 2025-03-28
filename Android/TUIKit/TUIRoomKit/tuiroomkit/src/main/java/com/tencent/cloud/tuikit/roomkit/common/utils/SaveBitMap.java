@@ -8,7 +8,7 @@ import android.os.Looper;
 import android.provider.MediaStore;
 
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.common.utils.RoomToast;
+import com.tencent.cloud.tuikit.roomkit.view.basic.RoomToast;
 
 public class SaveBitMap {
 

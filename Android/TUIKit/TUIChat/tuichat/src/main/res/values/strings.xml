@@ -223,9 +223,9 @@
     <string name="chat_call_cancel_caller">Canceled</string>
     <string name="chat_call_cancel_callee">Call canceled by caller</string>
     <string name="chat_call_timeout_caller">Call wasn\'t answered</string>
-    <string name="chat_call_timeout_callee">Call canceled by caller</string>
+    <string name="chat_call_timeout_callee">Call timeout</string>
     <string name="chat_call_line_busy_caller">Line busy</string>
-    <string name="chat_call_line_busy_callee">Call canceled by caller</string>
+    <string name="chat_call_line_busy_callee">Line busy</string>
     <string name="chat_group_call_send">initiated a group call</string>
     <string name="chat_group_call_end">End group call</string>
     <string name="chat_group_call_no_answer">no answer</string>

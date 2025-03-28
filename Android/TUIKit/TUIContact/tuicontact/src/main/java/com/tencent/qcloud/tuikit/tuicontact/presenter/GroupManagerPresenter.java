@@ -45,8 +45,4 @@ public class GroupManagerPresenter {
     public void cancelMuteGroupMember(String groupId, String userId, IUIKitCallback<Void> callback) {
         provider.cancelMuteGroupMember(groupId, userId, callback);
     }
-
-    public void modifyGroupNotification(String groupId, String value, IUIKitCallback<Void> callback) {
-        provider.modifyGroupNotification(groupId, value, callback);
-    }
 }

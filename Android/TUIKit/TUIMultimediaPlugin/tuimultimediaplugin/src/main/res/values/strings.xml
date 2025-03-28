@@ -51,6 +51,7 @@
     <string name="multimedia_plugin_origin_audio">Audio</string>
     <string name="multimedia_plugin_send">Send</string>
     <string name="multimedia_plugin_done">Done</string>
+    <string name="multimedia_plugin_restore">Restore</string>
     <string name="multimedia_plugin_zero">0</string>
     <string name="multimedia_plugin_zero_time">00:00</string>
     <string name="multimedia_plugin_local">Local</string>

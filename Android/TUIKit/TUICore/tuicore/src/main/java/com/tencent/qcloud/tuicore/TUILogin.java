@@ -247,6 +247,10 @@ public class TUILogin {
         if (initSuccess) {
             this.userId = userId;
             this.userSig = userSig;
+
+            // Notify init success event
+            TUICore.notifyEvent(TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_INIT_SUCCESS, null);
+
             V2TIMManager.getInstance().callExperimentalAPI("getLoginAccountType", null,
                     new V2TIMValueCallback<Object>() {
                 @Override

@@ -14,17 +14,17 @@ import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.tencent.cloud.tuikit.roomkit.model.manager.ConferenceController;
-import com.tencent.cloud.tuikit.roomkit.view.component.BaseDialogFragment;
-import com.tencent.cloud.tuikit.roomkit.view.page.ConferenceMainFragment;
-import com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatWindow.VideoPlaying.RoomFloatViewService;
+import com.tencent.cloud.tuikit.roomkit.manager.ConferenceController;
+import com.tencent.cloud.tuikit.roomkit.view.basic.BaseDialogFragment;
+import com.tencent.cloud.tuikit.roomkit.view.main.ConferenceMainFragment;
+import com.tencent.cloud.tuikit.roomkit.view.main.floatwindow.videoplaying.RoomFloatViewService;
 import com.tencent.qcloud.tuicore.util.TUIBuild;
 
 import java.io.Serializable;
 
 public class ConferenceMainActivity extends AppCompatActivity {
-    private static final String TAG = "ConferenceMainAy";
-    private static final int DEBOUNCE_TIME_MS = 1000;
+    private static final String TAG              = "ConferenceMainAy";
+    private static final int    DEBOUNCE_TIME_MS = 1000;
 
     private final long mFirstStartTime = SystemClock.elapsedRealtime();
 
@@ -83,7 +83,7 @@ public class ConferenceMainActivity extends AppCompatActivity {
     }
 
     private boolean startConferenceIfNeeded(Intent intent, ConferenceMainFragment fragment) {
-        Serializable startSerializable =  intent.getSerializableExtra(ConferenceDefine.KEY_START_CONFERENCE_PARAMS);
+        Serializable startSerializable = intent.getSerializableExtra(ConferenceDefine.KEY_START_CONFERENCE_PARAMS);
         if (startSerializable == null) {
             return false;
         }
@@ -98,7 +98,7 @@ public class ConferenceMainActivity extends AppCompatActivity {
     }
 
     private boolean joinConferenceIfNeeded(Intent intent, ConferenceMainFragment fragment) {
-        Serializable joinSerializable =  intent.getSerializableExtra(ConferenceDefine.KEY_JOIN_CONFERENCE_PARAMS);
+        Serializable joinSerializable = intent.getSerializableExtra(ConferenceDefine.KEY_JOIN_CONFERENCE_PARAMS);
         if (joinSerializable == null) {
             return false;
         }
@@ -132,11 +132,11 @@ public class ConferenceMainActivity extends AppCompatActivity {
     }
 
     private boolean isConferenceParams(Intent intent) {
-        Serializable startSerializable =  intent.getSerializableExtra(ConferenceDefine.KEY_START_CONFERENCE_PARAMS);
+        Serializable startSerializable = intent.getSerializableExtra(ConferenceDefine.KEY_START_CONFERENCE_PARAMS);
         if (startSerializable instanceof ConferenceDefine.StartConferenceParams) {
             return true;
         }
-        Serializable joinSerializable =  intent.getSerializableExtra(ConferenceDefine.KEY_JOIN_CONFERENCE_PARAMS);
+        Serializable joinSerializable = intent.getSerializableExtra(ConferenceDefine.KEY_JOIN_CONFERENCE_PARAMS);
         return joinSerializable instanceof ConferenceDefine.JoinConferenceParams;
     }
 

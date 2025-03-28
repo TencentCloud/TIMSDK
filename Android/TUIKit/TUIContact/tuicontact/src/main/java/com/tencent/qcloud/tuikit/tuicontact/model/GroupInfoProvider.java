@@ -36,8 +36,6 @@ import java.util.List;
 public class GroupInfoProvider {
     private static final String TAG = GroupInfoProvider.class.getSimpleName();
 
-    private static final int PAGE = 50;
-
     public void loadGroupInfo(final String groupId, final IUIKitCallback<GroupInfo> callBack) {
         loadGroupInfo(groupId, V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_ALL, callBack);
     }
@@ -57,21 +55,6 @@ public class GroupInfoProvider {
                 if (callBack != null) {
                     callBack.onError(module, errCode, ErrorMessageConverter.convertIMError(errCode, errMsg));
                 }
-            }
-        });
-    }
-
-    public void deleteGroup(String groupId, final IUIKitCallback<Void> callBack) {
-        V2TIMManager.getInstance().dismissGroup(groupId, new V2TIMCallback() {
-            @Override
-            public void onError(int code, String desc) {
-                ContactUtils.callbackOnError(callBack, TAG, code, desc);
-                TUIContactLog.e(TAG, "deleteGroup failed, code: " + code + "|desc: " + ErrorMessageConverter.convertIMError(code, desc));
-            }
-
-            @Override
-            public void onSuccess() {
-                ContactUtils.callbackOnSuccess(callBack, null);
             }
         });
     }
@@ -141,97 +124,6 @@ public class GroupInfoProvider {
                 memberInfoList.addAll(members);
                 groupInfo.setNextSeq(v2TIMGroupMemberInfoResult.getNextSeq());
                 ContactUtils.callbackOnSuccess(callBack, groupInfo);
-            }
-        });
-    }
-
-    public void modifyGroupInfo(GroupInfo groupInfo, final Object value, final int type, final IUIKitCallback callBack) {
-        V2TIMGroupInfo v2TIMGroupInfo = new V2TIMGroupInfo();
-        v2TIMGroupInfo.setGroupID(groupInfo.getId());
-        if (type == TUIContactConstants.Group.MODIFY_GROUP_NAME) {
-            v2TIMGroupInfo.setGroupName(value.toString());
-        } else if (type == TUIContactConstants.Group.MODIFY_GROUP_NOTICE) {
-            v2TIMGroupInfo.setNotification(value.toString());
-        } else if (type == TUIContactConstants.Group.MODIFY_GROUP_JOIN_TYPE) {
-            v2TIMGroupInfo.setGroupAddOpt((Integer) value);
-        } else if (type == TUIContactConstants.Group.MODIFY_GROUP_INVITE_TYPE) {
-            v2TIMGroupInfo.setGroupApproveOpt((Integer) value);
-        }
-        V2TIMManager.getGroupManager().setGroupInfo(v2TIMGroupInfo, new V2TIMCallback() {
-            @Override
-            public void onError(int code, String desc) {
-                TUIContactLog.i(TAG,
-                    "modifyGroupInfo failed type| value| code| desc " + value + ":" + type + ":" + code + ":"
-                        + ErrorMessageConverter.convertIMError(code, desc));
-                ContactUtils.callbackOnError(callBack, TAG, code, desc);
-            }
-
-            @Override
-            public void onSuccess() {
-                if (type == TUIContactConstants.Group.MODIFY_GROUP_NAME) {
-                    groupInfo.setGroupName(value.toString());
-                } else if (type == TUIContactConstants.Group.MODIFY_GROUP_NOTICE) {
-                    groupInfo.setNotice(value.toString());
-                } else if (type == TUIContactConstants.Group.MODIFY_GROUP_JOIN_TYPE) {
-                    groupInfo.setJoinType((Integer) value);
-                } else if (type == TUIContactConstants.Group.MODIFY_GROUP_INVITE_TYPE) {
-                    groupInfo.setInviteType((Integer) value);
-                }
-                ContactUtils.callbackOnSuccess(callBack, value);
-            }
-        });
-    }
-
-    public void modifyMyGroupNickname(GroupInfo groupInfo, final String nickname, final IUIKitCallback callBack) {
-        if (groupInfo == null) {
-            ToastUtil.toastLongMessage("modifyMyGroupNickname fail: NO GROUP");
-            return;
-        }
-
-        V2TIMGroupMemberFullInfo v2TIMGroupMemberFullInfo = new V2TIMGroupMemberFullInfo();
-        v2TIMGroupMemberFullInfo.setUserID(V2TIMManager.getInstance().getLoginUser());
-        v2TIMGroupMemberFullInfo.setNameCard(nickname);
-        V2TIMManager.getGroupManager().setGroupMemberInfo(groupInfo.getId(), v2TIMGroupMemberFullInfo, new V2TIMCallback() {
-            @Override
-            public void onError(int code, String desc) {
-                callBack.onError(TAG, code, ErrorMessageConverter.convertIMError(code, desc));
-                ToastUtil.toastLongMessage("modifyMyGroupNickname fail: " + code + "=" + ErrorMessageConverter.convertIMError(code, desc));
-            }
-
-            @Override
-            public void onSuccess() {
-                callBack.onSuccess(null);
-            }
-        });
-    }
-
-    public void setTopConversation(String conversationId, boolean isSetTop, IUIKitCallback<Void> callBack) {
-        TUIContactLog.i(TAG, "setConversationTop id:" + conversationId + "|isTop:" + isSetTop);
-        V2TIMManager.getConversationManager().pinConversation(conversationId, isSetTop, new V2TIMCallback() {
-            @Override
-            public void onSuccess() {
-                ContactUtils.callbackOnSuccess(callBack, null);
-            }
-
-            @Override
-            public void onError(int code, String desc) {
-                TUIContactLog.e(TAG, "setConversationTop code:" + code + "|desc:" + ErrorMessageConverter.convertIMError(code, desc));
-                ContactUtils.callbackOnError(callBack, code, desc);
-            }
-        });
-    }
-
-    public void quitGroup(String groupId, final IUIKitCallback<Void> callBack) {
-        V2TIMManager.getInstance().quitGroup(groupId, new V2TIMCallback() {
-            @Override
-            public void onError(int code, String desc) {
-                TUIContactLog.e(TAG, "quitGroup failed, code: " + code + "|desc: " + ErrorMessageConverter.convertIMError(code, desc));
-                ContactUtils.callbackOnError(callBack, TAG, code, desc);
-            }
-
-            @Override
-            public void onSuccess() {
-                ContactUtils.callbackOnSuccess(callBack, null);
             }
         });
     }
@@ -374,67 +266,6 @@ public class GroupInfoProvider {
             @Override
             public void onSuccess() {
                 ContactUtils.callbackOnSuccess(callBack, null);
-            }
-        });
-    }
-
-    public void setGroupReceiveMessageOpt(String groupId, boolean isReceive, IUIKitCallback callBack) {
-        int option;
-        if (!isReceive) {
-            option = V2TIMMessage.V2TIM_RECEIVE_NOT_NOTIFY_MESSAGE;
-        } else {
-            option = V2TIMMessage.V2TIM_RECEIVE_MESSAGE;
-        }
-        V2TIMManager.getMessageManager().setGroupReceiveMessageOpt(groupId, option, new V2TIMCallback() {
-            @Override
-            public void onSuccess() {
-                ContactUtils.callbackOnSuccess(callBack, null);
-                TUIContactLog.d(TAG, "setReceiveMessageOpt onSuccess");
-            }
-
-            @Override
-            public void onError(int code, String desc) {
-                ContactUtils.callbackOnError(callBack, code, desc);
-                TUIContactLog.d(TAG, "setReceiveMessageOpt onError code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
-            }
-        });
-    }
-
-    public void setGroupFold(String groupID, boolean isFold, IUIKitCallback callback) {
-        TUIContactLog.i(TAG, "setGroupFold id:" + groupID + "|isTop:" + isFold);
-        String conversationID = "group_" + groupID;
-        List<String> conversationIDList = new ArrayList<>();
-        conversationIDList.add(conversationID);
-        V2TIMManager.getConversationManager().markConversation(
-            conversationIDList, V2TIMConversation.V2TIM_CONVERSATION_MARK_TYPE_FOLD, isFold, new V2TIMValueCallback<List<V2TIMConversationOperationResult>>() {
-                @Override
-                public void onSuccess(List<V2TIMConversationOperationResult> v2TIMConversationOperationResults) {
-                    ContactUtils.callbackOnSuccess(callback, null);
-                    TUIContactLog.d(TAG, "markConversation fold onSuccess");
-                }
-
-                @Override
-                public void onError(int code, String desc) {
-                    ContactUtils.callbackOnError(callback, code, desc);
-                    TUIContactLog.d(TAG, "markConversation fold onError code = " + code + ", desc = " + ErrorMessageConverter.convertIMError(code, desc));
-                }
-            });
-    }
-
-    public void modifyGroupFaceUrl(String groupId, String faceUrl, IUIKitCallback<Void> callback) {
-        V2TIMGroupInfo v2TIMGroupInfo = new V2TIMGroupInfo();
-        v2TIMGroupInfo.setGroupID(groupId);
-        v2TIMGroupInfo.setFaceUrl(faceUrl);
-        V2TIMManager.getGroupManager().setGroupInfo(v2TIMGroupInfo, new V2TIMCallback() {
-            @Override
-            public void onError(int code, String desc) {
-                TUIContactLog.e(TAG, "modify group icon failed, code:" + code + "|desc:" + ErrorMessageConverter.convertIMError(code, desc));
-                ContactUtils.callbackOnError(callback, code, desc);
-            }
-
-            @Override
-            public void onSuccess() {
-                ContactUtils.callbackOnSuccess(callback, null);
             }
         });
     }
@@ -635,38 +466,6 @@ public class GroupInfoProvider {
             @Override
             public void onError(int code, String desc) {
                 ContactUtils.callbackOnError(callback, code, desc);
-            }
-        });
-    }
-
-    public void transferGroupOwner(String groupId, String userId, IUIKitCallback<Void> callback) {
-        V2TIMManager.getGroupManager().transferGroupOwner(groupId, userId, new V2TIMCallback() {
-            @Override
-            public void onSuccess() {
-                ContactUtils.callbackOnSuccess(callback, null);
-            }
-
-            @Override
-            public void onError(int code, String desc) {
-                ContactUtils.callbackOnError(callback, code, desc);
-            }
-        });
-    }
-
-    public void modifyGroupNotification(String groupId, final String value, final IUIKitCallback callBack) {
-        V2TIMGroupInfo v2TIMGroupInfo = new V2TIMGroupInfo();
-        v2TIMGroupInfo.setGroupID(groupId);
-        v2TIMGroupInfo.setNotification(value);
-        V2TIMManager.getGroupManager().setGroupInfo(v2TIMGroupInfo, new V2TIMCallback() {
-            @Override
-            public void onError(int code, String desc) {
-                TUIContactLog.e(TAG, "modifyGroupNotification failed value| code| desc " + value + ":" + code + ":" + desc);
-                ContactUtils.callbackOnError(callBack, TAG, code, desc);
-            }
-
-            @Override
-            public void onSuccess() {
-                ContactUtils.callbackOnSuccess(callBack, null);
             }
         });
     }

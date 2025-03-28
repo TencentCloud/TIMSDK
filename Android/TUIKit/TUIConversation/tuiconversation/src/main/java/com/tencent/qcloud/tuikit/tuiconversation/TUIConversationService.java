@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuiconversation;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+
 import com.google.auto.service.AutoService;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMConversationListener;
@@ -28,6 +29,7 @@ import com.tencent.qcloud.tuikit.tuiconversation.commonutil.TUIConversationLog;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.ConversationEventListener;
 import com.tencent.qcloud.tuikit.tuiconversation.interfaces.ConversationGroupNotifyListener;
 import com.tencent.qcloud.tuikit.tuiconversation.presenter.ConversationPresenter;
+
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,7 +50,6 @@ public class TUIConversationService implements TUIInitializer, ITUIService, ITUI
 
     private boolean syncFinished = false;
 
-    private SoftReference<ConversationEventListener> conversationEventListener;
     private final List<SoftReference<ConversationEventListener>> conversationEventListenerList = new ArrayList<>();
     private SoftReference<ConversationGroupNotifyListener> conversationGroupNotifyListener;
     private int conversationAllGroupUnreadDiff = 0;
@@ -106,51 +107,56 @@ public class TUIConversationService implements TUIInitializer, ITUIService, ITUI
                 return result;
             }
             ConversationEventListener eventListener = getConversationEventListener();
-            if (eventListener == null) {
+            if (eventListener != null) {
                 int diff = (int) param.get(TUIConversationConstants.CONVERSATION_ALL_GROUP_UNREAD_DIFF);
-                conversationAllGroupUnreadDiff += diff;
+                int count = conversationAllGroupUnreadDiff + diff;
                 ConversationPresenter presenter = new ConversationPresenter();
-                presenter.updateUnreadTotalByDiff(conversationAllGroupUnreadDiff);
+                presenter.updateUnreadTotalByDiff(count);
             }
-        }
-
-        ConversationEventListener conversationEventListener = getInstance().getConversationEventListener();
-        if (conversationEventListener == null) {
-            TUIConversationLog.e(TAG, "execute " + method + " failed , conversationEvent listener is null");
-            return result;
-        }
-        if (TextUtils.equals(TUIConstants.TUIConversation.METHOD_IS_TOP_CONVERSATION, method)) {
-            String chatId = (String) param.get(TUIConstants.TUIConversation.CHAT_ID);
-            if (!TextUtils.isEmpty(chatId)) {
-                boolean isTop = conversationEventListener.isTopConversation(chatId);
-                result.putBoolean(TUIConstants.TUIConversation.IS_TOP, isTop);
+        } else if (TextUtils.equals(TUIConstants.TUIConversation.METHOD_IS_TOP_CONVERSATION, method)) {
+            ConversationEventListener conversationEventListener = getConversationEventListener();
+            if (conversationEventListener != null) {
+                String chatId = (String) param.get(TUIConstants.TUIConversation.CHAT_ID);
+                if (!TextUtils.isEmpty(chatId)) {
+                    boolean isTop = conversationEventListener.isTopConversation(chatId);
+                    result.putBoolean(TUIConstants.TUIConversation.IS_TOP, isTop);
+                }
             }
         } else if (TextUtils.equals(TUIConstants.TUIConversation.METHOD_SET_TOP_CONVERSATION, method)) {
-            String chatId = (String) param.get(TUIConstants.TUIConversation.CHAT_ID);
-            boolean isTop = (boolean) param.get(TUIConstants.TUIConversation.IS_SET_TOP);
-            if (!TextUtils.isEmpty(chatId)) {
-                conversationEventListener.setConversationTop(chatId, isTop, new IUIKitCallback<Void>() {
-                    @Override
-                    public void onSuccess(Void data) {}
+            ConversationEventListener conversationEventListener = getConversationEventListener();
+            if (conversationEventListener != null) {
+                String chatId = (String) param.get(TUIConstants.TUIConversation.CHAT_ID);
+                boolean isTop = (boolean) param.get(TUIConstants.TUIConversation.IS_SET_TOP);
+                if (!TextUtils.isEmpty(chatId)) {
+                    conversationEventListener.setConversationTop(chatId, isTop, new IUIKitCallback<Void>() {
+                        @Override
+                        public void onSuccess(Void data) {}
 
-                    @Override
-                    public void onError(String module, int errCode, String errMsg) {}
-                });
+                        @Override
+                        public void onError(String module, int errCode, String errMsg) {}
+                    });
+                }
             }
         } else if (TextUtils.equals(TUIConstants.TUIConversation.METHOD_GET_TOTAL_UNREAD_COUNT, method)) {
-            return conversationEventListener.getUnreadTotal();
+            ConversationEventListener conversationEventListener = getConversationEventListener();
+            if (conversationEventListener != null) {
+                return conversationEventListener.getUnreadTotal();
+            }
         } else if (TextUtils.equals(TUIConstants.TUIConversation.METHOD_UPDATE_TOTAL_UNREAD_COUNT, method)) {
-            HashMap<String, Object> unreadMap = new HashMap<>();
-            long totalUnread = conversationEventListener.getUnreadTotal();
-            unreadMap.put(TUIConstants.TUIConversation.TOTAL_UNREAD_COUNT, totalUnread);
-            TUICore.notifyEvent(TUIConstants.TUIConversation.EVENT_UNREAD, TUIConstants.TUIConversation.EVENT_SUB_KEY_UNREAD_CHANGED, unreadMap);
+            ConversationEventListener conversationEventListener = getConversationEventListener();
+            if (conversationEventListener != null) {
+                HashMap<String, Object> unreadMap = new HashMap<>();
+                long totalUnread = conversationEventListener.getUnreadTotal();
+                unreadMap.put(TUIConstants.TUIConversation.TOTAL_UNREAD_COUNT, totalUnread);
+                TUICore.notifyEvent(TUIConstants.TUIConversation.EVENT_UNREAD, TUIConstants.TUIConversation.EVENT_SUB_KEY_UNREAD_CHANGED, unreadMap);
+            }
         } else if (TextUtils.equals(TUIConstants.TUIConversation.METHOD_DELETE_CONVERSATION, method)) {
-            String conversationId = (String) param.get(TUIConstants.TUIConversation.CONVERSATION_ID);
-            conversationEventListener.clearFoldMarkAndDeleteConversation(conversationId);
-
             List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
             for (ConversationEventListener conversationEventObserver : conversationEventObserverList) {
-                conversationEventObserver.clearFoldMarkAndDeleteConversation(conversationId);
+                if (conversationEventObserver != null) {
+                    String conversationId = (String) param.get(TUIConstants.TUIConversation.CONVERSATION_ID);
+                    conversationEventObserver.clearFoldMarkAndDeleteConversation(conversationId);
+                }
             }
         }
         return result;
@@ -181,9 +187,11 @@ public class TUIConversationService implements TUIInitializer, ITUIService, ITUI
                 return;
             }
             String conversationID = (String) param.get(TUIConstants.TUIConversation.CONVERSATION_ID);
-            ConversationEventListener eventListener = getConversationEventListener();
-            if (eventListener != null) {
-                eventListener.onMessageSendForHideConversation(conversationID);
+            List<ConversationEventListener> conversationEventListenerList = getConversationEventListenerList();
+            for (ConversationEventListener conversationEventListener : conversationEventListenerList) {
+                if (conversationEventListener != null) {
+                    conversationEventListener.onMessageSendForHideConversation(conversationID);
+                }
             }
         }
     }
@@ -266,6 +274,15 @@ public class TUIConversationService implements TUIInitializer, ITUIService, ITUI
         }
     }
 
+    private ConversationEventListener getConversationEventListener() {
+        List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
+        if (!conversationEventObserverList.isEmpty()) {
+            return conversationEventObserverList.get(0);
+        }
+
+        return null;
+    }
+
     private void handleChatReceiveMessageEvent(String subKey, Map<String, Object> param) {
         if (subKey.equals(TUIConstants.TUIChat.EVENT_SUB_KEY_CONVERSATION_ID)) {
             if (param == null || param.isEmpty()) {
@@ -276,13 +293,11 @@ public class TUIConversationService implements TUIInitializer, ITUIService, ITUI
             if (param.containsKey(TUIConstants.TUIChat.IS_TYPING_MESSAGE)) {
                 isTypingMessage = (Boolean) param.get(TUIConstants.TUIChat.IS_TYPING_MESSAGE);
             }
-            ConversationEventListener conversationEventListener = getInstance().getConversationEventListener();
-            if (conversationEventListener != null) {
-                conversationEventListener.onReceiveMessage(conversationID, isTypingMessage);
-            }
             List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
             for (ConversationEventListener conversationEventObserver : conversationEventObserverList) {
-                conversationEventObserver.onReceiveMessage(conversationID, isTypingMessage);
+                if (conversationEventObserver != null) {
+                    conversationEventObserver.onReceiveMessage(conversationID, isTypingMessage);
+                }
             }
         }
     }
@@ -292,17 +307,14 @@ public class TUIConversationService implements TUIInitializer, ITUIService, ITUI
             if (param == null || param.isEmpty()) {
                 return;
             }
-            ConversationEventListener conversationEventListener = getInstance().getConversationEventListener();
-            if (conversationEventListener == null) {
-                return;
-            }
+
             String id = (String) param.get(TUIConstants.TUIContact.FRIEND_ID);
             String remark = (String) param.get(TUIConstants.TUIContact.FRIEND_REMARK);
-            conversationEventListener.onFriendRemarkChanged(id, remark);
-
             List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
             for (ConversationEventListener conversationEventObserver : conversationEventObserverList) {
-                conversationEventObserver.onFriendRemarkChanged(id, remark);
+                if (conversationEventObserver != null) {
+                    conversationEventObserver.onFriendRemarkChanged(id, remark);
+                }
             }
         }
     }
@@ -313,13 +325,11 @@ public class TUIConversationService implements TUIInitializer, ITUIService, ITUI
                 return;
             }
             String userID = (String) getOrDefault(param.get(TUIConstants.TUIContact.FRIEND_ID), "");
-            ConversationEventListener eventListener = getConversationEventListener();
-            if (eventListener != null) {
-                eventListener.clearConversationMessage(userID, false);
-            }
             List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
             for (ConversationEventListener conversationEventObserver : conversationEventObserverList) {
-                conversationEventObserver.clearConversationMessage(userID, false);
+                if (conversationEventObserver != null) {
+                    conversationEventObserver.clearConversationMessage(userID, false);
+                }
             }
         }
     }
@@ -328,17 +338,15 @@ public class TUIConversationService implements TUIInitializer, ITUIService, ITUI
         if (TextUtils.equals(subKey, TUIConstants.TUIContact.EVENT_SUB_KEY_EXIT_GROUP)
             || TextUtils.equals(subKey, TUIConstants.TUIContact.EVENT_SUB_KEY_GROUP_DISMISS)
             || TextUtils.equals(subKey, TUIConstants.TUIContact.EVENT_SUB_KEY_GROUP_RECYCLE)) {
-            ConversationEventListener eventListener = getConversationEventListener();
             String groupId = null;
             if (param != null) {
                 groupId = (String) getOrDefault(param.get(TUIConstants.TUIContact.GROUP_ID), "");
             }
-            if (eventListener != null) {
-                eventListener.deleteConversation(groupId, true);
-            }
             List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
             for (ConversationEventListener conversationEventObserver : conversationEventObserverList) {
-                conversationEventObserver.deleteConversation(groupId, true);
+                if (conversationEventObserver != null) {
+                    conversationEventObserver.deleteConversation(groupId, true);
+                }
             }
         } else if (TextUtils.equals(subKey, TUIConstants.TUIContact.EVENT_SUB_KEY_MEMBER_KICKED_GROUP)) {
             if (param == null) {
@@ -351,26 +359,22 @@ public class TUIConversationService implements TUIInitializer, ITUIService, ITUI
             }
             for (String id : memberList) {
                 if (TextUtils.equals(id, TUILogin.getLoginUser())) {
-                    ConversationEventListener eventListener = getConversationEventListener();
-                    if (eventListener != null) {
-                        eventListener.deleteConversation(groupId, true);
-                    }
                     List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
                     for (ConversationEventListener conversationEventObserver : conversationEventObserverList) {
-                        conversationEventObserver.deleteConversation(groupId, true);
+                        if (conversationEventObserver != null) {
+                            conversationEventObserver.deleteConversation(groupId, true);
+                        }
                     }
                     break;
                 }
             }
         } else if (TextUtils.equals(subKey, TUIConstants.TUIContact.EVENT_SUB_KEY_CLEAR_GROUP_MESSAGE)) {
             String groupId = (String) getOrDefault(param.get(TUIConstants.TUIContact.GROUP_ID), "");
-            ConversationEventListener eventListener = getConversationEventListener();
-            if (eventListener != null) {
-                eventListener.clearConversationMessage(groupId, true);
-            }
             List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
             for (ConversationEventListener conversationEventObserver : conversationEventObserverList) {
-                conversationEventObserver.clearConversationMessage(groupId, true);
+                if (conversationEventObserver != null) {
+                    conversationEventObserver.clearConversationMessage(groupId, true);
+                }
             }
         }
     }
@@ -379,13 +383,11 @@ public class TUIConversationService implements TUIInitializer, ITUIService, ITUI
         if (TextUtils.equals(TUIConstants.TUIChat.Event.MessageDisplayString.SUB_KEY_PROCESS_MESSAGE, subKey)) {
             String conversationID = (String) param.get(TUIConstants.TUIChat.Event.MessageDisplayString.CONVERSATION_ID);
             TUIMessageBean messageBean = (TUIMessageBean) param.get(TUIConstants.TUIChat.Event.MessageDisplayString.MESSAGE_BEAN);
-            ConversationEventListener eventListener = getConversationEventListener();
-            if (eventListener != null) {
-                eventListener.onConversationLastMessageBeanChanged(conversationID, messageBean);
-            }
             List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
             for (ConversationEventListener conversationEventObserver : conversationEventObserverList) {
-                conversationEventObserver.onConversationLastMessageBeanChanged(conversationID, messageBean);
+                if (conversationEventObserver != null) {
+                    conversationEventObserver.onConversationLastMessageBeanChanged(conversationID, messageBean);
+                }
             }
         }
     }
@@ -406,14 +408,11 @@ public class TUIConversationService implements TUIInitializer, ITUIService, ITUI
 
             @Override
             public void onSyncServerFinish() {
-                ConversationEventListener conversationEventListener = getInstance().getConversationEventListener();
-                if (conversationEventListener != null) {
-                    conversationEventListener.onSyncServerFinish();
-                }
-
                 List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
                 for (ConversationEventListener conversationEventObserver : conversationEventObserverList) {
-                    conversationEventObserver.onSyncServerFinish();
+                    if (conversationEventObserver != null) {
+                        conversationEventObserver.onSyncServerFinish();
+                    }
                 }
 
                 syncFinished = true;
@@ -426,55 +425,43 @@ public class TUIConversationService implements TUIInitializer, ITUIService, ITUI
 
             @Override
             public void onNewConversation(List<V2TIMConversation> conversationList) {
-                ConversationEventListener conversationEventListener = getInstance().getConversationEventListener();
-                List<ConversationInfo> conversationInfoList = ConversationUtils.convertV2TIMConversationList(conversationList);
-                if (conversationEventListener != null) {
-                    conversationEventListener.onNewConversation(conversationInfoList);
-                }
-
                 List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
                 for (ConversationEventListener conversationEventObserver : conversationEventObserverList) {
-                    conversationInfoList = ConversationUtils.convertV2TIMConversationList(conversationList);
-                    conversationEventObserver.onNewConversation(conversationInfoList);
+                    if (conversationEventObserver != null) {
+                        List<ConversationInfo> conversationInfoList = ConversationUtils.convertV2TIMConversationList(conversationList);
+                        conversationEventObserver.onNewConversation(conversationInfoList);
+                    }
                 }
             }
 
             @Override
             public void onConversationChanged(List<V2TIMConversation> conversationList) {
-                ConversationEventListener conversationEventListener = getInstance().getConversationEventListener();
-                List<ConversationInfo> conversationInfoList = ConversationUtils.convertV2TIMConversationList(conversationList);
-                if (conversationEventListener != null) {
-                    conversationEventListener.onConversationChanged(conversationInfoList);
-                }
-
                 List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
                 for (ConversationEventListener conversationEventObserver : conversationEventObserverList) {
-                    conversationInfoList = ConversationUtils.convertV2TIMConversationList(conversationList);
-                    conversationEventObserver.onConversationChanged(conversationInfoList);
+                    if (conversationEventObserver != null) {
+                        List<ConversationInfo> conversationInfoList = ConversationUtils.convertV2TIMConversationList(conversationList);
+                        conversationEventObserver.onConversationChanged(conversationInfoList);
+                    }
                 }
             }
 
             @Override
             public void onTotalUnreadMessageCountChanged(long totalUnreadCount) {
-                ConversationEventListener conversationEventListener = getInstance().getConversationEventListener();
-                if (conversationEventListener != null) {
-                    conversationEventListener.updateTotalUnreadMessageCount(totalUnreadCount);
-                }
                 List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
                 for (ConversationEventListener conversationEventObserver : conversationEventObserverList) {
-                    conversationEventObserver.updateTotalUnreadMessageCount(totalUnreadCount);
+                    if (conversationEventObserver != null) {
+                        conversationEventObserver.updateTotalUnreadMessageCount(totalUnreadCount);
+                    }
                 }
             }
 
             @Override
             public void onConversationDeleted(List<String> conversationIDList) {
-                ConversationEventListener conversationEventListener = getInstance().getConversationEventListener();
-                if (conversationEventListener != null) {
-                    conversationEventListener.onConversationDeleted(conversationIDList);
-                }
                 List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
                 for (ConversationEventListener conversationEventObserver : conversationEventObserverList) {
-                    conversationEventObserver.onConversationDeleted(conversationIDList);
+                    if (conversationEventObserver != null) {
+                        conversationEventObserver.onConversationDeleted(conversationIDList);
+                    }
                 }
             }
         });
@@ -482,10 +469,6 @@ public class TUIConversationService implements TUIInitializer, ITUIService, ITUI
         V2TIMSDKListener v2TIMSDKListener = new V2TIMSDKListener() {
             @Override
             public void onUserStatusChanged(List<V2TIMUserStatus> userStatusList) {
-                ConversationEventListener conversationEventListener = getInstance().getConversationEventListener();
-                if (conversationEventListener != null) {
-                    conversationEventListener.onUserStatusChanged(userStatusList);
-                }
                 List<ConversationEventListener> conversationEventObserverList = getConversationEventListenerList();
                 for (ConversationEventListener conversationEventObserver : conversationEventObserverList) {
                     conversationEventObserver.onUserStatusChanged(userStatusList);
@@ -532,24 +515,6 @@ public class TUIConversationService implements TUIInitializer, ITUIService, ITUI
             }
         }
         return listeners;
-    }
-
-    public void setConversationEventListener(ConversationEventListener conversationManagerKit) {
-        this.conversationEventListener = new SoftReference<>(conversationManagerKit);
-        if (syncFinished) {
-            conversationManagerKit.onSyncServerFinish();
-        }
-    }
-
-    public void setConversationEventListenerNull() {
-        this.conversationEventListener = null;
-    }
-
-    public ConversationEventListener getConversationEventListener() {
-        if (conversationEventListener != null) {
-            return conversationEventListener.get();
-        }
-        return null;
     }
 
     public void setConversationGroupNotifyListener(ConversationGroupNotifyListener listener) {

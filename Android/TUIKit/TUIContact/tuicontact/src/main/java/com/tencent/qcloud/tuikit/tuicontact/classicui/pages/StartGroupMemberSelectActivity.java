@@ -221,7 +221,7 @@ public class StartGroupMemberSelectActivity extends BaseLightActivity {
 
             public SelectedViewHolder(@NonNull View itemView) {
                 super(itemView);
-                userIconView = (ImageView) itemView.findViewById(R.id.ivAvatar);
+                userIconView = itemView.findViewById(R.id.ivAvatar);
             }
         }
     }

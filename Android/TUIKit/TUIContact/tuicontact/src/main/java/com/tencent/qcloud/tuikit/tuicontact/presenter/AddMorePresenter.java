@@ -21,14 +21,8 @@ public class AddMorePresenter {
 
     private ContactProvider provider;
 
-    private IAddMoreActivity addMoreActivity;
-
     public AddMorePresenter() {
         provider = new ContactProvider();
-    }
-
-    public void setAddMoreActivity(IAddMoreActivity addMoreActivity) {
-        this.addMoreActivity = addMoreActivity;
     }
 
     public void getUserInfo(String userId, TUIValueCallback<ContactItemBean> callback) {

@@ -119,7 +119,7 @@ public class ActivityResultResolver {
         TUICore.startActivityForResult(activityResultCaller, ActivityResultProxyActivity.class, bundle, new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
-                if (result.getData() != null) {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                     TUIValueCallback.onSuccess(callback, result.getData().getBooleanExtra(KEY_DATA, false));
                 }
             }
@@ -187,13 +187,11 @@ public class ActivityResultResolver {
             if (isTakePicture) {
                 return new Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                     .putExtra(MediaStore.EXTRA_OUTPUT, input.first)
-                    .addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    .addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             } else {
                 return new Intent(MediaStore.ACTION_VIDEO_CAPTURE)
                     .putExtra(MediaStore.EXTRA_OUTPUT, input.first)
-                    .addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    .addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             }
         }
 

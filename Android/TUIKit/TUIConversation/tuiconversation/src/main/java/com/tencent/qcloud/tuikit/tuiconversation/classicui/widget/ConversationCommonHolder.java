@@ -226,7 +226,7 @@ public class ConversationCommonHolder extends ConversationBaseHolder {
                 TUIMessageBean lasTUIMessageBean = conversation.getLastTUIMessageBean();
                 if (lasTUIMessageBean != null) {
                     String displayString = ConversationPresenter.getMessageDisplayString(lasTUIMessageBean);
-                    messageText.setText(Html.fromHtml(displayString));
+                    messageText.setText(displayString);
                     messageText.setTextColor(rootView.getResources().getColor(R.color.list_bottom_text_bg));
                 }
                 if (conversation.getLastMessage() != null) {

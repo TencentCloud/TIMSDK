@@ -7,9 +7,6 @@ import android.content.pm.ApplicationInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.text.TextUtils;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 
 import androidx.annotation.Nullable;
 
@@ -19,6 +16,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.tencent.cloud.tuikit.roomkit.view.basic.RoomToast;
 import com.tencent.qcloud.tuicore.TUILogin;
 
 import java.nio.charset.Charset;

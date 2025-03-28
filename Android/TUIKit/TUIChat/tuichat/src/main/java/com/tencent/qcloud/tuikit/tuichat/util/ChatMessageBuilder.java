@@ -333,11 +333,6 @@ public class ChatMessageBuilder {
     }
 
     public static ReplyPreviewBean buildReplyPreviewBean(TUIMessageBean messageBean) {
-        String sender = messageBean.getNickName();
-        if (TextUtils.isEmpty(sender)) {
-            sender = messageBean.getSender();
-        }
-
         ReplyPreviewBean previewBean = new ReplyPreviewBean();
         if (messageBean instanceof ReplyMessageBean) {
             String msgRootId = ((ReplyMessageBean) messageBean).getMsgRootId();
@@ -349,7 +344,8 @@ public class ChatMessageBuilder {
         previewBean.setOriginalMessageBean(messageBean);
         previewBean.setMessageID(messageBean.getId());
         previewBean.setMessageAbstract(messageAbstract);
-        previewBean.setMessageSender(sender);
+        previewBean.setMessageSender(messageBean.getSender());
+        previewBean.setMessageSenderName(messageBean.getUserDisplayName());
         previewBean.setMessageTime(messageBean.getMessageTime());
         previewBean.setMessageSequence(messageBean.getMsgSeq());
         previewBean.setMessageType(messageBean.getMsgType());

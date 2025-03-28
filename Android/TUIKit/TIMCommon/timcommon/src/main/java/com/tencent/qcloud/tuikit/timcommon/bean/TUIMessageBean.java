@@ -9,6 +9,7 @@ import com.tencent.qcloud.tuikit.timcommon.TIMCommonService;
 import com.tencent.qcloud.tuikit.timcommon.util.MessageBuilder;
 import com.tencent.qcloud.tuikit.timcommon.util.MessageParser;
 import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonConstants;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -119,8 +120,7 @@ public abstract class TUIMessageBean implements Serializable {
             if (isSelf()) {
                 extra = TIMCommonService.getAppContext().getString(R.string.revoke_tips_you);
             } else if (isGroup) {
-                String message = TIMCommonConstants.covert2HTMLString(getSender());
-                extra = message + TIMCommonService.getAppContext().getString(R.string.revoke_tips);
+                extra = "\"" + getSender() + "\"" + TIMCommonService.getAppContext().getString(R.string.revoke_tips);
             } else {
                 extra = TIMCommonService.getAppContext().getString(R.string.revoke_tips_other);
             }
@@ -163,7 +163,9 @@ public abstract class TUIMessageBean implements Serializable {
      * Get a summary of messages to display in the conversation list
      * @return
      */
-    public abstract String onGetDisplayString();
+    public String onGetDisplayString() {
+        return getExtra();
+    }
 
     public abstract void onProcessMessage(V2TIMMessage v2TIMMessage);
 
@@ -407,12 +409,14 @@ public abstract class TUIMessageBean implements Serializable {
 
     public void setUserBean(String userID, UserBean userBean) {
         userBeanMap.put(userID, userBean);
-        List<MessageRepliesBean.ReplyBean> replyBeanList = messageRepliesBean.getReplies();
-        if (replyBeanList != null && !replyBeanList.isEmpty()) {
-            for (MessageRepliesBean.ReplyBean replyBean : replyBeanList) {
-                if (userBean != null && TextUtils.equals(replyBean.getMessageSender(), userID)) {
-                    replyBean.setSenderFaceUrl(userBean.getFaceUrl());
-                    replyBean.setSenderShowName(userBean.getDisplayName());
+        if (messageRepliesBean != null) {
+            List<MessageRepliesBean.ReplyBean> replyBeanList = messageRepliesBean.getReplies();
+            if (replyBeanList != null && !replyBeanList.isEmpty()) {
+                for (MessageRepliesBean.ReplyBean replyBean : replyBeanList) {
+                    if (userBean != null && TextUtils.equals(replyBean.getMessageSender(), userID)) {
+                        replyBean.setSenderFaceUrl(userBean.getFaceUrl());
+                        replyBean.setSenderShowName(userBean.getDisplayName());
+                    }
                 }
             }
         }

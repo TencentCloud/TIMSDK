@@ -199,9 +199,6 @@ public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayou
     public void onGroupInfoChanged(GroupInfo groupInfo) {}
 
     @Override
-    public void onGroupInfoModified(Object value, int type) {}
-
-    @Override
     public void onGroupMemberListChanged(GroupInfo groupInfo) {
         mGroupInfo = groupInfo;
         presenter.setGroupInfo(groupInfo);

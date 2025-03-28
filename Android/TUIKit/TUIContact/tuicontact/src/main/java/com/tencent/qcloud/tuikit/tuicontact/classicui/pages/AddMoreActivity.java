@@ -57,7 +57,6 @@ public class AddMoreActivity extends BaseLightActivity implements IAddMoreActivi
         }
 
         presenter = new AddMorePresenter();
-        presenter.setAddMoreActivity(this);
 
         faceImgView = findViewById(R.id.friend_icon);
         idTextView = findViewById(R.id.friend_account);

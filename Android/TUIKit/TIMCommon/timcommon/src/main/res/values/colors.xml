@@ -45,4 +45,5 @@
     <color name="timcommon_btn_negative">#ffffff</color>
     <color name="timcommon_btn_negative_hover">#cc3428</color>
 
+    <color name="common_quote_user_name_color">#FF5B6B92</color>
 </resources>
