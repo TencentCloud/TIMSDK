@@ -1,6 +1,6 @@
 package com.tencent.cloud.tuikit.roomkit;
 
-import com.tencent.cloud.tuikit.roomkit.model.ConferenceSessionImpl;
+import com.tencent.cloud.tuikit.roomkit.impl.ConferenceSessionImpl;
 
 import java.util.List;
 
@@ -22,5 +22,6 @@ public abstract class ConferenceSession {
     public abstract void setWaterMarkText(String waterMarkText);
 
     public abstract void setContactsViewProvider(Class<?> contactsActivity);
+
     public abstract void setParticipants(List<ConferenceDefine.User> participants);
 }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="70dp">
 
-    <com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.ListUserInfoView
+    <com.tencent.cloud.tuikit.roomkit.view.main.usercontrolpanel.userlistitem.ListUserInfoView
         android:id="@+id/room_view_user_info"
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.CameraIconView
+    <com.tencent.cloud.tuikit.roomkit.view.main.usercontrolpanel.userlistitem.CameraIconView
         android:id="@+id/tuiroomkit_img_camera_state"
         android:layout_width="20dp"
         android:layout_height="20dp"
@@ -26,7 +26,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.MicIconView
+    <com.tencent.cloud.tuikit.roomkit.view.main.usercontrolpanel.userlistitem.MicIconView
         android:id="@+id/tuiroomkit_img_mic_state"
         android:layout_width="20dp"
         android:layout_height="20dp"
@@ -36,7 +36,7 @@
         app:layout_constraintEnd_toStartOf="@+id/tuiroomkit_img_camera_state"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.ScreenIconView
+    <com.tencent.cloud.tuikit.roomkit.view.main.usercontrolpanel.userlistitem.ScreenIconView
         android:id="@+id/room_view_screen_state"
         android:layout_width="20dp"
         android:layout_height="20dp"
@@ -47,7 +47,7 @@
         app:layout_constraintEnd_toStartOf="@+id/tuiroomkit_img_mic_state"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.InviteSeatButton
+    <com.tencent.cloud.tuikit.roomkit.view.main.usercontrolpanel.userlistitem.InviteSeatButton
         android:id="@+id/tuiroomkit_btn_invite_seat"
         android:layout_width="72dp"
         android:layout_height="36dp"
@@ -68,7 +68,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5" />
 
-    <com.tencent.cloud.tuikit.roomkit.view.page.widget.UserControlPanel.CallUserView
+    <com.tencent.cloud.tuikit.roomkit.view.main.usercontrolpanel.userlistitem.CallUserView
         android:id="@+id/tuiroomkit_call_user_view"
         android:layout_width="wrap_content"
         android:layout_height="28dp"

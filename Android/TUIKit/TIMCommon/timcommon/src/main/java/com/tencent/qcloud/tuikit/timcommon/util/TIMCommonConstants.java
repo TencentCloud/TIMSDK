@@ -8,7 +8,4 @@ public class TIMCommonConstants {
     public static final String CHAT_SETTINGS_SP_NAME = "chat_settings_sp";
     public static final String CHAT_REPLY_GUIDE_SHOW_SP_KEY = "chat_reply_guide_show";
 
-    public static String covert2HTMLString(String original) {
-        return "\"<font color=\"#5B6B92\">" + original + "</font>\"";
-    }
 }

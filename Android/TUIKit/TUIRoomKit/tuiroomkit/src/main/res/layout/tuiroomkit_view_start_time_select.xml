@@ -74,7 +74,7 @@
         app:layout_constraintTop_toBottomOf="@+id/cl_start_time_select"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.WheelPicker.WheelPicker
+        <com.tencent.cloud.tuikit.roomkit.view.schedule.wheelpicker.WheelPicker
             android:id="@+id/np_start_time_date"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -92,7 +92,7 @@
             app:wheel_indicator_color="#F2F2F2"
             app:wheel_item_align="center"/>
 
-        <com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.WheelPicker.WheelPicker
+        <com.tencent.cloud.tuikit.roomkit.view.schedule.wheelpicker.WheelPicker
             android:id="@+id/np_start_time_hour"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -109,7 +109,7 @@
             app:wheel_visible_item_count="5"
             app:wheel_indicator_color="#F2F2F2"/>
 
-        <com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.WheelPicker.WheelPicker
+        <com.tencent.cloud.tuikit.roomkit.view.schedule.wheelpicker.WheelPicker
             android:id="@+id/np_start_time_minute"
             android:layout_width="0dp"
             android:layout_height="match_parent"

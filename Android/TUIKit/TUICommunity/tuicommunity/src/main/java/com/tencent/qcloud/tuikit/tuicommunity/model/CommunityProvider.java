@@ -151,7 +151,12 @@ public class CommunityProvider {
     public void modifyTopicCategory(TopicBean topicBean, String category, IUIKitCallback<Void> callback) {
         V2TIMTopicInfo v2TIMTopicInfo = topicBean.getV2TIMTopicInfo();
         Gson gson = new Gson();
-        Map<String, Object> map = gson.fromJson(v2TIMTopicInfo.getCustomString(), Map.class);
+        Map<String, Object> map = null;
+        try {
+            map = gson.fromJson(v2TIMTopicInfo.getCustomString(), Map.class);
+        } catch (Exception e) {
+            TUICommunityLog.e(TAG, e.getLocalizedMessage());
+        }
         if (map == null) {
             map = new HashMap<>();
         }

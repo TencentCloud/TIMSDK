@@ -315,7 +315,7 @@ public class ChatProvider {
     }
 
     private V2TIMOfflinePushInfo createOfflinePushInfo(TUIMessageBean message, ChatInfo chatInfo) {
-        String description = FaceManager.emojiJudge(message.getExtra());
+        String description = FaceManager.emojiJudge(message.getExtra()).toString();
 
         OfflinePushExtInfo offlinePushExtInfo = new OfflinePushExtInfo();
         String sender = message.getSender();
@@ -452,6 +452,43 @@ public class ChatProvider {
                 }
             });
         return msgId;
+    }
+
+    public String insertMessage(TUIMessageBean message, String receiver, boolean isGroup, TUIValueCallback<TUIMessageBean> callback)  {
+        V2TIMMessage v2TIMMessage = message.getV2TIMMessage();
+        if (v2TIMMessage == null) {
+            return null;
+        }
+        String sender =  TUILogin.getLoginUser();
+        String messageID;
+        if (isGroup) {
+            messageID = V2TIMManager.getMessageManager().insertGroupMessageToLocalStorage(
+                    v2TIMMessage, receiver, sender, new V2TIMValueCallback<V2TIMMessage>() {
+                @Override
+                public void onSuccess(V2TIMMessage v2TIMMessage) {
+                    TUIValueCallback.onSuccess(callback, ChatMessageParser.parsePresentMessage(v2TIMMessage));
+                }
+
+                @Override
+                public void onError(int code, String desc) {
+                    TUIValueCallback.onError(callback, code, desc);
+                }
+            });
+        } else {
+            messageID = V2TIMManager.getMessageManager().insertC2CMessageToLocalStorage(
+                    v2TIMMessage, receiver, sender, new V2TIMValueCallback<V2TIMMessage>() {
+                @Override
+                public void onSuccess(V2TIMMessage v2TIMMessage) {
+                    TUIValueCallback.onSuccess(callback, ChatMessageParser.parsePresentMessage(v2TIMMessage));
+                }
+
+                @Override
+                public void onError(int code, String desc) {
+                    TUIValueCallback.onError(callback, code, desc);
+                }
+            });
+        }
+        return messageID;
     }
 
     public void revokeMessage(TUIMessageBean messageInfo, IUIKitCallback<Void> callBack) {

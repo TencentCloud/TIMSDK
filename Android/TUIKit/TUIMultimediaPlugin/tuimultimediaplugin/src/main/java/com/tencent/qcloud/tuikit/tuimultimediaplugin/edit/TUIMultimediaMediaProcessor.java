@@ -53,9 +53,7 @@ public class TUIMultimediaMediaProcessor {
     public static TUIMultimediaMediaProcessor getInstance() {
         if (sInstance == null) {
             synchronized (TUIMultimediaMediaProcessor.class) {
-                if (sInstance == null) {
-                    sInstance = new TUIMultimediaMediaProcessor();
-                }
+                sInstance = new TUIMultimediaMediaProcessor();
             }
         }
         return sInstance;
@@ -141,7 +139,7 @@ public class TUIMultimediaMediaProcessor {
 
         private void getVideoInfo() {
             for (Uri uri : mUriQueue) {
-                TXVideoInfo videoInfo = TUIMultimediaEditorCore
+                TXVideoInfo videoInfo = TUIMultimediaVideoEditorCore
                         .getVideoFileInfo(TUIMultimediaPlugin.getAppContext(), uri.toString());
                 mVideoInfoMap.put(uri, videoInfo);
             }
@@ -159,11 +157,11 @@ public class TUIMultimediaMediaProcessor {
                 return;
             }
 
-            TUIMultimediaEditorCore tuiMultimediaEditorCore = new TUIMultimediaEditorCore(TUIMultimediaPlugin.getAppContext() );
-            tuiMultimediaEditorCore.setSource(uri.toString());
+            TUIMultimediaVideoEditorCore tuiMultimediaVideoEditorCore = new TUIMultimediaVideoEditorCore(TUIMultimediaPlugin.getAppContext() );
+            tuiMultimediaVideoEditorCore.setSource(uri.toString());
             String outVideoPath = TUIMultimediaFileUtil
                     .generateFilePath(MultimediaPluginFileType.EDIT_FILE);
-            tuiMultimediaEditorCore.generateVideo(outVideoPath, TUIMultimediaIConfig.getInstance().getVideoQuality(),
+            tuiMultimediaVideoEditorCore.generateVideo(outVideoPath, TUIMultimediaIConfig.getInstance().getVideoQuality(),
                     new TXVideoGenerateListener() {
                         @Override
                         public void onGenerateProgress(float progress) {
@@ -175,7 +173,7 @@ public class TUIMultimediaMediaProcessor {
                             mCustomHandler.runOrPost(() -> transcodeMediaInQueue());
                             notifyTranscodeFinish(txGenerateResult.retCode, txGenerateResult.descMsg, uri,
                                     FileUtil.getUriFromPath(outVideoPath));
-                            tuiMultimediaEditorCore.release();
+                            tuiMultimediaVideoEditorCore.release();
                         }
                     });
         }
@@ -199,13 +197,13 @@ public class TUIMultimediaMediaProcessor {
                 return false;
             }
 
-            if (!TUIMultimediaEditorCore.isValidVideo(videoInfo)) {
+            if (!TUIMultimediaVideoEditorCore.isValidVideo(videoInfo)) {
                 LiteavLog.i(TAG, "isNeedTranscode false. because is not valid video");
                 return false;
             }
 
             boolean isNeedTranscode = videoInfo.bitrate == 0 ||
-                    videoInfo.bitrate > TUIMultimediaEditorCore
+                    videoInfo.bitrate > TUIMultimediaVideoEditorCore
                             .getBitrateAccordQuality(TUIMultimediaIConfig.getInstance().getVideoQuality()) * 1.2;
             if (!isNeedTranscode) {
                 LiteavLog.i(TAG,

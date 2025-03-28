@@ -143,10 +143,6 @@ public class RecordOperationView extends LinearLayout {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 mRecordInfo.tuiDataRecordStatus.set(RecordStatus.TAKE_PHOTOING);
             }
-
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                mRecordInfo.tuiDataRecordStatus.set(RecordStatus.STOP);
-            }
             return false;
         });
 

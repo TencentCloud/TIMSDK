@@ -9,8 +9,8 @@
         android:id="@+id/camera_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:duration_max="10000"
-        app:iconMargin="20dp"
-        app:iconSize="30dp"
-        app:iconSrc="@drawable/chat_camera_switchcamera" />
+        app:chat_camera_duration_max="10000"
+        app:chat_camera_icon_margin="20dp"
+        app:chat_camera_icon_size="30dp"
+        app:chat_camera_icon_src="@drawable/chat_camera_switchcamera" />
 </LinearLayout>

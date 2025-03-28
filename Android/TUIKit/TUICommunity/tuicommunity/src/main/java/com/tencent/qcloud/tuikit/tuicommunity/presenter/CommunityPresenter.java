@@ -447,7 +447,6 @@ public class CommunityPresenter {
         topicBean.setTopicName(topicNameNotice);
         String topicCategoryAnnouncement = TUICommunityService.getAppContext().getString(R.string.community_default_category_announcement);
         topicBean.setCategory(topicCategoryAnnouncement);
-        topicBean.setAllMute(true);
         provider.createTopic(groupID, topicBean, null);
         String topicNameNewbie = TUICommunityService.getAppContext().getString(R.string.community_topic_newbie_report);
         topicBean.setTopicName(topicNameNewbie);

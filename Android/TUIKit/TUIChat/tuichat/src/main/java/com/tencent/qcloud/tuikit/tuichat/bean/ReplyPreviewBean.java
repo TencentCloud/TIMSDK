@@ -13,6 +13,7 @@ public class ReplyPreviewBean implements Serializable {
     private String messageRootID;
     private String messageAbstract;
     private String messageSender;
+    private transient String messageSenderName;
     private int messageType;
     private long messageTime;
     private long messageSequence;
@@ -43,6 +44,14 @@ public class ReplyPreviewBean implements Serializable {
 
     public void setMessageSender(String messageSender) {
         this.messageSender = messageSender;
+    }
+
+    public String getMessageSenderName() {
+        return messageSenderName;
+    }
+
+    public void setMessageSenderName(String messageSenderName) {
+        this.messageSenderName = messageSenderName;
     }
 
     public int getMessageType() {

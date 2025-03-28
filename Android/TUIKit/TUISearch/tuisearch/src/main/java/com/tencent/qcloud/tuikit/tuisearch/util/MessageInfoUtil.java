@@ -185,8 +185,10 @@ public class MessageInfoUtil {
                 businessIdForTimeout = (Double) businessIdObj;
             }
 
-            if (TextUtils.equals(businessId, TUIConstants.TUICalling.CUSTOM_MESSAGE_BUSINESS_ID)
-                || Math.abs(businessIdForTimeout - TUIConstants.TUICalling.CALL_TIMEOUT_BUSINESS_ID) < 0.000001) {
+            boolean isV2CallBusinessId = TextUtils.equals(businessId, TUIConstants.TUICalling.CUSTOM_MESSAGE_BUSINESS_ID);
+            boolean isV3CallBusinessId = TextUtils.equals(businessId, TUIConstants.TUICalling.V3_CALL_BUSINESS_ID);
+            if (isV2CallBusinessId || isV3CallBusinessId
+                    || Math.abs(businessIdForTimeout - TUIConstants.TUICalling.CALL_TIMEOUT_BUSINESS_ID) < 0.000001) {
                 boolean isGroup = !TextUtils.isEmpty(timMessage.getGroupID());
                 if (isGroup) {
                     msgInfo.setMsgType(MessageInfo.MSG_TYPE_TIPS);

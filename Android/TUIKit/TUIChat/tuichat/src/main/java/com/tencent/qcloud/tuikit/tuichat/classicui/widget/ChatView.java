@@ -89,7 +89,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ChatView extends LinearLayout implements IChatLayout {
-    private static final String TAG = ChatView.class.getSimpleName();
+    private static final String TAG = "ChatView";
 
     // Limit the number of messages forwarded one by one
     private static final int FORWARD_MSG_NUM_LIMIT = 30;
@@ -168,6 +168,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
 
     private ChatPresenter presenter;
     private int scrollDirection = 0;
+    private ChatInputMoreListener chatInputMoreListener;
 
     public ChatView(Context context) {
         super(context);
@@ -1024,12 +1025,13 @@ public class ChatView extends LinearLayout implements IChatLayout {
                 });
             }
         });
-        mInputView.setChatInputMoreListener(new ChatInputMoreListener() {
+        chatInputMoreListener = new ChatInputMoreListener() {
             @Override
             public String sendMessage(TUIMessageBean msg, IUIKitCallback<TUIMessageBean> callback) {
                 return ChatView.this.sendMessage(msg, false, callback);
             }
-        });
+        };
+        mInputView.setChatInputMoreListener(chatInputMoreListener);
     }
 
     private void displayBackToNewMessage(boolean display, String messageId, int count) {

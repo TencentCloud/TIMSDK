@@ -31,7 +31,6 @@ public class GroupMemberPresenter {
     private GroupMemberProvider provider = new GroupMemberProvider();
     private List<GroupMemberInfo> groupMemberBeanList = new ArrayList<>();
     private GroupMemberListener groupMemberListener;
-    private long nextSeq = 0;
     private String groupID;
     private int loadGroupMemberFilter = V2TIMGroupMemberFullInfo.V2TIM_GROUP_MEMBER_FILTER_ALL;
     private V2TIMGroupListener groupListener;
@@ -157,7 +156,6 @@ public class GroupMemberPresenter {
             @Override
             public void onSuccess(Pair<List<GroupMemberInfo>, Long> object) {
                 groupMemberBeanList.addAll(object.first);
-                GroupMemberPresenter.this.nextSeq = object.second;
                 if (groupMemberListener != null) {
                     groupMemberListener.onGroupMemberLoaded(groupMemberBeanList);
                 }

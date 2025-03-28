@@ -62,7 +62,7 @@ public class MergeReplyQuoteView extends TUIReplyQuoteView {
             }
             content += abstractList.get(i);
         }
-        content = FaceManager.emojiJudge(content);
+        content = FaceManager.emojiJudge(content).toString();
         mergeMsgContent.setText(content);
     }
 }

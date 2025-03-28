@@ -61,7 +61,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GroupInfoLayout extends LinearLayout {
-    private static final String TAG = GroupInfoLayout.class.getSimpleName();
+    private static final String TAG = "GroupInfoLayout";
     private TitleBarLayout mTitleBar;
     private MinimalistLineControllerView mMemberView;
     private MinimalistLineControllerView mGroupTypeView;
@@ -665,6 +665,9 @@ public class GroupInfoLayout extends LinearLayout {
                 break;
             case V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_FACE_URL:
                 loadGroupFaceUrl();
+                break;
+            case V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_OWNER:
+                setProfileBean(profileBean);
                 break;
             default:
                 break;

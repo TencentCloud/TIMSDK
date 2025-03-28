@@ -44,7 +44,7 @@ public class SubtitlePasterFloatLayerView extends FloatLayerView {
         mSubtitleTextInfo = tuiDataTextInfo;
         setPasterType(SUBTITLE_PASTER);
         mFloatLayerViewGroup = floatLayerViewGroup;
-        mFloatLayerViewGroup.addOperationView(this);
+        mFloatLayerViewGroup.addFloatLayerView(this);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class SubtitlePasterFloatLayerView extends FloatLayerView {
     }
 
     private void onDeleted() {
-        mFloatLayerViewGroup.removeOperationView(this);
+        mFloatLayerViewGroup.removeFloatLayerView(this);
     }
 
     private void addObserve() {

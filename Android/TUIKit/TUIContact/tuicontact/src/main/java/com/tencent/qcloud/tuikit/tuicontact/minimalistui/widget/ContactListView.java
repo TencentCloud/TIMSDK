@@ -41,9 +41,6 @@ public class ContactListView extends LinearLayout implements IContactListView {
 
     private ContactPresenter presenter;
 
-    private int dataSourceType = DataSource.UNKNOWN;
-    private ArrayList<String> alreadySelectedList;
-
     public ContactListView(Context context) {
         super(context);
         init();
@@ -72,7 +69,6 @@ public class ContactListView extends LinearLayout implements IContactListView {
     }
 
     public void setAlreadySelectedList(ArrayList<String> alreadySelectedList) {
-        this.alreadySelectedList = alreadySelectedList;
         mAdapter.setAlreadySelectedList(alreadySelectedList);
     }
 
@@ -154,7 +150,6 @@ public class ContactListView extends LinearLayout implements IContactListView {
     }
 
     public void loadDataSource(int dataSource) {
-        this.dataSourceType = dataSource;
         if (presenter == null) {
             return;
         }

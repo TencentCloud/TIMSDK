@@ -7,7 +7,7 @@
 package com.tencent.cloud.tuikit.roomkit;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
-import com.tencent.cloud.tuikit.roomkit.model.TUIRoomKitImpl;
+import com.tencent.cloud.tuikit.roomkit.impl.TUIRoomKitImpl;
 
 /**
  * @deprecated Please use ConferenceMainFragment for conference UI integration.

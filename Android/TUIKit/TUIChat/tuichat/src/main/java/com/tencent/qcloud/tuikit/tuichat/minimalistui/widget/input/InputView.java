@@ -39,7 +39,6 @@ import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.ChatInputMoreListener;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnFaceInputListener;
 import com.tencent.qcloud.tuikit.timcommon.util.ActivityResultResolver;
-import com.tencent.qcloud.tuikit.timcommon.util.FaceUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
@@ -411,7 +410,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             if (selectedIndex != -1) {
                 String insertStr = TIMMentionEditText.TIM_MENTION_TAG + displayInputString;
                 String text = mTextInput.getText().insert(selectedIndex, insertStr).toString();
-                FaceUtil.handlerEmojiText(mTextInput, text, true);
+                FaceManager.handlerEmojiText(mTextInput, text, true);
                 mTextInput.setSelection(selectedIndex + insertStr.length());
             }
             showSoftInput();
@@ -431,7 +430,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             int selectedIndex = mTextInput.getSelectionEnd();
             if (selectedIndex != -1) {
                 String text = mTextInput.getText().insert(selectedIndex, displayInputString).toString();
-                FaceUtil.handlerEmojiText(mTextInput, text, true);
+                FaceManager.handlerEmojiText(mTextInput, text, true);
                 mTextInput.setSelection(selectedIndex + displayInputString.length());
             }
 
@@ -930,7 +929,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                     int index = mTextInput.getSelectionStart();
                     Editable editable = mTextInput.getText();
                     editable.insert(index, emojiKey);
-                    FaceUtil.handlerEmojiText(mTextInput, editable, true);
+                    FaceManager.handlerEmojiText(mTextInput, editable, true);
                 }
 
                 @Override
@@ -1456,14 +1455,14 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         String msgTypeStr = ChatMessageParser.getMsgTypeStr(previewBean.getMessageType());
         // If replying to a text message, the middle part of the file name is displayed in abbreviated form
         if (previewBean.isReplyMessage()) {
-            String text = msgTypeStr + " " + replyMessageAbstract;
+            CharSequence text = msgTypeStr + " " + replyMessageAbstract;
             text = FaceManager.emojiJudge(text);
             isReplyModel = true;
             replyTv.setText(text);
-            replyUserNameTv.setText(previewBean.getMessageSender());
+            replyUserNameTv.setText(previewBean.getMessageSenderName());
             replyPreviewBar.setVisibility(View.VISIBLE);
         } else {
-            String text = previewBean.getMessageSender() + " : " + msgTypeStr + " " + replyMessageAbstract;
+            CharSequence text = previewBean.getMessageSenderName() + " : " + msgTypeStr + " " + replyMessageAbstract;
             text = FaceManager.emojiJudge(text);
             isQuoteModel = true;
             quoteTv.setText(text);

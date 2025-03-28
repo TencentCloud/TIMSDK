@@ -33,7 +33,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/et_input_message" />
 
-            <com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.view.EmojiEditText
+            <com.tencent.cloud.tuikit.roomkit.view.main.floatchat.view.EmojiEditText
                 android:id="@+id/et_input_message"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

@@ -14,6 +14,7 @@ public class TUIChatConstants {
     public static final String BUSINESS_ID_CUSTOM_ORDER = "order";
     public static final String BUSINESS_ID_CUSTOM_TYPING = "user_typing_status";
     public static final String BUSINESS_ID_QUICK_TAP = "quick_tap";
+    public static final String BUSINESS_ID_LOCAL_TIPS = "local_tips";
     public static final String FORWARD_SELECT_CONVERSATION_KEY = "forward_select_conversation_key";
     public static final String FORWARD_MERGE_MESSAGE_KEY = "forward_merge_message_key";
 
@@ -65,14 +66,9 @@ public class TUIChatConstants {
     public static final String CHAT_SETTINGS_SP_NAME = "chat_settings_sp";
     public static final String CHAT_SP_KEY_SPEAKER_MODE_ON = "chat_sp_key_speaker_mode_on";
 
-    public static String covert2HTMLString(String original) {
-        return "\"<font color=\"#5B6B92\">" + original + "</font>\"";
-    }
-
     public static final class Group {
         public static final String GROUP_ID = "group_id";
         public static final String GROUP_INFO = "groupInfo";
-
     }
 
     public static class Selection {

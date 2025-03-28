@@ -3,10 +3,13 @@ package com.tencent.qcloud.tuikit.tuichat.bean.message;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.ReplyReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.reply.TextReplyQuoteBean;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
+
+import java.util.Set;
 
 /**
  * Quote Message
@@ -108,6 +111,10 @@ public class QuoteMessageBean extends TUIMessageBean {
     }
 
     public String getOriginMsgSender() {
+        UserBean userBean = getUserBean(originMsgSender);
+        if (userBean != null) {
+             return userBean.getDisplayName();
+        }
         return originMsgSender;
     }
 
@@ -129,6 +136,13 @@ public class QuoteMessageBean extends TUIMessageBean {
 
     public boolean isAbstractEnable() {
         return abstractEnable;
+    }
+
+    @Override
+    public Set<String> getAdditionalUserIDList() {
+        Set<String>  userIDList = super.getAdditionalUserIDList();
+        userIDList.add(originMsgSender);
+        return userIDList;
     }
 
     @Override

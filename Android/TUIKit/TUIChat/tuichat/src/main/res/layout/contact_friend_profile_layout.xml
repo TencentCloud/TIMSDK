@@ -121,7 +121,6 @@
                 android:id="@+id/friend_settings_area"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 tools:visibility="visible"
                 android:orientation="vertical">
 
@@ -130,7 +129,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="46dp"
                     android:layout_marginTop="10dp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:canNav="true"
                     app:name="@string/profile_remark"
                     tools:visibility="visible" />
@@ -140,7 +139,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="46dp"
                     android:layout_marginTop="10dp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:isSwitch="true"
                     app:name="@string/profile_msgrev_opt" />
 
@@ -167,7 +166,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="46dp"
                     android:layout_marginTop="10dp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:isSwitch="true"
                     app:name="@string/profile_black" />
 
@@ -210,7 +209,7 @@
                     android:textAllCaps="false"
                     android:textColor="?attr/core_error_tip_color"
                     android:textSize="16.3sp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     tools:visibility="visible" />
 
                 <LinearLayout

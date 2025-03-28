@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuichat.util;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Pair;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -15,10 +16,9 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
-import com.tencent.qcloud.tuikit.timcommon.util.FaceUtil;
+import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonConstants;
 import com.tencent.qcloud.tuikit.tuichat.R;
-import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.CallModel;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageCustom;
@@ -39,7 +39,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -126,7 +125,7 @@ public class ChatMessageParser {
     private static TUIMessageBean parseCustomMessage(V2TIMMessage v2TIMMessage) {
         //********************************************************************************
         //********************************************************************************
-        
+
         //********************************************************************************
         //********************************************************************************
         TUIMessageBean messageBean = parseCallingMessage(v2TIMMessage);
@@ -272,7 +271,7 @@ public class ChatMessageParser {
         }
         if (businessIdObj == null && customJsonMap != null) {
             if (customJsonMap.containsKey(TUIConstants.TUICustomerServicePlugin.CUSTOMER_SERVICE_MESSAGE_KEY)) {
-                String customerServiceSrcValue = (String)customJsonMap.get(TUIConstants.TUICustomerServicePlugin.CUSTOMER_SERVICE_BUSINESS_ID_SRC_KEY);
+                String customerServiceSrcValue = (String) customJsonMap.get(TUIConstants.TUICustomerServicePlugin.CUSTOMER_SERVICE_BUSINESS_ID_SRC_KEY);
                 businessId = TUIConstants.TUICustomerServicePlugin.CUSTOMER_SERVICE_MESSAGE_KEY + customerServiceSrcValue;
                 return businessId;
             }
@@ -340,8 +339,8 @@ public class ChatMessageParser {
      *
      * Convert IMSDK's message bean list to TUIKit's message bean list
      *
-     * @param v2TIMMessageList IMSDK  bean 
-     * @return  TUIKit bean 
+     * @param v2TIMMessageList IMSDK  bean
+     * @return  TUIKit bean
      */
     public static List<TUIMessageBean> parsePresentMessageList(List<V2TIMMessage> v2TIMMessageList) {
         if (v2TIMMessageList == null) {
@@ -412,18 +411,19 @@ public class ChatMessageParser {
         Gson gson = new Gson();
 
         if (data.equals(MessageCustom.BUSINESS_ID_GROUP_CREATE)) {
-            
             // Compatible with tuikit prior to version 4.7
             TipsMessageBean messageBean = new TipsMessageBean();
             messageBean.setCommonAttribute(v2TIMMessage);
             messageBean.setTipType(TipsMessageBean.MSG_TYPE_GROUP_CREATE);
-            String message = TUIChatConstants.covert2HTMLString(getDisplayName(v2TIMMessage)) + TUIChatService.getAppContext().getString(R.string.create_group);
-            messageBean.setText(message);
-            messageBean.setExtra(message);
+            String senderName = getDisplayName(v2TIMMessage);
+            String senderID = v2TIMMessage.getSender();
+            String text = "\"" + senderName + "\"" + TUIChatService.getAppContext().getString(R.string.create_group);
+            messageBean.setOperationUserPair(new Pair<>(senderID, senderName));
+            messageBean.setText(text);
+            messageBean.setExtra(text);
             return messageBean;
         } else {
             if (isTyping(customElem.getData())) {
-                
                 // Ignore being typed, it cannot be displayed as a real message
                 return null;
             }
@@ -443,9 +443,12 @@ public class ChatMessageParser {
                             localizableContent = TUIChatService.getAppContext().getString(R.string.create_group);
                         }
                     }
-                    String message = TUIChatConstants.covert2HTMLString(getDisplayName(v2TIMMessage)) + localizableContent;
-                    messageBean.setText(message);
-                    messageBean.setExtra(message);
+                    String senderName = getDisplayName(v2TIMMessage);
+                    String senderID = v2TIMMessage.getSender();
+                    String text = "\"" + senderName + "\"" + localizableContent;
+                    messageBean.setText(text);
+                    messageBean.setExtra(text);
+                    messageBean.setOperationUserPair(new Pair<>(senderID, senderName));
                     return messageBean;
                 }
             } catch (Exception e) {
@@ -480,22 +483,26 @@ public class ChatMessageParser {
         if (messageBean == null) {
             return null;
         }
-        String displayString;
+        String displayString = "";
         if (messageBean.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
-            displayString = getRevokeMessageDisplayString(messageBean);
+            Pair<UserBean, String> displayStringPair = getRevokeMessageDisplayString(messageBean);
+            if (displayStringPair != null) {
+                displayString = displayStringPair.second;
+            }
         } else {
-            displayString = messageBean.onGetDisplayString();
+            displayString = messageBean.getExtra();
         }
-        displayString = FaceUtil.emojiJudge(displayString);
-        return displayString;
+        displayString = FaceManager.emojiJudge(displayString).toString();
+        return displayString.toString();
     }
 
-    public static String getRevokeMessageDisplayString(TUIMessageBean msg) {
+    public static Pair<UserBean, String> getRevokeMessageDisplayString(TUIMessageBean msg) {
         Context context = TUIChatService.getAppContext();
         if (context == null || msg == null || msg.getStatus() != TUIMessageBean.MSG_STATUS_REVOKE) {
-            return "";
+            return null;
         }
-        String showString;
+        Pair<UserBean, String> displayStringPair = null;
+        String showString = "";
         String revoker = msg.getSender();
         String messageSender = msg.getSender();
         UserBean revokerBean = msg.getRevoker();
@@ -510,14 +517,15 @@ public class ChatMessageParser {
                     showString = context.getResources().getString(R.string.revoke_tips_other);
                 } else {
                     String operatorName = msg.getUserDisplayName();
-                    showString = operatorName + context.getResources().getString(R.string.revoke_tips);
+                    showString = "\"" + operatorName + "\"" + context.getResources().getString(R.string.revoke_tips);
                 }
             }
-        } else {
+        } else if (revokerBean != null) {
             String operatorName = revokerBean.getDisplayName();
-            showString = operatorName + context.getResources().getString(R.string.revoke_tips);
+            showString = "\"" + operatorName + "\"" + context.getResources().getString(R.string.revoke_tips);
         }
-        return showString;
+        displayStringPair = new Pair<>(revokerBean, showString);
+        return displayStringPair;
     }
 
     public static String getReplyMessageAbstract(TUIMessageBean messageBean) {

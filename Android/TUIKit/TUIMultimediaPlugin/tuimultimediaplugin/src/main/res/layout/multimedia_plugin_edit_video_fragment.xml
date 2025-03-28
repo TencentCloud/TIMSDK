@@ -2,38 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
     <RelativeLayout
-            android:id="@+id/rl_video_area"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        <RelativeLayout
-                android:id="@+id/rl_video_play_view_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-        </RelativeLayout>
-
-        <RelativeLayout
-                android:id="@+id/rl_graffiti_drawing_view_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-        </RelativeLayout>
-
-        <com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.floatlayer.FloatLayerViewGroup
-                android:id="@+id/float_layer_view_group"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-            android:id="@+id/rl_subtitle_paster_input_view_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
+        android:id="@+id/edit_common_ctrl_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     </RelativeLayout>
 
     <RelativeLayout
@@ -63,73 +35,6 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
                 android:background="@null" />
-
-    </RelativeLayout>
-
-    <ImageView
-            android:id="@+id/edit_return_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/multimedia_plugin_return"
-            android:visibility="visible"
-            android:contentDescription="@string/multimedia_plugin_empty" />
-
-    <RelativeLayout
-            android:id="@+id/operation_layout"
-            android:background="@color/multimedia_plugin_edit_function_view_background"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_alignParentBottom="true">
-
-        <LinearLayout
-                android:id="@+id/function_button_layout"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_toStartOf="@+id/send_btn"
-                android:gravity="center_vertical">
-
-        </LinearLayout>
-
-        <Button
-                android:id="@+id/send_btn"
-                android:layout_height="28dp"
-                android:layout_width="60dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
-                android:text="@string/multimedia_plugin_send"
-                android:textColor="@color/multimedia_plugin_white"
-                android:textSize="@dimen/multimedia_plugin_common_text_size"
-                android:fontFamily="@string/multimedia_plugin_common_font"
-                android:layout_marginEnd="20dp"
-                android:padding="1dp" />
-    </RelativeLayout>
-
-    <RelativeLayout
-            android:id="@+id/rl_graffiti_operation_view_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/operation_layout">
-
-    </RelativeLayout>
-
-    <RelativeLayout
-            android:id="@+id/rl_picture_paster_panel_view_container"
-            android:layout_width="match_parent"
-            android:layout_height="260dp"
-            android:visibility="gone"
-            android:layout_alignParentBottom="true">
-
-    </RelativeLayout>
-
-    <RelativeLayout
-            android:id="@+id/rl_bgm_panel_view_container"
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:visibility="gone"
-            android:layout_alignParentBottom="true">
 
     </RelativeLayout>
 

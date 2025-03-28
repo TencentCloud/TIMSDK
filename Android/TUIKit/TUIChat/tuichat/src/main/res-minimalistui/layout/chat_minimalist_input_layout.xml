@@ -164,10 +164,10 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="55dp"
                 android:gravity="center"
-                app:lineColor="@color/white"
-                app:lineSpace="2dp"
-                app:lineWidth="2dp"
-                app:waveMode="left_right" />
+                app:chat_voice_line_color="@color/white"
+                app:chat_voice_line_space="2dp"
+                app:chat_voice_line_width="2dp"
+                app:chat_voice_wave_mode="left_right" />
         </FrameLayout>
 
         <ImageView

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatWindow.ScreenSharingIndicate.ScreenSharingIndicateFloatView
+<com.tencent.cloud.tuikit.roomkit.view.main.floatwindow.screensharingindicate.ScreenSharingIndicateFloatView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -14,4 +14,4 @@
         android:maxEms="1"
         android:text="@string/tuiroomkit_tv_screen_recording"/>
 
-</com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatWindow.ScreenSharingIndicate.ScreenSharingIndicateFloatView>
+</com.tencent.cloud.tuikit.roomkit.view.main.floatwindow.screensharingindicate.ScreenSharingIndicateFloatView>

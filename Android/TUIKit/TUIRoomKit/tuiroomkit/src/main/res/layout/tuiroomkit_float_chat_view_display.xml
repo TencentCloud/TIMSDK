@@ -13,7 +13,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <com.tencent.cloud.tuikit.roomkit.view.page.widget.FloatChat.view.MessageBarrageView
+    <com.tencent.cloud.tuikit.roomkit.view.main.floatchat.view.MessageBarrageView
         android:id="@+id/tuiroomkit_view_message_barrage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

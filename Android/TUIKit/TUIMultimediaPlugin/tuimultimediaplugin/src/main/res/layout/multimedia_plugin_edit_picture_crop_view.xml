@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <Button
+            android:id="@+id/crop_restore"
+            android:text="@string/multimedia_plugin_restore"
+            android:textColor="@color/multimedia_edit_picture_crop_button"
+            android:background="@android:color/transparent"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="62dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    <Button
+            android:id="@+id/crop_rotation"
+            android:background="@drawable/multimedia_plugin_edit_crop_rotation"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="35dp"
+            android:layout_marginBottom="70dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+            android:id="@+id/crop_cancel"
+            android:background="@drawable/multimedia_plugin_record_cancel"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="35dp"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    <Button
+            android:id="@+id/crop_ok"
+            android:background="@drawable/multimedia_plugin_picker_preview_selected_tick_icon"
+            android:layout_width="30dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="32.5dp"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

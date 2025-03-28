@@ -317,7 +317,7 @@ public class FaceManager {
         return null;
     }
 
-    public static String emojiJudge(String text) {
+    public static CharSequence emojiJudge(CharSequence text) {
         if (TextUtils.isEmpty(text)) {
             return "";
         }
@@ -333,17 +333,10 @@ public class FaceManager {
         ArrayList<EmojiData> emojiDataArrayList = new ArrayList<>();
         
         // Traverse to find matching characters and store
-        int lastMentionIndex = -1;
         while (m.find()) {
             String emojiKey = m.group();
-            int start;
-            if (lastMentionIndex != -1) {
-                start = text.indexOf(emojiKey, lastMentionIndex);
-            } else {
-                start = text.indexOf(emojiKey);
-            }
-            int end = start + emojiKey.length();
-            lastMentionIndex = end;
+            int start = m.start();
+            int end = m.end();
 
             Emoji emoji = getEmojiMap().get(emojiKey);
             if (emoji == null) {
@@ -357,7 +350,6 @@ public class FaceManager {
             emojiDataArrayList.add(emojiData);
         }
 
-        
         // flashback replacement
         if (emojiDataArrayList.isEmpty()) {
             return text;
@@ -372,7 +364,7 @@ public class FaceManager {
                 sb.replace(start, end, emojiName);
             }
         }
-        return sb.toString();
+        return sb;
     }
 
     public static List<String> splitEmojiText(String text) {

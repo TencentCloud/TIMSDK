@@ -18,7 +18,6 @@ import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
-import com.tencent.qcloud.tuikit.tuicontact.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupInfo;
 import com.tencent.qcloud.tuikit.tuicontact.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuicontact.classicui.widget.ContactListView;
@@ -46,8 +45,6 @@ public class ForwardSelectGroupActivity extends BaseLightActivity {
     private List<String> mSelectConversationIcons = new ArrayList<>();
     private RelativeLayout mForwardSelectlistViewLayout;
     private TextView mSureView;
-
-    private List<ConversationInfo> mContactDataSource = new ArrayList<>();
 
     private ContactPresenter presenter;
 

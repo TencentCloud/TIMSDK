@@ -27,6 +27,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.action.PopMenuAction;
 import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
 import com.tencent.qcloud.tuikit.tuiconversation.R;
+import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationGroupBean;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.classicui.interfaces.OnConversationAdapterListener;
 import com.tencent.qcloud.tuikit.tuiconversation.classicui.util.TUIConversationUtils;
@@ -58,7 +59,7 @@ public class TUIConversationFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        TUIConversationLog.d(TAG, "TUIConversationFragment onCreateView");
+        TUIConversationLog.d(TAG, "onCreateView");
         mBaseView = inflater.inflate(R.layout.conversation_fragment, container, false);
         initView();
         return mBaseView;
@@ -67,7 +68,15 @@ public class TUIConversationFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        TUIConversationLog.d(TAG, "TUIConversationFragment onResume");
+        presenter.setFocus(true);
+        TUIConversationLog.d(TAG, "onResume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.setFocus(false);
+        TUIConversationLog.d(TAG, "onPause");
     }
 
     public static TUIConversationFragment newInstance() {
@@ -82,6 +91,7 @@ public class TUIConversationFragment extends Fragment {
         presenter = new ConversationPresenter();
         presenter.setConversationListener();
         presenter.setShowType(ConversationPresenter.SHOW_TYPE_CONVERSATION_LIST_WITH_FOLD);
+        presenter.setConversationGroupType(ConversationGroupBean.CONVERSATION_GROUP_TYPE_DEFAULT);
         mConversationLayout.setPresenter(presenter);
 
         mConversationLayout.initDefault();
@@ -310,6 +320,7 @@ public class TUIConversationFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        TUIConversationLog.d(TAG, "onDestroy");
         if (presenter != null) {
             presenter.destroy();
             presenter = null;

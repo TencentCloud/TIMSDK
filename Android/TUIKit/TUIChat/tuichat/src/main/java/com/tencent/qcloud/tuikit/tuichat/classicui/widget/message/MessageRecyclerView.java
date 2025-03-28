@@ -2,7 +2,6 @@ package com.tencent.qcloud.tuikit.tuichat.classicui.widget.message;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PointF;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -12,7 +11,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import com.tencent.qcloud.tuicore.TUIConstants;
@@ -800,14 +798,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
     public void setAdapter(MessageAdapter adapter) {
         super.setAdapter(adapter);
         mAdapter = adapter;
-    }
-
-    public List<ChatPopMenu.ChatPopMenuAction> getPopActions() {
-        return mPopActions;
-    }
-
-    public void addPopAction(ChatPopMenu.ChatPopMenuAction action) {
-        mMorePopActions.add(action);
     }
 
     public void loadMessageFinish() {

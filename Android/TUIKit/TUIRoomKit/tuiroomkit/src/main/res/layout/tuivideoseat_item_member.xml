@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.tencent.cloud.tuikit.roomkit.videoseat.ui.view.RoundRelativeLayout
+<com.tencent.cloud.tuikit.roomkit.view.main.videoseat.ui.view.RoundRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl_content"
@@ -48,7 +48,7 @@
             android:scaleType="centerCrop"
             app:roundPercent="1"/>
 
-        <com.tencent.cloud.tuikit.roomkit.videoseat.ui.view.UserVolumePromptView
+        <com.tencent.cloud.tuikit.roomkit.view.main.videoseat.ui.view.UserVolumePromptView
             android:id="@+id/tuivideoseat_user_mic"
             android:layout_width="14dp"
             android:layout_height="14dp"
@@ -80,4 +80,4 @@
         android:background="@drawable/tuivideoseat_talk_bg_rectangular"
         android:visibility="gone" />
 
-</com.tencent.cloud.tuikit.roomkit.videoseat.ui.view.RoundRelativeLayout>
+</com.tencent.cloud.tuikit.roomkit.view.main.videoseat.ui.view.RoundRelativeLayout>

@@ -1,10 +1,17 @@
 package com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.floatlayer;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
+import com.tencent.liteav.base.util.LiteavLog;
+import com.tencent.liteav.base.util.Size;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.TUIMultimediaPasterInfo;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.floatlayer.FloatLayerView.Status;
 import com.tencent.ugc.TXVideoEditConstants.TXRect;
@@ -31,12 +38,12 @@ public class FloatLayerViewGroup extends FrameLayout {
         super(context, attrs, defStyleAttr);
     }
 
-    public void addOperationView(FloatLayerView view) {
+    public void addFloatLayerView(FloatLayerView view) {
         if (view == null) {
             return;
         }
         mFloatLayerViewList.add(view);
-        addView(view);
+        addView(view, MATCH_PARENT, MATCH_PARENT);
         view.tuiDataGetStatus().observe(status -> {
             if (status == Status.STATUS_SELECTED) {
                 if (mSelectedFloatLayerView != null && view != mSelectedFloatLayerView) {
@@ -47,12 +54,19 @@ public class FloatLayerViewGroup extends FrameLayout {
         });
     }
 
-    public void removeOperationView(FloatLayerView view) {
+    public void removeFloatLayerView(FloatLayerView view) {
         if (view == null) {
             return;
         }
         mFloatLayerViewList.remove(view);
         removeView(view);
+    }
+
+    public void removeAllFloatLayerView() {
+        for(FloatLayerView view : mFloatLayerViewList) {
+            removeView(view);
+        }
+        mFloatLayerViewList.clear();
     }
 
     @NonNull
@@ -99,4 +113,15 @@ public class FloatLayerViewGroup extends FrameLayout {
         return mFloatLayerViewList.size();
     }
 
+    @SuppressLint("DrawAllocation")
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        for (int i = 0; i < getChildCount(); i++) {
+            View view = getChildAt(i);
+            if (view instanceof FloatLayerView) {
+                ((FloatLayerView)view).onParentSizeChange(new Size(r - l, b - t));
+            }
+            view.invalidate();
+        }
+    }
 }

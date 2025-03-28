@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@color/multimedia_plugin_edit_function_view_background"
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+
+    <LinearLayout
+            android:id="@+id/function_button_layout"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toStartOf="@+id/send_btn"
+            android:gravity="center_vertical">
+
+    </LinearLayout>
+
+    <Button
+            android:id="@+id/send_btn"
+            android:layout_height="28dp"
+            android:layout_width="60dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:text="@string/multimedia_plugin_send"
+            android:textColor="@color/multimedia_plugin_white"
+            android:textSize="@dimen/multimedia_plugin_common_text_size"
+            android:fontFamily="@string/multimedia_plugin_common_font"
+            android:layout_marginEnd="20dp"
+            android:padding="1dp" />
+</RelativeLayout>

@@ -160,7 +160,6 @@ public class AlbumPreviewFragment extends DialogFragment {
                 currentBean = previewList.get(position);
                 selectedPhotosView.switchPhoto(currentBean);
                 setSelectCheckboxBg();
-                setEditButtonState();
             }
         });
         selectedPhotosView.setPhotoList(albumGridView.getSelectedPhotoList());
@@ -178,7 +177,6 @@ public class AlbumPreviewFragment extends DialogFragment {
 
         });
         setFullImageCheckboxState();
-        setEditButtonState();
         setSelectCheckboxBg();
     }
 
@@ -187,16 +185,6 @@ public class AlbumPreviewFragment extends DialogFragment {
             fullImageCheckbox.setSelected(true);
         } else {
             fullImageCheckbox.setSelected(false);
-        }
-    }
-
-    private void setEditButtonState() {
-        if (currentBean instanceof ImageBean) {
-            editButton.setTextColor(getResources().getColor(R.color.multimedia_plugin_picker_dark_gray));
-            editButton.setEnabled(false);
-        } else {
-            editButton.setTextColor(getResources().getColor(R.color.multimedia_plugin_picker_white_color));
-            editButton.setEnabled(true);
         }
     }
 
@@ -243,22 +231,20 @@ public class AlbumPreviewFragment extends DialogFragment {
             if (!(context instanceof ActivityResultCaller) || !isAdded()) {
                 return;
             }
-            if (currentBean instanceof VideoBean) {
-                Uri editUri = currentBean.getFinalUri();
-                TUIMultimediaMediaProcessor.getInstance().editMedia(context, editUri, uri -> {
-                    if (uri != null) {
-                        for (BaseBean baseBean : previewList) {
-                            if (baseBean.getFinalUri() == editUri) {
-                                baseBean.editedUri = uri;
-                                albumGridView.freshPhoto(baseBean);
-                                selectedPhotosView.freshPhoto(baseBean);
-                                adapter.freshPhoto(baseBean);
-                                break;
-                            }
+            Uri editUri = currentBean.getFinalUri();
+            TUIMultimediaMediaProcessor.getInstance().editMedia(context, editUri, uri -> {
+                if (uri != null) {
+                    for (BaseBean baseBean : previewList) {
+                        if (baseBean.getFinalUri() == editUri) {
+                            baseBean.editedUri = uri;
+                            albumGridView.freshPhoto(baseBean);
+                            selectedPhotosView.freshPhoto(baseBean);
+                            adapter.freshPhoto(baseBean);
+                            break;
                         }
                     }
-                });
-            }
+                }
+            });
         });
     }
 
@@ -377,7 +363,7 @@ public class AlbumPreviewFragment extends DialogFragment {
         @Override
         public void bind(BaseBean bean) {
             Glide.with(itemView.getContext())
-                .load(bean.uri)
+                .load(bean.getFinalUri())
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .dontTransform()

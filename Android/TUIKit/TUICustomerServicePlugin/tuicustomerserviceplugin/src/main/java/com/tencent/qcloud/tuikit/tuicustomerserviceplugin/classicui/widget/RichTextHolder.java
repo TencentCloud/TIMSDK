@@ -10,6 +10,7 @@ import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.request.target.Target;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.classicui.widget.message.MessageContentHolder;
+import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.R;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.bean.RichTextMessageBean;
 import com.tencent.qcloud.tuikit.tuicustomerserviceplugin.util.CustomLinkSpanFactory;
@@ -29,33 +30,18 @@ public class RichTextHolder extends MessageContentHolder {
         super(itemView);
         markdownTextView = itemView.findViewById(R.id.rich_text_view);
         Context context = itemView.getContext();
-        markwon = Markwon
-                      .builder(context)
-                      // automatically create Glide instance
-                      .usePlugin(GlideImagesPlugin.create(context))
-                      // use supplied Glide instance
-                      .usePlugin(GlideImagesPlugin.create(Glide.with(context)))
-                      // if you need more control
-                      .usePlugin(GlideImagesPlugin.create(new GlideImagesPlugin.GlideStore() {
-                          @NonNull
-                          @Override
-                          public RequestBuilder<Drawable> load(@NonNull AsyncDrawable drawable) {
-                              return Glide.with(context).load(drawable.getDestination());
-                          }
-
-                          @Override
-                          public void cancel(@NonNull Target<?> target) {
-                              Glide.with(context).clear(target);
-                          }
-                      }))
-                      .usePlugin(MovementMethodPlugin.link())
-                      .usePlugin(new AbstractMarkwonPlugin() {
-                          @Override
-                          public void configureSpansFactory(@NonNull MarkwonSpansFactory.Builder builder) {
-                              builder.setFactory(Link.class, new CustomLinkSpanFactory());
-                          }
-                      })
-                      .build();
+        if (!TUIUtil.isActivityDestroyed(context)) {
+            markwon = Markwon.builder(context)
+                          .usePlugin(GlideImagesPlugin.create(context))
+                          .usePlugin(MovementMethodPlugin.link())
+                          .usePlugin(new AbstractMarkwonPlugin() {
+                              @Override
+                              public void configureSpansFactory(@NonNull MarkwonSpansFactory.Builder builder) {
+                                  builder.setFactory(Link.class, new CustomLinkSpanFactory());
+                              }
+                          })
+                          .build();
+        }
     }
 
     @Override
@@ -70,6 +56,8 @@ public class RichTextHolder extends MessageContentHolder {
         msgArea.setPaddingRelative(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical);
 
         RichTextMessageBean richTextMessageBean = (RichTextMessageBean) msg;
-        markwon.setMarkdown(markdownTextView, richTextMessageBean.getExtra());
+        if (markwon != null) {
+            markwon.setMarkdown(markdownTextView, richTextMessageBean.getExtra());
+        }
     }
 }

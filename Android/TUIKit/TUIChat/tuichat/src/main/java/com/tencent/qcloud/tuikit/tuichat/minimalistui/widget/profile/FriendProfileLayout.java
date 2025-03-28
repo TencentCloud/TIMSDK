@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Map;
 
 public class FriendProfileLayout extends LinearLayout {
-    private static final String TAG = FriendProfileLayout.class.getSimpleName();
+    private static final String TAG = "FriendProfileLayout";
 
     private MinimalistTitleBar mTitleBar;
 

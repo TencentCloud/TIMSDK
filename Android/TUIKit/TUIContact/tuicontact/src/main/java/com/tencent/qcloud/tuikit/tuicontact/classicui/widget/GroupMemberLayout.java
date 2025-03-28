@@ -37,8 +37,6 @@ public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayou
     private RecyclerView recyclerView;
     private boolean isSelectMode;
     private String title;
-    private ArrayList<String> excludeList;
-    private ArrayList<String> alreadySelectedList;
     private RecyclerView selectedList;
     private SelectedAdapter selectedListAdapter;
     private View selectArea;
@@ -151,12 +149,10 @@ public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayou
     }
 
     public void setExcludeList(ArrayList<String> excludeList) {
-        this.excludeList = excludeList;
         mAdapter.setExcludeList(excludeList);
     }
 
     public void setAlreadySelectedList(ArrayList<String> alreadySelectedList) {
-        this.alreadySelectedList = alreadySelectedList;
         mAdapter.setAlreadySelectedList(alreadySelectedList);
     }
 
@@ -187,9 +183,6 @@ public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayou
 
     @Override
     public void onGroupInfoChanged(GroupInfo groupInfo) {}
-
-    @Override
-    public void onGroupInfoModified(Object value, int type) {}
 
     @Override
     public void onGroupMemberListChanged(GroupInfo groupInfo) {
@@ -274,7 +267,7 @@ public class GroupMemberLayout extends LinearLayout implements IGroupMemberLayou
 
             public SelectedViewHolder(@NonNull View itemView) {
                 super(itemView);
-                userIconView = (ImageView) itemView.findViewById(R.id.ivAvatar);
+                userIconView = itemView.findViewById(R.id.ivAvatar);
             }
         }
     }

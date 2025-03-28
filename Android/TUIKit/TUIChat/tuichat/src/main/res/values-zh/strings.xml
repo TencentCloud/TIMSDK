@@ -220,9 +220,9 @@
     <string name="chat_call_cancel_caller">已取消</string>
     <string name="chat_call_cancel_callee">对方已取消</string>
     <string name="chat_call_timeout_caller">对方无应答</string>
-    <string name="chat_call_timeout_callee">对方已取消</string>
+    <string name="chat_call_timeout_callee">超时无应答</string>
     <string name="chat_call_line_busy_caller">对方忙线中</string>
-    <string name="chat_call_line_busy_callee">对方已取消</string>
+    <string name="chat_call_line_busy_callee">忙线未接听</string>
     <string name="chat_group_call_send">发起了群通话</string>
     <string name="chat_group_call_end">通话结束</string>
     <string name="chat_group_call_no_answer">未接听</string>

@@ -35,13 +35,12 @@ import java.io.IOException;
 public class CameraView extends FrameLayout implements SurfaceHolder.Callback, ICameraView {
     private static final String TAG = CameraView.class.getSimpleName();
 
-    
     // camera mode
     public static final int TYPE_PICTURE = 0x001;
     public static final int TYPE_VIDEO = 0x002;
     public static final int TYPE_SHORT = 0x003;
     public static final int TYPE_DEFAULT = 0x004;
-    
+
     // Recording video bit rate
     public static final int MEDIA_QUALITY_HIGH = 20 * 100000;
     public static final int MEDIA_QUALITY_MIDDLE = 16 * 100000;
@@ -51,12 +50,11 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback, I
     public static final int MEDIA_QUALITY_DESPAIR = 2 * 100000;
     public static final int MEDIA_QUALITY_SORRY = 1 * 80000;
 
-    
     // Flash status
     private static final int FLASH_TYPE_AUTO = 0x021;
     private static final int FLASH_TYPE_ON = 0x022;
     private static final int FLASH_TYPE_OFF = 0x023;
-    
+
     // Camera state machine
     private CameraMachine machine;
     private int flashType = FLASH_TYPE_OFF;
@@ -75,10 +73,8 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback, I
     private int layoutWidth;
     private float screenProp = 0f;
 
-    
     private String videoUrl;
 
-    
     // Switch camera button parameters
     private int iconSize = 0;
     private int iconMargin = 0;
@@ -87,7 +83,6 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback, I
     private int iconRight = 0;
     private int duration = 0;
 
-    
     // scale gradient
     private int zoomGradient = 0;
 
@@ -107,15 +102,15 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback, I
         super(context, attrs, defStyleAttr);
         mContext = context;
         // get AttributeSet
-        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CameraView, defStyleAttr, 0);
-        iconSize = a.getDimensionPixelSize(
-            R.styleable.CameraView_iconSize, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 35, getResources().getDisplayMetrics()));
-        iconMargin = a.getDimensionPixelSize(
-            R.styleable.CameraView_iconMargin, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, getResources().getDisplayMetrics()));
-        iconSrc = a.getResourceId(R.styleable.CameraView_iconSrc, R.drawable.chat_camera_switchcamera);
-        iconLeft = a.getResourceId(R.styleable.CameraView_iconLeft, 0);
-        iconRight = a.getResourceId(R.styleable.CameraView_iconRight, 0);
-        duration = TUIChatConfigs.getConfigs().getGeneralConfig().getVideoRecordMaxTime() * 1000;
+        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ChatCameraView, defStyleAttr, 0);
+        iconSize = a.getDimensionPixelSize(R.styleable.ChatCameraView_chat_camera_icon_size,
+            (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 35, getResources().getDisplayMetrics()));
+        iconMargin = a.getDimensionPixelSize(R.styleable.ChatCameraView_chat_camera_icon_margin,
+            (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15, getResources().getDisplayMetrics()));
+        iconSrc = a.getResourceId(R.styleable.ChatCameraView_chat_camera_icon_src, R.drawable.chat_camera_switchcamera);
+        iconLeft = a.getResourceId(R.styleable.ChatCameraView_chat_camera_icon_left, 0);
+        iconRight = a.getResourceId(R.styleable.ChatCameraView_chat_camera_icon_right, 0);
+        duration = TUIChatConfigs.getGeneralConfig().getVideoRecordMaxTime() * 1000;
         a.recycle();
         initData();
         initView();
@@ -474,7 +469,7 @@ public class CameraView extends FrameLayout implements SurfaceHolder.Callback, I
         } else {
             mPictureShowView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         }
-        
+
         mPictureShowView.setImageBitmap(bitmap);
         mPictureShowView.setVisibility(VISIBLE);
         mCaptureLayout.startAlphaAnimation();

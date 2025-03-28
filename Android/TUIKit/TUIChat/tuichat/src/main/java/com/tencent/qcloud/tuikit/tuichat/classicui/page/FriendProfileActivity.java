@@ -82,7 +82,6 @@ public class FriendProfileActivity extends BaseLightActivity {
                     intent.putExtra(ImageSelectActivity.SELECTED, new ImageSelectActivity.ImageBean(mChatBackgroundThumbnailUrl, "", false));
                 }
                 intent.putExtra(ImageSelectActivity.NEED_DOWNLOAD_LOCAL, true);
-                startActivityForResult(intent, TUIChatConstants.CHAT_REQUEST_BACKGROUND_CODE);
                 TUICore.startActivityForResult(FriendProfileActivity.this, intent, new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
@@ -100,8 +99,6 @@ public class FriendProfileActivity extends BaseLightActivity {
                         String thumbnailUri = imageBean.getThumbnailUri();
                         TUIChatLog.d(TAG, "onActivityResult backgroundUri = " + backgroundUri);
                         mChatBackgroundThumbnailUrl = thumbnailUri;
-                        HashMap<String, Object> param = new HashMap<>();
-                        param.put(TUIConstants.TUIChat.CHAT_ID, userID);
                         String dataUri = thumbnailUri + "," + backgroundUri;
                         TUIChatService.getInstance().setChatBackground(userID, dataUri);
                     }

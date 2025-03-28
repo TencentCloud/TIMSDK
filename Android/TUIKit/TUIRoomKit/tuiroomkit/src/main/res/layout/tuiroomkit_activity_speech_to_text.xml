@@ -26,7 +26,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="12dp"/>
 
-    <com.tencent.cloud.tuikit.roomkit.view.page.widget.SpeechToText.SpeechToTextRecyclerView
+    <com.tencent.cloud.tuikit.roomkit.view.main.speechtotext.SpeechToTextRecyclerView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

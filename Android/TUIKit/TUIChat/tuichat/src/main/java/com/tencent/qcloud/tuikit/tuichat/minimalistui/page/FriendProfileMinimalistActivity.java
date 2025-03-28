@@ -90,11 +90,8 @@ public class FriendProfileMinimalistActivity extends BaseMinimalistLightActivity
                         String thumbnailUri = imageBean.getThumbnailUri();
                         TUIChatLog.d("FriendProfileMinimalistActivity", "onActivityResult backgroundUri = " + backgroundUri);
                         mChatBackgroundThumbnailUrl = thumbnailUri;
-                        HashMap<String, Object> param = new HashMap<>();
-                        param.put(TUIConstants.TUIChat.CHAT_ID, userID);
                         String dataUri = thumbnailUri + "," + backgroundUri;
-                        param.put(TUIConstants.TUIChat.CHAT_BACKGROUND_URI, dataUri);
-                        TUICore.callService(TUIConstants.TUIChat.SERVICE_NAME, TUIConstants.TUIChat.METHOD_UPDATE_DATA_STORE_CHAT_URI, param);
+                        TUIChatService.getInstance().setChatBackground(userID, dataUri);
                     }
                 });
             }

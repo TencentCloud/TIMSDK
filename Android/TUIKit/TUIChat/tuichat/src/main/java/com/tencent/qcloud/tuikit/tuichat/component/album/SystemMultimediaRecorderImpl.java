@@ -50,12 +50,14 @@ class SystemMultimediaRecorderImpl extends IMultimediaRecorder {
         ActivityResultResolver.takeVideo(activityResultCaller, uri, new TUIValueCallback<Boolean>() {
             @Override
             public void onSuccess(Boolean object) {
-                File videoFile = new File(path);
-                if (videoFile.exists()) {
-                    listener.onSuccess(uri);
-                    return;
+                if (object) {
+                    File videoFile = new File(path);
+                    if (videoFile.exists()) {
+                        listener.onSuccess(uri);
+                    }
+                } else {
+                    listener.onFailed(-1, "record failed, file not exists");
                 }
-                listener.onFailed(-1, "record failed, file not exists");
             }
 
             @Override

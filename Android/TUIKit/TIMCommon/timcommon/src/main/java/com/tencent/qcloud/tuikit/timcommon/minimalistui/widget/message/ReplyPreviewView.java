@@ -26,6 +26,8 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.tencent.qcloud.tuikit.timcommon.R;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
+
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -127,10 +129,8 @@ public class ReplyPreviewView extends FrameLayout {
     }
 
     private void loadAvatar(ImageView imageView, Object url) {
-        if (getContext() instanceof Activity) {
-            if (((Activity) getContext()).isDestroyed() || ((Activity) getContext()).isFinishing()) {
-                return;
-            }
+        if (TUIUtil.isActivityDestroyed(getContext())) {
+            return;
         }
 
         RequestBuilder<Drawable> errorRequestBuilder = Glide.with(getContext())

@@ -4,34 +4,19 @@
         android:layout_height="match_parent">
 
     <RelativeLayout
-            android:id="@+id/fl_media_preview_picture_view_container"
+            android:id="@+id/edit_common_ctrl_view_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
     </RelativeLayout>
 
-    <ImageView
-            android:id="@+id/edit_return_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/multimedia_plugin_return"
-            android:visibility="visible"
-            android:contentDescription="@string/multimedia_plugin_empty" />
 
-    <Button
-            android:id="@+id/send_btn"
-            android:text="@string/multimedia_plugin_send"
-            android:textColor="@color/multimedia_plugin_white"
-            android:textSize="@dimen/multimedia_plugin_common_text_size"
-            android:fontFamily="@string/multimedia_plugin_common_font"
-            android:layout_height="28dp"
-            android:layout_width="60dp"
-            android:layout_centerVertical="true"
-            android:padding="1dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp"/>
+<!--    <com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.ClipLayout-->
+<!--            android:id="@+id/fl_media_preview_picture_view_container"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent">-->
+
+
+<!--    </com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.ClipLayout>-->
+
 </RelativeLayout>

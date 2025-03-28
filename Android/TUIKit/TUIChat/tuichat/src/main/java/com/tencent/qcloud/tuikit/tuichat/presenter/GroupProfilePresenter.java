@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuichat.presenter;
 
 import android.text.TextUtils;
 
+import com.tencent.imsdk.group.GroupMemberInfo;
 import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.imsdk.v2.V2TIMGroupChangeInfo;
 import com.tencent.imsdk.v2.V2TIMGroupListener;
@@ -10,6 +11,7 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuikit.timcommon.bean.GroupProfileBean;
@@ -52,6 +54,15 @@ public class GroupProfilePresenter {
                             groupProfileBean.setAddOpt(changeInfo.getIntValue());
                         } else if (changeInfo.getType() == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_RECEIVE_MESSAGE_OPT) {
                             groupProfileBean.setRecvOpt(changeInfo.getIntValue());
+                        } else if (changeInfo.getType() == V2TIMGroupChangeInfo.V2TIM_GROUP_INFO_CHANGE_TYPE_OWNER) {
+                            String newOwnerID = changeInfo.getValue();
+                            if (TextUtils.equals(newOwnerID, TUILogin.getLoginUser())) {
+                                if (!groupProfileBean.isOwner()) {
+                                    groupProfileBean.setRoleInGroup(GroupMemberInfo.MEMBER_ROLE_OWNER);
+                                }
+                            } else if (groupProfileBean.isOwner()) {
+                                groupProfileBean.setRoleInGroup(GroupMemberInfo.MEMBER_ROLE_MEMBER);
+                            }
                         }
                         onGroupChanged(changeInfo);
                     }

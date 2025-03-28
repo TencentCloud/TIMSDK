@@ -119,7 +119,7 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.72" />
 
-    <com.tencent.cloud.tuikit.roomkit.view.page.widget.ConferenceInvitation.SlideToAcceptView
+    <com.tencent.cloud.tuikit.roomkit.view.main.conferenceinvitation.SlideToAcceptView
         android:id="@+id/view_accept_invitation"
         android:layout_width="196dp"
         android:layout_height="77dp"

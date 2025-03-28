@@ -232,7 +232,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.tencent.cloud.tuikit.roomkit.view.page.widget.ScheduleConference.SelectScheduleParticipant.SelectScheduleParticipantView
+    <com.tencent.cloud.tuikit.roomkit.view.schedule.selectscheduleparticipant.SelectScheduleParticipantView
         android:id="@+id/tuiroomkit_select_schedule_participant"
         android:layout_width="0dp"
         android:layout_height="32dp"

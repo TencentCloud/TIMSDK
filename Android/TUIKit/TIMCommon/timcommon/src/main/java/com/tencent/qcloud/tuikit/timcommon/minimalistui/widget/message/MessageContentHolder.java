@@ -30,6 +30,8 @@ import com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView;
 import com.tencent.qcloud.tuikit.timcommon.config.minimalistui.TUIConfigMinimalist;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -117,10 +119,8 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
     @Override
     public void layoutViews(final TUIMessageBean msg, final int position) {
         Context context = itemView.getContext();
-        if (context instanceof Activity) {
-            if (((Activity) context).isDestroyed()) {
-                return;
-            }
+        if (TUIUtil.isActivityDestroyed(context)) {
+            return;
         }
 
         super.layoutViews(msg, position);

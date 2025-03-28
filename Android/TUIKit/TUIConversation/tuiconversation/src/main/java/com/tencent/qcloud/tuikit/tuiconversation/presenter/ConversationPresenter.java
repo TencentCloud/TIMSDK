@@ -15,11 +15,12 @@ import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.util.SPUtils;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
+import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuikit.timcommon.util.FaceUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationConstants;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
+import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationGroupBean;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationInfo;
 import com.tencent.qcloud.tuikit.tuiconversation.bean.ConversationUserStatusBean;
 import com.tencent.qcloud.tuikit.tuiconversation.commonutil.ConversationUtils;
@@ -64,6 +65,8 @@ public class ConversationPresenter {
 
     private boolean hideFoldItem;
     private boolean isUnreadStatusOfFoldItem;
+    protected int conversationGroupType = ConversationGroupBean.CONVERSATION_GROUP_TYPE_DEFAULT;
+    protected boolean isFocusing = true;
 
     public ConversationPresenter() {
         provider = new ConversationProvider();
@@ -168,11 +171,11 @@ public class ConversationPresenter {
                 ConversationPresenter.this.onConversationLastMessageBeanChanged(conversationID, messageBean);
             }
         };
-        TUIConversationService.getInstance().setConversationEventListener(conversationEventListener);
+        TUIConversationService.getInstance().addConversationEventListener(conversationEventListener);
     }
 
     public void destroy() {
-        TUIConversationService.getInstance().setConversationEventListenerNull();
+        TUIConversationService.getInstance().removeConversationEventListener(conversationEventListener);
         this.conversationEventListener = null;
     }
 
@@ -854,8 +857,10 @@ public class ConversationPresenter {
         if (totalUnreadCount < 0) {
             totalUnreadCount = 0;
         }
-        TUIConversationService.getInstance().setConversationAllGroupUnreadDiff(markUnreadCount - markHiddenCount);
-        updateUnreadTotal(totalUnreadCount);
+        if (conversationGroupType == ConversationGroupBean.CONVERSATION_GROUP_TYPE_DEFAULT) {
+            TUIConversationService.getInstance().setConversationAllGroupUnreadDiff(markUnreadCount - markHiddenCount);
+            updateUnreadTotal(totalUnreadCount);
+        }
     }
 
     /**
@@ -1192,6 +1197,7 @@ public class ConversationPresenter {
         provider.markConversationHidden(id, false, new IUIKitCallback<Void>() {
             @Override
             public void onSuccess(Void data) {
+                conversationInfo.setMarkHidden(false);
                 TUIConversationLog.i(TAG, "onMessageSendForHideConversation markConversationHidden success, conversationID:" + id + ", isHidden:false");
             }
 
@@ -1379,7 +1385,7 @@ public class ConversationPresenter {
         } else {
             displayString = messageBean.onGetDisplayString();
         }
-        displayString = FaceUtil.emojiJudge(displayString);
+        displayString = FaceManager.emojiJudge(displayString).toString();
         return displayString;
     }
 
@@ -1414,5 +1420,13 @@ public class ConversationPresenter {
             showString = operatorName + context.getResources().getString(com.tencent.qcloud.tuikit.timcommon.R.string.revoke_tips);
         }
         return showString;
+    }
+
+    public void setConversationGroupType(int type) {
+        this.conversationGroupType = type;
+    }
+
+    public void setFocus(boolean focus) {
+        this.isFocusing = focus;
     }
 }

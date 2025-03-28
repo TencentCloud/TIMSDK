@@ -166,7 +166,6 @@ public class BeautyFilterScrollView extends RelativeLayout implements View.OnTou
 
     @Override
     public boolean onTouch(View v, @NonNull MotionEvent event) {
-        LiteavLog.i(TAG, "onTouch");
         if (v != mMaskLayout) {
             return false;
         }

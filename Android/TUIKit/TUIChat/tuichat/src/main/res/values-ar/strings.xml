@@ -221,9 +221,9 @@
     <string name="chat_call_cancel_caller">تم الإلغاء</string>
     <string name="chat_call_cancel_callee">تم الإلغاء من الطرف الآخر</string>
     <string name="chat_call_timeout_caller">لا يوجد رد من الطرف الآخر</string>
-    <string name="chat_call_timeout_callee">تم الإلغاء من الطرف الآخر</string>
+    <string name="chat_call_timeout_callee">انتهاء الاتصال بالوقت المحدد</string>
     <string name="chat_call_line_busy_caller">الخط مشغول عند الطرف الآخر</string>
-    <string name="chat_call_line_busy_callee">تم الإلغاء من الطرف الآخر</string>
+    <string name="chat_call_line_busy_callee">الخط مشغول عند الطرف الآخر</string>
     <string name="chat_group_call_send">تم بدء مكالمة جماعية</string>
     <string name="chat_group_call_end">تم إنهاء المكالمة</string>
     <string name="chat_group_call_no_answer">لم يتم الرد</string>

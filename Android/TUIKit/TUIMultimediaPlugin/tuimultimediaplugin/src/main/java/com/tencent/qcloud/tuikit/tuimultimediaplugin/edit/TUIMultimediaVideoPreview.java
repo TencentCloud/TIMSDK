@@ -15,9 +15,9 @@ public class TUIMultimediaVideoPreview extends FrameLayout {
 
     private final String TAG = TUIMultimediaVideoPreview.class.getSimpleName() + "_" + hashCode();
     private final Context mContext;
-    private final TUIMultimediaEditorCore mEditorCore;
+    private final TUIMultimediaVideoEditorCore mEditorCore;
 
-    public TUIMultimediaVideoPreview(@NonNull Context context, TUIMultimediaEditorCore editorCore) {
+    public TUIMultimediaVideoPreview(@NonNull Context context, TUIMultimediaVideoEditorCore editorCore) {
         super(context);
         mContext = context;
         mEditorCore = editorCore;
@@ -28,7 +28,6 @@ public class TUIMultimediaVideoPreview extends FrameLayout {
         LiteavLog.i(TAG, "onAttachedToWindow");
         super.onAttachedToWindow();
         initView();
-        addObserver();
     }
 
     @Override
@@ -36,7 +35,6 @@ public class TUIMultimediaVideoPreview extends FrameLayout {
         LiteavLog.i(TAG, "onDetachedFromWindow");
         super.onDetachedFromWindow();
         mEditorCore.stopPreview();
-        removeObserver();
         removeAllViews();
     }
 
@@ -44,13 +42,5 @@ public class TUIMultimediaVideoPreview extends FrameLayout {
         View rootView = LayoutInflater.from(mContext).inflate(R.layout.multimedia_plugin_edit_video_play_view, this, true);
         TXCloudVideoView videoView = rootView.findViewById(R.id.edit_video_view);
         mEditorCore.startPreview(videoView, true);
-    }
-
-    public void addObserver() {
-
-    }
-
-    public void removeObserver() {
-
     }
 }

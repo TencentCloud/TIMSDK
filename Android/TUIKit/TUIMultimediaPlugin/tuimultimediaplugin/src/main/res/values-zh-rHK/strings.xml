@@ -52,6 +52,7 @@
     <string name="multimedia_plugin_origin_audio">原音</string>
     <string name="multimedia_plugin_send">發送</string>
     <string name="multimedia_plugin_done">完成</string>
+    <string name="multimedia_plugin_restore">還原</string>
     <string name="multimedia_plugin_zero">0</string>
     <string name="multimedia_plugin_zero_time">00:00</string>
     <string name="multimedia_plugin_local">本地</string>

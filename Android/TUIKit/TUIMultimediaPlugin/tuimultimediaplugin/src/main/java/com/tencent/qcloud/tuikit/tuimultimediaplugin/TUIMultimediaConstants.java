@@ -2,7 +2,6 @@ package com.tencent.qcloud.tuikit.tuimultimediaplugin;
 
 public class TUIMultimediaConstants {
     public static final String RECORD_TYPE_KEY = "record_type";
-    public static final String PARAM_NAME_RECORD_CONFIG = "recordConfig";
     public static final String PARAM_NAME_RECORD_TYPE = "recordType";
     public static final String PARAM_NAME_EDIT_FILE_PATH = "editFilePath";
     public static final String PARAM_NAME_EDITED_FILE_PATH = "editedFilePath";

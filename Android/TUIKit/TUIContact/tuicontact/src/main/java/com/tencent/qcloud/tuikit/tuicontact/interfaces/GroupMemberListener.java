@@ -7,7 +7,5 @@ import java.util.List;
 
 public interface GroupMemberListener {
 
-    default void onGroupInfoLoaded(GroupInfo groupInfo) {}
-
     default void onGroupMemberLoaded(List<GroupMemberInfo> groupMemberBeanList) {}
 }

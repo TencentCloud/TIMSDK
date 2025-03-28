@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true">
 
-        <com.tencent.cloud.tuikit.roomkit.view.page.widget.TopNavigationBar.ConferenceNameView
+        <com.tencent.cloud.tuikit.roomkit.view.main.topnavigationbar.ConferenceNameView
             android:id="@+id/conference_tv_room_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
             android:layout_centerVertical="true"
             android:src="@drawable/tuiroomkit_ic_arrow_down" />
 
-        <com.tencent.cloud.tuikit.roomkit.view.page.widget.TopNavigationBar.ConferenceDurationView
+        <com.tencent.cloud.tuikit.roomkit.view.main.topnavigationbar.ConferenceDurationView
             android:id="@+id/conference_tv_room_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
 
     </RelativeLayout>
 
-    <com.tencent.cloud.tuikit.roomkit.view.page.widget.TopNavigationBar.AudioRouteSwitchView
+    <com.tencent.cloud.tuikit.roomkit.view.main.topnavigationbar.AudioRouteSwitchView
         android:id="@+id/conference_view_audio_route"
         android:layout_width="@dimen/tuiroomkit_top_view_item_width"
         android:layout_height="@dimen/tuiroomkit_top_view_item_height"
@@ -50,7 +50,7 @@
         android:layout_marginStart="16dp"
         android:src="@drawable/tuiroomkit_icon_speaker" />
 
-    <com.tencent.cloud.tuikit.roomkit.view.page.widget.TopNavigationBar.CameraSwitchView
+    <com.tencent.cloud.tuikit.roomkit.view.main.topnavigationbar.CameraSwitchView
         android:id="@+id/conference_view_camera_switch"
         android:layout_width="@dimen/tuiroomkit_top_view_item_width"
         android:layout_height="@dimen/tuiroomkit_top_view_item_height"
@@ -83,7 +83,7 @@
             android:text="@string/tuiroomkit_item_leave" />
     </LinearLayout>
 
-    <com.tencent.cloud.tuikit.roomkit.view.page.widget.TopNavigationBar.ReportView
+    <com.tencent.cloud.tuikit.roomkit.view.main.topnavigationbar.ReportView
         android:id="@+id/btn_report"
         android:layout_width="@dimen/tuiroomkit_top_view_item_width"
         android:layout_height="@dimen/tuiroomkit_top_view_item_height"
