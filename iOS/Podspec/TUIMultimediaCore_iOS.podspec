@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIMultimediaCore_iOS'
-  spec.version      = '8.4.6667'
+  spec.version      = '8.5.6864'
   spec.platform     = :ios
   spec.ios.deployment_target = '10.0'
   spec.license      = { :type => 'Proprietary',
@@ -17,7 +17,7 @@ Pod::Spec.new do |spec|
   spec.dependency 'TUIChat'
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.qcloud.com/download/tuiplugin/8.4.6667/ios/TUIMultimediaCore_8.4.6667.xcframework.zip'}
+  spec.source = { :http => 'https://im.sdk.qcloud.com/download/tuiplugin/8.5.6864/ios/TUIMultimediaCore_8.5.6864.xcframework.zip'}
   spec.vendored_frameworks = 'TUIMultimediaCore.xcframework'
   spec.resource_bundle = {
         "#{spec.module_name}_Privacy" => '**/TUIMultimediaCore.xcframework/ios-arm64/TUIMultimediaCore.framework/PrivacyInfo.xcprivacy'
