@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUICustomerServicePlugin'
-  spec.version      = '8.4.6667'
+  spec.version      = '8.5.6864'
   spec.platform     = :ios
   spec.ios.deployment_target = '10.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,16 +16,16 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/8.4.6667/ios/TUICustomerServicePlugin.zip'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/8.5.6864/ios/TUICustomerServicePlugin.zip'}
 
   spec.default_subspec = 'ALL'
 
   spec.subspec 'CommonModel' do |commonModel|
     commonModel.source_files = '**/TUICustomerServicePlugin/CommonModel/*.{h,m,mm}'
     commonModel.dependency 'TUICore'
-    commonModel.dependency 'TIMCommon', '~> 8.4.6667'
-    commonModel.dependency 'TUIChat/UI_Classic', '~> 8.4.6667'
-    commonModel.dependency 'TUIContact/UI_Classic','~> 8.4.6667'
+    commonModel.dependency 'TIMCommon', '~> 8.5.6864'
+    commonModel.dependency 'TUIChat/UI_Classic', '~> 8.5.6864'
+    commonModel.dependency 'TUIContact/UI_Classic','~> 8.5.6864'
   end
 
   spec.subspec 'UI_Classic' do |commonUI|
