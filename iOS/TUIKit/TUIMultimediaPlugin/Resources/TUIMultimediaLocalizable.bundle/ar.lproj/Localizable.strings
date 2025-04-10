@@ -78,3 +78,10 @@
 
 "remove_paster" = "حذف لصق";
 "restore" = "اختزال";
+
+"authorization_prompter" = "الوظيفة الحالية الخاصة بك سوف تكون محدودة بسبب عدم تمكين الوسائط المتعددة المكونات الإضافية .";
+"authorization_prompter_accessing_documents" = "1 . يمكنك الوصول إلى الملفات التالية لفتح الوسائط المتعددة المكونات في الأذونات : الوسائط المتعددة المكونات في فتح المبادئ التوجيهية";
+"authorization_prompter_remove_module" = "2 . يمكنك أيضا حذف tuimultimediaplugin و tuimultimediacore وحدات في ملف podfile المشروع ، وذلك باستخدام وظائف الوسائط المتعددة الأساسية التي تأتي مع المشروع .";
+"authorization_prompter_documents_title" = "الوسائط المتعددة المكونات في فتح المبادئ التوجيهية";
+"prompter" = "جديلة";
+"link_error" = "لا يمكن فتح الرابط";

@@ -18,6 +18,7 @@
 #import "TUIMultimediaPlugin/TUIMultimediaSubtitleEditController.h"
 #import "TUIMultimediaPlugin/TUIMultimediaConfig.h"
 #import "TUIMultimediaPlugin/TUIMultimediaConstant.h"
+#import "TUIMultimediaPlugin/TUIMultimediaAuthorizationPrompter.h"
 
 @interface TUIMultimediaVideoEditorController () <TXVideoPreviewListener,
 TXVideoGenerateListener,
@@ -176,6 +177,10 @@ TUIMultimediaBGMEditControllerDelegate> {
 
 #pragma mark - TUIMultimediaCommonEditorControlViewDelegate protocol
 - (void)onCommonEditorControlViewComplete:(TUIMultimediaCommonEditorControlView *)view stickers:(NSArray<TUIMultimediaSticker *> *)stickers {
+    if (![TUIMultimediaAuthorizationPrompter verifyPermissionGranted:self]) {
+        return;
+    }
+    
     if (stickers.count == 0 && !_hasAudioEdited && _sourceType == SOURCE_TYPE_ALBUM) {
         NSLog(@"Return directly without encoding the video");
         _resultVideoPath = _sourceVideoPath;
@@ -259,7 +264,11 @@ TUIMultimediaBGMEditControllerDelegate> {
 }
 
 #pragma mark - TUIMultimediaMusicControllerDelegate protocol
-- (void)onBGMEditController:(TUIMultimediaBGMEditController *)c bgmInfoChanged:(TUIMultimediaVideoBgmEditInfo *)bgmInfo {
+- (void)onBGMEditController:(TUIMultimediaBGMEditController *)bgmController bgmInfoChanged:(TUIMultimediaVideoBgmEditInfo *)bgmInfo {    
+    if (![TUIMultimediaAuthorizationPrompter verifyPermissionGranted:bgmController]) {
+        return;
+    }
+    
     [_editor setBGMLoop:YES];
     @weakify(self);
     [_editor setBGMAsset:bgmInfo.bgm.asset

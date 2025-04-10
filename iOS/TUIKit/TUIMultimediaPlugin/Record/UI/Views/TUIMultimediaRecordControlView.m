@@ -11,6 +11,7 @@
 #import "TUIMultimediaPlugin/TUIMultimediaIconLabelButton.h"
 #import "TUIMultimediaPlugin/TUIMultimediaRecordButton.h"
 #import "TUIMultimediaPlugin/TUIMultimediaConfig.h"
+#import "TUIMultimediaPlugin/TUIMultimediaAuthorizationPrompter.h"
 
 #pragma mark - UI relative constants
 const static CGFloat BtnStartRecordSize = 72;
@@ -304,6 +305,10 @@ const static BOOL ShowDurationLabel = YES;
 
 #pragma mark - TUIMultimediaRecordButtonDelegate protocol
 - (void)onRecordButtonLongPressBegan:(TUIMultimediaRecordButton *)btn {
+    if (![TUIMultimediaAuthorizationPrompter verifyPermissionGranted:self.delegate]) {
+        return;
+    }
+    
     if (!_isOnlySupportTakePhoto) {
         [_delegate recordControlViewOnRecordStart];
         _lbDuration.hidden = !ShowDurationLabel;
@@ -327,6 +332,11 @@ const static BOOL ShowDurationLabel = YES;
 }
 
 - (void)onRecordButtonLongPressEnded:(TUIMultimediaRecordButton *)btn {
+    if (![TUIMultimediaAuthorizationPrompter verifyPermissionGranted:nil]) {
+        return;
+    }
+    
+    
     if (!_isOnlySupportTakePhoto) {
         [_delegate recordControlViewOnRecordFinish];
     } else {
@@ -350,6 +360,10 @@ const static BOOL ShowDurationLabel = YES;
 }
 
 - (void)onRecordButtonLongPressCancelled:(TUIMultimediaRecordButton *)btn {
+    if (![TUIMultimediaAuthorizationPrompter verifyPermissionGranted:nil]) {
+        return;
+    }
+    
     if (!_isOnlySupportTakePhoto) {
         [_delegate recordControlViewOnRecordFinish];
     }

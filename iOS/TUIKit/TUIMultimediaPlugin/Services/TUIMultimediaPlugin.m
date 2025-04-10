@@ -32,6 +32,8 @@
     TUIRegisterThemeResourcePath(TUIMultimediaPluginThemePath, TUIThemeModuleMultimedia);
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onLoginSucceeded) name:TUILoginSuccessNotification object:nil];
     [TUIMultimediaPlugin shareInstance];
+    [MultimediaRecorder registerAdvancedVideoRecorder:(id)[[TUIMultimediaRecorder alloc] init]];
+    [AlbumPicker registerAdvancedAlbumPicker:(id)[[TUIMultimediaAlbumPicker alloc] init]];
 }
 
 + (void)onLoginSucceeded {
@@ -45,11 +47,8 @@
 }
 
 - (void)updateSignature {
-    __auto_type onUpdateSignatureSuccess = ^(void) {
+    [[TUIMultimediaSignatureChecker shareInstance] startUpdateSignature:^(void) {
         NSLog(@"TUIMultimediaPlugin onUpdateSignatureSuccess");
-        [MultimediaRecorder registerAdvancedVideoRecorder:(id)[[TUIMultimediaRecorder alloc] init]];
-        [AlbumPicker registerAdvancedAlbumPicker:(id)[[TUIMultimediaAlbumPicker alloc] init]];
-    };
-    [[TUIMultimediaSignatureChecker shareInstance] startUpdateSignature:onUpdateSignatureSuccess];
+    }];
 }
 @end

@@ -14,6 +14,7 @@
 #import "TUIMultimediaPlugin/TUIMultimediaSubtitleEditController.h"
 #import "TUIMultimediaPlugin/TUIMultimediaCommon.h"
 #import "TUIMultimediaPlugin/TUIMultimediaSticker.h"
+#import "TUIMultimediaPlugin/TUIMultimediaAuthorizationPrompter.h"
 
 @interface TUIMultimediaPictureEditorController () <TUIMultimediaCommonEditorControlViewDelegate, TUIMultimediaPasterSelectControllerDelegate> {
     TXPictureEditer *_editor;
@@ -147,6 +148,10 @@
 
 - (void)onCommonEditorControlViewComplete:(nonnull TUIMultimediaCommonEditorControlView *)view
                                  stickers:(nonnull NSArray<TUIMultimediaSticker *> *)stickers {
+    if (![TUIMultimediaAuthorizationPrompter verifyPermissionGranted:self]) {
+        return;
+    }
+    
     if (_completeCallback == nil) {
         return;
     }

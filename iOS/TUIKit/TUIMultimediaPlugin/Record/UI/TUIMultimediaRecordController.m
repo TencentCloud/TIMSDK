@@ -14,6 +14,7 @@
 #import "TUIMultimediaPlugin/TUIMultimediaCommon.h"
 #import "TUIMultimediaPlugin/TUIMultimediaRecordControlView.h"
 #import "TUIMultimediaPlugin/TUIMultimediaConfig.h"
+#import "TUIMultimediaPlugin/TUIMultimediaAuthorizationPrompter.h"
 
 @interface TUIMultimediaRecordController () <TUIMultimediaRecordControlViewDelegate, TXUGCRecordListener, TUIMultimediaBeautifyControllerDelegate> {
     TUIMultimediaBeautifyController *_beautifyController;
@@ -196,9 +197,14 @@
     [TXUGCRecord.shareInstance stopRecord];
     [TXUGCRecord.shareInstance stopCameraPreview];
 }
+
 - (void)recordControlViewPhoto {
+    if (![TUIMultimediaAuthorizationPrompter verifyPermissionGranted:self]) {
+        return;
+    }
     [self takePhoto];
 }
+
 - (void)recordControlViewOnBeautify {
     _ctrlView.recordTipHidden = YES;
     [self.navigationController presentViewController:_beautifyController animated:NO completion:nil];

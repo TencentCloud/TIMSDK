@@ -77,3 +77,10 @@
 
 "remove_paster" = "删除貼紙";
 "restore" = "還原";
+
+"authorization_prompter" = "由於您未開通多媒體挿件使用許可權，您當前功能將受限";
+"authorization_prompter_accessing_documents" = "1. 您可以訪問下麵的檔案開通多媒體挿件使用許可權：多媒體挿件開通指引";
+"authorization_prompter_remove_module" = "2. 您也可以在工程的Podfile檔案中删除TUIMultimediaPlugin和TUIMultimediaCore模塊，使用項目自帶的基礎多媒體功能";
+"authorization_prompter_documents_title" = "多媒體挿件開通指引";
+"prompter" = "提示";
+"link_error" = "無法打開連結";

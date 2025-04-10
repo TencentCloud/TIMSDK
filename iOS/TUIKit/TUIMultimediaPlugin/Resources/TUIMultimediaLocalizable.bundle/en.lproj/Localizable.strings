@@ -78,3 +78,10 @@
 
 "remove_paster" = "Delete Paster";
 "restore" = "Restore";
+
+"authorization_prompter" = "Your access to multimedia features is limited because the required plugin permissions have not been enabled";
+"authorization_prompter_accessing_documents" = "1. Access the guide below to enable multimedia plugin permissions: Permission Activation Guide";
+"authorization_prompter_remove_module" = "2. You can remove both the TUIMultimediaPlugin and TUIMultimediaCore modules from your project\'s Podfile file to utilize the built-in basic multimedia functionality";
+"authorization_prompter_documents_title" = "Permission Activation Guide";
+"prompter" = "Prompt";
+"link_error" = "Unable to open link";
