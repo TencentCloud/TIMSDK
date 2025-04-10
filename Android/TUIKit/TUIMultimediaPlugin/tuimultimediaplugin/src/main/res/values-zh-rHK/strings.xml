@@ -77,4 +77,11 @@
     <string name="multimedia_plugin_request_permission_media_title">%s申請訪問照片與視頻</string>
     <string name="multimedia_plugin_request_permission_media_reason">需要訪問照片與視頻，開啟後用於相冊圖片視頻發送、聊天圖片視頻保存等功能</string>
     <string name="multimedia_plugin_request_permission_media_tip">在設置-應用-%s-權限中開啟照片與視頻權限，以正常使用相冊圖片視頻發送、聊天圖片保存等功能</string>
+
+    <string name="authorization_prompter">由於您未開通多媒體挿件使用許可權，您當前功能將受限</string>
+    <string name="authorization_prompter_accessing_documents">1. 您可以訪問下麵的檔案開通多媒體挿件使用許可權：多媒體挿件開通指引</string>
+    <string name="authorization_prompter_remove_module">2. 您也可以在工程的settings檔案中删除tuimultimediaplugin和tuimultimediacore模塊，使用項目自帶的基礎多媒體功能</string>
+    <string name="authorization_prompter_documents_title">多媒體挿件開通指引</string>
+    <string name="prompter">提示</string>
+    <string name="link_error">無法打開連結</string>
 </resources>

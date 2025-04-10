@@ -1,0 +1,38 @@
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/dialog_padding"
+        android:minWidth="@dimen/dialog_min_width">
+
+    <TextView
+            android:id="@+id/dialog_title"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/prompter"/>
+
+    <TextView
+            android:id="@+id/authorization_prompter_tv"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/authorization_prompter"/>
+
+    <TextView
+            android:id="@+id/authorization_prompter_accessing_documents_tv"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/authorization_prompter_accessing_documents"
+            android:textColorLink="@color/multimedia_plugin_link_color"/>
+
+    <TextView
+            android:id="@+id/authorization_prompter_remove_module_tv"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/authorization_prompter_remove_module"
+            android:textColorLink="@color/multimedia_plugin_link_color"/>
+</LinearLayout>

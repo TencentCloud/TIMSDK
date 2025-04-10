@@ -13,6 +13,7 @@ import com.tencent.qcloud.tuicore.interfaces.TUIInitializer;
 import com.tencent.qcloud.tuikit.tuichat.component.album.AlbumPicker;
 import com.tencent.qcloud.tuikit.tuichat.component.album.VideoRecorder;
 import com.tencent.qcloud.tuikit.tuimultimediacore.TUIMultimediaSignatureChecker;
+import com.tencent.qcloud.tuikit.tuimultimediacore.TUIMultimediaSignatureChecker.SignatureCheckListener;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.pick.TUIMultimediaAlbumPicker;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.record.TUIMultimediaRecorder;
 import java.util.Map;
@@ -30,6 +31,8 @@ public class TUIMultimediaPlugin implements TUIInitializer, ITUINotification {
     @Override
     public void init(Context context) {
         TUICore.registerEvent(TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS, this);
+        AlbumPicker.registerAdvancedAlbumPicker(new TUIMultimediaAlbumPicker());
+        VideoRecorder.registerAdvancedVideoRecorder(new TUIMultimediaRecorder());
     }
 
     @Override
@@ -49,8 +52,7 @@ public class TUIMultimediaPlugin implements TUIInitializer, ITUINotification {
 
     private void updateSignature() {
         TUIMultimediaSignatureChecker.getInstance().startUpdateSignature(() -> {
-            AlbumPicker.registerAdvancedAlbumPicker(new TUIMultimediaAlbumPicker());
-            VideoRecorder.registerAdvancedVideoRecorder(new TUIMultimediaRecorder());
+
         });
     }
 }

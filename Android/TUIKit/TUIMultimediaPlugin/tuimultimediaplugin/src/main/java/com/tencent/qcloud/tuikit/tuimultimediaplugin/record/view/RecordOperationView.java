@@ -8,10 +8,13 @@ import android.view.MotionEvent;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import com.tencent.imsdk.BuildConfig;
 import com.tencent.imsdk.base.ThreadUtils;
 import com.tencent.liteav.base.util.LiteavLog;
+import com.tencent.qcloud.tuikit.tuimultimediacore.TUIMultimediaSignatureChecker;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.R;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaConstants;
+import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaAuthorizationPrompter;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaFileUtil;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaFileUtil.MultimediaPluginFileType;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaResourceUtils;
@@ -48,7 +51,8 @@ public class RecordOperationView extends LinearLayout {
                 mLastRecordTime = null;
                 if (recordStatus == RecordStatus.STOP && !mRecordInfo.recordResult.isSuccess
                         && mRecordInfo.recordResult.code == TXRecordCommon.RECORD_RESULT_OK_LESS_THAN_MINDURATION) {
-                    mRecordCore.takePhoto(TUIMultimediaFileUtil.generateFilePath(MultimediaPluginFileType.PICTURE_FILE));
+                    mRecordCore.takePhoto(
+                            TUIMultimediaFileUtil.generateFilePath(MultimediaPluginFileType.PICTURE_FILE));
                 } else {
                     findViewById(R.id.cancel_record_button).setVisibility(VISIBLE);
                     findViewById(R.id.record_switch_camera).setVisibility(VISIBLE);
@@ -117,6 +121,10 @@ public class RecordOperationView extends LinearLayout {
     @SuppressLint("ClickableViewAccessibility")
     private void initRecordButtonForVideoRecode() {
         mRecordButtonView.setOnLongClickListener(v -> {
+            if (!TUIMultimediaAuthorizationPrompter.verifyPermissionGranted(mContext)) {
+                return false;
+            }
+
             mRecordCore.startRecord(TUIMultimediaFileUtil.generateFilePath(MultimediaPluginFileType.RECODE_FILE));
             return false;
         });
@@ -131,7 +139,12 @@ public class RecordOperationView extends LinearLayout {
 
         mRecordButtonView.setOnClickListener(
                 v -> {
-                    mRecordCore.takePhoto(TUIMultimediaFileUtil.generateFilePath(MultimediaPluginFileType.PICTURE_FILE));
+                    if (!TUIMultimediaAuthorizationPrompter.verifyPermissionGranted(mContext)) {
+                        return;
+                    }
+
+                    mRecordCore.takePhoto(
+                            TUIMultimediaFileUtil.generateFilePath(MultimediaPluginFileType.PICTURE_FILE));
                 });
         mRecordOperationTipsView.setText(R.string.multimedia_plugin_record_operation_tips);
         mRecordButtonView.setIsOnlySupportTakePhoto(false);
@@ -148,7 +161,12 @@ public class RecordOperationView extends LinearLayout {
 
         mRecordButtonView.setOnClickListener(
                 v -> {
-                    mRecordCore.takePhoto(TUIMultimediaFileUtil.generateFilePath(MultimediaPluginFileType.PICTURE_FILE));
+                    if (!TUIMultimediaAuthorizationPrompter.verifyPermissionGranted(mContext)) {
+                        mRecordInfo.tuiDataRecordStatus.set(RecordStatus.IDLE);
+                        return;
+                    }
+                    mRecordCore.takePhoto(
+                            TUIMultimediaFileUtil.generateFilePath(MultimediaPluginFileType.PICTURE_FILE));
                 });
 
         mRecordOperationTipsView.setText(R.string.multimedia_plugin_record_take_phone_operation_tips);
