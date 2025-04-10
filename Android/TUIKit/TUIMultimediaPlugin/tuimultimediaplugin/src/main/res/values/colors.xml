@@ -32,4 +32,6 @@
     <color name="multimedia_plugin_picker_dark_gray">#FF555555</color>
     <color name="multimedia_plugin_picker_light_gray">#FF999999</color>
     <color name="multimedia_plugin_picker_white_color">#FFFFFFFF</color>
+
+    <color name="multimedia_plugin_link_color">#2196F3</color>
 </resources>

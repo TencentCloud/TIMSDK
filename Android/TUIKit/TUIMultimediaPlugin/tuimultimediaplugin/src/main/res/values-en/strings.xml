@@ -76,4 +76,11 @@
     <string name="multimedia_plugin_request_permission_media_title">%s requests access to photos and videos</string>
     <string name="multimedia_plugin_request_permission_media_reason">Access to photos and videos is needed to send photos and videos from the album and save pictures and videos in chat</string>
     <string name="multimedia_plugin_request_permission_media_tip">Enable photo and video permissions in Settings-Apps-%s-Permissions to use sending photos and videos from the album and saving pictures in chat normally</string>
+
+    <string name="authorization_prompter">Your access to multimedia features is limited because the required plugin permissions have not been enabled</string>
+    <string name="authorization_prompter_accessing_documents">1. Access the guide below to enable multimedia plugin permissions: Permission Activation Guide</string>
+    <string name="authorization_prompter_remove_module">2. You can remove both the tuimultimediaplugin and tuimultimediacore modules from your project\'s settings file to utilize the built-in basic multimedia functionality</string>
+    <string name="authorization_prompter_documents_title">Permission Activation Guide</string>
+    <string name="prompter">Prompt</string>
+    <string name="link_error">Unable to open link</string>
 </resources>

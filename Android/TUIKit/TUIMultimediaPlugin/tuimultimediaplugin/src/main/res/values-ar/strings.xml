@@ -78,4 +78,11 @@
     <string name="multimedia_plugin_request_permission_media_title">%s يطلب الوصول إلى الصور والفيديوهات</string>
     <string name="multimedia_plugin_request_permission_media_reason">مطلوب الوصول إلى الصور والفيديوهات لإرسال الصور والفيديوهات من الألبوم وحفظ الصور والفيديوهات في الدردشة</string>
     <string name="multimedia_plugin_request_permission_media_tip">افتح صلاحيات الصور والفيديوهات في الإعدادات-التطبيقات-%s-الصلاحيات لاستخدام إرسال الصور والفيديوهات من الألبوم وحفظ الصور في الدردشة بشكل طبيعي</string>
+
+    <string name="authorization_prompter">الوظيفة الحالية الخاصة بك سوف تكون محدودة بسبب عدم تمكين الوسائط المتعددة المكونات الإضافية .</string>
+    <string name="authorization_prompter_accessing_documents">1 . يمكنك الوصول إلى الملفات التالية لفتح الوسائط المتعددة المكونات في الأذونات : الوسائط المتعددة المكونات في فتح المبادئ التوجيهية</string>
+    <string name="authorization_prompter_remove_module">2 . يمكنك أيضا حذف tuimultimediaplugin و tuimultimediacore الوحدات في المشروع الخاص بك إعدادات الملف ، وذلك باستخدام الوسائط المتعددة الأساسية</string>
+    <string name="authorization_prompter_documents_title">الوسائط المتعددة المكونات في فتح المبادئ التوجيهية</string>
+    <string name="prompter">جديلة</string>
+    <string name="link_error">لا يمكن فتح الرابط</string>
 </resources>

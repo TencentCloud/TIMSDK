@@ -11,4 +11,13 @@
         <item name="android:windowExitAnimation">@anim/multimedia_plugin_picker_bucket_pop_exit</item>
         <item name="android:windowEnterAnimation">@anim/multimedia_plugin_picker_bucket_pop_enter</item>
     </style>
+
+
+    <style name="AuthorizationPrompterDialog" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+        <item name="android:windowMinWidthMajor">@dimen/dialog_min_width</item>
+        <item name="android:windowMinWidthMinor">@dimen/dialog_min_width</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 </resources>

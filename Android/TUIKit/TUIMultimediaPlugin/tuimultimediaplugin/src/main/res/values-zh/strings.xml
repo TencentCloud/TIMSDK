@@ -74,4 +74,10 @@
     <string name="multimedia_plugin_request_permission_media_reason">需要访问照片与视频，开启后用于相册图片视频发送、聊天图片视频保存等功能</string>
     <string name="multimedia_plugin_request_permission_media_tip">在设置-应用-%s-权限中开启照片与视频权限，以正常使用相册图片视频发送、聊天图片保存等功能</string>
 
+    <string name="authorization_prompter">由于您未开通多媒体插件使用权限，您当前功能将受限</string>
+    <string name="authorization_prompter_accessing_documents">1. 您可以访问下面的文档开通多媒体插件使用权限：多媒体插件开通指引</string>
+    <string name="authorization_prompter_remove_module">2. 您也可以在工程的settings文件中删除 tuimultimediaplugin和tuimultimediacore模块，使用项目自带的基础多媒体功能</string>
+    <string name="authorization_prompter_documents_title">多媒体插件开通指引</string>
+    <string name="prompter">提示</string>
+    <string name="link_error">无法打开链接</string>
 </resources>

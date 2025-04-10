@@ -26,6 +26,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.tencent.liteav.base.util.LiteavLog;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.R;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaConstants;
+import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaAuthorizationPrompter;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaFileUtil;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaFileUtil.MultimediaPluginFileType;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.TUIMultiMediaEditCommonCtrlView.CommonMediaEditListener;
@@ -130,6 +131,10 @@ public class TUIMultimediaPictureEditFragment extends Fragment {
         editCommonCtrlView.setCommonMediaEditListener(new CommonMediaEditListener() {
             @Override
             public void onGenerateMedia() {
+                if (!TUIMultimediaAuthorizationPrompter.verifyPermissionGranted(mContext)) {
+                    return;
+                }
+
                 List<TXPaster> pasterList = editCommonCtrlView.getNormalizedPaster();
                 LiteavLog.i(TAG, "on generate media." + " is recordFile: " + mIsRecordFile + " pasterList size is:" + (
                         pasterList != null ? pasterList.size() : 0));
@@ -176,6 +181,7 @@ public class TUIMultimediaPictureEditFragment extends Fragment {
 
             @Override
             public void onStartCrop() {
+                TUIMultimediaAuthorizationPrompter.verifyPermissionGranted(mContext);
                 mTuiMultimediaPictureEditorCore
                         .setPasterList(editCommonCtrlView.getNormalizedPaster());
                 mBeforeCropBitmap = mCurrentBitmap;
