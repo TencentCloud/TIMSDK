@@ -1057,18 +1057,19 @@ int ZLIB_INTERNAL _tr_tally (s, dist, lc)
  */
 local void compress_block(s, ltree, dtree)
     deflate_state *s;
-    ct_data *ltree; /* literal tree */
-    ct_data *dtree; /* distance tree */
+    const ct_data *ltree; /* literal tree */
+    const ct_data *dtree; /* distance tree */
 {
     unsigned dist;      /* distance of matched string */
     int lc;             /* match length or unmatched char (if dist == 0) */
-    unsigned lx = 0;    /* running index in l_buf */
+    unsigned sx = 0;    /* running index in sym_buf */
     unsigned code;      /* the code to send */
     int extra;          /* number of extra bits to send */
 
-    if (s->last_lit != 0) do {
-        dist = s->d_buf[lx];
-        lc = s->l_buf[lx++];
+    if (s->sym_next != 0) do {
+        dist = s->sym_buf[sx++] & 0xff;
+        dist += (unsigned)(s->sym_buf[sx++] & 0xff) << 8;
+        lc = s->sym_buf[sx++];
         if (dist == 0) {
             send_code(s, lc, ltree); /* send a literal byte */
             Tracecv(isgraph(lc), (stderr," '%c' ", lc));
@@ -1088,16 +1089,15 @@ local void compress_block(s, ltree, dtree)
             send_code(s, code, dtree);       /* send the distance code */
             extra = extra_dbits[code];
             if (extra != 0) {
-                dist -= base_dist[code];
+                dist -= (unsigned)base_dist[code];
                 send_bits(s, dist, extra);   /* send the extra distance bits */
             }
         } /* literal or match pair ? */
 
-        /* Check that the overlay between pending_buf and d_buf+l_buf is ok: */
-        Assert((uInt)(s->pending) < s->lit_bufsize + 2*lx,
-               "pendingBuf overflow");
+        /* Check that the overlay between pending_buf and sym_buf is ok: */
+        Assert(s->pending < s->lit_bufsize + sx, "pendingBuf overflow");
 
-    } while (lx < s->last_lit);
+    } while (sx < s->sym_next);
 
     send_code(s, END_BLOCK, ltree);
 }
