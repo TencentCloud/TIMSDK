@@ -225,11 +225,6 @@ int ZEXPORT deflateInit2_(strm, level, method, windowBits, memLevel, strategy,
     int wrap = 1;
     static const char my_version[] = ZLIB_VERSION;
 
-    ushf *overlay;
-    /* We overlay pending_buf and d_buf+l_buf. This works since the average
-     * output size for (length,distance) codes is <= 24 bits.
-     */
-
     if (version == Z_NULL || version[0] != my_version[0] ||
         stream_size != sizeof(z_stream)) {
         return Z_VERSION_ERROR;
@@ -298,9 +293,8 @@ int ZEXPORT deflateInit2_(strm, level, method, windowBits, memLevel, strategy,
 
     s->lit_bufsize = 1 << (memLevel + 6); /* 16K elements by default */
 
-    overlay = (ushf *) ZALLOC(strm, s->lit_bufsize, sizeof(ush)+2);
-    s->pending_buf = (uchf *) overlay;
-    s->pending_buf_size = (ulg)s->lit_bufsize * (sizeof(ush)+2L);
+    s->pending_buf = (uchf *) ZALLOC(strm, s->lit_bufsize, 4);
+    s->pending_buf_size = (ulg)s->lit_bufsize * 4;
 
     if (s->window == Z_NULL || s->prev == Z_NULL || s->head == Z_NULL ||
         s->pending_buf == Z_NULL) {
@@ -309,8 +303,8 @@ int ZEXPORT deflateInit2_(strm, level, method, windowBits, memLevel, strategy,
         deflateEnd (strm);
         return Z_MEM_ERROR;
     }
-    s->d_buf = overlay + s->lit_bufsize/sizeof(ush);
-    s->l_buf = s->pending_buf + (1+sizeof(ush))*s->lit_bufsize;
+    s->sym_buf = s->pending_buf + s->lit_bufsize;
+    s->sym_end = (s->lit_bufsize - 1) * 3;
 
     s->level = level;
     s->strategy = strategy;
@@ -318,7 +312,6 @@ int ZEXPORT deflateInit2_(strm, level, method, windowBits, memLevel, strategy,
 
     return deflateReset(strm);
 }
-
 /* ========================================================================= */
 int ZEXPORT deflateSetDictionary (strm, dictionary, dictLength)
     z_streamp strm;
