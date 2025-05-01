@@ -1018,10 +1018,9 @@ int ZEXPORT deflateCopy (dest, source)
 #else
     deflate_state *ds;
     deflate_state *ss;
-    ushf *overlay;
 
 
-    if (source == Z_NULL || dest == Z_NULL || source->state == Z_NULL) {
+    if (deflateStateCheck(source) || dest == Z_NULL) {
         return Z_STREAM_ERROR;
     }
 
@@ -1038,8 +1037,7 @@ int ZEXPORT deflateCopy (dest, source)
     ds->window = (Bytef *) ZALLOC(dest, ds->w_size, 2*sizeof(Byte));
     ds->prev   = (Posf *)  ZALLOC(dest, ds->w_size, sizeof(Pos));
     ds->head   = (Posf *)  ZALLOC(dest, ds->hash_size, sizeof(Pos));
-    overlay = (ushf *) ZALLOC(dest, ds->lit_bufsize, sizeof(ush)+2);
-    ds->pending_buf = (uchf *) overlay;
+    ds->pending_buf = (uchf *) ZALLOC(dest, ds->lit_bufsize, 4);
 
     if (ds->window == Z_NULL || ds->prev == Z_NULL || ds->head == Z_NULL ||
         ds->pending_buf == Z_NULL) {
@@ -1053,7 +1051,7 @@ int ZEXPORT deflateCopy (dest, source)
     zmemcpy(ds->pending_buf, ss->pending_buf, (uInt)ds->pending_buf_size);
 
     ds->pending_out = ds->pending_buf + (ss->pending_out - ss->pending_buf);
-    ds->d_buf = overlay + ds->lit_bufsize/sizeof(ush);
+    ds->d_buf = ds->pending_buf + ds->lit_bufsize;
     ds->l_buf = ds->pending_buf + (1+sizeof(ush))*ds->lit_bufsize;
 
     ds->l_desc.dyn_tree = ds->dyn_ltree;
@@ -1734,11 +1732,7 @@ local block_state deflate_slow(s, flush)
 
     /* Process the input block. */
     for (;;) {
-        /* Make sure that we always have enough lookahead, except
-         * at the end of the input file. We need MAX_MATCH bytes
-         * for the next match, plus MIN_MATCH bytes to insert the
-         * string following the next match.
-         */
+        /* Ensure lookahead is within bounds */
         if (s->lookahead < MIN_LOOKAHEAD) {
             fill_window(s);
             if (s->lookahead < MIN_LOOKAHEAD && flush == Z_NO_FLUSH) {
@@ -1752,22 +1746,20 @@ local block_state deflate_slow(s, flush)
          */
         hash_head = NIL;
         if (s->lookahead >= MIN_MATCH) {
+            if (s->strstart < 0 || s->strstart >= s->window_size - MIN_MATCH) {
+                /* Prevent out-of-bounds access */
+                return block_error;
+            }
             INSERT_STRING(s, s->strstart, hash_head);
         }
 
-        /* Find the longest match, discarding those <= prev_length.
-         */
+        /* Find the longest match, discarding those <= prev_length. */
         s->prev_length = s->match_length, s->prev_match = s->match_start;
-        s->match_length = MIN_MATCH-1;
+        s->match_length = MIN_MATCH - 1;
 
         if (hash_head != NIL && s->prev_length < s->max_lazy_match &&
             s->strstart - hash_head <= MAX_DIST(s)) {
-            /* To simplify the code, we prevent matches with the string
-             * of window index 0 (in particular we have to avoid a match
-             * of the string with itself at the start of the input file).
-             */
-            s->match_length = longest_match (s, hash_head);
-            /* longest_match() sets match_start */
+            s->match_length = longest_match(s, hash_head);
 
             if (s->match_length <= 5 && (s->strategy == Z_FILTERED
 #if TOO_FAR <= 32767
@@ -1775,31 +1767,23 @@ local block_state deflate_slow(s, flush)
                     s->strstart - s->match_start > TOO_FAR)
 #endif
                 )) {
-
-                /* If prev_match is also MIN_MATCH, match_start is garbage
-                 * but we will ignore the current match anyway.
-                 */
-                s->match_length = MIN_MATCH-1;
+                s->match_length = MIN_MATCH - 1;
             }
         }
-        /* If there was a match at the previous step and the current
-         * match is not better, output the previous match:
-         */
+
+        /* Handle matches and literals safely */
         if (s->prev_length >= MIN_MATCH && s->match_length <= s->prev_length) {
             uInt max_insert = s->strstart + s->lookahead - MIN_MATCH;
-            /* Do not insert strings in hash table beyond this. */
+            if (max_insert >= s->window_size) {
+                /* Prevent out-of-bounds insertion */
+                return block_error;
+            }
 
-            check_match(s, s->strstart-1, s->prev_match, s->prev_length);
-
-            _tr_tally_dist(s, s->strstart -1 - s->prev_match,
+            check_match(s, s->strstart - 1, s->prev_match, s->prev_length);
+            _tr_tally_dist(s, s->strstart - 1 - s->prev_match,
                            s->prev_length - MIN_MATCH, bflush);
 
-            /* Insert in hash table all strings up to the end of the match.
-             * strstart-1 and strstart are already inserted. If there is not
-             * enough lookahead, the last two strings are not inserted in
-             * the hash table.
-             */
-            s->lookahead -= s->prev_length-1;
+            s->lookahead -= s->prev_length - 1;
             s->prev_length -= 2;
             do {
                 if (++s->strstart <= max_insert) {
@@ -1807,18 +1791,14 @@ local block_state deflate_slow(s, flush)
                 }
             } while (--s->prev_length != 0);
             s->match_available = 0;
-            s->match_length = MIN_MATCH-1;
+            s->match_length = MIN_MATCH - 1;
             s->strstart++;
 
             if (bflush) FLUSH_BLOCK(s, 0);
 
         } else if (s->match_available) {
-            /* If there was no match at the previous position, output a
-             * single literal. If there was a match but the current match
-             * is longer, truncate the previous match to a single literal.
-             */
-            Tracevv((stderr,"%c", s->window[s->strstart-1]));
-            _tr_tally_lit(s, s->window[s->strstart-1], bflush);
+            Tracevv((stderr, "%c", s->window[s->strstart - 1]));
+            _tr_tally_lit(s, s->window[s->strstart - 1], bflush);
             if (bflush) {
                 FLUSH_BLOCK_ONLY(s, 0);
             }
@@ -1826,21 +1806,19 @@ local block_state deflate_slow(s, flush)
             s->lookahead--;
             if (s->strm->avail_out == 0) return need_more;
         } else {
-            /* There is no previous match to compare with, wait for
-             * the next step to decide.
-             */
             s->match_available = 1;
             s->strstart++;
             s->lookahead--;
         }
     }
-    Assert (flush != Z_NO_FLUSH, "no flush?");
+
+    Assert(flush != Z_NO_FLUSH, "no flush?");
     if (s->match_available) {
-        Tracevv((stderr,"%c", s->window[s->strstart-1]));
-        _tr_tally_lit(s, s->window[s->strstart-1], bflush);
+        Tracevv((stderr, "%c", s->window[s->strstart - 1]));
+        _tr_tally_lit(s, s->window[s->strstart - 1], bflush);
         s->match_available = 0;
     }
-    s->insert = s->strstart < MIN_MATCH-1 ? s->strstart : MIN_MATCH-1;
+    s->insert = s->strstart < MIN_MATCH - 1 ? s->strstart : MIN_MATCH - 1;
     if (flush == Z_FINISH) {
         FLUSH_BLOCK(s, 1);
         return finish_done;
@@ -1890,9 +1868,14 @@ local block_state deflate_rle(s, flush)
                          prev == *++scan && prev == *++scan &&
                          prev == *++scan && prev == *++scan &&
                          scan < strend);
-                s->match_length = MAX_MATCH - (int)(strend - scan);
-                if (s->match_length > s->lookahead)
-                    s->match_length = s->lookahead;
+                if (scan <= strend) {
+                    s->match_length = MAX_MATCH - (int)(strend - scan);
+                    if (s->match_length > s->lookahead) {
+                        s->match_length = s->lookahead;
+                    }
+                } else {
+                    s->match_length = 0; // Ensure match_length is valid if strend < scan
+                }
             }
             Assert(scan <= s->window+(uInt)(s->window_size-1), "wild scan");
         }
@@ -1933,7 +1916,7 @@ local block_state deflate_huff(s, flush)
     deflate_state *s;
     int flush;
 {
-    int bflush;             /* set if current block must be flushed */
+    int bflush = 0;         /* Initialize bflush to avoid undefined behavior */
 
     for (;;) {
         /* Make sure that we have a literal to write. */
@@ -1949,10 +1932,10 @@ local block_state deflate_huff(s, flush)
         /* Output a literal byte */
         s->match_length = 0;
         Tracevv((stderr,"%c", s->window[s->strstart]));
-        _tr_tally_lit (s, s->window[s->strstart], bflush);
+        _tr_tally_lit(s, s->window[s->strstart], bflush);
         s->lookahead--;
         s->strstart++;
-        if (bflush) FLUSH_BLOCK(s, 0);
+        if (bflush) FLUSH_BLOCK(s, 0); /* Use bflush only if it is properly set */
     }
     s->insert = 0;
     if (flush == Z_FINISH) {
