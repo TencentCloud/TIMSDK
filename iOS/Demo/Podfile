@@ -26,7 +26,7 @@ target 'TUIKitDemo' do
   pod 'TUIMultimediaPlugin','8.5.6864'
   pod 'TIMPush', '8.5.6864'
   pod 'TUICallKit_Swift/Professional', '2.7.0.1145'
-  pod 'TUIRoomKit/Professional', '2.8.4'
+  pod 'TUIRoomKit/Professional', '3.0.1'
   pod 'MJRefresh'
   pod 'Masonry'
 
