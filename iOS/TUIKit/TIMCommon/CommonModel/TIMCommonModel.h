@@ -55,6 +55,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) NSString *title;
 @property(nonatomic, strong) NSString *content;
 @property(nonatomic, strong) NSString *desc;
+/// input length 限制输入长度
+@property(nonatomic, assign) NSInteger inputLength;
 @property(nonatomic, assign) BOOL enableNull;
 @end
 
@@ -440,7 +442,7 @@ extern NSString *kTopConversationListChangedNotification;
 
 @property(nonatomic, strong) NSString *identifier;
 @property(nonatomic, strong) NSString *title;
-@property(nonatomic, strong) NSURL *avatarUrl;
+@property(nonatomic, strong, nullable) NSURL *avatarUrl;
 @property(nonatomic, strong) UIImage *avatarImage;
 
 @property(nonatomic, getter=isSelected) BOOL selected;
