@@ -1,6 +1,22 @@
 English | [简体中文](./版本历史.md)
 
 # TIMSDK
+## 8.6.7019 @2025.05.28 - Enhanced Version
+### SDK
+- Push SDK supports multilingual internationalization.
+- Push SDK supports Meizu message categorization.
+- Cloud group search now returns join options and invitation options.
+- Cloud group member search now returns member avatars.
+- iOS platform introduces Swift version of UIKit.
+- Upgraded QUIC plugin to support iOS simulator.
+- Enhanced OC SDK with Swift Optional property support.
+- Optimized long-connection IP freeze strategy with channel type added.
+- Fixed occasional issue where push-only accounts triggered IM commands.
+- Fixed missing device model setting in Flutter SDK on Android.
+- Fixed callback thread inconsistency when Flutter SDK coexists with RoomKit.
+- Fixed occasional callback conflicts between Flutter SDK and RoomEngine.
+
+
 ## 8.5.6864 @2025.03.27 - Enhanced Version
 ### SDK
 - Added support for iOS LiveActivity
