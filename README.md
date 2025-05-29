@@ -154,23 +154,19 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 8.5.6864 @2025.03.27
+## Latest Enhanced Version 8.6.7019 @2025.05.28
 ### SDK
-- Added support for iOS LiveActivity
-- Added support for binding device accounts to IM accounts
-- Added support for end-to-end message troubleshooting
-- Added randomized domains for long connections
-- Added support for modifying topic types after creation
-- Optimized long connection routing rotation strategy
-- Completed read status reporting for the last message in conversations
-- Fixed inaccurate mute duration field in group member profiles
-- Fixed issue where setting custom fields on merged forwarded messages would create new conversations
-- Fixed incorrect account login state after switching accounts during network disconnection
-- Fixed inability to set custom fields for friends on HarmonyOS platform
-- Fixed inaccurate state synchronization for iOS offline push notifications
-- Fixed occasional incorrect ordering in conversation lists
-
-### TUIKit & Demo
-- Multimedia plugin now supports image editing
+- Push SDK supports multilingual internationalization.
+- Push SDK supports Meizu message categorization.
+- Cloud group search now returns join options and invitation options.
+- Cloud group member search now returns member avatars.
+- iOS platform introduces Swift version of UIKit.
+- Upgraded QUIC plugin to support iOS simulator.
+- Enhanced OC SDK with Swift Optional property support.
+- Optimized long-connection IP freeze strategy with channel type added.
+- Fixed occasional issue where push-only accounts triggered IM commands.
+- Fixed missing device model setting in Flutter SDK on Android.
+- Fixed callback thread inconsistency when Flutter SDK coexists with RoomKit.
+- Fixed occasional callback conflicts between Flutter SDK and RoomEngine.
 
 
