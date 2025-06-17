@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/video_view"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,85 +9,114 @@
         android:id="@+id/img_video_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
 
-    <com.tencent.qcloud.tuikit.TUIVideoView
+    <com.tencent.cloud.tuikit.engine.common.TUIVideoView
         android:id="@+id/tx_cloud_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <androidx.constraintlayout.utils.widget.ImageFilterView
         android:id="@+id/img_head"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_centerInParent="true"
         android:scaleType="fitXY"
-        android:src="@drawable/tuicallkit_ic_avatar" />
+        android:src="@drawable/tuicallkit_ic_avatar"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
-    <com.tencent.qcloud.tuikit.tuicallkit.view.common.CustomLoadingView
+    <com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.multicall.MultiCallLoadingView
         android:id="@+id/img_loading"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_centerInParent="true"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/image_load"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_marginStart="10dp"
         android:layout_marginBottom="8dp"
         android:background="@color/tuicallkit_color_transparent"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/tuicallkit_color_white"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/iv_audio_input"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_alignParentBottom="true"
         android:layout_marginStart="4dp"
         android:layout_marginBottom="8dp"
-        android:layout_toEndOf="@+id/tv_name"
         android:background="@drawable/tuicallkit_ic_audio_input"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_name"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/iv_network"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_alignParentBottom="true"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:layout_toStartOf="@+id/iv_switch_camera"
         android:background="@drawable/tuicallkit_ic_network_bad"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/iv_switch_camera"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/iv_switch_camera"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_alignParentBottom="true"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:layout_toStartOf="@+id/iv_blur_background"
+        android:layout_toStartOf="@+id/iv_blur"
         android:background="@drawable/tuicallkit_ic_switch_camera_group"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/iv_blur"
+        tools:visibility="visible" />
 
     <ImageView
-        android:id="@+id/iv_blur_background"
+        android:id="@+id/iv_blur"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/tuicallkit_bg_blur_background"
-        android:visibility="gone" />
-</RelativeLayout>
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible" />
+</androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -43,7 +43,7 @@ public class TUIFloatChatDisplayView extends FrameLayout implements IFloatChatDi
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        FloatChatStore.sharedInstance().mSendBarrage.set(null);
+        FloatChatStore.sharedInstance().mSendBarrage.set(new TUIFloatChat());
         addObserver();
         MetricsStats.submit(MetricsStats.T_METRICS_BARRAGE_PANEL_SHOW);
     }
@@ -73,7 +73,7 @@ public class TUIFloatChatDisplayView extends FrameLayout implements IFloatChatDi
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         removeObserver();
-        FloatChatStore.sharedInstance().mSendBarrage.set(null);
+        FloatChatStore.sharedInstance().mSendBarrage.set(new TUIFloatChat());
     }
 
     @SuppressLint("NotifyDataSetChanged")

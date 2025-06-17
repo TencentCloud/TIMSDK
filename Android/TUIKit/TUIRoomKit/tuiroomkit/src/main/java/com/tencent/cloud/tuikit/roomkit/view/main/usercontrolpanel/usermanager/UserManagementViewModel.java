@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
+import com.tencent.cloud.tuikit.roomkit.common.utils.CommonUtils;
 import com.tencent.cloud.tuikit.roomkit.manager.eventcenter.ConferenceEventCenter;
 import com.tencent.cloud.tuikit.roomkit.manager.eventcenter.ConferenceEventConstant;
 import com.tencent.cloud.tuikit.roomkit.state.ConferenceState;
@@ -83,6 +84,9 @@ public class UserManagementViewModel implements ConferenceEventCenter.RoomEngine
     }
 
     public boolean checkPermission(String action) {
+        if (CommonUtils.isRobot(mUser.getUserId())) {
+            return false;
+        }
         UserState.UserInfo localUser = ConferenceController.sharedInstance().getUserState().selfInfo.get();
         if (TextUtils.equals(localUser.userId, mUser.getUserId())) {
             return false;

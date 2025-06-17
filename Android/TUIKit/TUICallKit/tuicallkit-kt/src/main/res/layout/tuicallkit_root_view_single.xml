@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cl_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FF55534F">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_horizontal_top"
@@ -14,36 +13,28 @@
         app:layout_constraintGuide_begin="20dp" />
 
     <FrameLayout
-        android:id="@+id/rl_container"
+        android:id="@+id/fl_video"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <FrameLayout
-        android:id="@+id/rl_user_info_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/fl_call_tag"
-        app:layout_constraintTop_toBottomOf="@+id/gl_horizontal_top" />
-
-    <FrameLayout
-        android:id="@+id/rl_layout_float_icon"
+    <ImageView
+        android:id="@+id/image_float_icon"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="32dp"
+        android:background="@drawable/tuicallkit_ic_float_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gl_horizontal_top" />
 
     <FrameLayout
-        android:id="@+id/fl_call_tag"
+        android:id="@+id/fl_call_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toTopOf="@id/rl_single_function"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rl_user_info_layout" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <FrameLayout
         android:id="@+id/rl_single_time"
@@ -51,10 +42,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:layout_marginTop="64dp"
-        app:layout_constraintBottom_toBottomOf="@+id/rl_layout_float_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/image_float_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/rl_layout_float_icon" />
+        app:layout_constraintTop_toTopOf="@+id/image_float_icon" />
 
     <FrameLayout
         android:id="@+id/rl_single_function"

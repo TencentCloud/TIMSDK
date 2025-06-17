@@ -123,11 +123,9 @@ public class RoomObserver extends TUIRoomObserver implements ConferenceEventCent
 
     private void addNewFreeUsers(List<TUIRoomDefine.UserInfo> userInfoList) {
         for (TUIRoomDefine.UserInfo item : userInfoList) {
-            Log.d(TAG, "addNewFreeUsers userName=" + item.userName + " userId=" + item.userId + " avatarUrl="
-                    + item.avatarUrl);
-            RoomMsgUserEntity userEntity = new RoomMsgUserEntity(item.userId, item.userName, item.avatarUrl);
-            mRoomMsgData.getUserList().add(userEntity);
-            mRoomMsgManager.updateGroupRoomMessage(mRoomMsgData);
+            if (addUser(item)) {
+                mRoomMsgManager.updateGroupRoomMessage(mRoomMsgData);
+            }
         }
     }
 
@@ -153,26 +151,14 @@ public class RoomObserver extends TUIRoomObserver implements ConferenceEventCent
     @Override
     public void onRemoteUserEnterRoom(String roomId, TUIRoomDefine.UserInfo userInfo) {
         super.onRemoteUserEnterRoom(roomId, userInfo);
+        Log.d(TAG, "onRemoteUserEnterRoom roomId=" + roomId + " userName=" + userInfo.userName + " userId="
+                + userInfo.userId);
         if (mRoomMsgData == null) {
             return;
         }
-        Log.d(TAG, "onRemoteUserEnterRoom roomId=" + roomId + " userName=" + userInfo.userName + " userId="
-                + userInfo.userId);
-        boolean isUserAdded = false;
-        for (RoomMsgUserEntity item : mRoomMsgData.getUserList()) {
-            if (item.getUserId().equals(userInfo.userId)) {
-                isUserAdded = true;
-                break;
-            }
+        if (addUser(userInfo)) {
+            mRoomMsgManager.updateGroupRoomMessage(mRoomMsgData);
         }
-        if (isUserAdded) {
-            Log.w(TAG, "onRemoteUserEnterRoom isUserAdded=true roomId=" + roomId + " userName=" + userInfo.userName
-                    + " userId=" + userInfo.userId);
-            return;
-        }
-        RoomMsgUserEntity userEntity = new RoomMsgUserEntity(userInfo.userId, userInfo.userName, userInfo.avatarUrl);
-        mRoomMsgData.getUserList().add(userEntity);
-        mRoomMsgManager.updateGroupRoomMessage(mRoomMsgData);
     }
 
     @Override
@@ -257,5 +243,15 @@ public class RoomObserver extends TUIRoomObserver implements ConferenceEventCent
         Log.d(TAG, "handleLocalUserDestroyRoom result=" + result);
         updateMsgForRoomStateChanged(AccessRoomConstants.RoomState.destroyed);
         mRoomCallback.onDestroyRoom(mRoomMsgData.getRoomId());
+    }
+
+    private boolean addUser(TUIRoomDefine.UserInfo user) {
+        for (RoomMsgUserEntity item : mRoomMsgData.getUserList()) {
+            if (TextUtils.equals(item.getUserId(), user.userId)) {
+                return false;
+            }
+        }
+        mRoomMsgData.getUserList().add(new RoomMsgUserEntity(user.userId, user.userName, user.avatarUrl));
+        return true;
     }
 }

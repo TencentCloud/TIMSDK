@@ -62,7 +62,6 @@ import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.OfflinePushInfoUtils;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -582,35 +581,39 @@ public abstract class ChatPresenter {
     protected void processQuoteMessage(List<TUIMessageBean> data) {
         List<String> msgIdList = new ArrayList<>();
         List<QuoteMessageBean> quoteMessageList = new ArrayList<>();
+        boolean hasQuoteMessage = false;
         for (TUIMessageBean messageBean : data) {
             if (messageBean instanceof QuoteMessageBean) {
                 quoteMessageList.add((QuoteMessageBean) messageBean);
                 msgIdList.add(((QuoteMessageBean) messageBean).getOriginMsgId());
+                hasQuoteMessage = true;
             }
         }
         Set<TUIMessageBean> updateSet = new HashSet<>();
         updateSet.addAll(quoteMessageList);
         CountDownLatch latch = new CountDownLatch(2);
+        List<TUIMessageBean> originMessageBeans = new ArrayList<>();
+        Iterator<String> iterator = msgIdList.iterator();
+        List<TUIMessageBean> loadedData = getLoadedMessageList();
+        while (iterator.hasNext()) {
+            String msgID = iterator.next();
+            for (TUIMessageBean messageBean : loadedData) {
+                if (TextUtils.equals(messageBean.getId(), msgID)) {
+                    originMessageBeans.add(messageBean);
+                    iterator.remove();
+                    break;
+                }
+            }
+        }
+        boolean finalHasQuoteMessage = hasQuoteMessage;
         Runnable findMessageRunnable = new Runnable() {
             @Override
             public void run() {
-                if (msgIdList.isEmpty()) {
+                if (!finalHasQuoteMessage) {
                     latch.countDown();
                     return;
                 }
-                List<TUIMessageBean> originMessageBeans = new ArrayList<>();
-                Iterator<String> iterator = msgIdList.iterator();
-                List<TUIMessageBean> loadedData = getLoadedMessageList();
-                while (iterator.hasNext()) {
-                    String msgID = iterator.next();
-                    for (TUIMessageBean messageBean : loadedData) {
-                        if (TextUtils.equals(messageBean.getId(), msgID)) {
-                            originMessageBeans.add(messageBean);
-                            iterator.remove();
-                            break;
-                        }
-                    }
-                }
+
                 findMessage(msgIdList, new IUIKitCallback<List<TUIMessageBean>>() {
                     @Override
                     public void onSuccess(List<TUIMessageBean> originData) {

@@ -41,7 +41,6 @@ import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomEngine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomObserver;
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.common.utils.KeepAliveService;
 import com.tencent.cloud.tuikit.roomkit.common.utils.BusinessSceneUtil;
 import com.tencent.cloud.tuikit.roomkit.common.utils.DrawOverlaysPermissionUtil;
 import com.tencent.cloud.tuikit.roomkit.common.utils.RoomPermissionUtil;
@@ -70,6 +69,8 @@ import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.permission.PermissionCallback;
 import com.tencent.trtc.TRTCCloud;
 import com.tencent.trtc.TRTCCloudDef;
+import com.trtc.tuikit.common.foregroundservice.AudioForegroundService;
+import com.trtc.tuikit.common.foregroundservice.MediaForegroundService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -289,7 +290,7 @@ public class ConferenceController {
             @Override
             public void onGranted() {
                 Log.d(TAG, "openLocalCamera");
-                mRoomEngine.openLocalCamera(mConferenceState.videoModel.isFrontCamera, mConferenceState.videoModel.getResolution(),
+                mRoomEngine.openLocalCamera(mConferenceState.mediaState.isFrontCamera.get(), mConferenceState.videoModel.getResolution(),
                         cameraCallback);
             }
 
@@ -605,9 +606,6 @@ public class ConferenceController {
                                                 String message) {
                             }
                         });
-                        KeepAliveService.startKeepAliveService(
-                                mContext.getString(mContext.getApplicationInfo().labelRes),
-                                mContext.getString(R.string.tuiroomkit_app_running));
                     }
 
                     @Override
@@ -684,9 +682,6 @@ public class ConferenceController {
                                         String message) {
                     }
                 });
-                KeepAliveService.startKeepAliveService(
-                        mContext.getString(mContext.getApplicationInfo().labelRes),
-                        mContext.getString(R.string.tuiroomkit_app_running));
             }
 
             @Override
@@ -1027,7 +1022,7 @@ public class ConferenceController {
         if (mConferenceState.audioModel.isMicOpen()) {
             closeLocalMicrophone();
         }
-        KeepAliveService.stopKeepAliveService();
+        stopKeepAliveService();
         mRoomFloatWindowManager.destroy();
         mViewController.destroy();
         mUserController.destroy();
@@ -1101,7 +1096,7 @@ public class ConferenceController {
         mMediaController.setAudioRoute(isOpenSpeaker);
 
         boolean isPushAudio = isPushAudio(enableAudio);
-        if (RoomPermissionUtil.hasAudioPermission()) {
+        if (RoomPermissionUtil.hasRecordAudioPermission()) {
             if (!isPushAudio) { // Mute first and then turn on mic to avoid sound leakage
                 ConferenceController.sharedInstance().muteLocalAudio();
             }
@@ -1180,5 +1175,13 @@ public class ConferenceController {
         String nickName = TUILogin.getNickName();
         String name = TextUtils.isEmpty(nickName) ? TUILogin.getUserId() : nickName;
         return mContext.getString(R.string.tuiroomkit_meeting_title, name);
+    }
+
+    private void stopKeepAliveService() {
+        if (RoomPermissionUtil.hasRecordAudioPermission()) {
+            AudioForegroundService.stop(mContext);
+        } else {
+            MediaForegroundService.stop(mContext);
+        }
     }
 }

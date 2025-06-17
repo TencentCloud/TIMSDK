@@ -81,6 +81,7 @@ public class TUIMultimediaRecordCore {
             mRecordInfo.recordResult.code = txRecordResult.retCode;
             mRecordInfo.tuiDataRecordStatus.set(RecordStatus.STOP);
             mRecordSDK.getPartsManager().deleteAllParts();
+            toggleTorch(false);
             LiteavLog.i(TAG, "onRecordComplete finish");
         }
     };
@@ -157,7 +158,7 @@ public class TUIMultimediaRecordCore {
         mRecordInfo.tuiDataRecordStatus.set(RecordStatus.TAKE_PHOTOING);
         mRecordSDK.snapshot(bitmap -> {
             LiteavLog.i(TAG, "onSnapshot. snap file Path is " + photoFilePath);
-
+            toggleTorch(false);
             FileOutputStream outputStream = null;
             try {
                 outputStream = new FileOutputStream(photoFilePath);

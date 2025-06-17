@@ -22,10 +22,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.common.utils.CommonUtils;
+import com.tencent.cloud.tuikit.roomkit.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.manager.eventcenter.ConferenceEventCenter;
 import com.tencent.cloud.tuikit.roomkit.state.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.state.entity.UserModel;
-import com.tencent.cloud.tuikit.roomkit.manager.ConferenceController;
 
 import java.util.List;
 
@@ -148,7 +149,7 @@ public class ExitRoomDialog extends BottomSheetDialog {
         UserEntity nextOwner = null;
         for (UserEntity user : list) {
             if (TextUtils.equals(user.getUserId(), localUserId)
-                    || user.getVideoStreamType() == TUIRoomDefine.VideoStreamType.SCREEN_STREAM) {
+                    || user.getVideoStreamType() == TUIRoomDefine.VideoStreamType.SCREEN_STREAM || CommonUtils.isRobot(user.getUserId())) {
                 continue;
             }
             count++;

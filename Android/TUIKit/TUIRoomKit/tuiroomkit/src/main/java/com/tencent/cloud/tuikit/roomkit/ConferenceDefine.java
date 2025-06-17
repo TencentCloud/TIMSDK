@@ -75,7 +75,7 @@ public class ConferenceDefine {
 
         public void onConferenceJoined(TUIRoomDefine.RoomInfo roomInfo, TUICommonDefine.Error error, String message) {}
 
-        public void onConferenceExisted(TUIRoomDefine.RoomInfo roomInfo, ConferenceExitedReason reason) {}
+        public void onConferenceExited(TUIRoomDefine.RoomInfo roomInfo, ConferenceExitedReason reason) {}
 
         public void onConferenceFinished(TUIRoomDefine.RoomInfo roomInfo, ConferenceFinishedReason reason) {}
     }

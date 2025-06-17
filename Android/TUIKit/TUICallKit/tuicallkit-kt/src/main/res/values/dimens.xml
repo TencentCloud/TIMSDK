@@ -3,8 +3,6 @@
     <dimen name="tuicallkit_small_image_size">30dp</dimen>
     <dimen name="tuicallkit_small_image_left_margin">8dp</dimen>
     <dimen name="tuicallkit_text_size_hint">12sp</dimen>
-
     <dimen name="tuicallkit_video_small_view_width">120dp</dimen>
     <dimen name="tuicallkit_video_small_view_height">180dp</dimen>
-
 </resources>

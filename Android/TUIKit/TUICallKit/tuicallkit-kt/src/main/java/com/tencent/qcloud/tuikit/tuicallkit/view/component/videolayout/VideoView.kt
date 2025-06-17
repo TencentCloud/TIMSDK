@@ -1,299 +1,294 @@
 package com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout
 
 import android.content.Context
-import android.text.TextUtils
 import android.view.LayoutInflater
-import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.constraintlayout.utils.widget.ImageFilterView
+import androidx.core.content.ContextCompat
+import com.tencent.cloud.tuikit.engine.call.TUICallDefine
+import com.tencent.cloud.tuikit.engine.common.TUICommonDefine
+import com.tencent.cloud.tuikit.engine.common.TUIVideoView
 import com.tencent.qcloud.tuicore.TUILogin
 import com.tencent.qcloud.tuicore.util.ScreenUtil
-import com.tencent.qcloud.tuikit.TUICommonDefine.Camera
-import com.tencent.qcloud.tuikit.TUIVideoView
-import com.tencent.qcloud.tuikit.tuicallengine.TUICallDefine
-import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
 import com.tencent.qcloud.tuikit.tuicallkit.R
-import com.tencent.qcloud.tuikit.tuicallkit.data.Constants
-import com.tencent.qcloud.tuikit.tuicallkit.data.User
-import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
-import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
-import com.tencent.qcloud.tuikit.tuicallkit.utils.ImageLoader
-import com.tencent.qcloud.tuikit.tuicallkit.view.common.CustomLoadingView
-import com.tencent.qcloud.tuikit.tuicallkit.view.root.BaseCallView
-import com.tencent.qcloud.tuikit.tuicallkit.viewmodel.component.videolayout.VideoViewModel
+import com.tencent.qcloud.tuikit.tuicallkit.common.data.Constants
+import com.tencent.qcloud.tuikit.tuicallkit.manager.CallManager
+import com.tencent.qcloud.tuikit.tuicallkit.state.GlobalState
+import com.tencent.qcloud.tuikit.tuicallkit.state.UserState
+import com.tencent.qcloud.tuikit.tuicallkit.state.ViewState
+import com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.multicall.MultiCallLoadingView
+import com.trtc.tuikit.common.imageloader.ImageLoader
+import com.trtc.tuikit.common.imageloader.ImageOptions
+import com.trtc.tuikit.common.livedata.Observer
 
-class VideoView(context: Context) : BaseCallView(context) {
-    private var tuiVideoView: TUIVideoView? = null
-    private var imageAvatar: ImageFilterView? = null
-    private var imageSwitchCamera: ImageView? = null
-    private var imageUserBlurBackground: ImageView? = null
-    private var imageNetworkBad: ImageView? = null
-    private var textUserName: TextView? = null
-    private var imageAudioInput: ImageView? = null
-    private var imageLoading: CustomLoadingView? = null
-    private var imageBackground: ImageView? = null
-    private var viewModel: VideoViewModel? = null
+class VideoView(context: Context, userInfo: UserState.User) : RelativeLayout(context) {
+    private val context = context.applicationContext
+    private var user: UserState.User = userInfo
+    private var isShowFloatWindow: Boolean = false
+
+    private lateinit var videoView: TUIVideoView
+    private lateinit var imageAvatar: ImageFilterView
+    private lateinit var buttonSwitchCamera: ImageView
+    private lateinit var buttonBlur: ImageView
+    private lateinit var imageNetworkBad: ImageView
+    private lateinit var textUserName: TextView
+    private lateinit var imageAudioInput: ImageView
+    private lateinit var imageBackground: ImageView
+    private lateinit var imageLoading: MultiCallLoadingView
 
     private var videoAvailableObserver = Observer<Boolean> {
-        if (it) {
-            tuiVideoView?.visibility = VISIBLE
-            imageBackground?.visibility = GONE
-            imageAvatar?.visibility = GONE
-            if (viewModel?.user?.id != viewModel?.selfUser?.id) {
-                EngineManager.instance.startRemoteView(viewModel?.user?.id, tuiVideoView, null)
-            }
-        } else {
-            tuiVideoView?.visibility = GONE
-            imageBackground?.visibility = VISIBLE
-            ImageLoader.loadBlurImage(context, imageBackground, viewModel?.user?.avatar?.get())
-
-            if (viewModel?.user?.id == viewModel?.selfUser?.id
-                && TUICallState.instance.scene.get() == TUICallDefine.Scene.SINGLE_CALL
-                && viewModel?.selfUser?.callStatus?.get() == TUICallDefine.Status.Waiting
-            ) {
-                imageAvatar?.visibility = GONE
-            } else {
-                imageAvatar?.visibility = VISIBLE
-                ImageLoader.loadImage(context, imageAvatar, viewModel?.user?.avatar?.get())
-            }
-        }
-
-        val show = it && viewModel?.user?.id == viewModel?.selfUser?.id
-                && viewModel?.showLargeViewUserId?.get() == viewModel?.selfUser?.id
-        refreshFunctionButton(show)
+        updateVideoView()
+        updateBackground()
+        updateUserAvatarView()
+        updateUserNameView()
+        updateSwitchCameraButton()
+        updateBlurButton()
     }
 
     private var audioAvailableObserver = Observer<Boolean> {
-        if (!it && viewModel?.scene?.get() == TUICallDefine.Scene.GROUP_CALL && viewModel?.user == viewModel?.selfUser) {
-            imageAudioInput?.setImageResource(R.drawable.tuicallkit_ic_self_mute)
-            imageAudioInput?.visibility = VISIBLE
-        } else {
-            imageAudioInput?.visibility = GONE
-        }
+        updateAudioInputIcon()
     }
 
-    private var playoutVolumeAvailableObserver = Observer<Int> {
-        if (viewModel?.scene?.get() == TUICallDefine.Scene.GROUP_CALL
-            && viewModel?.user == viewModel?.selfUser && viewModel?.selfUser?.audioAvailable?.get() == false
-        ) {
-            imageAudioInput?.setImageResource(R.drawable.tuicallkit_ic_self_mute)
-            imageAudioInput?.visibility = VISIBLE
-        } else if (it > Constants.MIN_AUDIO_VOLUME && viewModel?.scene?.get() == TUICallDefine.Scene.GROUP_CALL) {
-            imageAudioInput?.setImageResource(R.drawable.tuicallkit_ic_audio_input)
-            imageAudioInput?.visibility = VISIBLE
-        } else {
-            imageAudioInput?.visibility = GONE
-        }
+    private var playoutVolumeObserver = Observer<Int> {
+        updateAudioInputIcon()
     }
 
     private var callStatusObserver = Observer<TUICallDefine.Status> {
-        if (it == TUICallDefine.Status.Waiting && !viewModel?.user?.id.equals(TUILogin.getLoginUser())) {
-            imageLoading?.visibility = VISIBLE
-            imageLoading?.startLoading()
-        } else {
-            imageLoading?.visibility = GONE
-            imageLoading?.stopLoading()
+        if (it == TUICallDefine.Status.None) {
+            unregisterObserver()
+            return@Observer
         }
-        if (viewModel?.user?.id == viewModel?.selfUser?.id && viewModel?.user?.videoAvailable?.get() == false) {
-            imageAvatar?.visibility = VISIBLE
-            ImageLoader.loadImage(context, imageAvatar, viewModel?.user?.avatar?.get())
-        }
+        updateImageLoadingView()
+        updateUserAvatarView()
     }
 
     private var avatarObserver = Observer<String> {
-        if (!TextUtils.isEmpty(it)) {
-            ImageLoader.loadImage(context.applicationContext, imageAvatar, it, R.drawable.tuicallkit_ic_avatar)
-            ImageLoader.loadBlurImage(context, imageBackground, it)
-        }
+        updateUserAvatarView()
+        updateBackground()
     }
 
     private var nicknameObserver = Observer<String> {
-        if (!TextUtils.isEmpty(it)) {
-            textUserName?.text = it
-        }
+        textUserName.text = it
     }
 
     private var showLargeViewUserIdObserver = Observer<String> {
-        val show = !it.isNullOrEmpty() && viewModel?.selfUser?.videoAvailable?.get() == true
-                && it == viewModel?.user?.id && it == viewModel?.selfUser?.id
-        refreshFunctionButton(show)
-        refreshUserNameView()
+        updateUserNameView()
+        updateSwitchCameraButton()
+        updateBlurButton()
     }
 
     private var networkQualityObserver = Observer<Boolean> {
-        if (it && viewModel?.scene?.get() == TUICallDefine.Scene.GROUP_CALL) {
-            imageNetworkBad?.visibility = VISIBLE
-        } else {
-            imageNetworkBad?.visibility = GONE
-        }
+        updateNetworkHint()
+    }
+
+    private val viewRouterObserver = Observer<ViewState.ViewRouter> {
+        isShowFloatWindow = it == ViewState.ViewRouter.FloatView
+        updateNetworkHint()
+        updateAudioInputIcon()
+        updateSwitchCameraButton()
+        updateBlurButton()
+        updateUserNameView()
     }
 
     init {
         initView()
+        registerObserver()
     }
 
-    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
-        return super.onInterceptTouchEvent(ev)
+    private fun registerObserver() {
+        user.videoAvailable.observe(videoAvailableObserver)
+        user.avatar.observe(avatarObserver)
+        user.nickname.observe(nicknameObserver)
+        user.callStatus.observe(callStatusObserver)
+        user.audioAvailable.observe(audioAvailableObserver)
+        user.playoutVolume.observe(playoutVolumeObserver)
+        user.networkQualityReminder.observe(networkQualityObserver)
+        CallManager.instance.viewState.showLargeViewUserId.observe(showLargeViewUserIdObserver)
+        CallManager.instance.viewState.router.observe(viewRouterObserver)
     }
 
-    override fun clear() {
-        removeObserver()
-    }
-
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        return false
-    }
-
-    fun setUser(user: User) {
-        viewModel = VideoViewModel(user)
-        refreshView()
-
-        addObserver()
-    }
-
-    fun setImageAvatarVisibility(isShow: Boolean) {
-        if (isShow) {
-            imageAvatar?.visibility = VISIBLE
-            imageBackground?.visibility = VISIBLE
-            ImageLoader.loadImage(context, imageAvatar, viewModel?.user?.avatar?.get())
-            ImageLoader.loadBlurImage(context, imageBackground, viewModel?.user?.avatar?.get())
-        } else {
-            imageAvatar?.visibility = GONE
-            imageBackground?.visibility = GONE
-        }
-    }
-
-    fun setVideoIconVisibility(needShow: Boolean) {
-        if (!needShow) {
-            imageAudioInput?.visibility = GONE
-            textUserName?.visibility = GONE
-            refreshFunctionButton(false)
-        }
-    }
-
-    private fun addObserver() {
-        viewModel?.user?.videoAvailable?.observe(videoAvailableObserver)
-        viewModel?.user?.audioAvailable?.observe(audioAvailableObserver)
-        viewModel?.user?.playoutVolume?.observe(playoutVolumeAvailableObserver)
-        viewModel?.user?.callStatus?.observe(callStatusObserver)
-        viewModel?.user?.avatar?.observe(avatarObserver)
-        viewModel?.user?.nickname?.observe(nicknameObserver)
-        viewModel?.user?.networkQualityReminder?.observe(networkQualityObserver)
-
-        viewModel?.showLargeViewUserId?.observe(showLargeViewUserIdObserver)
-    }
-
-    private fun removeObserver() {
-        viewModel?.user?.videoAvailable?.removeObserver(videoAvailableObserver)
-        viewModel?.user?.audioAvailable?.removeObserver(audioAvailableObserver)
-        viewModel?.user?.playoutVolume?.removeObserver(playoutVolumeAvailableObserver)
-        viewModel?.user?.callStatus?.removeObserver(callStatusObserver)
-        viewModel?.user?.avatar?.removeObserver(avatarObserver)
-        viewModel?.user?.nickname?.removeObserver(nicknameObserver)
-        viewModel?.user?.networkQualityReminder?.removeObserver(networkQualityObserver)
-
-        viewModel?.showLargeViewUserId?.removeObserver(showLargeViewUserIdObserver)
-    }
-
-    private fun refreshView() {
-        if (TUICallDefine.Scene.GROUP_CALL == viewModel?.scene?.get()
-            && TUICallDefine.Status.Waiting == viewModel?.user?.callStatus?.get()
-        ) {
-            if (!viewModel?.user?.id.equals(TUILogin.getLoginUser())) {
-                imageLoading?.visibility = VISIBLE
-                imageLoading?.startLoading()
-            }
-        } else if (TUICallDefine.Status.Accept == viewModel?.user?.callStatus?.get()) {
-            if (viewModel?.user?.videoAvailable?.get() == true) {
-                tuiVideoView?.visibility = VISIBLE
-                imageAvatar?.visibility = GONE
-            } else {
-                tuiVideoView?.visibility = GONE
-                imageAvatar?.visibility = VISIBLE
-            }
-            imageLoading?.visibility = GONE
-            imageLoading?.stopLoading()
-        } else {
-            imageLoading?.visibility = GONE
-            imageLoading?.stopLoading()
-        }
-
-        refreshUserAvatarView()
-        refreshUserNameView()
-
-        val show = viewModel?.user?.videoAvailable?.get() == true
-                && viewModel?.showLargeViewUserId?.get() == viewModel?.user?.id
-        refreshFunctionButton(show)
+    private fun unregisterObserver() {
+        user.videoAvailable.removeObserver(videoAvailableObserver)
+        user.avatar.removeObserver(avatarObserver)
+        user.nickname.removeObserver(nicknameObserver)
+        user.callStatus.removeObserver(callStatusObserver)
+        user.audioAvailable.removeObserver(audioAvailableObserver)
+        user.playoutVolume.removeObserver(playoutVolumeObserver)
+        user.networkQualityReminder.removeObserver(networkQualityObserver)
+        CallManager.instance.viewState.showLargeViewUserId.removeObserver(showLargeViewUserIdObserver)
+        CallManager.instance.viewState.router.removeObserver(viewRouterObserver)
     }
 
     private fun initView() {
         LayoutInflater.from(context).inflate(R.layout.tuicallkit_video_view, this, true)
-        tuiVideoView = findViewById(R.id.tx_cloud_view)
+        videoView = findViewById(R.id.tx_cloud_view)
         imageAvatar = findViewById(R.id.img_head)
-        imageSwitchCamera = findViewById(R.id.iv_switch_camera)
-        imageUserBlurBackground = findViewById(R.id.iv_blur_background)
         textUserName = findViewById(R.id.tv_name)
         imageAudioInput = findViewById(R.id.iv_audio_input)
-        imageLoading = findViewById(R.id.img_loading)
         imageBackground = findViewById(R.id.img_video_background)
         imageNetworkBad = findViewById(R.id.iv_network)
-
-        refreshUserAvatarView()
-        refreshUserNameView()
-
-        imageSwitchCamera?.setOnClickListener() {
-            val camera = if (viewModel?.isFrontCamera?.get() == Camera.Front) Camera.Back else Camera.Front
-            EngineManager.instance.switchCamera(camera)
+        imageLoading = findViewById(R.id.img_loading)
+        buttonSwitchCamera = findViewById(R.id.iv_switch_camera)
+        buttonSwitchCamera.setOnClickListener {
+            var camera = TUICommonDefine.Camera.Back
+            if (CallManager.instance.mediaState.isFrontCamera.get() == TUICommonDefine.Camera.Back) {
+                camera = TUICommonDefine.Camera.Front
+            }
+            CallManager.instance.switchCamera(camera)
         }
-        imageUserBlurBackground?.setOnClickListener {
-            EngineManager.instance.setBlurBackground(!TUICallState.instance.enableBlurBackground.get())
-            imageUserBlurBackground?.isActivated = TUICallState.instance.enableBlurBackground.get()
+        buttonBlur = findViewById(R.id.iv_blur)
+        buttonBlur.setOnClickListener {
+            CallManager.instance.setBlurBackground(!CallManager.instance.viewState.isVirtualBackgroundOpened.get())
+        }
+
+        updateVideoView()
+        updateImageLoadingView()
+        updateUserAvatarView()
+        updateUserNameView()
+        updateBackground()
+    }
+
+    fun getVideoView(): TUIVideoView {
+        return videoView
+    }
+
+    private fun updateVideoView() {
+        if (user.videoAvailable.get()) {
+            CallManager.instance.startRemoteView(user.id, this, null)
+            videoView.visibility = View.VISIBLE
+        } else {
+            videoView.visibility = View.GONE
         }
     }
 
-    private fun refreshUserAvatarView() {
-        val layoutParams: LayoutParams = imageAvatar?.layoutParams as LayoutParams
-        if (TUICallDefine.Scene.GROUP_CALL == viewModel?.scene?.get()) {
+    private fun updateImageLoadingView() {
+        if (TUICallDefine.Scene.GROUP_CALL == CallManager.instance.callState.scene.get()
+            && TUICallDefine.Status.Waiting == user.callStatus.get() && user.id != TUILogin.getLoginUser()) {
+            imageLoading.visibility = View.VISIBLE
+            imageLoading.startLoading()
+        } else {
+            imageLoading.visibility = View.GONE
+            imageLoading.stopLoading()
+        }
+    }
+
+    private fun updateAudioInputIcon() {
+        if (isShowFloatWindow || CallManager.instance.callState.scene.get() == TUICallDefine.Scene.SINGLE_CALL) {
+            imageAudioInput.visibility = View.GONE
+            return
+        }
+
+        when {
+            !user.audioAvailable.get() && user.id == CallManager.instance.userState.selfUser.get().id -> {
+                imageAudioInput.setImageResource(R.drawable.tuicallkit_ic_self_mute)
+                imageAudioInput.visibility = View.VISIBLE
+            }
+            user.playoutVolume.get() > Constants.MIN_AUDIO_VOLUME -> {
+                imageAudioInput.setImageResource(R.drawable.tuicallkit_ic_audio_input)
+                imageAudioInput.visibility = View.VISIBLE
+            }
+            else -> imageAudioInput.visibility = View.GONE
+        }
+    }
+
+    private fun updateNetworkHint() {
+        if (isShowFloatWindow || CallManager.instance.callState.scene.get() == TUICallDefine.Scene.SINGLE_CALL) {
+            imageNetworkBad.visibility = View.GONE
+            return
+        }
+        when {
+            user.networkQualityReminder.get() -> imageNetworkBad.visibility = View.VISIBLE
+            else -> imageNetworkBad.visibility = View.GONE
+        }
+    }
+
+    private fun updateSwitchCameraButton() {
+        if (isShowFloatWindow || CallManager.instance.callState.scene.get() == TUICallDefine.Scene.SINGLE_CALL) {
+            buttonSwitchCamera.visibility = View.GONE
+            return
+        }
+        val selfUser = CallManager.instance.userState.selfUser.get()
+        val largeUserId = CallManager.instance.viewState.showLargeViewUserId.get()
+
+        if (user.videoAvailable.get() && user.id == selfUser.id && user.id == largeUserId) {
+            buttonSwitchCamera.visibility = View.VISIBLE
+        } else {
+            buttonSwitchCamera.visibility = View.GONE
+        }
+    }
+
+    private fun updateBlurButton() {
+        if (!GlobalState.instance.enableVirtualBackground) {
+            buttonBlur.visibility = View.GONE
+            return
+        }
+        if (isShowFloatWindow || CallManager.instance.callState.scene.get() == TUICallDefine.Scene.SINGLE_CALL) {
+            buttonBlur.visibility = View.GONE
+            return
+        }
+        val selfUser = CallManager.instance.userState.selfUser.get()
+        val largeUserId = CallManager.instance.viewState.showLargeViewUserId.get()
+
+        if (user.videoAvailable.get() && user.id == selfUser.id && user.id == largeUserId) {
+            buttonBlur.visibility = View.VISIBLE
+        } else {
+            buttonBlur.visibility = View.GONE
+        }
+    }
+
+    private fun updateUserAvatarView() {
+        if (user.videoAvailable.get()) {
+            imageAvatar.visibility = View.GONE
+            return
+        }
+
+        val selfUser = CallManager.instance.userState.selfUser.get()
+        if (user.id == selfUser.id && selfUser.callStatus.get() == TUICallDefine.Status.Waiting
+            && CallManager.instance.callState.scene.get() == TUICallDefine.Scene.SINGLE_CALL
+        ) {
+            imageAvatar.visibility = View.GONE
+            return
+        }
+
+        val layoutParams = imageAvatar.layoutParams
+        if (TUICallDefine.Scene.GROUP_CALL == CallManager.instance.callState.scene.get()) {
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
             layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
-            layoutParams.removeRule(CENTER_IN_PARENT)
-            imageAvatar?.round = 0f
+            imageAvatar.round = 0f
         } else {
-            layoutParams.addRule(CENTER_IN_PARENT)
-            layoutParams.width = ScreenUtil.dip2px(80.0f)
-            layoutParams.height = ScreenUtil.dip2px(80.0f)
-            imageAvatar?.round = 12f
+            layoutParams.width = ScreenUtil.dip2px(80f)
+            layoutParams.height = ScreenUtil.dip2px(80f)
+            imageAvatar.round = 12f
         }
-        ImageLoader.loadImage(context, imageAvatar, viewModel?.user?.avatar?.get(), R.drawable.tuicallkit_ic_avatar)
-        imageAvatar?.layoutParams = layoutParams
+        imageAvatar.layoutParams = layoutParams
+        ImageLoader.load(context, imageAvatar, user.avatar.get(), R.drawable.tuicallkit_ic_avatar)
+        imageAvatar.visibility = VISIBLE
     }
 
-    private fun refreshUserNameView() {
-        if (TUICallDefine.Scene.GROUP_CALL == viewModel?.scene?.get()
-            && viewModel?.showLargeViewUserId?.get() == viewModel?.user?.id
-        ) {
-            textUserName?.visibility = VISIBLE
-        } else {
-            textUserName?.visibility = GONE
+    private fun updateUserNameView() {
+        if (isShowFloatWindow || CallManager.instance.callState.scene.get() == TUICallDefine.Scene.SINGLE_CALL) {
+            textUserName.visibility = View.GONE
+            return
         }
+        val shouldShowUserId = CallManager.instance.viewState.showLargeViewUserId.get() == user.id
 
-        textUserName?.text = if (TextUtils.isEmpty(viewModel?.user?.nickname?.get())) {
-            viewModel?.user?.id
-        } else {
-            viewModel?.user?.nickname?.get()
-        }
+        textUserName.visibility = if (shouldShowUserId) View.VISIBLE else View.GONE
+        textUserName.text = user.nickname.get()
     }
 
-    private fun refreshFunctionButton(show: Boolean) {
-        imageSwitchCamera?.visibility = if (show) VISIBLE else GONE
-        imageUserBlurBackground?.visibility =
-            if (TUICallState.instance.showVirtualBackgroundButton && show) VISIBLE else GONE
+    private fun updateBackground() {
+        if (user.videoAvailable.get() || CallManager.instance.callState.scene.get() == TUICallDefine.Scene.GROUP_CALL) {
+            imageBackground.visibility = View.GONE
+            return
+        }
 
-    }
-
-    fun getVideoView(): TUIVideoView? {
-        return tuiVideoView
+        imageBackground.visibility = View.VISIBLE
+        val option = ImageOptions.Builder().setPlaceImage(R.drawable.tuicallkit_ic_avatar).setBlurEffect(80f).build()
+        ImageLoader.load(context, imageBackground, user.avatar.get(), option)
+        imageBackground.setColorFilter(ContextCompat.getColor(context, R.color.tuicallkit_color_blur_mask))
     }
 }

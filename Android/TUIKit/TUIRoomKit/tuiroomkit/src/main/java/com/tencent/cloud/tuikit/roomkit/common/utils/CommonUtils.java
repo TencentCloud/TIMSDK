@@ -28,6 +28,7 @@ public class CommonUtils {
 
     private static final int    QR_CODE_MARGIN = 2;
     private static final String LABEL          = "Label";
+    private static final String ROBOT_PREFIX   = "robot_";
 
     public static String getAppName(Context context) {
         ApplicationInfo applicationInfo = context.getApplicationInfo();
@@ -77,5 +78,9 @@ public class CommonUtils {
         ClipData mClipData = ClipData.newPlainText(LABEL, content);
         cm.setPrimaryClip(mClipData);
         RoomToast.toastShortMessageCenter(toastMessage);
+    }
+
+    public static boolean isRobot(String userId) {
+        return !TextUtils.isEmpty(userId) && userId.startsWith(ROBOT_PREFIX);
     }
 }

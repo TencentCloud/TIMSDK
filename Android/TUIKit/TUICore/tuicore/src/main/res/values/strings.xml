@@ -15,4 +15,5 @@
     <string name="date_second_short">SS</string>
 
     <string name="core_float_permission_hint">Please enable both \"Display pop-up window while running in the background\" and \"Display pop-up Window\" permissions</string>
+    <string name="core_float_permission_hint_harmony">Please enable both \"Background pop-ups\" and \"Dropzone\" permissions</string>
 </resources>

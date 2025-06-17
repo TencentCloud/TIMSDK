@@ -1,10 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -22,45 +17,30 @@
     <uses-permission
         android:name="android.permission.BLUETOOTH_ADMIN"
         android:maxSdkVersion="30" />
-    <!-- Support Android S(31) Bluetooth-->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.MANAGE_OWN_CALLS" />
 
     <application>
         <activity
-            android:name="com.tencent.qcloud.tuikit.tuicallkit.view.CallKitActivity"
+            android:name=".view.CallMainActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".view.component.inviteuser.SelectGroupMemberActivity"
             android:configChanges="orientation|screenSize"
             android:launchMode="singleTask"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <provider
-            android:name="com.tencent.qcloud.tuikit.tuicallkit.internal.ServiceInitializer"
-            android:authorities="${applicationId}.ServiceInitializer"
+            android:name="com.tencent.qcloud.tuikit.tuicallkit.manager.bridge.Initializer"
+            android:authorities="${applicationId}.Initializer"
             android:enabled="true"
             android:exported="false" />
-
-        <service
-            android:name="com.tencent.qcloud.tuikit.tuicallkit.extensions.TUICallService"
-            android:enabled="true"
-            android:exported="false"
-            android:foregroundServiceType="microphone" />
-
-        <service
-            android:name="com.tencent.qcloud.tuikit.tuicallkit.view.component.floatview.FloatWindowService"
-            android:enabled="true"
-            android:exported="false" />
-
-        <activity
-            android:name=".extensions.inviteuser.SelectGroupMemberActivity"
-            android:configChanges="orientation|screenSize"
-            android:launchMode="singleTask"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <receiver
-            android:name="com.tencent.qcloud.tuikit.tuicallkit.view.component.incomingview.IncomingCallReceiver"
+            android:name=".view.component.incomingbanner.IncomingCallReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -68,5 +48,4 @@
             </intent-filter>
         </receiver>
     </application>
-
 </manifest>

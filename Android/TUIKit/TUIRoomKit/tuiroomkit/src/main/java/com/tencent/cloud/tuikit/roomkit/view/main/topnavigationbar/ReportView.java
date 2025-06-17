@@ -41,7 +41,7 @@ public class ReportView extends androidx.appcompat.widget.AppCompatImageView {
 
     private void updateReportView(TUIRoomDefine.Role role) {
         boolean isGeneralUser = TUIRoomDefine.Role.GENERAL_USER.equals(role);
-        boolean isShow = isGeneralUser && RTCubeUtils.isRTCubeApp(getContext());
+        boolean isShow = isGeneralUser && (RTCubeUtils.isRTCubeApp(getContext()) || RTCubeUtils.isTencentRTC(getContext()));
         setVisibility(isShow ? VISIBLE : GONE);
     }
 
@@ -51,8 +51,8 @@ public class ReportView extends androidx.appcompat.widget.AppCompatImageView {
             return;
         }
         try {
-            Class clz = Class.forName("com.tencent.liteav.demo.report.ReportDialog");
-            Method method = clz.getDeclaredMethod("showReportDialog", Context.class, String.class, String.class);
+            Class clz = Class.forName("com.tencent.liteav.business.common.report.ReportDialog");
+            Method method = clz.getDeclaredMethod("displayReportDialog", Context.class, String.class, String.class);
             method.invoke(null, getContext(), String.valueOf(roomState.roomId.get()), roomState.ownerId.get());
         } catch (Exception e) {
             e.printStackTrace();

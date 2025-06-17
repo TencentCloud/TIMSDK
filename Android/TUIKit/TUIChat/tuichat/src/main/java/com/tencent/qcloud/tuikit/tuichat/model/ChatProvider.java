@@ -367,6 +367,7 @@ public class ChatProvider {
         v2TIMOfflinePushInfo.setIOSInterruptionLevel("time-sensitive");
         v2TIMOfflinePushInfo.enableIOSBackgroundNotification(false);
         v2TIMOfflinePushInfo.setAndroidHonorImportance("NORMAL");
+        v2TIMOfflinePushInfo.setAndroidMeizuNotifyType(1);
 
         return v2TIMOfflinePushInfo;
     }

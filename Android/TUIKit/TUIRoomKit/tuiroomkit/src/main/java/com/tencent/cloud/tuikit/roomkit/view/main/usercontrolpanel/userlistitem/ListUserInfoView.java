@@ -17,6 +17,7 @@ import androidx.constraintlayout.utils.widget.ImageFilterView;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.common.utils.CommonUtils;
 import com.tencent.cloud.tuikit.roomkit.common.utils.ImageLoader;
 import com.tencent.cloud.tuikit.roomkit.state.InvitationState;
 import com.tencent.cloud.tuikit.roomkit.state.UserState;
@@ -30,8 +31,10 @@ public class ListUserInfoView extends FrameLayout {
 
     private final ImageFilterView mIfvUserAvatar;
     private final ImageFilterView mIfvUserRole;
+    private final ImageFilterView mIfvRobot;
     private final TextView        mTvUserName;
     private final TextView        mTvUserRole;
+    private final TextView        mTvRobot;
 
     private String mUserId;
 
@@ -93,7 +96,9 @@ public class ListUserInfoView extends FrameLayout {
         mIfvUserAvatar = parent.findViewById(R.id.room_ifv_list_user_avatar);
         mTvUserName = parent.findViewById(R.id.room_tv_list_user_name);
         mIfvUserRole = parent.findViewById(R.id.room_ifv_list_user_role);
+        mIfvRobot = parent.findViewById(R.id.room_ifv_list_user_robot);
         mTvUserRole = parent.findViewById(R.id.room_tv_list_user_role);
+        mTvRobot = parent.findViewById(R.id.room_tv_list_user_robot);
     }
 
     public void setUserId(String userId) {
@@ -129,6 +134,11 @@ public class ListUserInfoView extends FrameLayout {
         }
         mTvUserName.setText(userName);
 
+        updateRoleView(userInfo);
+        updateRobotView(userInfo);
+    }
+
+    private void updateRoleView(UserState.UserInfo userInfo) {
         TUIRoomDefine.Role role = userInfo.role.get();
         mIfvUserRole.setVisibility(role == GENERAL_USER ? INVISIBLE : VISIBLE);
         mTvUserRole.setVisibility(role == GENERAL_USER ? INVISIBLE : VISIBLE);
@@ -136,5 +146,12 @@ public class ListUserInfoView extends FrameLayout {
                 : R.drawable.tuiroomkit_icon_user_room_manager);
         mTvUserRole.setText(getContext().getString(role == ROOM_OWNER ? R.string.tuiroomkit_master
                 : R.string.tuiroomkit_room_manager));
+    }
+
+    private void updateRobotView(UserState.UserInfo userInfo) {
+        if (CommonUtils.isRobot(userInfo.userId)) {
+            mIfvRobot.setVisibility(VISIBLE);
+            mTvRobot.setVisibility(VISIBLE);
+        }
     }
 }

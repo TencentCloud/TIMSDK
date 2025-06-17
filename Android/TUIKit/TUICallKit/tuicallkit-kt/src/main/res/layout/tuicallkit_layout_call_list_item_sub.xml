@@ -8,16 +8,15 @@
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
-    <com.tencent.qcloud.tuikit.tuicallkit.extensions.recents.RecordsIconView
+    <com.tencent.qcloud.tuikit.tuicallkit.view.component.recents.RecordsIconView
         android:id="@+id/call_icon"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:scaleType="fitCenter"
-        app:corner_radius="45dp"
-        app:default_image="@drawable/tuicallkit_ic_avatar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:round="45dp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_info"

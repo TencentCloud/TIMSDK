@@ -1,12 +1,9 @@
 <resources>
-    <string name="tuicallkit_contact_default_name">test123</string>
     <string name="tuicallkit_toast_enable_mute">マイクオフ</string>
     <string name="tuicallkit_toast_disable_mute">マイクオン</string>
     <string name="tuicallkit_toast_speaker">スピーカーオン</string>
     <string name="tuicallkit_toast_use_earpiece">スピーカーオフ</string>
-    <string name="tuicallkit_toast_user_end">%s 通話終了</string>
     <string name="tuicallkit_toast_callee_hangup">相手が切断、通話終了</string>
-    <string name="tuicallkit_toast_user_reject">%s は通話を拒否しました</string>
     <string name="tuicallkit_toast_callee_reject">相手による通話拒否</string>
     <string name="tuicallkit_toast_callee_no_response">呼び出しタイムアウト</string>
     <string name="tuicallkit_other_party_network_low_quality">相手のネットワーク接続が不安定です</string>
@@ -17,18 +14,13 @@
     <string name="tuicallkit_waiting_accept">応答を待っています</string>
     <string name="tuicallkit_invite_audio_call">音声通話に招待されました</string>
     <string name="tuicallkit_invite_video_call">ビデオ通話に招待されました</string>
-    <string name="tuicallkit_text_microphone">マイク</string>
     <string name="tuicallkit_text_hangup">マイク</string>
-    <string name="tuicallkit_text_reject">拒否</string>
     <string name="tuicallkit_text_line_busy">回線ビジー</string>
-    <string name="tuicallkit_text_speaker">スピーカー</string>
     <string name="tuicallkit_text_dialing">応答</string>
-    <string name="tuicallkit_text_camera">カメラ</string>
-    <string name="tuicallkit_switch_audio_call">音声通話に切り替えます</string>
     <string name="tuicallkit_btn_cancel">キャンセル</string>
     <string name="tuicallkit_video_call">ビデオ通話</string>
     <string name="tuicallkit_audio_call">音声通話</string>
-    <string name="tuicallkit_user_exceed_limit">暫して、最大9人までの通话をサポートしています。複数人の会議を希望する場合、TUIRoomを使用してください。</string>
+    <string name="tuicallkit_user_exceed_limit">暫して、最大9人までの通话をサポートしています。複数人の会議を希望する場合、TUIRoomKitを使用してください。</string>
     <string name="tuicallkit_wait_response">応答を待っています...</string>
     <string name="tuicallkit_wait_accept_group">グループ通話に招待します</string>
     <string name="tuicallkit_accept_single">接続済み</string>
@@ -74,7 +66,9 @@
     <string name="tuicallkit_error_request_repeated">現在実行中のメソッドを呼び出すことはできません</string>
     <string name="tuicallkit_error_scene_not_support">現在の通話シーンでは、この機能はサポートしていません</string>
     <string name="tuicallkit_join_group_call">参加</string>
-    <string name="tuicallkit_join_group_call_users">%s人が%sをしています</string>
+    <string name="tuicallkit_join_group_call_users">%d人が通話中です</string>
 
     <string name="tuicallkit_blur_background">背景をぼかす</string>
+    <string name="tuicallkit_notification_channel_group_id">つうわかんり</string>
+    <string name="tuicallkit_notification_channel_id">おんせい・えいぞうつうわ</string>
 </resources>

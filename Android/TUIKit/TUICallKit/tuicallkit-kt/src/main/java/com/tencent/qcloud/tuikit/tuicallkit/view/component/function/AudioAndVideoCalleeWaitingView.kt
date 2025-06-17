@@ -3,36 +3,28 @@ package com.tencent.qcloud.tuikit.tuicallkit.view.component.function
 import android.content.Context
 import android.view.LayoutInflater
 import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.RelativeLayout
 import com.tencent.qcloud.tuikit.tuicallkit.R
-import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
-import com.tencent.qcloud.tuikit.tuicallkit.view.root.BaseCallView
+import com.tencent.qcloud.tuikit.tuicallkit.manager.CallManager
 
-class AudioAndVideoCalleeWaitingView(context: Context) : BaseCallView(context) {
-    private var layoutReject: LinearLayout? = null
-    private var layoutDialing: LinearLayout? = null
-    private var textReject: TextView? = null
-    private var textDialing: TextView? = null
-
-    init {
+class AudioAndVideoCalleeWaitingView(context: Context) : RelativeLayout(context) {
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        this.layoutParams?.width = LayoutParams.MATCH_PARENT
+        this.layoutParams?.height = LayoutParams.MATCH_PARENT
         initView()
-    }
-
-    override fun clear() {
     }
 
     private fun initView() {
         LayoutInflater.from(context).inflate(R.layout.tuicallkit_function_view_invited_waiting, this)
-        layoutReject = findViewById(R.id.ll_decline)
-        layoutDialing = findViewById(R.id.ll_answer)
-        textReject = findViewById(R.id.tv_reject)
-        textDialing = findViewById(R.id.tv_dialing)
+        val layoutReject: LinearLayout = findViewById(R.id.ll_reject)
+        val layoutDialing: LinearLayout = findViewById(R.id.ll_answer)
 
-        initViewListener()
-    }
-
-    private fun initViewListener() {
-        layoutReject!!.setOnClickListener { EngineManager.instance.reject(null) }
-        layoutDialing!!.setOnClickListener { EngineManager.instance.accept(null) }
+        layoutReject.setOnClickListener {
+            CallManager.instance.reject(null)
+        }
+        layoutDialing.setOnClickListener {
+            CallManager.instance.accept(null)
+        }
     }
 }

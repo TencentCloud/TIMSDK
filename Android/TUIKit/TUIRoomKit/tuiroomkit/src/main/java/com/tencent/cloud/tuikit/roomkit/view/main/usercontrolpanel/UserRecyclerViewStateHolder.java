@@ -298,6 +298,6 @@ public class UserRecyclerViewStateHolder extends StateHolder {
     }
 
     private boolean isContainsSearchWord(String text) {
-        return !TextUtils.isEmpty(text) && text.contains(mSearchWord);
+        return TextUtils.isEmpty(mSearchWord) || !TextUtils.isEmpty(text) && text.contains(mSearchWord);
     }
 }

@@ -36,6 +36,7 @@ public class TUIMultimediaRecordFragment extends Fragment {
     private RecordFunctionView mRecordFunctionView;
     private RelativeLayout mVideoViewContainer;
     private RelativeLayout mRecordFunctionContainer;
+    private boolean isFlashOnWhenPause;
 
     private final TUIMultimediaDataObserver<RecordStatus> mRecordStatusObserver = new TUIMultimediaDataObserver<RecordStatus>() {
         @Override
@@ -83,6 +84,19 @@ public class TUIMultimediaRecordFragment extends Fragment {
         LiteavLog.i(TAG, "onDestroy");
         super.onDestroy();
         mTUIMultimediaRecordCore.release();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mTUIMultimediaRecordCore.toggleTorch(isFlashOnWhenPause);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isFlashOnWhenPause = mRecordInfo.tuiDataIsFlashOn.get();
+        mTUIMultimediaRecordCore.toggleTorch(false);
     }
 
     private void addObserver() {

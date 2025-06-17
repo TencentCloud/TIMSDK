@@ -2,6 +2,7 @@
     <string name="tuiroomkit_app_running">运行中</string>
     <string name="tuiroomkit_role_owner">主持人</string>
     <string name="tuiroomkit_role_manager">管理员</string>
+    <string name="tuiroomkit_robot">机器人</string>
     <string name="tuiroomkit_copy_room_id_success">房间号复制成功</string>
     <string name="tuiroomkit_tip_exit_first_title">请先退出当前会议，再进入其它会议</string>
     <string name="tuiroomkit_permission_camera_reason_title">%s申请获取相机权限</string>
@@ -370,4 +371,5 @@
     <string name="tuiroomkit_confirm_select_participant">确定(%d)</string>
     <string name="tuiroomkit_select_schedule_participant">选择成员</string>
     <string name="tuiroomkit_hint_search_member_id_or_name">输入用户ID或名称</string>
+    <string name="tuiroomkit_invalid_for_robot">此操作对机器人无效</string>
 </resources>

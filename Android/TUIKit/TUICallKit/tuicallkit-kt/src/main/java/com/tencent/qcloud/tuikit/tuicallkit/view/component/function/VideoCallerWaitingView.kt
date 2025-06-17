@@ -4,42 +4,52 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
-import com.tencent.qcloud.tuikit.TUICommonDefine
-import com.tencent.qcloud.tuikit.tuicallengine.impl.base.Observer
+import com.tencent.cloud.tuikit.engine.common.TUICommonDefine
 import com.tencent.qcloud.tuikit.tuicallkit.R
-import com.tencent.qcloud.tuikit.tuicallkit.manager.EngineManager
-import com.tencent.qcloud.tuikit.tuicallkit.state.TUICallState
-import com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.VideoViewFactory
-import com.tencent.qcloud.tuikit.tuicallkit.view.root.BaseCallView
+import com.tencent.qcloud.tuikit.tuicallkit.manager.CallManager
+import com.tencent.qcloud.tuikit.tuicallkit.state.GlobalState
+import com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.VideoFactory
+import com.trtc.tuikit.common.livedata.Observer
 
-class VideoCallerWaitingView(context: Context) : BaseCallView(context) {
-    private var layoutCancel: LinearLayout? = null
-    private var imageSwitchCamera: ImageView? = null
-    private var imageViewBlur: ImageView? = null
-    private var imageOpenCamera: ImageView? = null
-    private var layoutBlurBackground: LinearLayout? = null
-    private var textCamera: TextView? = null
-
-    private var enableBlurBackgroundObserver = Observer<Boolean> {
-        imageViewBlur?.isActivated = TUICallState.instance.enableBlurBackground.get()
-    }
+class VideoCallerWaitingView(context: Context) : RelativeLayout(context) {
+    private lateinit var layoutCancel: LinearLayout
+    private lateinit var imageSwitchCamera: ImageView
+    private lateinit var imageViewBlur: ImageView
+    private lateinit var imageOpenCamera: ImageView
+    private lateinit var layoutBlurBackground: LinearLayout
+    private lateinit var textCamera: TextView
 
     private var isCameraOpenObserver = Observer<Boolean> {
-        imageOpenCamera?.isActivated = TUICallState.instance.isCameraOpen.get()
+        imageOpenCamera.isActivated = it
+    }
+    private var isVirtualBackgroundObserver = Observer<Boolean> {
+        imageViewBlur.isActivated = it
     }
 
-    init {
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        this.layoutParams?.width = LayoutParams.MATCH_PARENT
+        this.layoutParams?.height = LayoutParams.MATCH_PARENT
         initView()
-        TUICallState.instance.enableBlurBackground.observe(enableBlurBackgroundObserver)
-        TUICallState.instance.isCameraOpen.observe(isCameraOpenObserver)
+        registerObserver()
     }
 
-    override fun clear() {
-        TUICallState.instance.enableBlurBackground.removeObserver(enableBlurBackgroundObserver)
-        TUICallState.instance.isCameraOpen.removeObserver(isCameraOpenObserver)
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        unregisterObserver()
+    }
+
+    private fun registerObserver() {
+        CallManager.instance.viewState.isVirtualBackgroundOpened.observe(isVirtualBackgroundObserver)
+        CallManager.instance.mediaState.isCameraOpened.observe(isCameraOpenObserver)
+    }
+
+    private fun unregisterObserver() {
+        CallManager.instance.viewState.isVirtualBackgroundOpened.removeObserver(isVirtualBackgroundObserver)
+        CallManager.instance.mediaState.isCameraOpened.removeObserver(isCameraOpenObserver)
     }
 
     private fun initView() {
@@ -51,10 +61,9 @@ class VideoCallerWaitingView(context: Context) : BaseCallView(context) {
         layoutBlurBackground = findViewById(R.id.ll_blur)
         imageViewBlur = findViewById(R.id.iv_video_blur)
 
-        imageOpenCamera?.isActivated = TUICallState.instance.isCameraOpen.get()
-
-        if (!TUICallState.instance.showVirtualBackgroundButton) {
-            layoutBlurBackground?.visibility = GONE
+        imageOpenCamera.isActivated = CallManager.instance.mediaState.isCameraOpened.get()
+        if (!GlobalState.instance.enableVirtualBackground) {
+            layoutBlurBackground.visibility = GONE
             reLayoutView()
         }
 
@@ -62,55 +71,59 @@ class VideoCallerWaitingView(context: Context) : BaseCallView(context) {
     }
 
     private fun reLayoutView() {
-        val constraintLayout: ConstraintLayout = findViewById(R.id.constraint_layout)
-        val constraintSet: ConstraintSet = ConstraintSet()
-        constraintSet.clone(constraintLayout)
+        val size = ConstraintLayout.LayoutParams.WRAP_CONTENT
+        val parentId = ConstraintLayout.LayoutParams.PARENT_ID
 
-        constraintSet.connect(R.id.ll_cancel, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+        layoutCancel.layoutParams = ConstraintLayout.LayoutParams(size, size).apply {
+            topToTop = parentId
+            startToStart = parentId
+            endToEnd = parentId
+        }
 
-        constraintSet.connect(R.id.ll_switch, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-        constraintSet.connect(R.id.ll_switch, ConstraintSet.END, R.id.ll_cancel, ConstraintSet.START)
-        constraintSet.connect(R.id.ll_switch, ConstraintSet.TOP, R.id.ll_cancel, ConstraintSet.TOP)
-        constraintSet.connect(R.id.ll_switch, ConstraintSet.BOTTOM, R.id.ll_cancel, ConstraintSet.BOTTOM)
+        findViewById<LinearLayout>(R.id.ll_switch).layoutParams = ConstraintLayout.LayoutParams(size, size).apply {
+            startToStart = parentId
+            endToStart = layoutCancel.id
+            topToTop = layoutCancel.id
+            bottomToBottom = layoutCancel.id
+        }
 
-        constraintSet.connect(R.id.ll_camera, ConstraintSet.START, R.id.ll_cancel, ConstraintSet.END)
-        constraintSet.connect(R.id.ll_camera, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-        constraintSet.connect(R.id.ll_camera, ConstraintSet.TOP, R.id.ll_cancel, ConstraintSet.TOP)
-        constraintSet.connect(R.id.ll_camera, ConstraintSet.BOTTOM, R.id.ll_cancel, ConstraintSet.BOTTOM)
-
-        constraintSet.applyTo(constraintLayout)
+        findViewById<LinearLayout>(R.id.ll_camera).layoutParams = ConstraintLayout.LayoutParams(size, size).apply {
+            startToEnd = layoutCancel.id
+            endToEnd = parentId
+            topToTop = layoutCancel.id
+            bottomToBottom = layoutCancel.id
+        }
     }
 
     private fun initViewListener() {
-        layoutCancel?.setOnClickListener { EngineManager.instance.hangup(null) }
-        imageSwitchCamera!!.setOnClickListener {
+        layoutCancel.setOnClickListener {
+            CallManager.instance.hangup(null)
+        }
+        imageSwitchCamera.setOnClickListener {
             var camera = TUICommonDefine.Camera.Back
-            if (TUICallState.instance.isFrontCamera.get() == TUICommonDefine.Camera.Back) {
+            if (CallManager.instance.mediaState.isFrontCamera.get() == TUICommonDefine.Camera.Back) {
                 camera = TUICommonDefine.Camera.Front
             }
-            EngineManager.instance.switchCamera(camera)
+            CallManager.instance.switchCamera(camera)
         }
-        imageOpenCamera?.setOnClickListener {
-            if (TUICallState.instance.isCameraOpen.get()) {
-                EngineManager.instance.closeCamera()
+        imageOpenCamera.setOnClickListener {
+            val isCameraOpened = CallManager.instance.mediaState.isCameraOpened.get()
+            imageOpenCamera.isActivated = !isCameraOpened
+            imageSwitchCamera.isEnabled = !isCameraOpened
+            layoutBlurBackground.isEnabled = !isCameraOpened
 
-                imageOpenCamera?.setImageResource(R.drawable.tuicallkit_ic_camera_disable)
-                textCamera?.text = context.resources.getString(R.string.tuicallkit_toast_disable_camera)
-                imageSwitchCamera?.isEnabled = false
-                layoutBlurBackground?.isEnabled = false
+            if (isCameraOpened) {
+                CallManager.instance.closeCamera()
+                textCamera.text = context.resources.getString(R.string.tuicallkit_toast_disable_camera)
             } else {
-                val camera = TUICallState.instance.isFrontCamera.get()
-                val videoView = VideoViewFactory.instance.findVideoView(TUICallState.instance.selfUser.get().id)
-                EngineManager.instance.openCamera(camera, videoView?.getVideoView(), null)
-
-                imageOpenCamera?.setImageResource(R.drawable.tuicallkit_ic_camera_enable)
-                textCamera?.text = context.resources.getString(R.string.tuicallkit_toast_enable_camera)
-                imageSwitchCamera?.isEnabled = true
-                layoutBlurBackground?.isEnabled = true
+                val camera = CallManager.instance.mediaState.isFrontCamera.get()
+                val videoView = VideoFactory.instance.findVideoView(CallManager.instance.userState.selfUser.get().id)
+                CallManager.instance.openCamera(camera, videoView, null)
+                textCamera.text = context.resources.getString(R.string.tuicallkit_toast_enable_camera)
             }
         }
-        layoutBlurBackground?.setOnClickListener {
-            EngineManager.instance.setBlurBackground(!TUICallState.instance.enableBlurBackground.get())
+        layoutBlurBackground.setOnClickListener {
+            CallManager.instance.setBlurBackground(!CallManager.instance.viewState.isVirtualBackgroundOpened.get())
         }
     }
 }
