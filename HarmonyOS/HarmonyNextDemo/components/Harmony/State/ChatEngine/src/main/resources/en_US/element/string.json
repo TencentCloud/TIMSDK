@@ -1,0 +1,256 @@
+{
+  "string": [
+    {
+      "name": "merge_message_title",
+      "value": "Merge Message"
+    },
+    {
+      "name": "message_type_image",
+      "value": "Image"
+    },
+    {
+      "name": "message_type_voice",
+      "value": "Voice"
+    },
+    {
+      "name": "message_type_video",
+      "value": "Video"
+    },
+    {
+      "name": "message_type_file",
+      "value": "File"
+    },
+    {
+      "name": "message_type_animate_emoji",
+      "value": "Animated Emoji"
+    },
+    {
+      "name": "message_tips_unsupport_custom",
+      "value": "Unsupported custom message"
+    },
+    {
+      "name": "message_tips_you_recall",
+      "value": "You recalled a message"
+    },
+    {
+      "name": "message_tips_others_recall",
+      "value": "Other party recalled a message"
+    },
+    {
+      "name": "message_tips_recall",
+      "value": "recalled a message"
+    },
+    {
+      "name": "message_tips_normal_recall",
+      "value": "Message recalled"
+    },
+    {
+      "name": "message_tips_join_group",
+      "value": "%s joined the group"
+    },
+    {
+      "name": "message_tips_invite_join_group",
+      "value": "%s invited %s to join the group"
+    },
+    {
+      "name": "message_tips_leave_group",
+      "value": "%s left the group"
+    },
+    {
+      "name": "message_tips_kickoff_group",
+      "value": "%s removed %s from the group"
+    },
+    {
+      "name": "you",
+      "value": "You"
+    },
+    {
+      "name": "message_tips_unmute",
+      "value": "unmuted"
+    },
+    {
+      "name": "message_tips_mute",
+      "value": "muted"
+    },
+    {
+      "name": "message_tips_group_pin",
+      "value": "%s pinned a message"
+    },
+    {
+      "name": "message_tips_group_unpin",
+      "value": "%s unpinned a message"
+    },
+    {
+      "name": "message_tips_set_admin",
+      "value": "%s was set as admin"
+    },
+    {
+      "name": "message_tips_cancel_admin",
+      "value": "%s was removed as admin"
+    },
+    {
+      "name": "message_tips_edit_group_name",
+      "value": "%s changed group name to \"%s\""
+    },
+    {
+      "name": "message_tips_edit_group_intro",
+      "value": "%s changed group intro to \"%s\""
+    },
+    {
+      "name": "message_tips_edit_group_announce",
+      "value": "%s changed group announcement to \"%s\""
+    },
+    {
+      "name": "message_tips_delete_group_announce",
+      "value": "%s deleted group announcement"
+    },
+    {
+      "name": "message_tips_edit_group_avatar",
+      "value": "%s changed group avatar"
+    },
+    {
+      "name": "message_tips_edit_group_owner",
+      "value": "%s transferred group ownership to \"%s\""
+    },
+    {
+      "name": "message_tips_shutup_all",
+      "value": "%s enabled group-wide mute"
+    },
+    {
+      "name": "message_tips_cancel_shutup_all",
+      "value": "%s disabled group-wide mute"
+    },
+    {
+      "name": "message_tips_edit_group_join",
+      "value": "%s changed join option to \"%s\""
+    },
+    {
+      "name": "message_tips_edit_group_invite",
+      "value": "%s changed invite option to \"%s\""
+    },
+    {
+      "name": "group_join_disable",
+      "value": "Join Disabled"
+    },
+    {
+      "name": "group_admin_approve",
+      "value": "Admin Approval"
+    },
+    {
+      "name": "group_auto_approval",
+      "value": "Auto Approval"
+    },
+    {
+      "name": "group_invite_disable",
+      "value": "Invite Disabled"
+    },
+    {
+      "name": "unknown",
+      "value": "Unknown"
+    },
+    {
+      "name": "sunday",
+      "value": "Sunday"
+    },
+    {
+      "name": "monday",
+      "value": "Monday"
+    },
+    {
+      "name": "tuesday",
+      "value": "Tuesday"
+    },
+    {
+      "name": "wednesday",
+      "value": "Wednesday"
+    },
+    {
+      "name": "thursday",
+      "value": "Thursday"
+    },
+    {
+      "name": "friday",
+      "value": "Friday"
+    },
+    {
+      "name": "saturday",
+      "value": "Saturday"
+    },
+    {
+      "name": "conversation_fetch_failed",
+      "value": "Failed to fetch conversation list"
+    },
+    {
+      "name": "conversation_no_more",
+      "value": "No more conversations"
+    },
+    {
+      "name": "conversation_fetch_first",
+      "value": "Please fetch conversation list first"
+    },
+    {
+      "name": "conversation_load_more_failed",
+      "value": "Failed to load more conversations"
+    },
+    {
+      "name": "conversation_delete_failed",
+      "value": "Failed to delete conversation"
+    },
+    {
+      "name": "conversation_clear_unread_failed",
+      "value": "Failed to clear unread count"
+    },
+    {
+      "name": "conversation_set_draft_failed",
+      "value": "Failed to set draft"
+    },
+    {
+      "name": "conversation_pin_failed",
+      "value": "Failed to pin conversation"
+    },
+    {
+      "name": "conversation_unpin_failed",
+      "value": "Failed to unpin conversation"
+    },
+    {
+      "name": "conversation_unsupported_action",
+      "value": "Unsupported conversation action"
+    },
+    {
+      "name": "group_id_empty",
+      "value": "Group ID is empty"
+    },
+    {
+      "name": "message_empty",
+      "value": "Message is empty"
+    },
+    {
+      "name": "fetch_members_first",
+      "value": "Please fetch group members first"
+    },
+    {
+      "name": "fetch_members_failed",
+      "value": "Failed to fetch group members"
+    },
+    {
+      "name": "message_not_found",
+      "value": "Message not found"
+    },
+    {
+      "name": "conversation_hide_failed",
+      "value": "隐藏会话失败"
+    },
+    {
+      "name": "conversation_clear_message_failed",
+      "value": "清除历史消息失败"
+    },
+    {
+      "name": "conversation_mark_read_failed",
+      "value": "标记会话已/未读失败"
+    },
+    {
+      "name": "conversation_mark_unread_failed",
+      "value": "标记会话为未读失败"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "float": [
+    {
+      "name": "demo_splash_icon_width",
+      "value": "160vp"
+    },
+    {
+      "name": "demo_splash_icon_height",
+      "value": "160vp"
+    },
+    {
+      "name": "demo_splash_title_font_size",
+      "value": "24fp"
+    },
+    {
+      "name": "demo_splash_title_margin_top",
+      "value": "12vp"
+    },
+    {
+      "name": "demo_profile_face_size",
+      "value": "48vp"
+    },
+    {
+      "name": "demo_profile_name_font_size",
+      "value": "18fp"
+    },
+    {
+      "name": "demo_profile_id_font_size",
+      "value": "13fp"
+    },
+    {
+      "name": "demo_profile_face_image_margin_top",
+      "value": "10vp"
+    },
+    {
+      "name": "demo_profile_text_top_space",
+      "value": "4vp"
+    },
+    {
+      "name": "demo_profile_forward_button_size",
+      "value": "14vp"
+    },
+    {
+      "name": "demo_profile_self_info_area_height",
+      "value": "80vp"
+    },
+    {
+      "name": "demo_dev_login_icon_size",
+      "value": "200vp"
+    },
+    {
+      "name": "demo_dev_login_user_name_font_size",
+      "value": "16fp"
+    }
+  ]
+}

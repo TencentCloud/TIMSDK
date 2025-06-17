@@ -1,0 +1,300 @@
+{
+  "string": [
+    {
+      "name": "shared_desc",
+      "value": "description"
+    },
+    {
+      "name": "TUIEmoji_Smile",
+      "value": "Smile"
+    },
+    {
+      "name": "TUIEmoji_Expect",
+      "value": "Expect"
+    },
+    {
+      "name": "TUIEmoji_Blink",
+      "value": "Blink"
+    },
+    {
+      "name": "TUIEmoji_Guffaw",
+      "value": "Guffaw"
+    },
+    {
+      "name": "TUIEmoji_KindSmile",
+      "value": "Kind Smile"
+    },
+    {
+      "name": "TUIEmoji_Haha",
+      "value": "Haha"
+    },
+    {
+      "name": "TUIEmoji_Cheerful",
+      "value": "Cheerful"
+    },
+    {
+      "name": "TUIEmoji_Speechless",
+      "value": "Speechless"
+    },
+    {
+      "name": "TUIEmoji_Amazed",
+      "value": "Amazed"
+    },
+    {
+      "name": "TUIEmoji_Sorrow",
+      "value": "Sorrow"
+    },
+    {
+      "name": "TUIEmoji_Complacent",
+      "value": "Complacent"
+    },
+    {
+      "name": "TUIEmoji_Silly",
+      "value": "Silly"
+    },
+    {
+      "name": "TUIEmoji_Lustful",
+      "value": "Lustful"
+    },
+    {
+      "name": "TUIEmoji_Giggle",
+      "value": "Giggle"
+    },
+    {
+      "name": "TUIEmoji_Kiss",
+      "value": "Kiss"
+    },
+    {
+      "name": "TUIEmoji_Wail",
+      "value": "Wail"
+    },
+    {
+      "name": "TUIEmoji_TearsLaugh",
+      "value": "Tears Laugh"
+    },
+    {
+      "name": "TUIEmoji_Trapped",
+      "value": "Trapped"
+    },
+    {
+      "name": "TUIEmoji_Mask",
+      "value": "Mask"
+    },
+    {
+      "name": "TUIEmoji_Fear",
+      "value": "Fear"
+    },
+    {
+      "name": "TUIEmoji_BareTeeth",
+      "value": "Bare Teeth"
+    },
+    {
+      "name": "TUIEmoji_FlareUp",
+      "value": "Flare Up"
+    },
+    {
+      "name": "TUIEmoji_Yawn",
+      "value": "Yawn"
+    },
+    {
+      "name": "TUIEmoji_Tact",
+      "value": "Tact"
+    },
+    {
+      "name": "TUIEmoji_Stareyes",
+      "value": "Stareyes"
+    },
+    {
+      "name": "TUIEmoji_ShutUp",
+      "value": "Shut Up"
+    },
+    {
+      "name": "TUIEmoji_Sigh",
+      "value": "Sigh"
+    },
+    {
+      "name": "TUIEmoji_Hehe",
+      "value": "Hehe"
+    },
+    {
+      "name": "TUIEmoji_Silent",
+      "value": "Silent"
+    },
+    {
+      "name": "TUIEmoji_Surprised",
+      "value": "Surprised"
+    },
+    {
+      "name": "TUIEmoji_Askance",
+      "value": "Askance"
+    },
+    {
+      "name": "TUIEmoji_Ok",
+      "value": "OK"
+    },
+    {
+      "name": "TUIEmoji_Shit",
+      "value": "Shit"
+    },
+    {
+      "name": "TUIEmoji_Monster",
+      "value": "Monster"
+    },
+    {
+      "name": "TUIEmoji_Daemon",
+      "value": "Daemon"
+    },
+    {
+      "name": "TUIEmoji_Rage",
+      "value": "Rage"
+    },
+    {
+      "name": "TUIEmoji_Fool",
+      "value": "Fool"
+    },
+    {
+      "name": "TUIEmoji_Pig",
+      "value": "Pig"
+    },
+    {
+      "name": "TUIEmoji_Cow",
+      "value": "Cow"
+    },
+    {
+      "name": "TUIEmoji_Ai",
+      "value": "AI"
+    },
+    {
+      "name": "TUIEmoji_Skull",
+      "value": "Skull"
+    },
+    {
+      "name": "TUIEmoji_Bombs",
+      "value": "Bombs"
+    },
+    {
+      "name": "TUIEmoji_Coffee",
+      "value": "Coffee"
+    },
+    {
+      "name": "TUIEmoji_Cake",
+      "value": "Cake"
+    },
+    {
+      "name": "TUIEmoji_Beer",
+      "value": "Beer"
+    },
+    {
+      "name": "TUIEmoji_Flower",
+      "value": "Flower"
+    },
+    {
+      "name": "TUIEmoji_Watermelon",
+      "value": "Watermelon"
+    },
+    {
+      "name": "TUIEmoji_Rich",
+      "value": "Rich"
+    },
+    {
+      "name": "TUIEmoji_Heart",
+      "value": "Heart"
+    },
+    {
+      "name": "TUIEmoji_Moon",
+      "value": "Moon"
+    },
+    {
+      "name": "TUIEmoji_Sun",
+      "value": "Sun"
+    },
+    {
+      "name": "TUIEmoji_Star",
+      "value": "Star"
+    },
+    {
+      "name": "TUIEmoji_RedPacket",
+      "value": "Red Packet"
+    },
+    {
+      "name": "TUIEmoji_Celebrate",
+      "value": "Celebrate"
+    },
+    {
+      "name": "TUIEmoji_Bless",
+      "value": "Bless"
+    },
+    {
+      "name": "TUIEmoji_Fortune",
+      "value": "Fortune"
+    },
+    {
+      "name": "TUIEmoji_Convinced",
+      "value": "Convinced"
+    },
+    {
+      "name": "TUIEmoji_Prohibit",
+      "value": "Prohibit"
+    },
+    {
+      "name": "TUIEmoji_666",
+      "value": "666"
+    },
+    {
+      "name": "TUIEmoji_857",
+      "value": "857"
+    },
+    {
+      "name": "TUIEmoji_Knife",
+      "value": "Knife"
+    },
+    {
+      "name": "TUIEmoji_Like",
+      "value": "Like"
+    },
+    {
+      "name": "emoji_category_recent",
+      "value": "Recent"
+    },
+    {
+      "name": "emoji_category_all",
+      "value": "All Emojis"
+    },
+    {
+      "name": "emoji_category_people",
+      "value": "People"
+    },
+    {
+      "name": "emoji_category_nature",
+      "value": "Nature"
+    },
+    {
+      "name": "emoji_category_food",
+      "value": "Food"
+    },
+    {
+      "name": "emoji_category_activity",
+      "value": "Activity"
+    },
+    {
+      "name": "emoji_category_travel",
+      "value": "Travel"
+    },
+    {
+      "name": "emoji_category_objects",
+      "value": "Objects"
+    },
+    {
+      "name": "emoji_category_symbols",
+      "value": "Symbols"
+    },
+    {
+      "name": "emoji_type_normal",
+      "value": "Normal Emoji"
+    },
+    {
+      "name": "emoji_type_large",
+      "value": "Large Emoji"
+    }
+  ]
+}

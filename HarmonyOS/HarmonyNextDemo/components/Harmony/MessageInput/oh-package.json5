@@ -1,0 +1,19 @@
+{
+  "name": "messageinput",
+  "version": "1.0.0",
+  "description": "Please describe the basic information.",
+  "main": "Index.ets",
+  "author": "",
+  "license": "Apache-2.0",
+  "packageType": "InterfaceHar",
+  "dependencies": {
+    "basecomponent": "file:../BaseComponent",
+    "chatengine": "file:../State/ChatEngine",
+    "emojipicker": "file:../EmojiPicker",
+    "imagepicker": "file:../ImagePicker",
+    "videorecorder": "file:../VideoRecorder",
+    "videopicker": "file:../VideoPicker",
+    "audioplayer": "file:../AudioPlayer",
+    "audiorecorder": "file:../AudioRecorder"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "chatengine",
+  "version": "1.0.0",
+  "description": "Please describe the basic information.",
+  "main": "Index.ets",
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "@tencentcloud/imsdk": "file:./imsdk-ohos-8.4.6676.har",
+    //    "basecomponent": "file:../../components/Harmony/BaseComponent"
+  },
+  "features": [
+  ]
+}
