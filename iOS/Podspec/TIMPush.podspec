@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TIMPush'
-  spec.version      = '8.5.6864'
+  spec.version      = '8.6.7019'
   spec.platform     = :ios
   spec.ios.deployment_target = '10.0'
   spec.license      = { :type => 'Proprietary',
@@ -15,9 +15,9 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.qcloud.com/download/tuiplugin/8.5.6864/ios/TIMPush_8.5.6864.xcframework.zip'}
+  spec.source = { :http => 'https://im.sdk.qcloud.com/download/tuiplugin/8.6.7019/ios/TIMPush_8.6.7019.xcframework.zip'}
   
-  spec.dependency 'TXIMSDK_Plus_iOS_XCFramework','~> 8.5.6864'
+  spec.dependency 'TXIMSDK_Plus_iOS_XCFramework','>= 8.6.7019'
   spec.vendored_frameworks = 'TIMPush.xcframework'
   spec.resource_bundle = {
         "#{spec.module_name}_Privacy" => '**/TIMPush.xcframework/ios-arm64/TIMPush.framework/PrivacyInfo.xcprivacy'

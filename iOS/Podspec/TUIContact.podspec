@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'TUIContact'
-  spec.version      = '8.5.6864'
+  spec.version      = '8.6.7019'
   spec.platform     = :ios 
   spec.ios.deployment_target = '9.0'
   spec.license      = { :type => 'Proprietary',
@@ -16,14 +16,14 @@ Pod::Spec.new do |spec|
 
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/8.5.6864/ios/TUIContact.zip?time=2'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuikit/8.6.7019/ios/TUIContact.zip?time=2'}
 
   spec.default_subspec = 'ALL'
   spec.subspec 'CommonModel' do |commonModel|
     commonModel.source_files = '**/TUIContact/CommonModel/*.{h,m,mm}'
     commonModel.dependency 'TXIMSDK_Plus_iOS_XCFramework'
     commonModel.dependency 'TUICore'
-    commonModel.dependency 'TIMCommon','~> 8.5.6864'
+    commonModel.dependency 'TIMCommon','~> 8.6.7019'
     commonModel.dependency 'ReactiveObjC'
     commonModel.dependency 'Masonry'
   end
