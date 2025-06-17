@@ -51,7 +51,7 @@
    >
    > 为尊重表情设计版权，下载的 Demo 工程中不包含大表情元素切图，您可以使用自己本地表情包来配置代码。未授权使用 IM Demo 中的表情包可能会构成设计侵权。
 
-2. 打开所属终端目录的工程，找到对应的 `GenerateTestUserSig.ts` 文件（路径：`TIMSDK/HarmonyOS/HarmonyNextDemo/uikit-next/harmony/entry/src/main/ets/signature/GenerateTestUserSig.ts`）。
+2. 打开所属终端目录的工程，找到对应的 `GenerateTestUserSig.ts` 文件（路径：`TIMSDK/HarmonyOS/UIKitDemo/uikit-next/harmony/entry/src/main/ets/signature/GenerateTestUserSig.ts`）。
 
 3. 设置 `GenerateTestUserSig.ts` 文件中的相关参数：
 
@@ -67,7 +67,7 @@
 
 ### 步骤 4：编译运行
 
-1. 打开 鸿蒙 NextDemo（路径：`TIMSDK/HarmonyOS/HarmonyNextDemo/uikit-next/harmony`），配置签名：
+1. 打开 鸿蒙 NextDemo（路径：`TIMSDK/HarmonyOS/UIKitDemo/uikit-next/harmony`），配置签名：
 
    ![](https://im.sdk.qcloud.com/doc/HarmonyOS/doc-image/6.png)
 
