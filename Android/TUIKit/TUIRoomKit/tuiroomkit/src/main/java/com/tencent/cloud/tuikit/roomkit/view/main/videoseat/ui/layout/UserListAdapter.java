@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.common.utils.CommonUtils;
 import com.tencent.cloud.tuikit.roomkit.common.utils.ImageLoader;
 import com.tencent.cloud.tuikit.roomkit.view.main.videoseat.ui.view.ConferenceVideoView;
 import com.tencent.cloud.tuikit.roomkit.view.main.videoseat.ui.view.RoundRelativeLayout;
@@ -113,6 +114,7 @@ public class UserListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private View                 mViewBackground;
         private TextView             mUserNameTv;
         private ImageView            mIvRoomManage;
+        private ImageFilterView      mIfvRoomRobot;
         private UserVolumePromptView mUserMic;
         private ImageFilterView      mUserHeadImg;
         private UserEntity           mMemberEntity;
@@ -164,6 +166,9 @@ public class UserListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 mIvRoomManage.setBackgroundResource(R.drawable.tuiroomkit_icon_video_room_owner);
             } else if (model.getRole() == TUIRoomDefine.Role.MANAGER) {
                 mIvRoomManage.setBackgroundResource(R.drawable.tuiroomkit_icon_video_room_manager);
+            }
+            if (CommonUtils.isRobot(model.getUserId())) {
+                mIfvRoomRobot.setVisibility(VISIBLE);
             }
         }
 
@@ -225,6 +230,7 @@ public class UserListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             mUserHeadImg = itemView.findViewById(R.id.img_user_head);
             mUserMic = itemView.findViewById(R.id.tuivideoseat_user_mic);
             mIvRoomManage = itemView.findViewById(R.id.tuiroomkit_iv_room_manage);
+            mIfvRoomRobot = itemView.findViewById(R.id.tuiroomkit_ifv_robot);
             mTalkView = itemView.findViewById(R.id.talk_view);
             mViewBackground = itemView.findViewById(R.id.view_background);
         }

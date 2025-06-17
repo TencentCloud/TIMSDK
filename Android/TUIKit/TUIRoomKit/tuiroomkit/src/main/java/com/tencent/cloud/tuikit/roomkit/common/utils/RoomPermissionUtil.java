@@ -3,6 +3,7 @@ package com.tencent.cloud.tuikit.roomkit.common.utils;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.text.TextUtils;
 
 import androidx.core.content.ContextCompat;
@@ -10,9 +11,10 @@ import androidx.core.content.ContextCompat;
 import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.permission.PermissionCallback;
 import com.tencent.qcloud.tuicore.permission.PermissionRequester;
+import com.tencent.qcloud.tuicore.util.TUIBuild;
+import com.trtc.tuikit.common.system.ContextProvider;
 
 public class RoomPermissionUtil {
     public static void requestCameraPermission(Context context, PermissionCallback callback) {
@@ -55,8 +57,19 @@ public class RoomPermissionUtil {
                 .request();
     }
 
-    public static boolean hasAudioPermission() {
-        return ContextCompat.checkSelfPermission(TUILogin.getAppContext(), Manifest.permission.RECORD_AUDIO)
+    public static boolean hasRecordAudioPermission() {
+        if (TUIBuild.getVersionInt() < Build.VERSION_CODES.M) {
+            return true;
+        }
+        return ContextCompat.checkSelfPermission(ContextProvider.getApplicationContext(), Manifest.permission.RECORD_AUDIO)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static boolean hasNotificationPermission() {
+        if (TUIBuild.getVersionInt() < Build.VERSION_CODES.TIRAMISU) {
+            return true;
+        }
+        return ContextCompat.checkSelfPermission(ContextProvider.getApplicationContext(), Manifest.permission.POST_NOTIFICATIONS)
                 == PackageManager.PERMISSION_GRANTED;
     }
 }

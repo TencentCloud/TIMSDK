@@ -2,6 +2,7 @@
     <string name="tuiroomkit_app_running">Running</string>
     <string name="tuiroomkit_role_owner">Host</string>
     <string name="tuiroomkit_role_manager">Administrator</string>
+    <string name="tuiroomkit_robot">Robot</string>
     <string name="tuiroomkit_copy_room_id_success">Room ID copied successfully.</string>
     <string name="tuiroomkit_tip_exit_first_title">Please exit the current meeting before entering other meetings</string>
     <string name="tuiroomkit_permission_mic_reason_title">%s applies for access to the microphone</string>
@@ -370,4 +371,5 @@
     <string name="tuiroomkit_confirm_select_participant">OK(%d)</string>
     <string name="tuiroomkit_select_schedule_participant">Select member</string>
     <string name="tuiroomkit_hint_search_member_id_or_name">Enter user ID or name</string>
+    <string name="tuiroomkit_invalid_for_robot">This operation is not valid for robot</string>
 </resources>

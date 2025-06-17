@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class RTCubeUtils {
     private static final String RTCUBE_PACKAGE_NAME = "com.tencent.trtc";
+    private static final String PACKAGE_TENCENT_RTC = "com.tencent.rtc.app";
 
     public static String getApplicationName(Context context) {
         PackageManager packageManager = null;
@@ -27,6 +28,10 @@ public class RTCubeUtils {
 
     public static boolean isRTCubeApp(Context context) {
         return RTCUBE_PACKAGE_NAME.equals(context.getPackageName());
+    }
+
+    public static boolean isTencentRTC(Context context) {
+        return TextUtils.equals(context.getPackageName(), PACKAGE_TENCENT_RTC);
     }
 
     public static String getPackageName() {

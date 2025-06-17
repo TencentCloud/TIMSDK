@@ -2,15 +2,10 @@
 <resources>
     <color name="tuicallkit_color_white">#FFFFFFFF</color>
     <color name="tuicallkit_color_black">#FF000000</color>
-    <color name="tuicallkit_color_second">#666666</color>
-    <color name="tuicallkit_color_audio_background">#FFF1F2F8</color>
-    <color name="tuicallkit_color_video_background">#FF55534F</color>
-    <color name="tuicallkit_color_transparent">#00000000</color>
-    <color name="tuicallkit_color_green">#FF29CC85</color>
-    <color name="tuicallkit_color_bg_float_view">#FFBBBBBB</color>
     <color name="tuicallkit_color_gray">#696969</color>
+    <color name="tuicallkit_color_transparent">#00000000</color>
+    <color name="tuicallkit_color_blur_mask">#8022262E</color>
     <color name="tuicallkit_record_text_red">#FF584C</color>
-    <color name="tuicallkit_record_edit">#0365F9</color>
-    <color name="tuicallkit_color_audio_waiting_hint">#8F9AB2</color>
-    <color name="tuicallkit_color_join_group_separate">#707070</color>
+    <color name="tuicallkit_record_text_green">#12B969</color>
+    <color name="tuicallkit_color_bg_float_view">#FFBBBBBB</color>
 </resources>

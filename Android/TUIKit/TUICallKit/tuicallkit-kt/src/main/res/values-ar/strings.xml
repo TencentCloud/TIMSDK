@@ -1,12 +1,9 @@
 <resources>
-    <string name="tuicallkit_contact_default_name">اختبار 123</string>
     <string name="tuicallkit_toast_enable_mute">كتم الصوت</string>
     <string name="tuicallkit_toast_disable_mute">إلغاء الكتم</string>
     <string name="tuicallkit_toast_speaker">مكبر الصوت</string>
     <string name="tuicallkit_toast_use_earpiece">سماعة الأذن</string>
-    <string name="tuicallkit_toast_user_end">%s انهى المكالمة</string>
     <string name="tuicallkit_toast_callee_hangup">أنهى الطرف الآخر المكالمة</string>
-    <string name="tuicallkit_toast_user_reject">%s رفض طلب المكالمة</string>
     <string name="tuicallkit_toast_callee_reject">الطرف الآخر رفض المكالمة</string>
     <string name="tuicallkit_toast_callee_no_response">لم يستجب الطرف الآخر</string>
     <string name="tuicallkit_other_party_network_low_quality">اتصال الطرف الآخر بالشبكة ضعيف</string>
@@ -17,18 +14,13 @@
     <string name="tuicallkit_waiting_accept">في انتظار قبول المستخدم...</string>
     <string name="tuicallkit_invite_audio_call">دعوتك لمكالمة صوتية...</string>
     <string name="tuicallkit_invite_video_call">دعوتك لمكالمة فيديو...</string>
-    <string name="tuicallkit_text_microphone">ميكروفون</string>
     <string name="tuicallkit_text_hangup">إنهاء المكالمة</string>
-    <string name="tuicallkit_text_reject">رفض</string>
     <string name="tuicallkit_text_line_busy">الخط مشغول</string>
-    <string name="tuicallkit_text_speaker">مكبر الصوت</string>
     <string name="tuicallkit_text_dialing">الرد</string>
-    <string name="tuicallkit_text_camera">الكاميرا</string>
-    <string name="tuicallkit_switch_audio_call">التحول إلى المكالمة الصوتية</string>
     <string name="tuicallkit_btn_cancel">إلغاء</string>
     <string name="tuicallkit_video_call">مكالمة فيديو</string>
     <string name="tuicallkit_audio_call">مكالمة صوتية</string>
-    <string name="tuicallkit_user_exceed_limit">يدعم TUICallKit حاليًا المكالمة مع ما يصل إلى 9 أشخاص. لمؤتمرات الاتصال الأكبر ، جرب استخدام TUIRoom</string>
+    <string name="tuicallkit_user_exceed_limit">يدعم TUICallKit حاليًا المكالمة مع ما يصل إلى 9 أشخاص. لمؤتمرات الاتصال الأكبر ، جرب استخدام TUIRoomKit</string>
     <string name="tuicallkit_wait_response">انتظار</string>
     <string name="tuicallkit_wait_accept_group">أدعوك للانضمام إلى مكالمة جماعية</string>
     <string name="tuicallkit_accept_single">" تم توصيل الهاتف"</string>
@@ -74,7 +66,9 @@
     <string name="tuicallkit_error_request_repeated">الطريقة الحالية تتم تنفيذها، يرجى عدم استدعاءها مرة أخرى</string>
     <string name="tuicallkit_error_scene_not_support">مشهد المكالمة الحالي لا يدعم هذه الوظيفة</string>
     <string name="tuicallkit_join_group_call">انضمام</string>
-    <string name="tuicallkit_join_group_call_users">يرتاد %s أشخاص %s</string>
+    <string name="tuicallkit_join_group_call_users">%d شخص في مكالمة</string>
 
     <string name="tuicallkit_blur_background">الخلفية الغائمة</string>
+    <string name="tuicallkit_notification_channel_group_id">إدارة المكالمات</string>
+    <string name="tuicallkit_notification_channel_id">مكالمات الصوت والفيديو</string>
 </resources>

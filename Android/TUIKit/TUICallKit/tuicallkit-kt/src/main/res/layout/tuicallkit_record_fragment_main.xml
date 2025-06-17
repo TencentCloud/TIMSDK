@@ -100,7 +100,7 @@
             app:layout_constraintTop_toTopOf="@+id/tab_layout" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.tencent.qcloud.tuikit.tuicallkit.view.common.SlideRecyclerView
+    <com.tencent.qcloud.tuikit.tuicallkit.view.component.recents.SlideRecyclerView
         android:id="@+id/recycle_view_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"

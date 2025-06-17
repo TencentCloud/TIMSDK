@@ -15,4 +15,5 @@
     <string name="date_yesterday">昨天</string>
 
     <string name="core_float_permission_hint">請同時打開\"後台彈出界面\"和\"顯示懸浮窗\"權限</string>
+    <string name="core_float_permission_hint_harmony">請同時打開\"後台彈窗\"和\"懸浮窗\"權限</string>
 </resources>

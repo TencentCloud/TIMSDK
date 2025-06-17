@@ -21,6 +21,7 @@ import com.tencent.cloud.tuikit.roomkit.state.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.view.basic.RoomToast;
 import com.tencent.qcloud.tuicore.TUILogin;
+import com.trtc.tuikit.common.livedata.Observer;
 
 import java.util.Map;
 
@@ -28,6 +29,8 @@ public class LocalAudioToggleViewModel implements LocalAudioToggleViewAction, Co
     private static final String TAG = "LocalAudioToggleVM";
 
     private LocalAudioToggleViewResponder mViewResponder;
+
+    private final Observer<Boolean> mSeatEnableStateObserver = this::handleSeatEnableStateChanged;
 
     public LocalAudioToggleViewModel(LocalAudioToggleViewResponder viewResponder) {
         mViewResponder = viewResponder;
@@ -143,6 +146,8 @@ public class LocalAudioToggleViewModel implements LocalAudioToggleViewAction, Co
         ConferenceEventCenter.getInstance().subscribeEngine(USER_ROLE_CHANGED, this);
         ConferenceEventCenter.getInstance().subscribeEngine(REMOTE_USER_TAKE_SEAT, this);
         ConferenceEventCenter.getInstance().subscribeEngine(REMOTE_USER_LEAVE_SEAT, this);
+
+        ConferenceController.sharedInstance().getRoomState().isSeatEnabled.observe(mSeatEnableStateObserver);
     }
 
     private void unSubscribeEvent() {
@@ -151,6 +156,8 @@ public class LocalAudioToggleViewModel implements LocalAudioToggleViewAction, Co
         ConferenceEventCenter.getInstance().unsubscribeEngine(USER_ROLE_CHANGED, this);
         ConferenceEventCenter.getInstance().unsubscribeEngine(REMOTE_USER_TAKE_SEAT, this);
         ConferenceEventCenter.getInstance().unsubscribeEngine(REMOTE_USER_LEAVE_SEAT, this);
+
+        ConferenceController.sharedInstance().getRoomState().isSeatEnabled.removeObserver(mSeatEnableStateObserver);
     }
 
     private boolean isAllowToOperateAudio() {
@@ -166,5 +173,9 @@ public class LocalAudioToggleViewModel implements LocalAudioToggleViewAction, Co
             return false;
         }
         return true;
+    }
+
+    private void handleSeatEnableStateChanged(boolean enable) {
+        updateLocalAudioVisibility();
     }
 }

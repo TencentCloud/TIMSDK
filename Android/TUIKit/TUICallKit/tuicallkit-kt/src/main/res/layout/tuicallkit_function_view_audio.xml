@@ -17,7 +17,6 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/ll_hangup"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -45,8 +44,7 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/ll_handsfree"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toStartOf="@+id/ll_audio_device"
         app:layout_constraintStart_toEndOf="@+id/ll_mute"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -67,22 +65,21 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/ll_handsfree"
+        android:id="@+id/ll_audio_device"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/ll_hangup"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/img_handsfree"
+            android:id="@+id/img_audio_device"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/tuicallkit_bg_handsfree" />
+            android:src="@drawable/tuicallkit_bg_audio_device" />
 
         <TextView
             android:id="@+id/tv_audio_device"

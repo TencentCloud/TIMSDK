@@ -2,6 +2,7 @@
     <string name="tuiroomkit_app_running">يعمل</string>
     <string name="tuiroomkit_role_owner">يستضيف</string>
     <string name="tuiroomkit_role_manager">مدير</string>
+    <string name="tuiroomkit_robot">روبوت</string>
     <string name="tuiroomkit_copy_room_id_success">تم نسخ معرف الغرفة بنجاح.</string>
     <string name="tuiroomkit_tip_exit_first_title">الرجاء الخروج من الاجتماع الحالي قبل الدخول إلى الاجتماعات الأخرى</string>
     <string name="tuiroomkit_permission_mic_reason_title">%s يتقدم بطلب للوصول إلى الميكروفون</string>
@@ -370,4 +371,5 @@
     <string name="tuiroomkit_confirm_select_participant">مؤكد(%d)</string>
     <string name="tuiroomkit_select_schedule_participant">اختر الأعضاء</string>
     <string name="tuiroomkit_hint_search_member_id_or_name">أدخلIDالمستخدم أو الاسم</string>
+    <string name="tuiroomkit_invalid_for_robot">هذه العملية ليست صالحة للروبوت</string>
 </resources>

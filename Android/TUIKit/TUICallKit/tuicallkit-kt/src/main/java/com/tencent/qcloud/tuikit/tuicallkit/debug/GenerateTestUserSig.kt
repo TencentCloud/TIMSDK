@@ -1,6 +1,5 @@
 package com.tencent.qcloud.tuikit.tuicallkit.debug
 
-import android.text.TextUtils
 import android.util.Base64
 import org.json.JSONException
 import org.json.JSONObject
@@ -87,7 +86,7 @@ object GenerateTestUserSig {
     private fun genTLSSignature(
         sdkappId: Long, userId: String, expire: Long, userbuf: ByteArray?, priKeyContent: String
     ): String {
-        if (TextUtils.isEmpty(priKeyContent)) {
+        if (priKeyContent.isNullOrEmpty()) {
             return ""
         }
         val currTime = System.currentTimeMillis() / 1000

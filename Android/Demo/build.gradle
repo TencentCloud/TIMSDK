@@ -5,8 +5,9 @@ buildscript {
     repositories {
         mavenCentral()
         maven { url "https://mirrors.tencent.com/nexus/repository/maven-public/" }
-        maven {url 'https://developer.huawei.com/repo/'}
-        maven {url 'https://developer.hihonor.com/repo'}
+        maven { url "https://mirrors.tencent.com/repository/maven/liteavsdk/" }
+        maven { url 'https://developer.huawei.com/repo/' }
+        maven { url 'https://developer.hihonor.com/repo' }
     }
     dependencies {
         VersionNumber currentGradleVersion = VersionNumber.parse(gradle.gradleVersion)
@@ -37,8 +38,9 @@ allprojects {
     repositories {
         mavenCentral()
         maven { url "https://mirrors.tencent.com/nexus/repository/maven-public/" }
-        maven {url 'https://developer.huawei.com/repo/'}
-        maven {url 'https://developer.hihonor.com/repo'}
+        maven { url "https://mirrors.tencent.com/repository/maven/liteavsdk/" }
+        maven { url 'https://developer.huawei.com/repo/' }
+        maven { url 'https://developer.hihonor.com/repo' }
     }
 
     tasks.withType(Javadoc) {
@@ -58,12 +60,13 @@ ext {
     minSdkVersion = 19
     targetSdkVersion = 33
     versionCode = 1
-    versionName = "8.5.6864"
-    abiFilters = ['armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'] //['armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
+    versionName = "8.6.7019"
+    abiFilters = ['armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
+    //['armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
     arguments = "-DANDROID_STL=c++_static"
     cppFlags = "-std=c++11"
 
-    liteavSdk = "com.tencent.liteav:LiteAVSDK_Professional:12.4.0.17372"
+    liteavSdk = "com.tencent.liteav:LiteAVSDK_Professional:12.4.+"
 }
 
 task clean(type: Delete) {

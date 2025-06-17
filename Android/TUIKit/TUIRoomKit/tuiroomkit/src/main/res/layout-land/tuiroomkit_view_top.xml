@@ -87,8 +87,9 @@
         android:id="@+id/btn_report"
         android:layout_width="@dimen/tuiroomkit_top_view_item_width"
         android:layout_height="@dimen/tuiroomkit_top_view_item_height"
+        android:layout_marginStart="16dp"
         android:layout_centerVertical="true"
-        android:layout_toStartOf="@id/rl_meeting_info"
+        android:layout_toEndOf="@+id/conference_view_camera_switch"
         android:src="@drawable/tuiroomkit_ic_report_room"
         android:visibility="gone" />
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="53dp"
@@ -10,7 +10,10 @@
         android:id="@+id/rl_meeting_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginStart="10dp">
 
         <com.tencent.cloud.tuikit.roomkit.view.main.topnavigationbar.ConferenceNameView
@@ -39,36 +42,48 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/conference_tv_room_name"
             android:layout_centerHorizontal="true" />
-
     </RelativeLayout>
 
     <com.tencent.cloud.tuikit.roomkit.view.main.topnavigationbar.AudioRouteSwitchView
         android:id="@+id/conference_view_audio_route"
         android:layout_width="@dimen/tuiroomkit_top_view_item_width"
         android:layout_height="@dimen/tuiroomkit_top_view_item_height"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="16dp"
-        android:src="@drawable/tuiroomkit_icon_speaker" />
+        android:src="@drawable/tuiroomkit_icon_speaker"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/conference_view_camera_switch"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <com.tencent.cloud.tuikit.roomkit.view.main.topnavigationbar.CameraSwitchView
         android:id="@+id/conference_view_camera_switch"
         android:layout_width="@dimen/tuiroomkit_top_view_item_width"
         android:layout_height="@dimen/tuiroomkit_top_view_item_height"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="16dp"
-        android:layout_toEndOf="@+id/conference_view_audio_route"
-        android:src="@drawable/tuiroomkit_ic_camera_switch" />
+        android:src="@drawable/tuiroomkit_ic_camera_switch"
+        app:layout_constraintStart_toEndOf="@id/conference_view_audio_route"
+        app:layout_constraintEnd_toStartOf="@+id/btn_report"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
+    <com.tencent.cloud.tuikit.roomkit.view.main.topnavigationbar.ReportView
+        android:id="@+id/btn_report"
+        android:layout_width="@dimen/tuiroomkit_top_view_item_width"
+        android:layout_height="@dimen/tuiroomkit_top_view_item_height"
+        android:src="@drawable/tuiroomkit_ic_report_room"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@id/conference_view_camera_switch"
+        app:layout_constraintEnd_toStartOf="@+id/rl_meeting_info"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <LinearLayout
         android:id="@+id/btn_exit_room"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="16dp">
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -84,18 +99,11 @@
             android:text="@string/tuiroomkit_item_leave" />
     </LinearLayout>
 
-    <com.tencent.cloud.tuikit.roomkit.view.main.topnavigationbar.ReportView
-        android:id="@+id/btn_report"
-        android:layout_width="@dimen/tuiroomkit_top_view_item_width"
-        android:layout_height="@dimen/tuiroomkit_top_view_item_height"
-        android:layout_centerVertical="true"
-        android:layout_toStartOf="@id/rl_meeting_info"
-        android:src="@drawable/tuiroomkit_ic_report_room"
-        android:visibility="gone" />
-
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="#22262E"
-        android:layout_alignParentBottom="true"/>
-</RelativeLayout>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

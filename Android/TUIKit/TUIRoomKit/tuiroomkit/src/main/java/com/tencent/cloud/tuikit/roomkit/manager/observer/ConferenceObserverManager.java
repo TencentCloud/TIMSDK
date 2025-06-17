@@ -103,9 +103,9 @@ public class ConferenceObserverManager implements ITUINotification {
         TUIRoomDefine.RoomInfo roomInfo = (TUIRoomDefine.RoomInfo) param.get(ConferenceEventConstant.KEY_CONFERENCE);
         ConferenceDefine.ConferenceExitedReason reason = (ConferenceDefine.ConferenceExitedReason) param.get(ConferenceEventConstant.KEY_REASON);
         assert roomInfo != null;
-        Log.i(TAG, "onConferenceExisted roomId=" + roomInfo.roomId + " ownerId=" + roomInfo.ownerId + " roomName=" + roomInfo.name + " reason=" + reason);
+        Log.i(TAG, "onConferenceExited roomId=" + roomInfo.roomId + " ownerId=" + roomInfo.ownerId + " roomName=" + roomInfo.name + " reason=" + reason);
         for (ConferenceDefine.ConferenceObserver observer : mObserverList) {
-            observer.onConferenceExisted(roomInfo, reason);
+            observer.onConferenceExited(roomInfo, reason);
         }
     }
 

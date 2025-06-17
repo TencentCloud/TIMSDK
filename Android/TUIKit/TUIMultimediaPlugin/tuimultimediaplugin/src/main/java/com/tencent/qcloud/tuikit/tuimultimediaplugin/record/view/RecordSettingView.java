@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import com.tencent.liteav.base.util.LiteavLog;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.R;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaIConfig;
+import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaData;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaResourceUtils;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaData.TUIMultimediaDataObserver;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.record.TUIMultimediaRecordCore;
@@ -31,8 +32,8 @@ public class RecordSettingView extends RelativeLayout {
     private final String TAG = RecordSettingView.class.getSimpleName() + "_" + hashCode();
     private final Context mContext;
     private final TUIMultimediaRecordCore mRecordCore;
-    private final RecordInfo mRecordInfo;
 
+    private RecordInfo mRecordInfo;
     private BeautyPanelView mBeautyPanelView;
     private BeautyFilterScrollView mBeautyFilterScrollView;
     private SettingItemViewHolder mSettingItemTorch;
@@ -41,22 +42,23 @@ public class RecordSettingView extends RelativeLayout {
     private RelativeLayout mBeautyPanelViewContainer;
     private RelativeLayout mScrollFilterViewContainer;
 
-    private final TUIMultimediaDataObserver<Boolean> mIsFrontCameraObserver = isFrontCamera -> {
-        LiteavLog.i(TAG, "front camera is " + isFrontCamera);
-        if (mSettingItemTorch != null) {
-            int resId = !isFrontCamera ? R.drawable.multimedia_plugin_record_torch_close
-                    : R.drawable.multimedia_plugin_record_torch_close_disable;
-            mSettingItemTorch.setIconRes(resId);
-            mSettingItemTorch.setClickable(!isFrontCamera);
+    private final TUIMultimediaDataObserver<Boolean> mFlashStatusObserver = isOnAndFront -> {
+        if (mSettingItemTorch == null) {
+            return;
         }
-    };
 
-    private final TUIMultimediaDataObserver<Boolean> mIsFlashOnObserver = isFlashOn -> {
-        LiteavLog.i(TAG, "camera flash is " + (isFlashOn ? "open " : "close"));
-        int resId = isFlashOn ? R.drawable.multimedia_plugin_record_torch_open : R.drawable.multimedia_plugin_record_torch_close;
-        if (mSettingItemTorch != null) {
-            mSettingItemTorch.setIconRes(resId);
+        LiteavLog.i(TAG,"is front camera:" + mRecordInfo.tuiDataIsFontCamera.get()
+                + " is flash on: " + mRecordInfo.tuiDataIsFlashOn.get());
+
+        if (mRecordInfo.tuiDataIsFontCamera.get()) {
+            mSettingItemTorch.setIconRes(R.drawable.multimedia_plugin_record_torch_close_disable);
+            mSettingItemTorch.setClickable(false);
+            return;
         }
+
+        int resId = mRecordInfo.tuiDataIsFlashOn.get() ? R.drawable.multimedia_plugin_record_torch_open : R.drawable.multimedia_plugin_record_torch_close;
+        mSettingItemTorch.setIconRes(resId);
+        mSettingItemTorch.setClickable(true);
     };
 
     public RecordSettingView(@NonNull Context context, TUIMultimediaRecordCore recordCore, RecordInfo recordInfo) {
@@ -204,13 +206,13 @@ public class RecordSettingView extends RelativeLayout {
     }
 
     private void addObserver() {
-        mRecordInfo.tuiDataIsFontCamera.observe(mIsFrontCameraObserver);
-        mRecordInfo.tuiDataIsFlashOn.observe(mIsFlashOnObserver);
+        mRecordInfo.tuiDataIsFontCamera.observe(mFlashStatusObserver);
+        mRecordInfo.tuiDataIsFlashOn.observe(mFlashStatusObserver);
     }
 
     private void removeObserver() {
-        mRecordInfo.tuiDataIsFontCamera.removeObserver(mIsFrontCameraObserver);
-        mRecordInfo.tuiDataIsFlashOn.removeObserver(mIsFlashOnObserver);
+        mRecordInfo.tuiDataIsFontCamera.removeObserver(mFlashStatusObserver);
+        mRecordInfo.tuiDataIsFlashOn.removeObserver(mFlashStatusObserver);
     }
 
     static class SettingItemViewHolder{

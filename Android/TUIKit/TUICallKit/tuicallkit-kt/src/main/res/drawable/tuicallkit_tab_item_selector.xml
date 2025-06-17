@@ -2,7 +2,7 @@
     <item android:state_selected="true">
         <shape android:shape="rectangle">
             <stroke android:width="2dp" android:color="@color/tuicallkit_color_transparent" />
-            <solid android:color="@color/white" />
+            <solid android:color="@color/tuicallkit_color_white" />
             <corners android:radius="8.91dp" />
         </shape>
     </item>

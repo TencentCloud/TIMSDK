@@ -25,7 +25,7 @@
             android:focusable="false"
             android:gravity="center" />
 
-        <com.tencent.qcloud.tuikit.tuicallkit.view.common.RoundCornerImageView
+        <androidx.constraintlayout.utils.widget.ImageFilterView
             android:id="@+id/group_user_avatar"
             android:layout_width="38.4dp"
             android:layout_height="38.4dp"
@@ -34,7 +34,7 @@
             android:layout_marginEnd="12dp"
             android:scaleType="centerCrop"
             android:src="@drawable/tuicallkit_ic_avatar"
-            app:corner_radius="12dp" />
+            app:round="12dp" />
 
         <TextView
             android:id="@+id/group_user_name"

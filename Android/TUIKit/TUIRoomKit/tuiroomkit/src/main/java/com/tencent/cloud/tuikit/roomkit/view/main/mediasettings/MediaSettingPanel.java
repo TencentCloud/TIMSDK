@@ -40,6 +40,10 @@ public class MediaSettingPanel extends BaseBottomDialog {
 
     private SettingViewModel mViewModel;
 
+    private boolean mIsResolutionPanelShowed = false;
+    private boolean mIsFpsPanelShowed        = false;
+    private boolean mIsQualityPanelShowed    = false;
+
     public MediaSettingPanel(@NonNull Context context) {
         super(context);
         mContext = context;
@@ -101,7 +105,12 @@ public class MediaSettingPanel extends BaseBottomDialog {
         mClVideoResolution.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mIsResolutionPanelShowed) {
+                    return;
+                }
+                mIsResolutionPanelShowed = true;
                 VideoResolutionChoicePanel videoResolutionChoicePanel = new VideoResolutionChoicePanel(mContext);
+                videoResolutionChoicePanel.setOnDismissListener(dialog -> mIsResolutionPanelShowed = false);
                 videoResolutionChoicePanel.show();
             }
         });
@@ -113,7 +122,12 @@ public class MediaSettingPanel extends BaseBottomDialog {
         mClQualityCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (mIsQualityPanelShowed) {
+                    return;
+                }
+                mIsQualityPanelShowed = true;
                 QualityInfoPanel qualityInfoPanel = new QualityInfoPanel(mContext);
+                qualityInfoPanel.setOnDismissListener(dialog -> mIsQualityPanelShowed = false);
                 qualityInfoPanel.show();
             }
         });
@@ -133,7 +147,12 @@ public class MediaSettingPanel extends BaseBottomDialog {
         mClVideoFps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mIsFpsPanelShowed) {
+                    return;
+                }
+                mIsFpsPanelShowed = true;
                 VideoFrameRateChoicePanel videoFrameRateChoicePanel = new VideoFrameRateChoicePanel(mContext);
+                videoFrameRateChoicePanel.setOnDismissListener(dialog -> mIsFpsPanelShowed = false);
                 videoFrameRateChoicePanel.show();
             }
         });

@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/iv_mute"
+        android:id="@+id/iv_mic"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="32dp"
@@ -34,18 +34,18 @@
         android:text="@string/tuicallkit_toast_disable_mute"
         android:textColor="@color/tuicallkit_color_white"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/iv_mute"
-        app:layout_constraintStart_toStartOf="@+id/iv_mute"
-        app:layout_constraintTop_toBottomOf="@+id/iv_mute" />
+        app:layout_constraintEnd_toEndOf="@+id/iv_mic"
+        app:layout_constraintStart_toStartOf="@+id/iv_mic"
+        app:layout_constraintTop_toBottomOf="@+id/iv_mic" />
 
     <ImageView
         android:id="@+id/iv_speaker"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/tuicallkit_bg_handsfree"
+        android:src="@drawable/tuicallkit_bg_audio_device"
         app:layout_constraintEnd_toStartOf="@+id/iv_camera"
-        app:layout_constraintStart_toEndOf="@+id/iv_mute"
-        app:layout_constraintTop_toTopOf="@+id/iv_mute" />
+        app:layout_constraintStart_toEndOf="@+id/iv_mic"
+        app:layout_constraintTop_toTopOf="@+id/iv_mic" />
 
     <TextView
         android:id="@+id/tv_speaker"
@@ -67,7 +67,7 @@
         android:src="@drawable/tuicallkit_bg_camera"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/iv_speaker"
-        app:layout_constraintTop_toTopOf="@+id/iv_mute" />
+        app:layout_constraintTop_toTopOf="@+id/iv_mic" />
 
     <TextView
         android:id="@+id/tv_video_camera"
@@ -110,7 +110,7 @@
         android:src="@drawable/tuicallkit_ic_blur_background_accept"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/iv_hang_up"
-        app:layout_constraintEnd_toEndOf="@+id/iv_mute"
+        app:layout_constraintEnd_toEndOf="@+id/iv_mic"
         app:layout_constraintTop_toTopOf="@+id/iv_hang_up" />
 
     <ImageView

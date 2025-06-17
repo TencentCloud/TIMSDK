@@ -400,7 +400,7 @@ public class PermissionRequester {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
 
-            ToastUtil.toastShortMessage(context.getResources().getString(R.string.core_float_permission_hint));
+            ToastUtil.toastShortMessage(context.getResources().getString(R.string.core_float_permission_hint_harmony));
         } catch (Exception e) {
             Log.w(TAG, "startHuaweiPermissionSettings: open common settings");
             startCommonSettings(context);

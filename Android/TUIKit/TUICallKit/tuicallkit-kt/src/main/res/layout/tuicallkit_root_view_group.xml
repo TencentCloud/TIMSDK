@@ -4,103 +4,50 @@
     android:id="@+id/cl_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/tuicallkit_color_white">
+    android:background="@color/tuicallkit_color_gray">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_horizontal_top"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="20dp" />
+        app:layout_constraintGuide_begin="57dp" />
 
     <ImageView
         android:id="@+id/img_group_view_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:visibility="visible" />
 
-    <ScrollView
-        android:id="@+id/rl_layout_render"
+    <FrameLayout
+        android:id="@+id/rl_layout_video_group"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toTopOf="@+id/rl_layout_function"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rl_layout_add_user"
-        app:layout_constraintVertical_bias="0" />
-
-    <FrameLayout
-        android:id="@+id/rl_layout_caller_user_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        app:layout_constraintBottom_toBottomOf="@+id/rl_layout_invitee_wait_hint"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/gl_horizontal_top" />
-
-    <FrameLayout
-        android:id="@+id/rl_layout_invitee_wait_hint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rl_layout_caller_user_info" />
-
-    <LinearLayout
-        android:id="@+id/ll_layout_invitee_avatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/rl_layout_function"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rl_layout_invitee_wait_hint" />
-
-    <FrameLayout
-        android:id="@+id/rl_layout_float_icon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="20dp"
-        android:background="#00000000"
-        app:layout_constraintBottom_toBottomOf="@+id/rl_layout_add_user"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/rl_layout_add_user" />
-
-    <FrameLayout
-        android:id="@+id/rl_layout_add_user"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:background="#00000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gl_horizontal_top" />
-
-    <FrameLayout
-        android:id="@+id/rl_layout_call_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/rl_layout_float_icon"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/rl_layout_float_icon" />
+        app:layout_constraintTop_toBottomOf="@+id/image_float_icon_group"
+        app:layout_constraintVertical_weight="1" />
 
     <FrameLayout
         android:id="@+id/rl_layout_call_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="12sp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/rl_layout_float_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/rl_layout_float_icon" />
+        app:layout_constraintTop_toBottomOf="@+id/gl_horizontal_top" />
+
+    <FrameLayout
+        android:id="@+id/rl_layout_call_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/rl_layout_function"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <FrameLayout
         android:id="@+id/rl_layout_function"
@@ -109,4 +56,21 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/image_float_icon_group"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/tuicallkit_ic_float_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gl_horizontal_top" />
+
+    <FrameLayout
+        android:id="@+id/rl_layout_invite_user"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gl_horizontal_top" />
 </androidx.constraintlayout.widget.ConstraintLayout>

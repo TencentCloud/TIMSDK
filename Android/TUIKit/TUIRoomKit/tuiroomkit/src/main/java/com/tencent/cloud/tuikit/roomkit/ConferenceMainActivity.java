@@ -1,7 +1,9 @@
 package com.tencent.cloud.tuikit.roomkit;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,20 +13,27 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.tencent.cloud.tuikit.roomkit.common.utils.RoomPermissionUtil;
 import com.tencent.cloud.tuikit.roomkit.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.view.basic.BaseDialogFragment;
 import com.tencent.cloud.tuikit.roomkit.view.main.ConferenceMainFragment;
 import com.tencent.cloud.tuikit.roomkit.view.main.floatwindow.videoplaying.RoomFloatViewService;
 import com.tencent.qcloud.tuicore.util.TUIBuild;
+import com.trtc.tuikit.common.foregroundservice.AudioForegroundService;
+import com.trtc.tuikit.common.foregroundservice.MediaForegroundService;
 
 import java.io.Serializable;
 
 public class ConferenceMainActivity extends AppCompatActivity {
-    private static final String TAG              = "ConferenceMainAy";
-    private static final int    DEBOUNCE_TIME_MS = 1000;
+    private static final String TAG = "ConferenceMainAy";
+
+    private static final int DEBOUNCE_TIME_MS                = 1000;
+    private static final int POST_NOTIFICATIONS_REQUEST_CODE = 10001;
 
     private final long mFirstStartTime = SystemClock.elapsedRealtime();
 
@@ -64,6 +73,7 @@ public class ConferenceMainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        startKeepAliveInBackground();
         if (mNewIntent == null) {
             return;
         }
@@ -74,6 +84,14 @@ public class ConferenceMainActivity extends AppCompatActivity {
             return;
         }
         showRepeatConferenceDialog();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == POST_NOTIFICATIONS_REQUEST_CODE && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            startForegroundService();
+        }
     }
 
     @Override
@@ -166,6 +184,24 @@ public class ConferenceMainActivity extends AppCompatActivity {
             window.setStatusBarColor(Color.TRANSPARENT);
         } else if (sdkVersion >= Build.VERSION_CODES.KITKAT) {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+    }
+
+    private void startKeepAliveInBackground() {
+        if (RoomPermissionUtil.hasNotificationPermission()) {
+            startForegroundService();
+            return;
+        }
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, POST_NOTIFICATIONS_REQUEST_CODE);
+    }
+
+    private void startForegroundService() {
+        String appName = getApplicationInfo().loadLabel(getPackageManager()).toString();
+        String notificationText = getString(R.string.tuiroomkit_app_running);
+        if (RoomPermissionUtil.hasRecordAudioPermission()) {
+            AudioForegroundService.start(this, appName, notificationText, 0);
+        } else {
+            MediaForegroundService.start(this, appName, notificationText, 0);
         }
     }
 }

@@ -14,9 +14,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.cloud.tuikit.roomkit.R;
-import com.tencent.cloud.tuikit.roomkit.state.entity.UserEntity;
-import com.tencent.cloud.tuikit.roomkit.manager.ConferenceController;
+import com.tencent.cloud.tuikit.roomkit.common.utils.CommonUtils;
 import com.tencent.cloud.tuikit.roomkit.common.utils.ImageLoader;
+import com.tencent.cloud.tuikit.roomkit.manager.ConferenceController;
+import com.tencent.cloud.tuikit.roomkit.state.entity.UserEntity;
+import com.tencent.cloud.tuikit.roomkit.view.basic.RoomToast;
 
 import java.util.List;
 
@@ -92,6 +94,10 @@ public class TransferOwnerAdapter extends RecyclerView.Adapter<TransferOwnerAdap
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (CommonUtils.isRobot(user.getUserId())) {
+                        RoomToast.toastShortMessage(mContext.getString(R.string.tuiroomkit_invalid_for_robot));
+                        return;
+                    }
                     mSelectedUserId = user.getUserId();
                     notifyDataSetChanged();
                 }

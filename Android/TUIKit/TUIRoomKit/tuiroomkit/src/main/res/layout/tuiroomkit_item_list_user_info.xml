@@ -38,15 +38,38 @@
         app:layout_constraintStart_toStartOf="@+id/room_tv_list_user_name"
         app:layout_constraintTop_toBottomOf="@+id/room_tv_list_user_name" />
 
+    <androidx.constraintlayout.utils.widget.ImageFilterView
+        android:id="@+id/room_ifv_list_user_robot"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:visibility="gone"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/tuiroomkit_ic_robot"
+        app:layout_constraintStart_toStartOf="@+id/room_tv_list_user_name"
+        app:layout_constraintTop_toBottomOf="@+id/room_tv_list_user_name" />
+
     <TextView
         android:id="@+id/room_tv_list_user_role"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/tuiroomkit_master"
+        android:text="@string/tuiroomkit_robot"
         android:textColor="@color/tuiroomkit_color_owner_name"
         android:textSize="12sp"
         android:layout_marginStart="2dp"
         app:layout_constraintStart_toEndOf="@+id/room_ifv_list_user_role"
         app:layout_constraintTop_toTopOf="@+id/room_ifv_list_user_role"/>
+
+    <TextView
+        android:id="@+id/room_tv_list_user_robot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="@string/tuiroomkit_robot"
+        android:textColor="@color/tuiroomkit_color_owner_name"
+        android:textSize="12sp"
+        android:layout_marginStart="2dp"
+        app:layout_constraintStart_toEndOf="@+id/room_ifv_list_user_robot"
+        app:layout_constraintTop_toTopOf="@+id/room_ifv_list_user_robot"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -67,7 +67,7 @@ public class MessageBarrageView extends ScrollView {
     }
 
     public void addMessage(TUIFloatChat message) {
-        if (message == null) {
+        if (message == null || TextUtils.isEmpty(message.content)) {
             return;
         }
         if (mMessageHolders.size() >= MAX_ITEM_COUNT) {
