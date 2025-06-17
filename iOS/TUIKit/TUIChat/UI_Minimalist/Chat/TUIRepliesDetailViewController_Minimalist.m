@@ -299,6 +299,8 @@
     self.cellData.cellLayout = self.originCellLayout;
     self.cellData.direction = self.direction;
     self.cellData.showMessageModifyReplies = YES;
+    self.cellData.showAvatar = self.showAvatar;
+    self.cellData.sameToNextMsgSender = self.sameToNextMsgSender;
 }
 
 - (NSMutableArray *)transUIMsgFromIMMsg:(NSArray *)msgs {

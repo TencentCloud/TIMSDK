@@ -690,9 +690,6 @@
                             [groupName appendFormat:@"、%@", item.title];
                         }
 
-                        if ([groupName length] > 10) {
-                            groupName = [groupName substringToIndex:10].mutableCopy;
-                        }
                         void (^createGroupCompletion)(BOOL, V2TIMGroupInfo *) = ^(BOOL isSuccess, V2TIMGroupInfo *_Nonnull info) {
                           NSDictionary *param = @{
                               TUICore_TUIChatObjectFactory_ChatViewController_Title : info.groupName ?: @"",

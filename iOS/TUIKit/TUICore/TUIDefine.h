@@ -205,7 +205,7 @@ static inline NSString *getTUIFrameWorkName(NSString *bundleKeyClass) {
         return @"TUISearch";
     }
     if ([bundleKeyClass isEqualToString:TUIPollBundle_Key_Class]) {
-        return @"TUIPullPlugin";
+        return @"TUIPollPlugin";
     }
     if ([bundleKeyClass isEqualToString:TUIGroupNoteBundle_Key_Class]) {
         return @"TUIGroupNotePlugin";

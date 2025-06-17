@@ -11,6 +11,7 @@
 #import <TIMCommon/TIMDefine.h>
 #import <TUICore/NSString+TUIUtil.h>
 #import "TUICommonContactSelectCell_Minimalist.h"
+#import <TIMCommon/TUIRelationUserModel.h>
 
 @interface TUIContactSelectViewDataProvider_Minimalist ()
 @property NSDictionary<NSString *, NSArray<TUICommonContactSelectCellData_Minimalist *> *> *dataDict;
@@ -31,9 +32,22 @@
           for (V2TIMFriendInfo *fr in infoList) {
               [arr addObject:fr.userFullInfo];
           }
-          [self fillList:arr displayNames:nil];
+        
+         // Insert V2TIMFriendInfo Model
+         NSMutableDictionary<NSString *, TUIRelationUserModel *> *result = [NSMutableDictionary dictionary];
+         for (V2TIMFriendInfo *item in infoList) {
+            if (item && item.userID.length > 0) {
+                TUIRelationUserModel *userInfo = [[TUIRelationUserModel alloc] init];
+                userInfo.userID = item.userID;
+                userInfo.nickName = item.userFullInfo.nickName;
+                userInfo.friendRemark = item.friendRemark;
+                userInfo.faceURL = item.userFullInfo.faceURL;
+                [result setObject:userInfo forKey:userInfo.userID];
+            }
+         }
+         [self fillList:arr friendsInfo:result displayNames:nil];
         }
-                 fail:nil];
+     fail:nil];
 }
 
 - (void)setSourceIds:(NSArray<NSString *> *)ids {
@@ -43,12 +57,31 @@
 - (void)setSourceIds:(NSArray<NSString *> *)ids displayNames:(NSDictionary *__nullable)displayNames {
     [[V2TIMManager sharedInstance] getUsersInfo:ids
                                            succ:^(NSArray<V2TIMUserFullInfo *> *infoList) {
-                                             [self fillList:infoList displayNames:displayNames];
-                                           }
-                                           fail:nil];
+        NSMutableDictionary<NSString *, TUIRelationUserModel *> *result = [NSMutableDictionary dictionary];
+        [V2TIMManager.sharedInstance getFriendsInfo:ids
+                                               succ:^(NSArray<V2TIMFriendInfoResult *> *resultList) {
+            for (V2TIMFriendInfoResult *item in resultList) {
+                if (item.friendInfo && item.friendInfo.userID.length > 0) {
+                    TUIRelationUserModel *userInfo = [[TUIRelationUserModel alloc] init];
+                    userInfo.userID = item.friendInfo.userID;
+                    userInfo.nickName = item.friendInfo.userFullInfo.nickName;
+                    userInfo.friendRemark = item.friendInfo.friendRemark;
+                    userInfo.faceURL = item.friendInfo.userFullInfo.faceURL;
+                    [result setObject:userInfo forKey:userInfo.userID];
+                }
+            }
+            [self fillList:infoList friendsInfo:result displayNames:displayNames];
+        }
+                                               fail:^(int code, NSString *desc) {
+        }];
+   
+    }
+        fail:nil];
 }
 
-- (void)fillList:(NSArray<V2TIMUserFullInfo *> *)profiles displayNames:(NSDictionary *__nullable)displayNames {
+- (void)fillList:(NSArray<V2TIMUserFullInfo *> *)profiles
+     friendsInfo:(NSMutableDictionary<NSString *, TUIRelationUserModel *>*)result
+        displayNames:(NSDictionary *__nullable)displayNames {
     NSMutableDictionary *dataDict = @{}.mutableCopy;
     NSMutableArray *groupList = @[].mutableCopy;
     NSMutableArray *nonameList = @[].mutableCopy;
@@ -61,6 +94,10 @@
         }
         if (showName.length == 0) {
             showName = profile.showName;
+        }
+        if (result.count > 0 && result[profile.userID]) {
+            TUIRelationUserModel *userInfo = result[profile.userID];
+            showName = userInfo.getDisplayName;
         }
         data.title = showName;
         if (profile.faceURL.length) {

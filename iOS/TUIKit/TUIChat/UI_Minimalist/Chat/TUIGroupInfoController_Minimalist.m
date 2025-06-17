@@ -176,6 +176,7 @@
         return cell;
     } else if ([data isKindOfClass:[TUIGroupMemberCellData_Minimalist class]]) {
         TUICommonTableViewCell *cell = [[TUICommonTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TGroupMembersCell_ReuseId];
+        cell.frame = CGRectMake(0, 0, tableView.contentSize.width, [(TUIGroupMemberCellData_Minimalist *)data heightOfWidth:Screen_Width]);
         NSDictionary *param = @{
             @"data": data ,
             @"pushVC": self.navigationController,

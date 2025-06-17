@@ -88,9 +88,7 @@
                                                         initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
         [parentView addSubview:cell];
         parentView.userInteractionEnabled = YES;
-        [cell mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(parentView);
-        }];
+        cell.frame = parentView.frame;
         cell.backgroundColor = TUIChatDynamicColor(@"chat_pop_menu_bg_color", @"#FFFFFF");
         [cell fillWithData:data];
         [cell setTapAction:^{

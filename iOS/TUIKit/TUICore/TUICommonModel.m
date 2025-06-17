@@ -437,7 +437,7 @@ static void *gScrollViewBoundsChangeNotificationContext = &gScrollViewBoundsChan
     });
 }
 
-+ (void)getCacheGroupAvatar:(NSString *)groupID callback:(void (^)(UIImage *, NSString *groupID))imageCallBack {
++ (void)getCacheGroupAvatar:(NSString *)groupID callback:(void (^)(UIImage * _Nullable, NSString *groupID))imageCallBack {
     if (groupID == nil || groupID.length == 0) {
         if (imageCallBack) {
             imageCallBack(nil, groupID);
@@ -474,7 +474,7 @@ static void *gScrollViewBoundsChangeNotificationContext = &gScrollViewBoundsChan
         }];
 }
 
-+ (UIImage *)getCacheAvatarForGroup:(NSString *)groupId number:(UInt32)memberNum {
++ (UIImage * _Nullable)getCacheAvatarForGroup:(NSString *)groupId number:(UInt32)memberNum {
     memberNum = MAX(1, memberNum);
     memberNum = MIN(memberNum, 9);
     ;
@@ -546,7 +546,7 @@ static void *gScrollViewBoundsChangeNotificationContext = &gScrollViewBoundsChan
                      }];
 }
 
-- (UIImage *)getResourceFromCache:(NSString *)path {
+- (UIImage * _Nullable)getResourceFromCache:(NSString *)path {
     if (path.length == 0) {
         return nil;
     }

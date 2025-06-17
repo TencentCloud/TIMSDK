@@ -36,7 +36,7 @@
     // Invalid if not 3, 6, or 8 characters
     NSUInteger length = [hex length];
     if (length != 3 && length != 6 && length != 8) {
-        return nil;
+        return [[UIColor alloc] init];
     }
 
     // Make the string 8 characters long for easier parsing
@@ -72,7 +72,7 @@
     // Invalid if not 3, 6, or 8 characters
     NSUInteger length = [hex length];
     if (length != 3 && length != 6 && length != 8) {
-        return nil;
+        return [[UIColor alloc] init];
     }
 
     // Make the string 8 characters long for easier parsing

@@ -354,4 +354,90 @@ static void *gTUIViewLayoutMethodPropertyRightGap = &gTUIViewLayoutMethodPropert
     return gap.floatValue;
 }
 
+- (UIView *)mm_top:(CGFloat)top {
+    self.mm_y = top;
+    return self;
+}
+
+- (UIView *)mm_bottom:(CGFloat)bottom {
+    self.mm_b = bottom;
+    return self;
+}
+
+- (UIView *)mm_flexToBottom:(CGFloat)bottom {
+    self.mm_h += self.mm_b - bottom;
+    return self;
+}
+
+- (UIView *)mm_left:(CGFloat)left {
+    self.mm_x = left;
+    return self;
+}
+
+- (UIView *)mm_right:(CGFloat)right {
+    self.mm_r = right;
+    return self;
+}
+
+- (UIView *)mm_flexToRight:(CGFloat)right {
+    self.mm_w += self.mm_r - right;
+    return self;
+}
+
+- (UIView *)mm_width:(CGFloat)width {
+    self.mm_w = width;
+    return self;
+}
+
+- (UIView *)mm_height:(CGFloat)height {
+    self.mm_h = height;
+    return self;
+}
+
+- (UIView *)mm__centerX:(CGFloat)x {
+    self.mm_centerX = x;
+    return self;
+}
+
+- (UIView *)mm__centerY:(CGFloat)y {
+    self.mm_centerY = y;
+    return self;
+}
+
+- (UIView *)tui_mm__center {
+    if (self.superview) {
+        self.mm_centerX = self.superview.mm_w / 2;
+        self.mm_centerY = self.superview.mm_h / 2;
+    }
+    return self;
+}
+
+- (UIView *)mm__fill {
+    if (self.superview) {
+        self.mm_x = self.mm_y = 0;
+        self.mm_w = self.superview.mm_w;
+        self.mm_h = self.superview.mm_h;
+    }
+    return self;
+}
+
+- (UIView *)mm_hstack:(CGFloat)space {
+    if (self.mm_sibling) {
+        self.mm__centerY(self.mm_sibling.mm_centerY).mm_left(self.mm_sibling.mm_maxX + space);
+    }
+    return self;
+}
+
+- (UIView *)mm_vstack:(CGFloat)space {
+    if (self.mm_sibling) {
+        self.mm__centerX(self.mm_sibling.mm_centerX).mm_top(self.mm_sibling.mm_maxY + space);
+    }
+    return self;
+}
+
+- (UIView *)mm__sizeToFit {
+    [self sizeToFit];
+    return self;
+}
+
 @end

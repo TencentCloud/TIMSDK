@@ -1155,7 +1155,10 @@ static NSMutableArray *reloadMsgIndexs = nil;
 - (BOOL)isAddCopy:(V2TIMMessage *)imMsg data:(TUIMessageCellData *)data {
     BOOL isCopyShown = [TUIChatConfig defaultConfig].enablePopMenuCopyAction;
     BOOL isContentModerated = imMsg.hasRiskContent;
-    return isCopyShown && ([data isKindOfClass:[TUITextMessageCellData class]] || [data isKindOfClass:TUIReferenceMessageCellData.class]) && !isContentModerated;
+    return isCopyShown && ([data isKindOfClass:[TUITextMessageCellData class]]
+                           || [data isKindOfClass:[TUIReferenceMessageCellData class]]
+                           || [data isKindOfClass:[TUIReplyMessageCellData class]])
+                      && !isContentModerated;
 }
 
 - (BOOL)isAddMultiSelect:(V2TIMMessage *)imMsg {
@@ -1448,6 +1451,11 @@ static NSMutableArray *reloadMsgIndexs = nil;
     if ([sender isKindOfClass:TUIReferenceMessageCell_Minimalist.class]) {
         TUIReferenceMessageCell_Minimalist *replyMsgCell = (TUIReferenceMessageCell_Minimalist *)sender;
         TUIReferenceMessageCellData *replyMsg = (TUIReferenceMessageCellData *)replyMsgCell.data;
+        content = replyMsg.content;
+    }
+    if ([sender isKindOfClass:TUIReplyMessageCell_Minimalist.class]) {
+        TUIReplyMessageCell_Minimalist *replyMsgCell = (TUIReplyMessageCell_Minimalist *)sender;
+        TUIReplyMessageCellData *replyMsg = (TUIReplyMessageCellData *)replyMsgCell.data;
         content = replyMsg.content;
     }
     if (content.length > 0) {

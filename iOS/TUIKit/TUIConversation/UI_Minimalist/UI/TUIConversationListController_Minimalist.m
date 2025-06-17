@@ -245,9 +245,6 @@ static NSString *kConversationCell_Minimalist_ReuseId = @"kConversationCell_Mini
                             [groupName appendFormat:@"、%@", item.title];
                         }
 
-                        if ([groupName length] > 10) {
-                            groupName = [groupName substringToIndex:10].mutableCopy;
-                        }
                         void (^createGroupCompletion)(BOOL, V2TIMGroupInfo *, UIImage *) = ^(BOOL isSuccess, V2TIMGroupInfo *_Nonnull info,
                                                                                              UIImage *_Nonnull submitShowImage) {
                           NSDictionary *param = @{

@@ -60,4 +60,24 @@
 
 - (UIView * (^)(void))mm_sizeToFit;
 - (UIView * (^)(CGFloat w, CGFloat h))mm_sizeToFitThan;
+
+- (UIView *)mm_top:(CGFloat)top;
+- (UIView *)mm_bottom:(CGFloat)bottom;
+- (UIView *)mm_flexToBottom:(CGFloat)bottom NS_SWIFT_NAME(mm_flexToBottom(_:));
+- (UIView *)mm_left:(CGFloat)left;
+- (UIView *)mm_right:(CGFloat)right;
+- (UIView *)mm_flexToRight:(CGFloat)right NS_SWIFT_NAME(mm_flexToRight(_:));
+- (UIView *)mm_width:(CGFloat)width;
+- (UIView *)mm_height:(CGFloat)height;
+- (UIView *)mm__centerX:(CGFloat)x;
+- (UIView *)mm__centerY:(CGFloat)y;
+
+- (UIView *)tui_mm__center;
+- (UIView *)mm__fill;
+
+- (UIView *)mm_hstack:(CGFloat)space;
+- (UIView *)mm_vstack:(CGFloat)space;
+
+- (UIView *)mm__sizeToFit;
+
 @end

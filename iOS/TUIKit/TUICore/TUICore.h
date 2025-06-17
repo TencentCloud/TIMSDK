@@ -66,7 +66,7 @@ typedef void (^TUIValueResultCallback)(NSDictionary *param);
 
 @interface NSObject (TUIRoute)
 
-@property(nonatomic, copy) TUIValueResultCallback navigateValueCallback;
+@property(nonatomic, copy, nullable) TUIValueResultCallback navigateValueCallback;
 
 @end
 

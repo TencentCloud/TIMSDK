@@ -129,8 +129,12 @@ NSString *kHaveViewedIMIntroduction = @"TUIKitDemo_HaveViewedIMIntroduction";
     }
 }
 
-static BOOL g_hasAddedCustomFace = NO;
 - (void)setupCustomSticker {
+    [TUIEnterIMViewController setupCustomSticker];
+}
+
+static BOOL g_hasAddedCustomFace = NO;
++ (void)setupCustomSticker {
     if (g_hasAddedCustomFace) {
         return;
     }
@@ -157,9 +161,12 @@ static BOOL g_hasAddedCustomFace = NO;
         group4350.menuPath = [bundlePath stringByAppendingPathComponent:@"4350/menu"];  // TUIChatFaceImagePath(@"4350/menu");
         [service appendFaceGroup:group4350];
     }
-    if (self.isTencentRTCApp) {
+    
+    NSString *appBundleId = [[NSBundle mainBundle] bundleIdentifier];
+    if ([appBundleId isEqualToString:@"com.tencent.rtc.app"]) {
         return;
     }
+    
     // 4351 group
     NSMutableArray *faces4351 = [NSMutableArray array];
     for (int i = 0; i <= 15; i++) {

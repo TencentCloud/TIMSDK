@@ -74,12 +74,12 @@ NS_ASSUME_NONNULL_BEGIN
  * Get the cached avatar asynchronously, this interface will request the interface to get the current number of group members, and return the avatar
  * corresponding to the local cache
  */
-+ (void)getCacheGroupAvatar:(NSString *)groupID callback:(void (^)(UIImage *, NSString *groupID))imageCallBack;
++ (void)getCacheGroupAvatar:(NSString *)groupID callback:(void (^)(UIImage * _Nullable, NSString *groupID))imageCallBack;
 
 /**
  * Get the cached avatar synchronously, this interface does not request the network
  */
-+ (UIImage *)getCacheAvatarForGroup:(NSString *)groupId number:(UInt32)memberNum;
++ (UIImage * _Nullable)getCacheAvatarForGroup:(NSString *)groupId number:(UInt32)memberNum;
 
 /**
  * 
@@ -99,7 +99,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)sharedInstance;
 
 - (void)addResourceToCache:(NSString *)path;
-- (UIImage *)getResourceFromCache:(NSString *)path;
+- (UIImage * _Nullable)getResourceFromCache:(NSString *)path;
 
 - (void)addFaceToCache:(NSString *)path;
 - (UIImage *)getFaceFromCache:(NSString *)path;

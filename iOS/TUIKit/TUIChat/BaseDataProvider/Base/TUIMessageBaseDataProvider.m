@@ -1177,6 +1177,7 @@ static const int kOfflinePushVersion = 1;
         pushInfo.AndroidHuaWeiCategory = @"IM";
         pushInfo.AndroidVIVOCategory = @"IM";
         pushInfo.AndroidHonorImportance = @"NORMAL";
+        pushInfo.AndroidMeizuNotifyType = 1;
         pushInfo.iOSInterruptionLevel = @"time-sensitive";
         pushInfo.enableIOSBackgroundNotification = NO;
     }
