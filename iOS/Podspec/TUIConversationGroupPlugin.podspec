@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name         = 'TUIConversationGroupPlugin'
-    spec.version      = '8.5.6864'
+    spec.version      = '8.6.7019'
     spec.platform     = :ios 
     spec.ios.deployment_target = '10.0'
     spec.license      = { :type => 'Proprietary',
@@ -15,7 +15,7 @@ Pod::Spec.new do |spec|
     
     spec.requires_arc = true
   
-    spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuiplugin/8.5.6864/ios/TUIConversationGroupPlugin_8.5.6864.xcframework.zip'}
+    spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/tuiplugin/8.6.7019/ios/TUIConversationGroupPlugin_8.6.7019.xcframework.zip'}
     
     spec.vendored_frameworks = 'TUIConversationGroupPlugin.xcframework'
     spec.resource_bundle = {
