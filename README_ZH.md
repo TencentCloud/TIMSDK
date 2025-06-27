@@ -165,19 +165,8 @@
 
 [接口升级指引](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## 最新增强版 8.6.7019 @2025.05.28
+## 最新增强版 8.6.7020 @2025.06.03
 ### SDK
-- 推送 SDK 支持多语言国际化。
-- 推送 SDK 支持魅族消息分类。
-- 云端群搜索支持返回加群选项、邀请进群选项。
-- 云端群成员搜索支持返回群成员头像。
-- IOS 平台推出 Swift 版 UIKit。
-- 升级 QUIC 插件支持 IOS 模拟器。
-- 升级 OC SDK支持 Swift Optional 属性。
-- 升级长连接 IP 冻结策略，加上通道类型。
-- 修复纯推送账号偶现触发 IM 命令字的问题。
-- 修复 Android 平台下 Flutter SDK 未设置手机机型的问题。
-- 修复 Flutter SDK 与 RoomKit 共存时回调线程不一致的问题。
-- 修复 Flutter SDK 和 RoomEngine 全局回调偶现冲突的问题。
+- 修复 iOS 平台的稳定性问题。
 
 
