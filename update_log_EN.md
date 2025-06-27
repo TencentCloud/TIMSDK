@@ -1,6 +1,10 @@
 English | [简体中文](./版本历史.md)
 
 # TIMSDK
+## 8.6.7020 @2025.06.03 - Enhanced Version
+### SDK
+- Fixed stability issues on iOS platform.
+
 ## 8.6.7019 @2025.05.28 - Enhanced Version
 ### SDK
 - Push SDK supports multilingual internationalization.
