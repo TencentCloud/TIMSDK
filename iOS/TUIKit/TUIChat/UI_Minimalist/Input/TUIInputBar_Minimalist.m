@@ -624,7 +624,7 @@
                                                     UIApplication *app = [UIApplication sharedApplication];
                                                     NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
                                                     if ([app canOpenURL:settingsURL]) {
-                                                        [app openURL:settingsURL];
+                                                        [TUITool openLinkWithURL:settingsURL];
                                                     }
                                                   }]];
     dispatch_async(dispatch_get_main_queue(), ^{
