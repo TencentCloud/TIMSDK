@@ -1,14 +1,10 @@
 #import "GenerateTestUserSig.h"
 #import <CommonCrypto/CommonCrypto.h>
 #import <zlib.h>
-#import "TCLoginModel.h"
 
 @implementation GenerateTestUserSig
 
 + (unsigned int)currentSDKAppid {
-    if (![TCLoginModel sharedInstance].isDirectlyLoginSDK) {
-        return (unsigned int)[TCLoginModel sharedInstance].SDKAppID;
-    }
     return public_SDKAPPID;
 }
 
