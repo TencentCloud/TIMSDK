@@ -159,6 +159,6 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 - Adds support for Japan site.
 - Fixed stability issues on Android platform.
 - Fixed signaling issues for Flutter on iOS.
-- Fixes push token configuration errors in Flutter for Android.
+- Fixed push token configuration errors in Flutter for Android.
 
 
