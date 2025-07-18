@@ -1,6 +1,13 @@
 English | [简体中文](./版本历史.md)
 
 # TIMSDK
+## 8.6.7040 @2025.07.18 - Enhanced Version
+### SDK
+- Added support for Japan site.
+- Fixed stability issues on Android platform.
+- Fixed signaling issues for Flutter on iOS.
+- Fixed push token configuration errors in Flutter for Android.
+
 ## 8.6.7020 @2025.06.03 - Enhanced Version
 ### SDK
 - Fixed stability issues on iOS platform.
