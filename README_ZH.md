@@ -165,8 +165,9 @@
 
 [接口升级指引](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## 最新增强版 8.6.7020 @2025.06.03
+## 最新增强版 8.6.7040 @2025.07.18
 ### SDK
-- 修复 iOS 平台的稳定性问题。
-
-
+- 支持日本站
+- 修复 Android 平台的稳定性问题。
+- 修复 Flutter iOS 端的信令问题。
+- 修复 Flutter Android 端设置推送 token 报错问题。
