@@ -156,7 +156,7 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 ## Latest Enhanced Version 8.6.7040 @2025.07.18
 ### SDK
-- Adds support for Japan site.
+- Added support for Japan site.
 - Fixed stability issues on Android platform.
 - Fixed signaling issues for Flutter on iOS.
 - Fixed push token configuration errors in Flutter for Android.
