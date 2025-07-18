@@ -154,8 +154,11 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 8.6.7020 @2025.06.03
+## Latest Enhanced Version 8.6.7040 @2025.07.18
 ### SDK
-- Fixed stability issues on iOS platform.
+- Adds support for Japan site.
+- Fixed stability issues on Android platform.
+- Fixed signaling issues for Flutter on iOS.
+- Fixes push token configuration errors in Flutter for Android.
 
 
