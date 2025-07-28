@@ -39,6 +39,9 @@
 #import "TUIReplyMessageCell.h"
 #import "TUIReplyMessageCellData.h"
 #import "TUITextMessageCell.h"
+#import "TUITextMessageCellData.h"
+#import "TUIChatbotMessagePlaceholderCellData.h"
+#import "TUIAIPlaceholderTypingMessageManager.h"
 #import "TUIVideoMessageCell.h"
 #import "TUIVoiceMessageCell.h"
 #import "TUIMessageCellConfig.h"
@@ -194,6 +197,25 @@
     [self loadGroupInfo];
 }
 
+- (void)restoreAITypingMessageIfNeeded {
+    TUIMessageCellData * lastObj = self.messageDataProvider.uiMsgs.lastObject;
+    NSString *conversationID = self.conversationData.conversationID;
+    if ([[TUIAIPlaceholderTypingMessageManager sharedInstance] hasAIPlaceholderTypingMessageForConversation:conversationID]) {
+        TUIMessageCellData *existingAIPlaceHolderMessage = [[TUIAIPlaceholderTypingMessageManager sharedInstance] getAIPlaceholderTypingMessageForConversation:conversationID];
+        if (existingAIPlaceHolderMessage) {
+            BOOL lastObjisTUIChatbotMessageCellData = [lastObj isKindOfClass:NSClassFromString(@"TUIChatbotMessageCellData")];
+            BOOL isSuccess = lastObj.status != Msg_Status_Fail;
+            if (!lastObjisTUIChatbotMessageCellData && isSuccess) {
+                // Add the existing AI typing message to current message list
+                [self sendPlaceHolderUIMessage:existingAIPlaceHolderMessage];
+            }
+            else {
+                [[TUIAIPlaceholderTypingMessageManager sharedInstance] removeAIPlaceholderTypingMessageForConversation:conversationID];
+            }
+        }
+    }
+}
+
 - (void)loadMessage {
     if (self.messageDataProvider.isLoadingData || self.messageDataProvider.isNoMoreMsg) {
         return;
@@ -335,6 +357,21 @@
 - (void)sendPlaceHolderUIMessage:(TUIMessageCellData *)cellData {
     [self.messageDataProvider sendPlaceHolderUIMessage:cellData];
     [self scrollToBottom:YES];
+}
+
+- (void)createAITypingMessage {
+    // Create AI typing placeholder message using TUIChatbotMessagePlaceholderCellData
+    TUIChatbotMessagePlaceholderCellData *aiTypingData = [TUIChatbotMessagePlaceholderCellData createAIPlaceholderCellData];
+    
+    // Send as placeholder message
+    [self sendPlaceHolderUIMessage:aiTypingData];
+    
+    // Store reference in global manager for later replacement
+    NSString *conversationID = self.conversationData.conversationID;
+    [[TUIAIPlaceholderTypingMessageManager sharedInstance] setAIPlaceholderTypingMessage:aiTypingData forConversation:conversationID];
+    
+    // Note: AI typing message will be automatically removed when real AI response is received
+    // via onRecvNewMessage in TUIMessageBaseDataProvider
 }
 
 - (void)sendUIMessage:(TUIMessageCellData *)cellData {
@@ -593,6 +630,15 @@
                                <= Screen_Height);
             if ([lasData.msgID isEqualToString:data.msgID]  && isInBottomPage) {
                 isAllowScroll2Bottom = YES;
+            }
+        }
+        //only for chatboxcell
+        if (self.steamCellFinishedBlock)  {
+            if ([param[@"isFinished"] isEqualToString:@"1"]) {
+                self.steamCellFinishedBlock(YES,data);
+            }
+            else {
+                self.steamCellFinishedBlock(NO,data);
             }
         }
         [self.messageCellConfig removeHeightCacheOfMessageCellData:data];
@@ -1032,6 +1078,36 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     }
 }
 
+- (void)handleAIConversationLongPress:(TUIMessageCell *)cell {
+    // Check if AI is currently typing, if so, don't allow long press
+    if (_delegate && [_delegate respondsToSelector:@selector(isAICurrentlyTyping)] && [_delegate isAICurrentlyTyping]) {
+        return;
+    }
+    
+    TUIMessageCellData *data = cell.messageData;
+    
+    // Create menu without emoji view for AI conversations
+    TUIChatPopMenu *menu = [[TUIChatPopMenu alloc] initWithEmojiView:NO frame:CGRectZero];
+    self.chatPopMenu = menu;
+    menu.targetCellData = data;
+    menu.targetCell = cell;
+    
+    // Add AI-specific actions
+    [self addChatAIActionToCell:cell ofMenu:menu];
+    
+    // Setup menu position and display
+    CGRect frame = [UIApplication.sharedApplication.keyWindow convertRect:cell.container.frame fromView:cell];
+    
+    CGFloat topMarginiByCustomView = 0;
+    if (_delegate && [_delegate respondsToSelector:@selector(getTopMarginByCustomView)]) {
+        topMarginiByCustomView = [_delegate getTopMarginByCustomView];
+    }
+    
+    [menu setArrawPosition:CGPointMake(frame.origin.x + frame.size.width * 0.5, frame.origin.y - 5 - topMarginiByCustomView)
+              adjustHeight:frame.size.height + 5];
+    [menu showInView:self.tableView];
+}
+
 - (void)onLongPressMessage:(TUIMessageCell *)cell {
     if (TUIChatConfig.defaultConfig.eventConfig.chatEventListener &&
         [TUIChatConfig.defaultConfig.eventConfig.chatEventListener respondsToSelector:@selector(onMessageLongClicked:messageCellData:)]) {
@@ -1056,6 +1132,14 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
         //The pop-up menu can only appear one at a time.
         return;
     }
+    
+    // Check if this is an AI conversation and handle separately
+    if ([self.conversationData isAIConversation]) {
+        [self handleAIConversationLongPress:cell];
+        return;
+    }
+    
+    // Handle normal conversation long press
     TUIChatPopMenu *menu = [[TUIChatPopMenu alloc] initWithEmojiView:YES frame:CGRectZero];
     self.chatPopMenu = menu;
     menu.targetCellData = data;
@@ -1063,7 +1147,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     __weak typeof(menu) weakMenu = menu;
     BOOL isPluginCustomMessage = [TUIMessageCellConfig isPluginCustomMessageCellData:data];
     BOOL isChatNoramlMessageOrCustomMessage = !isPluginCustomMessage;
-    
+
     // Insert Action
     if (isChatNoramlMessageOrCustomMessage) {
         // Chat common Action
@@ -1101,7 +1185,7 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     } else {
         [self becomeFirstResponder];
     }
-    
+
     CGRect frame = [UIApplication.sharedApplication.keyWindow convertRect:cell.container.frame fromView:cell];
     
     CGFloat topMarginiByCustomView = 0;
@@ -1208,6 +1292,30 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
             [menu addAction:extension];
         }
     }
+}
+
+- (void)addChatAIActionToCell:(TUIMessageCell *)cell ofMenu:(TUIChatPopMenu *)menu {
+    // Setup popAction
+    TUIChatPopMenuAction *copyAction = [self setupCopyAction:cell];
+    TUIChatPopMenuAction *forwardAction = [self setupForwardAction:cell];
+    TUIChatPopMenuAction *deleteAction = [self setupDeleteAction:cell];
+
+    TUIMessageCellData *data = cell.messageData;
+    V2TIMMessage *imMsg = data.innerMessage;
+    
+    BOOL isMsgSendSucceed = imMsg.status == V2TIM_MSG_STATUS_SEND_SUCC;
+    BOOL isContentModerated = imMsg.hasRiskContent;
+
+    if (([data isKindOfClass:[TUITextMessageCellData class]] || [data isKindOfClass:TUIReplyMessageCellData.class] ||
+        [data isKindOfClass:TUIReferenceMessageCellData.class]) && !isContentModerated) {
+        [menu addAction:copyAction];
+    }
+    [menu addAction:deleteAction];
+
+    if ([self canForward:data] && isMsgSendSucceed && !isContentModerated) {
+        [menu addAction:forwardAction];
+    }
+    
 }
 
 - (void)configSelectActionToCell:(TUIMessageCell *)cell ofMenu:(TUIChatPopMenu *)menu {
@@ -1597,6 +1705,9 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
     if ([sender isKindOfClass:[TUITextMessageCell class]]) {
         TUITextMessageCell *txtCell = (TUITextMessageCell *)sender;
         content = txtCell.selectContent;
+        if (!content || [content isEqualToString:@""]) {
+            content = txtCell.textView.text;
+        }
     }
     if ([sender isKindOfClass:TUIReplyMessageCell.class] || [sender isKindOfClass:TUIReferenceMessageCell.class]) {
         TUIReplyMessageCellData *replyMsg = (TUIReplyMessageCellData *)sender;
@@ -1740,6 +1851,13 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
                                    NSLog(@"deleteMessages failed!");
                                    NSAssert(NO, desc);
                                  }];
+}
+- (void)removeUIMsgList:(NSArray<TUIMessageCellData *> *)uiMsgs {
+    if (uiMsgs.count == 0 || uiMsgs.count > 30) {
+        NSLog(@"The size of messages must be between 0 and 30");
+        return;
+    }
+    [self.messageDataProvider removeUIMsgList:uiMsgs];
 }
 
 - (void)clickTextMessage:(TUITextMessageCell *)cell {
@@ -1926,5 +2044,6 @@ ReceiveReadMsgWithGroupID:(NSString *)groupID
         // Fallback on earlier versions
     }
 }
+
 
 @end

@@ -100,8 +100,18 @@
     if (self.headerView.headImg.image) {
         param[TUICore_TUIContactExtension_FriendProfileActionMenu_UserIcon] = self.headerView.headImg.image;
     }
-    param[TUICore_TUIContactExtension_FriendProfileActionMenu_FilterVideoCall] = @(NO);
-    param[TUICore_TUIContactExtension_FriendProfileActionMenu_FilterAudioCall] = @(NO);
+    
+    BOOL isAIConversation = [self.friendProfile.userID containsString:@"@RBT#"] ;
+
+    if (isAIConversation ) {
+        param[TUICore_TUIContactExtension_FriendProfileActionMenu_FilterVideoCall] = @(YES);
+        param[TUICore_TUIContactExtension_FriendProfileActionMenu_FilterAudioCall] = @(YES);
+    }
+    else {
+        param[TUICore_TUIContactExtension_FriendProfileActionMenu_FilterVideoCall] = @(NO);
+        param[TUICore_TUIContactExtension_FriendProfileActionMenu_FilterAudioCall] = @(NO);
+    }
+    
     if (self.navigationController) {
         param[TUICore_TUIContactExtension_FriendProfileActionMenu_PushVC] = self.navigationController;
     }

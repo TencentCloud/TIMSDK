@@ -98,6 +98,11 @@
 
 - (void)inputTextViewShouldEndTyping:(UITextView *)textView;
 
+/**
+ * Callback after clicking AI interrupt button
+ */
+- (void)inputBarDidTouchAIInterrupt:(TUIInputBar *)textView;
+
 @end
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -105,6 +110,16 @@
 //                              TUIInputBar
 //
 /////////////////////////////////////////////////////////////////////////////////
+
+typedef NS_ENUM(NSInteger, TUIInputBarStyle) {
+    TUIInputBarStyleDefault = 0,    // Default style
+    TUIInputBarStyleAI = 1,         // AI chat style
+};
+
+typedef NS_ENUM(NSInteger, TUIInputBarAIState) {
+    TUIInputBarAIStateDefault = 0,  // AI default state: large input box only
+    TUIInputBarAIStateActive = 1,   // AI active state: input box + interrupt/send button
+};
 
 @interface TUIInputBar : UIView
 
@@ -153,6 +168,31 @@
 
 @property(nonatomic, assign) BOOL isFromReplyPage;
 
+/**
+ * AI chat style
+ */
+@property(nonatomic, assign) TUIInputBarStyle inputBarStyle;
+
+/**
+ * AI chat state
+ */
+@property(nonatomic, assign) TUIInputBarAIState aiState;
+
+/**
+ * AI interrupt button
+ */
+@property(nonatomic, strong) UIButton *aiInterruptButton;
+
+/**
+ * AI send button
+ */
+@property(nonatomic, strong) UIButton *aiSendButton;
+
+/**
+ * Whether AI is currently typing
+ */
+@property(nonatomic, assign) BOOL aiIsTyping;
+
 - (void)defaultLayout;
 /**
  *  Add emoticon text
@@ -174,4 +214,20 @@
 
 - (void)addDraftToInputBar:(NSAttributedString *)draft;
 - (void)addWordsToInputBar:(NSAttributedString *)words;
+
+/**
+ * Set input bar style
+ */
+- (void)setInputBarStyle:(TUIInputBarStyle)style;
+
+/**
+ * Set AI state
+ */
+- (void)setAIState:(TUIInputBarAIState)state;
+
+/**
+ * Set AI typing state
+ */
+- (void)setAITyping:(BOOL)typing;
+
 @end

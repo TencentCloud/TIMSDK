@@ -103,6 +103,11 @@ typedef NS_ENUM(NSInteger, TUIRecordStatus) {
 
 - (void)inputTextViewShouldEndTyping:(UITextView *)textView;
 
+/**
+ * Callback after clicking AI interrupt button
+ */
+- (void)inputBarDidTouchAIInterrupt:(TUIInputBar_Minimalist *)textView;
+
 @end
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -110,6 +115,16 @@ typedef NS_ENUM(NSInteger, TUIRecordStatus) {
 //                              TUIInputBar
 //
 /////////////////////////////////////////////////////////////////////////////////
+
+typedef NS_ENUM(NSInteger, TUIInputBarStyle_Minimalist) {
+    TUIInputBarStyleDefault_Minimalist = 0,    // Default style
+    TUIInputBarStyleAI_Minimalist = 1,         // AI chat style
+};
+
+typedef NS_ENUM(NSInteger, TUIInputBarAIState_Minimalist) {
+    TUIInputBarAIStateDefault_Minimalist = 0,  // AI default state: large input box only
+    TUIInputBarAIStateActive_Minimalist = 1,   // AI active state: input box + interrupt/send button
+};
 
 @interface TUIInputBar_Minimalist : UIView
 
@@ -170,6 +185,31 @@ typedef NS_ENUM(NSInteger, TUIRecordStatus) {
 @property(nonatomic, copy) void (^inputBarTextChanged)(UITextView * textview);
 
 /**
+ * AI chat style
+ */
+@property(nonatomic, assign) TUIInputBarStyle_Minimalist inputBarStyle;
+
+/**
+ * AI chat state
+ */
+@property(nonatomic, assign) TUIInputBarAIState_Minimalist aiState;
+
+/**
+ * AI interrupt button
+ */
+@property(nonatomic, strong) UIButton *aiInterruptButton;
+
+/**
+ * AI send button
+ */
+@property(nonatomic, strong) UIButton *aiSendButton;
+
+/**
+ * Whether AI is currently typing
+ */
+@property(nonatomic, assign) BOOL aiIsTyping;
+
+/**
  *
  *  Add emoticon text
  *  Used to input emoticon text in the current text input box
@@ -189,5 +229,20 @@ typedef NS_ENUM(NSInteger, TUIRecordStatus) {
 - (void)changeToKeyboard;
 - (void)addDraftToInputBar:(NSAttributedString *)draft;
 - (void)addWordsToInputBar:(NSAttributedString *)words;
+
+/**
+ * Set input bar style
+ */
+- (void)setInputBarStyle:(TUIInputBarStyle_Minimalist)style;
+
+/**
+ * Set AI state
+ */
+- (void)setAIState:(TUIInputBarAIState_Minimalist)state;
+
+/**
+ * Set AI typing state
+ */
+- (void)setAITyping:(BOOL)typing;
 
 @end

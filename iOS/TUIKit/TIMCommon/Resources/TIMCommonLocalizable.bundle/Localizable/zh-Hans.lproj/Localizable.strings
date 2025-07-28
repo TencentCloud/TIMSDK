@@ -549,6 +549,8 @@
 "TUIKitSearchNoResultLists" = "无相关会话、联系人或消息记录";
 "TUIKitTyping" = "对方正在输入";
 
+"TUIKitAITyping" = "回答输出中\n请稍后或点击停止回答";
+
 "TUIKitMessageTipsEditGroupAddOptFormat" = "%@修改加群方式为\"%@\"、";
 "TUIKitMessageTipsEditGroupInviteOptFormat" = "%@修改邀请进群方式为\"%@\"、";
 

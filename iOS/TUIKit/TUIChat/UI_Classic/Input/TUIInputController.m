@@ -33,6 +33,7 @@
 @property(nonatomic, assign) CGRect keyboardFrame;
 
 @property(nonatomic, copy) void (^modifyRootReplyMsgBlock)(TUIMessageCellData *);
+
 @end
 
 @implementation TUIInputController
@@ -82,6 +83,9 @@
     _inputBar = [[TUIInputBar alloc] initWithFrame:CGRectZero];
     _inputBar.delegate = self;
     [self.view addSubview:_inputBar];
+    
+    // 初始化AI样式相关属性
+    _enableAIStyle = NO;
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification {
@@ -725,6 +729,38 @@
         inputHeight = CGRectGetMaxY(_referencePreviewBar.frame);
     }
     return inputHeight;
+}
+
+#pragma mark - AI Style Methods
+
+- (void)enableAIStyle:(BOOL)enable {
+    _enableAIStyle = enable;
+    
+    if (enable) {
+        [_inputBar setInputBarStyle:TUIInputBarStyleAI];
+        [_inputBar setAIState:TUIInputBarAIStateDefault]; // 默认状态
+    } else {
+        [_inputBar setInputBarStyle:TUIInputBarStyleDefault];
+    }
+}
+
+- (void)setAIState:(TUIInputBarAIState)state {
+    if (_enableAIStyle) {
+        [_inputBar setAIState:state];
+    }
+}
+
+- (void)setAITyping:(BOOL)typing {
+    if (_enableAIStyle) {
+        [_inputBar setAITyping:typing];
+    }
+}
+
+- (void)inputBarDidTouchAIInterrupt:(TUIInputBar *)textView {
+    // 处理AI打断逻辑
+    if (_delegate && [_delegate respondsToSelector:@selector(inputControllerDidTouchAIInterrupt:)]) {
+        [_delegate inputControllerDidTouchAIInterrupt:self];
+    }
 }
 
 @end

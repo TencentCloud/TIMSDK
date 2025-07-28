@@ -546,6 +546,7 @@
 "TUIKitContactNoBlockList" = "暫無黑名單好友";
 "TUIKitSearchNoResultLists" = "無相關會話、聯繫人或消息記錄";
 "TUIKitTyping" = "對方正在輸入";
+"TUIKitAITyping" = "回答輸出中\n請稍後或點選停止回答";
 
 "TUIKitMessageTipsEditGroupAddOptFormat" = "%@修改加群方式為\"%@\"、";
 "TUIKitMessageTipsEditGroupInviteOptFormat" = "%@修改邀請進群方式為\"%@\"、";

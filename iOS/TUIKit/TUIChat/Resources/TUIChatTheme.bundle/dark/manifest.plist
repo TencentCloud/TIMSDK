@@ -188,5 +188,9 @@
 	<string>TypeSelectorBtn_Black</string>
 	<key>chat_TypeSelectorBtnHL_Black_img</key>
 	<string>TypeSelectorBtnHL_Black</string>
+	<key>chat_ai_clear_icon_img</key>
+	<string>chat_ai_clear_icon</string>
+	<key>chat_ai_interrupt_icon_img</key>
+	<string>chat_ai_interrupt_icon</string>
 </dict>
 </plist>

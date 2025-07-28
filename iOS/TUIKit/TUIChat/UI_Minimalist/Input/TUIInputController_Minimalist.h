@@ -1,4 +1,3 @@
-
 //  Created by Tencent on 2023/06/09.
 //  Copyright © 2023 Tencent. All rights reserved.
 /**
@@ -61,6 +60,11 @@
 - (void)inputControllerBeginTyping:(TUIInputController_Minimalist *)inputController;
 - (void)inputControllerEndTyping:(TUIInputController_Minimalist *)inputController;
 
+/**
+ * Callback when AI interrupt button is clicked
+ */
+- (void)inputControllerDidTouchAIInterrupt:(TUIInputController_Minimalist *)inputController;
+
 @end
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -112,6 +116,34 @@
 @property(nonatomic, strong) TUIMenuView_Minimalist *menuView;
 
 @property(nonatomic, weak) id<TUIInputControllerDelegate_Minimalist> delegate;
+
+/**
+ * AI chat style related properties
+ */
+
+/**
+ * Whether AI chat style is enabled
+ */
+@property(nonatomic, assign) BOOL enableAIStyle;
+
+/**
+ * AI chat style related methods
+ */
+
+/**
+ * Enable/disable AI chat style
+ */
+- (void)enableAIStyle:(BOOL)enable;
+
+/**
+ * Set AI state (default/active)
+ */
+- (void)setAIState:(TUIInputBarAIState_Minimalist)state;
+
+/**
+ * Set AI typing state
+ */
+- (void)setAITyping:(BOOL)typing;
 
 /**
  *  Reset the current input controller.

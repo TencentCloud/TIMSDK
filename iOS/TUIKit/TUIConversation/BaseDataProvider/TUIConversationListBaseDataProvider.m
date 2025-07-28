@@ -261,9 +261,19 @@
         [self handleInsertConversationList:addedDataList];
     }
 
+    BOOL onlyAIConversation = NO ;
+    if (duplicateDataList.count == 1 ) {
+        TUIConversationCellData *firstCellData = duplicateDataList.firstObject;
+        if (firstCellData && [firstCellData.conversationID  containsString:@"@RBT#"]) {
+            onlyAIConversation = YES;
+        }
+    }
+    
     [self updateMardHide:markHideDataList];
 
-    [self updateMarkUnreadCount];
+    if (!onlyAIConversation) {
+        [self updateMarkUnreadCount];
+    }
 
     [self updateMarkFold:markFoldDataList];
   

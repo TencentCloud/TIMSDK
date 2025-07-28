@@ -29,6 +29,9 @@
           @strongify(self);
           NSMutableArray *arr = [NSMutableArray new];
           for (V2TIMFriendInfo *fr in infoList) {
+              if ([self filteConversation:fr]) {
+                  continue;
+              }
               [arr addObject:fr.userFullInfo];
           }
         
@@ -49,6 +52,13 @@
         
         }
      fail:nil];
+}
+
+- (BOOL)filteConversation:(V2TIMFriendInfo *)fr {
+    if ([fr.userID  containsString:@"@RBT#"]) {
+        return YES;
+    }
+    return NO;
 }
 
 - (void)setSourceIds:(NSArray<NSString *> *)ids {

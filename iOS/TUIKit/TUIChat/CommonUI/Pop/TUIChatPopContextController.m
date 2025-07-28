@@ -40,6 +40,7 @@
 
     _backgroundColor = [UIColor clearColor];
     _backgoundTapDismissEnable = YES;
+    _configRecentView = YES; // Default to YES
     [[V2TIMManager sharedInstance] addAdvancedMsgListener:self];
 }
 
@@ -256,9 +257,14 @@
                                    _originFrame.origin.y - kScale390(8 + 40),
                                    MAX(kTIMDefaultEmojiSize.width *8,kScale390(208)),
                                    kScale390(40));
+    
+    // Set alpha to 0 if configRecentView is NO
+    if (!_configRecentView) {
+        _recentView.alpha = 0;
+    }
+    
     NSDictionary *param = @{TUICore_TUIChatExtension_ChatPopMenuReactRecentView_Delegate : self};
     [TUICore raiseExtension:TUICore_TUIChatExtension_ChatPopMenuReactRecentView_MinimalistExtensionID parentView:self.recentView param:param];
-
 }
 
 - (void)configExtionView {

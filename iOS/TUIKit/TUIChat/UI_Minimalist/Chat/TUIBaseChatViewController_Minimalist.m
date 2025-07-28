@@ -44,6 +44,7 @@
 #import "TUIVideoMessageCellData.h"
 #import "TUIVoiceMessageCellData.h"
 #import "UIAlertController+TUICustomStyle.h"
+#import "TUIAIPlaceholderTypingMessageManager.h"
 
 static UIView *gCustomTopView;
 static UIView *gTopExentsionView;
@@ -84,6 +85,15 @@ static CGRect gCustomTopViewRect;
 @property(nonatomic, strong) UILabel *subTitleLabel;
 
 @property(nonatomic, strong) TUIChatMediaDataProvider *mediaProvider;
+
+// AI interrupt message properties
+@property(nonatomic, assign) NSTimeInterval lastSendInterruptMessageTime;
+@property(nonatomic, strong) TUIMessageCellData *receivingChatbotMessage;
+
+// HUD properties
+@property(nonatomic, strong) UIView *hudContainerView;
+@property(nonatomic, strong) UIView *hudBackgroundView;
+@property(nonatomic, strong) UILabel *hudLabel;
 
 @end
 
@@ -134,10 +144,18 @@ static CGRect gCustomTopViewRect;
     self.dataProvider.delegate = self;
 
     [[V2TIMManager sharedInstance] addIMSDKListener:self];
+    
+    // Add notification listener for AI loading animation
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onChatbotLoadingAnimationDidStop:)
+                                                 name:@"TUIChatbotLoadingAnimationDidStop"
+                                               object:nil];
 }
 
 - (void)dealloc {
     [TUICore unRegisterEventByObject:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"TUIChatbotLoadingAnimationDidStop" object:nil];
+    [self hideHud];
 }
 
 - (void)willMoveToParentViewController:(UIViewController *)parent {
@@ -301,6 +319,18 @@ static CGRect gCustomTopViewRect;
 
     self.navigationItem.leftBarButtonItems = @[ backButtonItem, infoViewItem ];
 
+    if ([self.conversationData isAIConversation]) {
+        CGSize itemSize = CGSizeMake(25, 25);
+        UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, itemSize.width, itemSize.height)];
+        [button setImage:TUIChatBundleThemeImage(@"chat_ai_clear_icon_img",@"chat_ai_clear_icon")
+                forState:UIControlStateNormal];
+        [button.widthAnchor constraintEqualToConstant:itemSize.width].active = YES;
+        [button.heightAnchor constraintEqualToConstant:itemSize.height].active = YES;
+        [button addTarget:self action:@selector(rightBarAIClearButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+        UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+        self.navigationItem.rightBarButtonItems = @[rightItem];
+        return;
+    }
     CGSize itemSize = CGSizeMake(30, 24);
     NSMutableArray *rightBarButtonList = [NSMutableArray array];
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
@@ -429,6 +459,39 @@ static CGRect gCustomTopViewRect;
     info.onClicked(param);
 }
 
+- (void)rightBarAIClearButtonClick:(UIButton *)button {
+    [self.inputController reset];
+    if (self.inputController.inputBar.aiIsTyping) {
+        [self showHudMsgText:TIMCommonLocalizableString(TUIKitAITyping)];
+        return;
+    }
+    if (IS_NOT_EMPTY_NSSTRING(self.conversationData.userID)) {
+        NSString *userID = self.conversationData.userID;
+        @weakify(self);
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil
+                                                                    message:TIMCommonLocalizableString(TUIKitClearAllChatHistoryTips)
+                                                             preferredStyle:UIAlertControllerStyleAlert];
+        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Confirm)
+                                                        style:UIAlertActionStyleDestructive
+                                                      handler:^(UIAlertAction *_Nonnull action) {
+                                                        @strongify(self);
+                                                        [V2TIMManager.sharedInstance clearC2CHistoryMessage:userID
+                                                            succ:^{
+                                                              [TUICore notifyEvent:TUICore_TUIConversationNotify
+                                                                            subKey:TUICore_TUIConversationNotify_ClearConversationUIHistorySubKey
+                                                                            object:self
+                                                                             param:nil];
+                                                              [TUITool makeToast:TIMCommonLocalizableString(Done)];
+                                                            }
+                                                            fail:^(int code, NSString *desc) {
+                                                              [TUITool makeToastError:code msg:desc];
+                                                            }];
+                                                      }]];
+        [ac tuitheme_addAction:[UIAlertAction actionWithTitle:TIMCommonLocalizableString(Cancel) style:UIAlertActionStyleCancel handler:nil]];
+        [self presentViewController:ac animated:YES completion:nil];
+    }
+}
+
 - (void)setupMessageController {
     TUIMessageController_Minimalist *vc = [[TUIMessageController_Minimalist alloc] init];
     vc.hightlightKeyword = self.highlightKeyword;
@@ -484,8 +547,31 @@ static CGRect gCustomTopViewRect;
     _inputController.view.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     [self addChildViewController:_inputController];
     [self.view addSubview:_inputController.view];
+    
+    // AI style example - AI chat style can be enabled as needed
+    // For example: Enable when the conversation ID contains "AI" or is a specific AI bot
+    BOOL isAIConversation = [self.conversationData isAIConversation];
+    if (isAIConversation) {
+        [_inputController enableAIStyle:YES];
+        NSString *conversationID = self.conversationData.conversationID;
+        TUIMessageCellData *currentAITypingMessage = [[TUIAIPlaceholderTypingMessageManager sharedInstance]
+                                                      getAIPlaceholderTypingMessageForConversation:conversationID];
+        if (currentAITypingMessage) {
+            [self setAIStartTyping];
+        }
+        __weak typeof(self) weakSelf = self;
+        self.messageController.steamCellFinishedBlock = ^(BOOL finished, TUIMessageCellData * _Nonnull cellData) {
+            if (!finished) {
+                [weakSelf setAIStartTyping];
+                weakSelf.receivingChatbotMessage = cellData;
+            }
+            else {
+                [weakSelf setAIFinishTyping];
+            }
+        };
+    }
+    
     _inputController.view.hidden = !TUIChatConfig.defaultConfig.enableMainPageInputBar;
-
 }
 
 - (void)setupInputMoreMenu {
@@ -567,6 +653,8 @@ static CGRect gCustomTopViewRect;
     [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onFriendInfoChanged:) name:@"FriendInfoChangedNotification" object:nil];
 
     [TUICore registerEvent:TUICore_TUIContactNotify subKey:TUICore_TUIContactNotify_UpdateConversationBackgroundImageSubKey object:self];
+    [TUICore registerEvent:TUICore_TUIChatNotify subKey:TUICore_TUIChatNotify_SendMessageSubKey object:self];
+
 }
 
 #pragma mark - Public Methods
@@ -720,6 +808,9 @@ static CGRect gCustomTopViewRect;
     return height;
 }
 
+- (BOOL)isAICurrentlyTyping {
+    return self.inputController.inputBar.aiIsTyping;
+}
 
 #pragma mark - Event Response
 
@@ -804,6 +895,19 @@ static CGRect gCustomTopViewRect;
             [self updateBackgroundImageUrlByConversationID:conversationID];
         }
     }
+    else if ([key isEqualToString:TUICore_TUIChatNotify] && [subKey isEqualToString:TUICore_TUIChatNotify_SendMessageSubKey]) {
+        int code = [param[TUICore_TUIChatNotify_SendMessageSubKey_Code] intValue];
+        NSString *desc = param[TUICore_TUIChatNotify_SendMessageSubKey_Desc];
+        BOOL isAIConversation = [self.conversationData isAIConversation];
+        if (code == 0) {
+            if (isAIConversation) {
+                // Create AI placeholder message immediately when user sends message
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self.messageController createAITypingMessage];
+                });
+            }
+        }
+    }
 }
 
 - (void)updateBackgroundImageUrlByConversationID:(NSString *)conversationID {
@@ -868,7 +972,18 @@ static CGRect gCustomTopViewRect;
 }
 
 - (void)inputController:(TUIInputController_Minimalist *)inputController didSendMessage:(V2TIMMessage *)msg {
-    [self.messageController sendMessage:msg];
+    BOOL isAIConversation = [self.conversationData isAIConversation];
+    if (isAIConversation) {
+        if (self.inputController.inputBar.aiIsTyping) {
+            [self showHudMsgText:TIMCommonLocalizableString(TUIKitAITyping)];
+            return;
+        }
+        [self.inputController setAITyping:YES];
+        [self.messageController sendMessage:msg];
+    }
+    else {
+        [self.messageController sendMessage:msg];
+    }
 }
 
 - (void)inputControllerDidSelectMoreButton:(TUIInputController_Minimalist *)inputController {
@@ -907,6 +1022,124 @@ static CGRect gCustomTopViewRect;
 
 - (void)inputControllerEndTyping:(TUIInputController_Minimalist *)inputController {
     // for C2CChatVC
+}
+
+- (void)inputControllerDidTouchAIInterrupt:(TUIInputController_Minimalist *)inputController {
+    NSLog(@"inputControllerDidTouchAIInterrupt");
+    if (!self.receivingChatbotMessage) {
+        NSLog(@"self.receivingChatbotMessage empty");
+        return;
+    }
+
+    // Send interrupt message
+    [self sendChatbotInterruptMessage];
+    
+}
+
+- (void)setAIStartTyping {
+    if ([self.conversationData isAIConversation]) {
+        [_inputController setAITyping:YES];
+    }
+}
+
+- (void)setAIFinishTyping {
+    if ([self.conversationData isAIConversation]) {
+        [_inputController setAITyping:NO];
+    }
+}
+
+- (NSString *)generateMessageKey:(TUIMessageCellData *)messageData {
+    if (!messageData || !messageData.innerMessage) {
+        return @"";
+    }
+    
+    V2TIMMessage *message = messageData.innerMessage;
+    uint64_t msgSeq = message.seq;
+    uint64_t random = message.random;
+    NSTimeInterval timestamp = message.timestamp ? [message.timestamp timeIntervalSince1970] : 0;
+    
+    return [NSString stringWithFormat:@"%llu_%llu_%.0f", msgSeq, random, timestamp];
+}
+
+- (V2TIMMessage *)buildChatbotInterruptMessage:(TUIMessageCellData *)messageData {
+    if (!messageData || !messageData.innerMessage) {
+        return nil;
+    }
+    
+    // Build interrupt message content
+    NSDictionary *interruptMessageContent = @{
+        @"chatbotPlugin": @(2),
+        @"src": @(22),
+        @"msgKey": [self generateMessageKey:messageData]
+    };
+    
+    // Convert to JSON
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:interruptMessageContent
+                                                       options:0
+                                                         error:&error];
+    if (error || !jsonData) {
+        NSLog(@"Failed to create interrupt message JSON: %@", error.localizedDescription);
+        return nil;
+    }
+    
+    // Create custom message
+    V2TIMMessage *message = [[V2TIMManager sharedInstance] createCustomMessage:jsonData];
+    message.isExcludedFromLastMessage = YES;
+    message.isExcludedFromUnreadCount = YES;
+    return message;
+}
+
+- (void)sendChatbotInterruptMessage {
+    // Check send interval (1 second minimum)
+    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
+    const NSTimeInterval sendInterruputMessageInterval = 1.0;
+    
+    if (self.lastSendInterruptMessageTime != 0 && 
+        currentTime - self.lastSendInterruptMessageTime < sendInterruputMessageInterval) {
+        return;
+    }
+    
+    self.lastSendInterruptMessageTime = currentTime;
+    
+    TUIMessageCellData *messageData = self.receivingChatbotMessage;
+    if (!messageData) {
+        NSLog(@"No receiving chatbot message found");
+        return;
+    }
+    
+    V2TIMMessage *message = [self buildChatbotInterruptMessage:messageData];
+    if (!message) {
+        NSLog(@"Failed to build interrupt message");
+        return;
+    }
+    
+    // Determine conversation type
+    NSString *groupID = nil;
+    NSString *userID = nil;
+    
+    if (self.conversationData.groupID.length > 0) {
+        groupID = self.conversationData.groupID;
+    } else {
+        userID = self.conversationData.userID;
+    }
+    
+    __weak typeof(self) weakSelf = self;
+
+    // Send interrupt message
+    [[V2TIMManager sharedInstance] sendMessage:message
+                                      receiver:userID
+                                       groupID:groupID
+                                      priority:V2TIM_PRIORITY_DEFAULT
+                                onlineUserOnly:YES
+                               offlinePushInfo:nil
+                                      progress:nil
+                                          succ:^{
+                                              NSLog(@"sendChatbotInterruptMessage success");
+                                          }
+                                          fail:^(int code, NSString *desc) {
+                                              NSLog(@"sendChatbotInterruptMessage failed %d %@", code, desc);
+                                          }];
 }
 
 #pragma mark - TUIBaseMessageControllerDelegate
@@ -1503,5 +1736,131 @@ static CGRect gCustomTopViewRect;
 }
 - (BOOL)isPageAppears {
     return self.responseKeyboard;
+}
+
+- (void)onChatbotLoadingAnimationDidStop:(NSNotification *)notification {
+    // Handle the notification when AI loading animation stops
+    NSLog(@"AI loading animation did stop");
+    
+    // Check if this is an AI conversation
+    BOOL isAIConversation = [self.conversationData isAIConversation];
+    
+    if (isAIConversation) {
+        // Call finishAITypingWithMessage to complete the AI typing process
+        [self setAIFinishTyping];
+        
+        // Clear the receiving chatbot message
+        self.receivingChatbotMessage = nil;
+    }
+}
+
+#pragma mark - HUD Methods
+
+- (void)showHudMsgText:(NSString *)msgText {
+    [self hideHud];
+    
+    if (!msgText || msgText.length == 0) {
+        return;
+    }
+    
+    // Create container view
+    self.hudContainerView = [[UIView alloc] init];
+    self.hudContainerView.backgroundColor = [UIColor clearColor];
+    self.hudContainerView.alpha = 0.0;
+    [self.view addSubview:self.hudContainerView];
+    
+    // Create background view with design specs
+    self.hudBackgroundView = [[UIView alloc] init];
+    self.hudBackgroundView.backgroundColor = [UIColor colorWithRed:0.92 green:0.95 blue:1.0 alpha:1.0]; // #EBF3FF
+    self.hudBackgroundView.layer.cornerRadius = 6.0;
+    self.hudBackgroundView.layer.masksToBounds = NO;
+    
+    // Add shadow effects as per design
+    self.hudBackgroundView.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.hudBackgroundView.layer.shadowOffset = CGSizeMake(0, 8);
+    self.hudBackgroundView.layer.shadowRadius = 13;
+    self.hudBackgroundView.layer.shadowOpacity = 0.06;
+    
+    // Additional shadow layers for multiple shadow effect
+    CALayer *shadowLayer1 = [CALayer layer];
+    shadowLayer1.shadowColor = [UIColor blackColor].CGColor;
+    shadowLayer1.shadowOffset = CGSizeMake(0, 12);
+    shadowLayer1.shadowRadius = 13;
+    shadowLayer1.shadowOpacity = 0.06;
+    [self.hudBackgroundView.layer insertSublayer:shadowLayer1 atIndex:0];
+    
+    CALayer *shadowLayer2 = [CALayer layer];
+    shadowLayer2.shadowColor = [UIColor blackColor].CGColor;
+    shadowLayer2.shadowOffset = CGSizeMake(0, 1);
+    shadowLayer2.shadowRadius = 2.5;
+    shadowLayer2.shadowOpacity = 0.06;
+    [self.hudBackgroundView.layer insertSublayer:shadowLayer2 atIndex:0];
+    
+    [self.hudContainerView addSubview:self.hudBackgroundView];
+    
+    // Create label with design specs
+    self.hudLabel = [[UILabel alloc] init];
+    self.hudLabel.text = msgText;
+    self.hudLabel.textColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.9]; // rgba(0, 0, 0, 0.9)
+    self.hudLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:14.0];
+    if (!self.hudLabel.font) {
+        self.hudLabel.font = [UIFont systemFontOfSize:14.0 weight:UIFontWeightMedium];
+    }
+    self.hudLabel.textAlignment = NSTextAlignmentCenter;
+    self.hudLabel.numberOfLines = 0;
+    self.hudLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    [self.hudBackgroundView addSubview:self.hudLabel];
+    
+    // Layout constraints
+    self.hudContainerView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.hudBackgroundView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.hudLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    // Container view constraints (center in parent view)
+    [NSLayoutConstraint activateConstraints:@[
+        [self.hudContainerView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor],
+        [self.hudContainerView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor],
+        [self.hudContainerView.leadingAnchor constraintGreaterThanOrEqualToAnchor:self.view.leadingAnchor constant:40],
+        [self.hudContainerView.trailingAnchor constraintLessThanOrEqualToAnchor:self.view.trailingAnchor constant:-40]
+    ]];
+    
+    // Background view constraints (hug content)
+    [NSLayoutConstraint activateConstraints:@[
+        [self.hudBackgroundView.topAnchor constraintEqualToAnchor:self.hudContainerView.topAnchor],
+        [self.hudBackgroundView.leadingAnchor constraintEqualToAnchor:self.hudContainerView.leadingAnchor],
+        [self.hudBackgroundView.trailingAnchor constraintEqualToAnchor:self.hudContainerView.trailingAnchor],
+        [self.hudBackgroundView.bottomAnchor constraintEqualToAnchor:self.hudContainerView.bottomAnchor]
+    ]];
+    
+    // Label constraints (8px 20px padding as per design)
+    [NSLayoutConstraint activateConstraints:@[
+        [self.hudLabel.topAnchor constraintEqualToAnchor:self.hudBackgroundView.topAnchor constant:8],
+        [self.hudLabel.leadingAnchor constraintEqualToAnchor:self.hudBackgroundView.leadingAnchor constant:20],
+        [self.hudLabel.trailingAnchor constraintEqualToAnchor:self.hudBackgroundView.trailingAnchor constant:-20],
+        [self.hudLabel.bottomAnchor constraintEqualToAnchor:self.hudBackgroundView.bottomAnchor constant:-8]
+    ]];
+    
+    // Animate in
+    [UIView animateWithDuration:0.3 animations:^{
+        self.hudContainerView.alpha = 1.0;
+    }];
+    
+    // Auto hide after 2 seconds
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self hideHud];
+    });
+}
+
+- (void)hideHud {
+    if (self.hudContainerView) {
+        [UIView animateWithDuration:0.3 animations:^{
+            self.hudContainerView.alpha = 0.0;
+        } completion:^(BOOL finished) {
+            [self.hudContainerView removeFromSuperview];
+            self.hudContainerView = nil;
+            self.hudBackgroundView = nil;
+            self.hudLabel = nil;
+        }];
+    }
 }
 @end

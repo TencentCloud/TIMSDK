@@ -93,6 +93,7 @@
         textFont = self.class.outgoingTextFont;
     }
     self.textView.attributedText = [data getContentAttributedString:textFont];
+    self.textView.textAlignment = isRTL()?NSTextAlignmentRight:NSTextAlignmentLeft;
     self.textView.textColor = textColor;
     self.textView.font = textFont;
 

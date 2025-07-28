@@ -43,6 +43,9 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        _inputBarStyle = TUIInputBarStyleDefault_Minimalist;
+        _aiState = TUIInputBarAIStateDefault_Minimalist;
+        _aiIsTyping = NO;
         [self setupViews];
         [self defaultLayout];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onThemeChanged) name:TUIDidApplyingThemeChangedNotfication object:nil];
@@ -108,6 +111,24 @@
     [self addSubview:_cameraButton];
 
     [self initRecordView];
+    
+    // Create AI related buttons
+    [self setupAIButtons];
+}
+
+- (void)setupAIButtons {
+    // AI interrupt button - designed to be placed inside input box
+    _aiInterruptButton = [[UIButton alloc] init];
+    [_aiInterruptButton setBackgroundImage:TUIChatBundleThemeImage(@"",@"chat_ai_interrupt_icon_white") forState:UIControlStateNormal];
+    [_aiInterruptButton.titleLabel setFont:[UIFont systemFontOfSize:12.0f]];
+    [_aiInterruptButton.layer setCornerRadius:12.0f];
+    [_aiInterruptButton.layer setMasksToBounds:YES];
+    [_aiInterruptButton addTarget:self action:@selector(onAIInterruptButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    _aiInterruptButton.hidden = YES;
+    [self addSubview:_aiInterruptButton];
+    
+    // Remove AI send button - not needed for minimalist style
+    // _aiSendButton is no longer created
 }
 
 - (void)initRecordView {
@@ -210,6 +231,14 @@
 - (void)defaultLayout {
     _lineView.frame = CGRectMake(0, 0, Screen_Width, TLine_Heigh);
 
+    if (_inputBarStyle == TUIInputBarStyleAI_Minimalist) {
+        [self layoutAIStyle];
+    } else {
+        [self layoutDefaultStyle];
+    }
+}
+
+- (void)layoutDefaultStyle {
     CGFloat iconSize = 24;
     _moreButton.frame = CGRectMake(kScale390(16), kScale390(13), iconSize, iconSize);
     _cameraButton.frame = CGRectMake(Screen_Width - kScale390(16) - iconSize, 13, iconSize, iconSize);
@@ -240,12 +269,56 @@
     _recordAnimateCoverView.frame = self.recordAnimateCoverViewFrame;
     [self applyBorderTheme];
     
+    // Hide AI buttons
+    _aiInterruptButton.hidden = YES;
+    
     if(isRTL()) {
         for (UIView *subviews in self.subviews) {
             [subviews resetFrameToFitRTL];
         }
         for (UIView *subview in _recordView.subviews) {
             [subview resetFrameToFitRTL];
+        }
+    }
+}
+
+- (void)layoutAIStyle {
+    // Hide default buttons
+    _moreButton.hidden = YES;
+    _cameraButton.hidden = YES;
+    _micButton.hidden = YES;
+    _faceButton.hidden = YES;
+    _keyboardButton.hidden = YES;
+    
+    if (_aiIsTyping) {
+        // Show interrupt button inside the input box (right side)
+        CGFloat buttonSize = 24;
+        CGFloat buttonMargin = 8;
+        _aiInterruptButton.frame = CGRectMake(Screen_Width - kScale390(16) - buttonMargin - buttonSize, 
+                                            7 + (36 - buttonSize) / 2, 
+                                            buttonSize, 
+                                            buttonSize);
+        _aiInterruptButton.hidden = NO;
+        
+        // Use full width input box but adjust text container inset to avoid button
+        _inputTextView.frame = CGRectMake(kScale390(16), 7, Screen_Width - kScale390(32), 36);
+        UIEdgeInsets ei = UIEdgeInsetsMake(kScale390(9), kScale390(16), kScale390(9), buttonSize + buttonMargin * 2);
+        _inputTextView.textContainerInset = rtlEdgeInsetsWithInsets(ei);
+    } else {
+        // Hide interrupt button when AI is not typing
+        _aiInterruptButton.hidden = YES;
+        
+        // Use full width input box with normal padding
+        _inputTextView.frame = CGRectMake(kScale390(16), 7, Screen_Width - kScale390(32), 36);
+        UIEdgeInsets ei = UIEdgeInsetsMake(kScale390(9), kScale390(16), kScale390(9), kScale390(30));
+        _inputTextView.textContainerInset = rtlEdgeInsetsWithInsets(ei);
+    }
+    
+    [self applyBorderTheme];
+    
+    if(isRTL()) {
+        for (UIView *subviews in self.subviews) {
+            [subviews resetFrameToFitRTL];
         }
     }
 }
@@ -352,9 +425,11 @@
 #pragma mark - talk
 
 - (void)textViewDidBeginEditing:(UITextView *)textView {
-    self.keyboardButton.hidden = YES;
-    self.micButton.hidden = NO;
-    self.faceButton.hidden = NO;
+    if (_inputBarStyle == TUIInputBarStyleDefault_Minimalist) {
+        self.keyboardButton.hidden = YES;
+        self.micButton.hidden = NO;
+        self.faceButton.hidden = NO;
+    }
 
     self.isFocusOn = YES;
     self.allowSendTypingStatusByChangeWord = YES;
@@ -389,6 +464,11 @@
         }
     }
 
+    // AI style: simplified layout update
+    if (_inputBarStyle == TUIInputBarStyleAI_Minimalist) {
+        [self layoutAIStyle];
+    }
+
     if (self.isFocusOn && [textView.textStorage tui_getPlainString].length == 0) {
         if (_delegate && [_delegate respondsToSelector:@selector(inputTextViewShouldEndTyping:)]) {
             [_delegate inputTextViewShouldEndTyping:textView];
@@ -417,6 +497,12 @@
                        CGRect textFrame = ws.inputTextView.frame;
                        textFrame.size.height += newHeight - oldHeight;
                        ws.inputTextView.frame = textFrame;
+                       
+                       // Update layout for AI style
+                       if (ws.inputBarStyle == TUIInputBarStyleAI_Minimalist) {
+                           [ws layoutAIStyle];
+                       }
+                       
                        [ws layoutButton:newHeight + 2 * TTextView_Margin];
                      }];
 }
@@ -662,6 +748,37 @@
         _recorder.delegate = self;
     }
     return _recorder;
+}
+
+#pragma mark - AI Style Methods
+
+- (void)setInputBarStyle:(TUIInputBarStyle_Minimalist)style {
+    _inputBarStyle = style;
+    [self defaultLayout];
+}
+
+- (void)setAIState:(TUIInputBarAIState_Minimalist)state {
+    _aiState = state;
+    if (_inputBarStyle == TUIInputBarStyleAI_Minimalist) {
+        [self layoutAIStyle];
+    }
+}
+
+- (void)setAITyping:(BOOL)typing {
+    NSLog(@"setAITyping:%d",typing);
+    _aiIsTyping = typing;
+    if (_inputBarStyle == TUIInputBarStyleAI_Minimalist) {
+        [self layoutAIStyle];
+    }
+}
+
+#pragma mark - AI Button Actions
+
+- (void)onAIInterruptButtonClicked:(UIButton *)sender {
+    // Handle AI interrupt logic
+    if (_delegate && [_delegate respondsToSelector:@selector(inputBarDidTouchAIInterrupt:)]) {
+        [_delegate inputBarDidTouchAIInterrupt:self];
+    }
 }
 
 @end

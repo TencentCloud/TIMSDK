@@ -1,4 +1,3 @@
-
 //  Created by Tencent on 2023/06/09.
 //  Copyright © 2023 Tencent. All rights reserved.
 /**
@@ -58,6 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, copy) void (^pinGroupMessageChanged)(NSArray *groupPinList);
 
+@property(nonatomic, copy) void (^steamCellFinishedBlock)(BOOL finished, TUIMessageCellData *cellData);
 
 - (void)sendMessage:(V2TIMMessage *)msg;
 
@@ -70,6 +70,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setConversation:(TUIChatConversationModel *)conversationData;
 
 - (void)sendPlaceHolderUIMessage:(TUIMessageCellData *)cellData;
+
+// AI typing message management
+- (void)createAITypingMessage;
+- (void)restoreAITypingMessageIfNeeded;
+
 /**
  *
  * After enabling multi-selection mode, get the currently selected result
@@ -79,6 +84,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)enableMultiSelectedMode:(BOOL)enable;
 
 - (void)deleteMessages:(NSArray<TUIMessageCellData *> *)uiMsgs;
+- (void)removeUIMsgList:(NSArray<TUIMessageCellData *> *)uiMsgs;
+
 
 /**
  * Conversation read report

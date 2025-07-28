@@ -120,6 +120,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (CGFloat)getTopMarginByCustomView;
 
+/**
+ * Check if AI is currently typing
+ */
+- (BOOL)isAICurrentlyTyping;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -82,6 +82,9 @@
     if ([conv.groupType isEqualToString:@"AVChatRoom"]) {
         return YES;
     }
+    if ([conv.conversationID  containsString:@"@RBT#"]) {
+        return YES;
+    }
     return NO;
 }
 

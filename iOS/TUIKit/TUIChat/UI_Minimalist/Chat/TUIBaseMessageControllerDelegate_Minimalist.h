@@ -118,6 +118,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (CGFloat)getTopMarginByCustomView;
 
+/**
+ * Check if AI is currently typing
+ */
+- (BOOL)isAICurrentlyTyping;
+
 - (void)messageController:(TUIBaseMessageController_Minimalist *)controller onSelectMessageWhenMultiCheckboxAppear:(TUIMessageCellData *)data;
 
 /// Forward text.

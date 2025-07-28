@@ -47,6 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, copy) void (^pinGroupMessageChanged)(NSArray *groupPinList);
 
+@property(nonatomic, copy) void (^steamCellFinishedBlock)(BOOL finished, TUIMessageCellData *cellData);
+
 @property(nonatomic, weak) id<TUIBaseMessageControllerDelegate_Minimalist> delegate;
 
 @property(nonatomic, assign) BOOL isInVC;
@@ -64,6 +66,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)sendPlaceHolderUIMessage:(TUIMessageCellData *)cellData;
 
+// AI typing message management
+- (void)createAITypingMessage;
+- (void)restoreAITypingMessageIfNeeded;
+
 - (void)scrollToBottom:(BOOL)animate;
 
 - (void)setConversation:(TUIChatConversationModel *)conversationData;
@@ -76,6 +82,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)enableMultiSelectedMode:(BOOL)enable;
 
 - (void)deleteMessages:(NSArray<TUIMessageCellData *> *)uiMsgs;
+- (void)removeUIMsgList:(NSArray<TUIMessageCellData *> *)uiMsgs;
 
 /**
  * Conversation read report

@@ -37,6 +37,8 @@ typedef NS_ENUM(NSUInteger, BlurEffectStyle) {
 
 @property(nonatomic, strong) NSMutableArray<TUIChatPopContextExtionItem *> *items;
 
+@property(nonatomic, assign) BOOL configRecentView; // Control whether to show recent view, default YES
+
 - (void)setBlurEffectWithView:(UIView *)view;
 
 - (void)blurDismissViewControllerAnimated:(BOOL)animated completion:(void (^__nullable)(BOOL finished))completion;

@@ -263,6 +263,9 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
         if ([businessID tui_containsString:BussinessID_CustomerService]) {
             return nil;
         }
+        if ([businessID tui_containsString:@"IgnoreMessage"]) {
+            return nil;
+        }
         return [self getUnsupportedCellData:message];
     } else {
         return [self getUnsupportedCellData:message];
@@ -526,6 +529,9 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
         if ([businessID tui_containsString:BussinessID_CustomerService]) {
             return nil;
         }
+        if ([businessID tui_containsString:@"IgnoreMessage"]) {
+            return nil;
+        }
         return TIMCommonLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
     } else {
         return TIMCommonLocalizableString(TUIKitMessageTipsUnsupportCustomMessage);
@@ -677,6 +683,12 @@ static Class<TUIMessageDataProviderDataSource> gDataSourceClass = nil;
             if (src.length > 0 && [src isKindOfClass:[NSString class]]) {
                 return [NSString stringWithFormat:@"%@%@", BussinessID_CustomerService, src];
             }
+        }
+        else if ([param.allKeys containsObject:@"chatbotPlugin"]) {
+            if ([param[@"src"] doubleValue] == 22) {
+                return @"IgnoreMessage";
+            }
+            return @"chatbotPlugin";;
         }
         return nil;
     }

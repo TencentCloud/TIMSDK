@@ -542,6 +542,7 @@
 "TUIKitContactNoBlockList" = "لا توجد أشخاص في قائمة الحظر حاليًا";
 "TUIKitSearchNoResultLists" = "لا توجد نتائج متعلقة بالمحادثات أو جهات الاتصال أو سجل الرسائل";
 "TUIKitTyping" = "الشخص الآخر يكتب حاليًا";
+"TUIKitAITyping" = "إخراج الإجابات_يرجى الانتظار أو انقر لإيقاف الإجابة";
 
 "TUIKitMessageTipsEditGroupAddOptFormat" = "\"%@\" قام بتعديل طريقة الانضمام إلى المجموعة إلى \"%@\"、";
 "TUIKitMessageTipsEditGroupInviteOptFormat" = "\"%@\" قام بتعديل طريقة الدعوة إلى المجموعة إلى \"%@\"、";

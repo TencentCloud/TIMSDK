@@ -73,6 +73,11 @@
 
 - (void)inputControllerDidClickMore:(TUIInputController *)inputController;
 
+/**
+ * Callback when AI interrupt button is clicked
+ */
+- (void)inputControllerDidTouchAIInterrupt:(TUIInputController *)inputController;
+
 @end
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -131,6 +136,34 @@
 @property(nonatomic, strong) TUIMoreView *moreView;
 
 @property(nonatomic, weak) id<TUIInputControllerDelegate> delegate;
+
+/**
+ * AI聊天样式相关属性
+ */
+
+/**
+ * 是否启用AI聊天样式
+ */
+@property(nonatomic, assign) BOOL enableAIStyle;
+
+/**
+ * AI聊天样式相关方法
+ */
+
+/**
+ * 启用/禁用AI聊天样式
+ */
+- (void)enableAIStyle:(BOOL)enable;
+
+/**
+ * 设置AI状态（默认/激活）
+ */
+- (void)setAIState:(TUIInputBarAIState)state;
+
+/**
+ * 设置AI输入状态
+ */
+- (void)setAITyping:(BOOL)typing;
 
 /**
  *  Reset the current input controller.

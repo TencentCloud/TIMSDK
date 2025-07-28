@@ -116,6 +116,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGFloat shortcutViewHeight;
 @property (nonatomic, strong) NSArray<TUIChatShortcutMenuCellData *> *shortcutMenuItems;
 
+- (BOOL)isAIConversation;
 @end
 
 NS_ASSUME_NONNULL_END

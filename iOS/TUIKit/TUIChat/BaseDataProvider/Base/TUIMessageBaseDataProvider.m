@@ -1,4 +1,3 @@
-
 //  Created by Tencent on 2023/06/09.
 //  Copyright © 2023 Tencent. All rights reserved.
 
@@ -19,6 +18,7 @@
 #import "TUIMessageBaseDataProvider.h"
 #import "TUIMessageProgressManager.h"
 #import "TUITypingStatusCellData.h"
+#import "TUIAIPlaceholderTypingMessageManager.h"
 
 /**
  * Date time interval above the message in the UIMessageCell, in seconds, default is (5 * 60)
@@ -165,6 +165,28 @@
                      @strongify(self);
                      [self.dataSource dataProviderDataSourceWillChange:self];
                      @autoreleasepool {
+                         // Check if this is a TUIChatbotMessageCellData and remove AI typing placeholder if exists
+                         if ([newUIMsg isKindOfClass:NSClassFromString(@"TUIChatbotMessageCellData")]) {
+                             NSString *conversationID = self.conversationModel.conversationID;
+                             TUIMessageCellData *currentAITypingMessage = [[TUIAIPlaceholderTypingMessageManager sharedInstance]
+                                                                           getAIPlaceholderTypingMessageForConversation:conversationID];
+                             if (currentAITypingMessage) {
+                                 // Find the index of the AI typing message before removing it
+                                 NSInteger aiTypingIndex = [self.uiMsgs_ indexOfObject:currentAITypingMessage];
+                                 if (aiTypingIndex != NSNotFound) {
+                                     // Remove the AI typing placeholder message
+                                     [self removeUIMsg:currentAITypingMessage];
+                                     // Notify data source about the deletion
+                                     [self.dataSource dataProviderDataSourceChange:self
+                                                                          withType:TUIMessageBaseDataProviderDataSourceChangeTypeDelete
+                                                                           atIndex:aiTypingIndex
+                                                                         animation:YES];
+                                 }
+                                 // Remove from global manager
+                                 [[TUIAIPlaceholderTypingMessageManager sharedInstance] removeAIPlaceholderTypingMessageForConversation:conversationID];
+                             }
+                         }
+                         
                          for (TUIMessageCellData *uiMsg in newUIMsgs) {
                              [self addUIMsg:uiMsg];
                              [self.dataSource dataProviderDataSourceChange:self

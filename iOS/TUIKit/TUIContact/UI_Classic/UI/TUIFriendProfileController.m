@@ -224,8 +224,16 @@
         if (self.friendProfile.userID.length > 0) {
           extensionParam[TUICore_TUIContactExtension_FriendProfileActionMenu_UserID] = self.friendProfile.userID;
         }
-        extensionParam[TUICore_TUIContactExtension_FriendProfileActionMenu_FilterVideoCall] = @(NO);
-        extensionParam[TUICore_TUIContactExtension_FriendProfileActionMenu_FilterAudioCall] = @(NO);
+        BOOL isAIConversation = [self.friendProfile.userID containsString:@"@RBT#"] ;
+
+        if (isAIConversation ) {
+            extensionParam[TUICore_TUIContactExtension_FriendProfileActionMenu_FilterVideoCall] = @(YES);
+            extensionParam[TUICore_TUIContactExtension_FriendProfileActionMenu_FilterAudioCall] = @(YES);
+        }
+        else {
+            extensionParam[TUICore_TUIContactExtension_FriendProfileActionMenu_FilterVideoCall] = @(NO);
+            extensionParam[TUICore_TUIContactExtension_FriendProfileActionMenu_FilterAudioCall] = @(NO);
+        }
         NSArray *extensionList = [TUICore getExtensionList:TUICore_TUIContactExtension_FriendProfileActionMenu_ClassicExtensionID param:extensionParam];
         for (TUIExtensionInfo *info in extensionList) {
           if (info.text && info.onClicked) {

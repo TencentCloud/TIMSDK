@@ -68,6 +68,9 @@
         [[TUIInputBar_Minimalist alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.replyPreviewBar.frame), self.view.frame.size.width, TTextView_Height)];
     _inputBar.delegate = self;
     [self.view addSubview:_inputBar];
+    
+    // Initialize AI style related properties
+    _enableAIStyle = NO;
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification {
@@ -393,6 +396,13 @@
     }
 }
 
+- (void)inputBarDidTouchAIInterrupt:(TUIInputBar_Minimalist *)textView {
+    // Handle AI interrupt logic
+    if (_delegate && [_delegate respondsToSelector:@selector(inputControllerDidTouchAIInterrupt:)]) {
+        [_delegate inputControllerDidTouchAIInterrupt:self];
+    }
+}
+
 - (void)reset {
     if (_status == Input_Status_Input) {
         return;
@@ -622,6 +632,31 @@
         inputHeight = CGRectGetMaxY(_referencePreviewBar.frame);
     }
     return inputHeight;
+}
+
+#pragma mark - AI Style Methods
+
+- (void)enableAIStyle:(BOOL)enable {
+    _enableAIStyle = enable;
+    
+    if (enable) {
+        [_inputBar setInputBarStyle:TUIInputBarStyleAI_Minimalist];
+        [_inputBar setAIState:TUIInputBarAIStateDefault_Minimalist]; // Default state
+    } else {
+        [_inputBar setInputBarStyle:TUIInputBarStyleDefault_Minimalist];
+    }
+}
+
+- (void)setAIState:(TUIInputBarAIState_Minimalist)state {
+    if (_enableAIStyle) {
+        [_inputBar setAIState:state];
+    }
+}
+
+- (void)setAITyping:(BOOL)typing {
+    if (_enableAIStyle) {
+        [_inputBar setAITyping:typing];
+    }
 }
 
 @end

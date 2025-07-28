@@ -44,6 +44,8 @@
 #import "TUIVoiceMessageCell_Minimalist.h"
 #import "TUIMessageCellConfig_Minimalist.h"
 #import "TUIVoiceMessageCell_Minimalist.h"
+#import "TUIChatbotMessagePlaceholderCellData.h"
+#import "TUIAIPlaceholderTypingMessageManager.h"
 
 typedef NSString * CellDataClassName;
 typedef Class<TUIMessageCellProtocol> CellClass;
@@ -183,6 +185,26 @@ typedef NSNumber * HeightNumber;
     }
     [self loadMessage];
     [self loadGroupInfo];
+}
+
+- (void)restoreAITypingMessageIfNeeded {
+    TUIMessageCellData * lastObj = self.messageDataProvider.uiMsgs.lastObject;
+    NSString *conversationID = self.conversationData.conversationID;
+    if ([[TUIAIPlaceholderTypingMessageManager sharedInstance] hasAIPlaceholderTypingMessageForConversation:conversationID]) {
+        TUIMessageCellData *existingAIPlaceHolderMessage = [[TUIAIPlaceholderTypingMessageManager sharedInstance] getAIPlaceholderTypingMessageForConversation:conversationID];
+        if (existingAIPlaceHolderMessage) {
+            BOOL lastObjisTUIChatbotMessageCellData = [lastObj isKindOfClass:NSClassFromString(@"TUIChatbotMessageCellData")];
+            BOOL isSuccess = lastObj.status != Msg_Status_Fail;
+            if (!lastObjisTUIChatbotMessageCellData && isSuccess) {
+                // Add the existing AI typing message to current message list
+                [self sendPlaceHolderUIMessage:existingAIPlaceHolderMessage];
+            }
+            else {
+                [[TUIAIPlaceholderTypingMessageManager sharedInstance] removeAIPlaceholderTypingMessageForConversation:conversationID];
+            }
+            
+        }
+    }
 }
 
 - (void)loadMessage {
@@ -331,6 +353,21 @@ typedef NSNumber * HeightNumber;
     [self scrollToBottom:YES];
 }
 
+- (void)createAITypingMessage {
+    // Create AI typing placeholder message using TUIChatbotMessagePlaceholderCellData
+    TUIChatbotMessagePlaceholderCellData *aiTypingData = [TUIChatbotMessagePlaceholderCellData createAIPlaceholderCellData];
+    
+    // Send as placeholder message
+    [self sendPlaceHolderUIMessage:aiTypingData];
+    
+    // Store reference in global manager for later replacement
+    NSString *conversationID = self.conversationData.conversationID;
+    [[TUIAIPlaceholderTypingMessageManager sharedInstance] setAIPlaceholderTypingMessage:aiTypingData forConversation:conversationID];
+    
+    // Note: AI typing message will be automatically removed when real AI response is received
+    // via onRecvNewMessage in TUIMessageBaseDataProvider
+}
+
 - (void)sendUIMessage:(TUIMessageCellData *)cellData {
     @weakify(self);
     cellData.innerMessage.needReadReceipt = self.isMsgNeedReadReceipt;
@@ -352,12 +389,21 @@ typedef NSNumber * HeightNumber;
           @strongify(self);
           [self reloadUIMessage:cellData];
           [self setUIMessageStatus:cellData status:Msg_Status_Succ];
+            NSDictionary *param = @{
+            TUICore_TUIChatNotify_SendMessageSubKey_Code : @0,
+            TUICore_TUIChatNotify_SendMessageSubKey_Desc : @"",
+            TUICore_TUIChatNotify_SendMessageSubKey_Message : cellData.innerMessage
+            };
+            [TUICore notifyEvent:TUICore_TUIChatNotify subKey:TUICore_TUIChatNotify_SendMessageSubKey object:self param:param];
         }
         FailBlock:^(int code, NSString *desc) {
           @strongify(self);
           [self reloadUIMessage:cellData];
           [self setUIMessageStatus:cellData status:Msg_Status_Fail];
           [self makeSendErrorHud:code desc:desc];
+            NSDictionary *param = @{TUICore_TUIChatNotify_SendMessageSubKey_Code : @(code),
+                                TUICore_TUIChatNotify_SendMessageSubKey_Desc : desc};
+            [TUICore notifyEvent:TUICore_TUIChatNotify subKey:TUICore_TUIChatNotify_SendMessageSubKey object:self param:param];
         }];
 }
 
@@ -556,6 +602,15 @@ typedef NSNumber * HeightNumber;
                                <= Screen_Height);
             if ([lasData.msgID isEqualToString:data.msgID]  && isInBottomPage) {
                 isAllowScroll2Bottom = YES;
+            }
+        }
+        //only for chatboxcell
+        if (self.steamCellFinishedBlock)  {
+            if ([param[@"isFinished"] isEqualToString:@"1"]) {
+                self.steamCellFinishedBlock(YES,data);
+            }
+            else {
+                self.steamCellFinishedBlock(NO,data);
             }
         }
         [self.messageCellConfig removeHeightCacheOfMessageCellData:data];
@@ -1028,7 +1083,6 @@ static NSMutableArray *reloadMsgIndexs = nil;
         [self.delegate messageController:self onSelectMessageContent:cell];
     }
 }
-
 - (void)showContextWindow:(TUIMessageCell *)cell {
     CGRect frame = [UIApplication.sharedApplication.keyWindow convertRect:cell.container.frame fromView:cell];
     TUIChatPopContextController *alertController = [[TUIChatPopContextController alloc] init];
@@ -1145,6 +1199,60 @@ static NSMutableArray *reloadMsgIndexs = nil;
     }
     if ([self isAddPin:imMsg]) {
         [items addObject:[self setupGroupPinAction:alertController targetCell:cell]];
+    }
+}
+
+- (void)handleAIConversationLongPress:(TUIMessageCell *)cell {
+    // Check if AI is currently typing, if so, don't allow long press
+    if (_delegate && [_delegate respondsToSelector:@selector(isAICurrentlyTyping)] && [_delegate isAICurrentlyTyping]) {
+        return;
+    }
+    
+    TUIMessageCellData *data = cell.messageData;
+    
+    CGRect frame = [UIApplication.sharedApplication.keyWindow convertRect:cell.container.frame fromView:cell];
+    TUIChatPopContextController *alertController = [[TUIChatPopContextController alloc] init];
+    alertController.alertViewCellData = cell.messageData;
+    alertController.originFrame = frame;
+    alertController.alertCellClass = cell.class;
+    alertController.configRecentView = NO;
+    // blur effect
+    [alertController setBlurEffectWithView:self.navigationController.view];
+    // config
+    [self configAIItems:alertController targetCell:cell];
+    __weak typeof(cell) weakCell = cell;
+    __weak typeof(self) weakSelf = self;
+    alertController.viewWillShowHandler = ^(TUIMessageCell *_Nonnull alertView) {
+      alertView.delegate = weakSelf;
+    };
+
+    alertController.dismissComplete = ^{
+      if (weakCell) {
+          weakCell.container.hidden = NO;
+      }
+    };
+    [self.navigationController presentViewController:alertController animated:NO completion:nil];
+    self.popAlertController = alertController;
+}
+
+- (void)configAIItems:(TUIChatPopContextController *)alertController targetCell:(TUIMessageCell *)cell {
+    NSMutableArray *items = [NSMutableArray arrayWithCapacity:6];
+    
+    V2TIMMessage *imMsg = cell.messageData.innerMessage;
+
+    if ([self isAddCopy:imMsg data:cell.messageData]) {
+        [items addObject:[self setupCopyAction:alertController targetCell:cell]];
+    }
+    if ([self isAddForward:imMsg]) {
+        [items addObject:[self setupForwardAction:alertController targetCell:cell]];
+    }
+    if ([self isAddDelete]) {
+        [items addObject:[self setupDeleteAction:alertController targetCell:cell]];
+    }
+    NSMutableArray *sortedArray = [self sortItems:items];
+    NSMutableArray *allPageItemsArray = [self pageItems:sortedArray inAlertController:alertController];
+    if (allPageItemsArray.count > 0) {
+        alertController.items = allPageItemsArray[0];
     }
 }
 
@@ -1305,6 +1413,11 @@ static NSMutableArray *reloadMsgIndexs = nil;
         return;
     }
     self.menuUIMsg = data;
+    // Check if this is an AI conversation and handle separately
+    if ([self.conversationData isAIConversation]) {
+        [self handleAIConversationLongPress:cell];
+        return;
+    }
     [self showContextWindow:cell];
 }
 
@@ -1568,6 +1681,10 @@ static NSMutableArray *reloadMsgIndexs = nil;
                                    NSLog(@"deleteMessages failed!");
                                    NSAssert(NO, desc);
                                  }];
+}
+
+- (void)removeUIMsgList:(NSArray<TUIMessageCellData *> *)uiMsgs {
+    [self.messageDataProvider removeUIMsgList:uiMsgs];
 }
 
 - (void)clickTextMessage:(TUITextMessageCell_Minimalist *)cell {

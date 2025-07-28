@@ -349,6 +349,7 @@
 
                               if (isFirstLoad) {
                                   [self scrollToBottom:NO];
+                                  [self restoreAITypingMessageIfNeeded];
                               } else {
                                   if (order) {
                                       NSInteger index = 0;

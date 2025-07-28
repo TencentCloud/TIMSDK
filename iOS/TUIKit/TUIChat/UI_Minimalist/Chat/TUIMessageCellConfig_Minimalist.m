@@ -64,6 +64,8 @@ static NSMutableDictionary *gCustomMessageInfoMap = nil;
     [self registerCustomMessageCell:@"TUIOrderCell_Minimalist" messageCellData:@"TUIOrderCellData" forBusinessID:BussinessID_Order];
     [self registerCustomMessageCell:@"TUIMessageCell_Minimalist" messageCellData:@"TUITypingStatusCellData" forBusinessID:BussinessID_Typing];
     [self registerCustomMessageCell:@"TUISystemMessageCell" messageCellData:@"TUILocalTipsCellData" forBusinessID:@"local_tips"];
+    [self registerCustomMessageCell:@"TUIChatbotMessageCell_Minimalist" messageCellData:@"TUIChatbotMessageCellData" forBusinessID:@"chatbotPlugin"];
+    [self registerCustomMessageCell:@"TUIChatbotMessagePlaceholderCell_Minimalist" messageCellData:@"TUIChatbotMessagePlaceholderCellData" forBusinessID:@"TUIChatbotMessagePlaceholderCellData"];
 
 }
 

@@ -37,6 +37,9 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        _inputBarStyle = TUIInputBarStyleDefault;
+        _aiState = TUIInputBarAIStateDefault;
+        _aiIsTyping = NO;
         [self setupViews];
         [self defaultLayout];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onThemeChanged) name:TUIDidApplyingThemeChangedNotfication object:nil];
@@ -106,7 +109,34 @@
     [_inputTextView setReturnKeyType:UIReturnKeySend];
     [self addSubview:_inputTextView];
 
+    // 创建AI相关按钮
+    [self setupAIButtons];
+
     [self applyBorderTheme];
+}
+
+- (void)setupAIButtons {
+    // AI interrupt button
+    _aiInterruptButton = [[UIButton alloc] init];
+    [_aiInterruptButton setBackgroundImage:TUIChatBundleThemeImage(@"chat_ai_interrupt_icon_img",@"chat_ai_interrupt_icon") forState:UIControlStateNormal];
+    [_aiInterruptButton.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
+    [_aiInterruptButton.layer setCornerRadius:16.0f];
+    [_aiInterruptButton.layer setMasksToBounds:YES];
+    [_aiInterruptButton addTarget:self action:@selector(onAIInterruptButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    _aiInterruptButton.hidden = YES;
+    [self addSubview:_aiInterruptButton];
+    
+    // AI send button
+    _aiSendButton = [[UIButton alloc] init];
+    [_aiSendButton setTitle:TIMCommonLocalizableString(Send) forState:UIControlStateNormal];
+    [_aiSendButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_aiSendButton.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
+    [_aiSendButton setBackgroundColor:TUIChatDynamicColor(@"", @"#0ABF77")];
+    [_aiSendButton.layer setCornerRadius:3.0f];
+    [_aiSendButton.layer setMasksToBounds:YES];
+    [_aiSendButton addTarget:self action:@selector(onAISendButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    _aiSendButton.hidden = YES;
+    [self addSubview:_aiSendButton];
 }
 
 - (void)onThemeChanged {
@@ -136,8 +166,15 @@
         make.height.mas_equalTo(TLine_Heigh);
     }];
 
+    if (_inputBarStyle == TUIInputBarStyleAI) {
+        [self layoutAIStyle];
+    } else {
+        [self layoutDefaultStyle];
+    }
+}
+
+- (void)layoutDefaultStyle {
     CGSize buttonSize = TTextView_Button_Size;
-    CGFloat buttonOriginY = (TTextView_Height - buttonSize.height) * 0.5;
 
     [_micButton mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.leading.mas_equalTo(self.mas_leading);
@@ -154,11 +191,13 @@
         make.size.mas_equalTo(buttonSize);
         make.centerY.mas_equalTo(self);
     }];
+    
     [_faceButton mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.trailing.mas_equalTo(_moreButton.mas_leading).mas_offset(- TTextView_Margin);
         make.size.mas_equalTo(buttonSize);
         make.centerY.mas_equalTo(self);
     }];
+    
     [_recordButton mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.leading.mas_equalTo(_micButton.mas_trailing).mas_offset(10);
         make.trailing.mas_equalTo(_faceButton.mas_leading).mas_offset(-10);;
@@ -177,6 +216,53 @@
         make.height.mas_equalTo(TTextView_TextView_Height_Min);
         make.centerY.mas_equalTo(self);
     }];
+    
+    // Hide AI buttons
+    _aiInterruptButton.hidden = YES;
+    _aiSendButton.hidden = YES;
+}
+
+- (void)layoutAIStyle {
+    // Hide default buttons
+    _micButton.hidden = YES;
+    _faceButton.hidden = YES;
+    _moreButton.hidden = YES;
+    _recordButton.hidden = YES;
+    _keyboardButton.hidden = YES;
+    
+    if (_aiState == TUIInputBarAIStateDefault) {
+        // AI default state: large input box only
+        [_inputTextView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(self.mas_leading).mas_offset(16);
+            make.trailing.mas_equalTo(self.mas_trailing).mas_offset(-16);
+            make.height.mas_equalTo(TTextView_TextView_Height_Min);
+            make.centerY.mas_equalTo(self);
+        }];
+        
+        _aiInterruptButton.hidden = YES;
+        _aiSendButton.hidden = YES;
+    } else {
+        // AI active state: input box on left, button on right
+        UIButton *rightButton = _aiIsTyping ? _aiInterruptButton : _aiSendButton;
+        UIButton *hiddenButton = _aiIsTyping ? _aiSendButton : _aiInterruptButton;
+        
+        [_inputTextView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.leading.mas_equalTo(self.mas_leading).mas_offset(16);
+            make.trailing.mas_equalTo(rightButton.mas_leading).mas_offset(-12);
+            make.height.mas_equalTo(TTextView_TextView_Height_Min);
+            make.centerY.mas_equalTo(self);
+        }];
+        
+        [rightButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.trailing.mas_equalTo(self.mas_trailing).mas_offset(-16);
+            make.width.mas_equalTo(_aiIsTyping ? 32 : 60);
+            make.height.mas_equalTo(_aiIsTyping ? 32 : 32);
+            make.centerY.mas_equalTo(self);
+        }];
+        
+        rightButton.hidden = NO;
+        hiddenButton.hidden = YES;
+    }
 }
 
 - (void)layoutButton:(CGFloat)height {
@@ -208,6 +294,31 @@
 
     if (_delegate && [_delegate respondsToSelector:@selector(inputBar:didChangeInputHeight:)]) {
         [_delegate inputBar:self didChangeInputHeight:offset];
+    }
+}
+
+#pragma mark - AI Style Methods
+
+- (void)setInputBarStyle:(TUIInputBarStyle)style {
+    _inputBarStyle = style;
+    [self defaultLayout];
+}
+
+- (void)setAIState:(TUIInputBarAIState)state {
+    _aiState = state;
+    if (_inputBarStyle == TUIInputBarStyleAI) {
+        [self layoutAIStyle];
+    }
+}
+
+- (void)setAITyping:(BOOL)typing {
+    NSLog(@"setAITyping:%d",typing);
+    _aiIsTyping = typing;
+    if (typing) {
+        [self setAIState:TUIInputBarAIStateActive];
+    }
+    if (_inputBarStyle == TUIInputBarStyleAI && _aiState == TUIInputBarAIStateActive) {
+        [self layoutAIStyle];
     }
 }
 
@@ -342,9 +453,11 @@
 #pragma mark - Text input
 #pragma mark-- UITextViewDelegate
 - (void)textViewDidBeginEditing:(UITextView *)textView {
-    self.keyboardButton.hidden = YES;
-    self.micButton.hidden = NO;
-    self.faceButton.hidden = NO;
+    if (_inputBarStyle == TUIInputBarStyleDefault) {
+        self.keyboardButton.hidden = YES;
+        self.micButton.hidden = NO;
+        self.faceButton.hidden = NO;
+    }
 
     self.isFocusOn = YES;
     self.allowSendTypingStatusByChangeWord = YES;
@@ -379,11 +492,27 @@
         }
     }
 
+    // AI style: state switching logic
+    if (_inputBarStyle == TUIInputBarStyleAI) {
+        if (_aiIsTyping) {
+            // When AI is typing, always stay in active state
+            [self setAIState:TUIInputBarAIStateActive];
+        } else {
+            // When AI is not typing, decide based on user input state
+            if ([textView.textStorage tui_getPlainString].length > 0) {
+                [self setAIState:TUIInputBarAIStateActive];
+            } else {
+                [self setAIState:TUIInputBarAIStateDefault];
+            }
+        }
+    }
+    
     if (self.isFocusOn && [textView.textStorage tui_getPlainString].length == 0) {
         if (_delegate && [_delegate respondsToSelector:@selector(inputTextViewShouldEndTyping:)]) {
             [_delegate inputTextViewShouldEndTyping:textView];
         }
     }
+    
     if (self.inputBarTextChanged) {
         self.inputBarTextChanged(_inputTextView);
     }
@@ -405,10 +534,23 @@
     [UIView animateWithDuration:0.3
                      animations:^{
                        [ws.inputTextView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                         make.leading.mas_equalTo(ws.micButton.mas_trailing).mas_offset(10);
-                         make.trailing.mas_equalTo(ws.faceButton.mas_leading).mas_offset(-10);
+                         if (ws.inputBarStyle == TUIInputBarStyleAI) {
+                             // AI style layout update
+                             if (ws.aiState == TUIInputBarAIStateDefault) {
+                                 make.leading.mas_equalTo(ws.mas_leading).mas_offset(16);
+                                 make.trailing.mas_equalTo(ws.mas_trailing).mas_offset(-16);
+                             } else {
+                                 UIButton *rightButton = ws.aiIsTyping ? ws.aiInterruptButton : ws.aiSendButton;
+                                 make.leading.mas_equalTo(ws.mas_leading).mas_offset(16);
+                                 make.trailing.mas_equalTo(rightButton.mas_leading).mas_offset(-12);
+                             }
+                         } else {
+                             // Default style layout update
+                             make.leading.mas_equalTo(ws.micButton.mas_trailing).mas_offset(10);
+                             make.trailing.mas_equalTo(ws.faceButton.mas_leading).mas_offset(-10);
+                         }
                          make.height.mas_equalTo(newHeight);
-                         make.centerY.mas_equalTo(self);
+                         make.centerY.mas_equalTo(ws);
                        }];
                        [ws layoutButton:newHeight + 2 * TTextView_Margin];
                      }];
@@ -691,6 +833,26 @@
         _recordView.frame = self.frame;
     }
     return _recordView;
+}
+
+#pragma mark - AI Button Actions
+
+- (void)onAIInterruptButtonClicked:(UIButton *)sender {
+    // Handle AI interrupt logic
+    if (_delegate && [_delegate respondsToSelector:@selector(inputBarDidTouchAIInterrupt:)]) {
+        [_delegate inputBarDidTouchAIInterrupt:self];
+    }
+}
+
+- (void)onAISendButtonClicked:(UIButton *)sender {
+    // Handle AI send logic
+    NSString *text = [_inputTextView.textStorage tui_getPlainString];
+    if (text.length > 0) {
+        if (_delegate && [_delegate respondsToSelector:@selector(inputBar:didSendText:)]) {
+            [_delegate inputBar:self didSendText:text];
+            [self clearInput];
+        }
+    }
 }
 
 @end

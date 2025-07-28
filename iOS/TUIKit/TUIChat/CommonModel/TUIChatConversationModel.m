@@ -28,4 +28,17 @@
     }
     return self;
 }
+
+- (BOOL)isAIConversation {
+    BOOL isAIConversation = [self.conversationID containsString:@"@RBT#"] ||
+                           [self.conversationID hasPrefix:@"@RBT#"];
+    return isAIConversation;
+}
+
+- (BOOL)msgNeedReadReceipt {
+    if ([self isAIConversation]) {
+        return NO;
+    }
+    return _msgNeedReadReceipt;
+}
 @end
