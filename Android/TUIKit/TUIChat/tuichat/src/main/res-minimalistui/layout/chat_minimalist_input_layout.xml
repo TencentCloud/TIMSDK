@@ -102,10 +102,12 @@
             android:layout_marginStart="6dp"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
+            android:clipToPadding="false"
+            android:clipChildren="false"
             android:background="@drawable/chat_minimalist_input_edittext_border"
             android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="4dp">
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp">
 
             <com.tencent.qcloud.tuikit.tuichat.component.inputedittext.TIMMentionEditText
                 android:id="@+id/input_edit_text"
@@ -131,8 +133,24 @@
                 android:layout_gravity="center_vertical"
                 android:scaleType="centerCrop"
                 android:padding="8dp"
+                android:layout_marginEnd="-8dp"
                 android:background="@drawable/common_item_pressed_effect_background"
                 android:src="@drawable/chat_minimalist_input_face_icon" />
+
+            <ImageView
+                android:id="@+id/chatbot_interrupt_button"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="bottom|end"
+                android:scaleType="centerCrop"
+                android:padding="8dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginEnd="-8dp"
+                android:background="@drawable/common_item_pressed_effect_background"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:src="@drawable/chat_chatbot_interrupt_icon" />
+
 
         </LinearLayout>
 

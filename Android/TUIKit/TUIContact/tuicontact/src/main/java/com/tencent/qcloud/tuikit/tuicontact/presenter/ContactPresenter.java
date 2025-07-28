@@ -9,6 +9,7 @@ import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactConstants;
@@ -155,6 +156,9 @@ public class ContactPresenter {
             @Override
             public void onSuccess(List<ContactItemBean> data) {
                 TUIContactLog.i(TAG, "load data source success , loadType = " + dataSourceType);
+                if (dataSourceType == IContactListView.DataSource.FRIEND_LIST) {
+                    filterContactBeanList(data);
+                }
                 onDataLoaded(data, dataSourceType);
             }
 
@@ -188,6 +192,16 @@ public class ContactPresenter {
                 break;
             default:
                 break;
+        }
+    }
+
+    private void filterContactBeanList(List<ContactItemBean> data) {
+        Iterator<ContactItemBean> iterator = data.iterator();
+        while (iterator.hasNext()) {
+            ContactItemBean loadedBean = iterator.next();
+            if (TIMCommonUtil.isChatbot(loadedBean.getId())) {
+                iterator.remove();
+            }
         }
     }
 

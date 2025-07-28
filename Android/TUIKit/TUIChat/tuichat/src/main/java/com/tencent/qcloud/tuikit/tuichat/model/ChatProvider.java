@@ -455,29 +455,28 @@ public class ChatProvider {
         return msgId;
     }
 
-    public String insertMessage(TUIMessageBean message, String receiver, boolean isGroup, TUIValueCallback<TUIMessageBean> callback)  {
+    public String insertMessage(TUIMessageBean message, String receiver, boolean isGroup, TUIValueCallback<TUIMessageBean> callback) {
         V2TIMMessage v2TIMMessage = message.getV2TIMMessage();
         if (v2TIMMessage == null) {
             return null;
         }
-        String sender =  TUILogin.getLoginUser();
+        String sender = TUILogin.getLoginUser();
         String messageID;
         if (isGroup) {
-            messageID = V2TIMManager.getMessageManager().insertGroupMessageToLocalStorage(
-                    v2TIMMessage, receiver, sender, new V2TIMValueCallback<V2TIMMessage>() {
-                @Override
-                public void onSuccess(V2TIMMessage v2TIMMessage) {
-                    TUIValueCallback.onSuccess(callback, ChatMessageParser.parsePresentMessage(v2TIMMessage));
-                }
+            messageID =
+                V2TIMManager.getMessageManager().insertGroupMessageToLocalStorage(v2TIMMessage, receiver, sender, new V2TIMValueCallback<V2TIMMessage>() {
+                    @Override
+                    public void onSuccess(V2TIMMessage v2TIMMessage) {
+                        TUIValueCallback.onSuccess(callback, ChatMessageParser.parsePresentMessage(v2TIMMessage));
+                    }
 
-                @Override
-                public void onError(int code, String desc) {
-                    TUIValueCallback.onError(callback, code, desc);
-                }
-            });
+                    @Override
+                    public void onError(int code, String desc) {
+                        TUIValueCallback.onError(callback, code, desc);
+                    }
+                });
         } else {
-            messageID = V2TIMManager.getMessageManager().insertC2CMessageToLocalStorage(
-                    v2TIMMessage, receiver, sender, new V2TIMValueCallback<V2TIMMessage>() {
+            messageID = V2TIMManager.getMessageManager().insertC2CMessageToLocalStorage(v2TIMMessage, receiver, sender, new V2TIMValueCallback<V2TIMMessage>() {
                 @Override
                 public void onSuccess(V2TIMMessage v2TIMMessage) {
                     TUIValueCallback.onSuccess(callback, ChatMessageParser.parsePresentMessage(v2TIMMessage));
@@ -650,8 +649,7 @@ public class ChatProvider {
                 List<TUIMessageBean> presentMessageList = new ArrayList<>();
                 if (messageBeans != null) {
                     for (TUIMessageBean message : messageBeans) {
-                        if (message != null && message.getV2TIMMessage() != null
-                                && message.getV2TIMMessage().getStatus() != V2TIM_MSG_STATUS_HAS_DELETED) {
+                        if (message != null && message.getV2TIMMessage() != null && message.getV2TIMMessage().getStatus() != V2TIM_MSG_STATUS_HAS_DELETED) {
                             presentMessageList.add(message);
                         }
                     }
@@ -1091,5 +1089,33 @@ public class ChatProvider {
                 TUIValueCallback.onError(callback, code, desc);
             }
         });
+    }
+
+    public void clearHistoryMessage(String chatID, boolean isGroup, TUICallback callback) {
+        if (isGroup) {
+            V2TIMManager.getMessageManager().clearGroupHistoryMessage(chatID, new V2TIMCallback() {
+                @Override
+                public void onSuccess() {
+                    TUICallback.onSuccess(callback);
+                }
+
+                @Override
+                public void onError(int code, String desc) {
+                    TUICallback.onError(callback, code, desc);
+                }
+            });
+        } else {
+            V2TIMManager.getMessageManager().clearC2CHistoryMessage(chatID, new V2TIMCallback() {
+                @Override
+                public void onSuccess() {
+                    TUICallback.onSuccess(callback);
+                }
+
+                @Override
+                public void onError(int code, String desc) {
+                    TUICallback.onError(callback, code, desc);
+                }
+            });
+        }
     }
 }

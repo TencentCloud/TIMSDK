@@ -339,5 +339,8 @@
     <string name="profile_remark_edit">تعديل الملاحظات</string>
     <string name="contact_modify_remark_rule">يسمح فقط بالأحرف الصينية والأحرف اللاتينية والأرقام والشرطة السفلية</string>
     <string name="chat_add_friend">إضافة صديق</string>
+    <string name="chat_ai_interrupt_text" translatable="false">انقر للقطع</string>
+    <string name="chat_ai_waiting_tips">يرجى الانتظار للمتابعة أو النقر لإيقاف الإجابة</string>
+    <string name="chat_forward_to_ai_tips">لا يمكن إعادة توجيه الرسائل إلى الذكاء الاصطناعي</string>
 
 </resources>

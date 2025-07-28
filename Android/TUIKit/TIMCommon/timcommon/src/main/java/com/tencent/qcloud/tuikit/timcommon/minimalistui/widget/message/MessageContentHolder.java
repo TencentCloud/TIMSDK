@@ -11,10 +11,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
@@ -178,54 +181,62 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
 
     private void setEventListener(TUIMessageBean msg) {
         if (!isForwardMode && !isMessageDetailMode) {
-            if (onItemClickListener != null) {
-                msgContentFrame.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
+            msgContentFrame.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (onItemClickListener != null) {
                         onItemClickListener.onMessageLongClick(msgArea, msg);
-                        return true;
                     }
-                });
+                    return true;
+                }
+            });
 
-                msgArea.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
+            msgArea.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (onItemClickListener != null) {
                         onItemClickListener.onMessageLongClick(msgArea, msg);
-                        return true;
                     }
-                });
+                    return true;
+                }
+            });
 
-                leftUserIcon.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+            leftUserIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onItemClickListener != null) {
                         onItemClickListener.onUserIconClick(view, msg);
                     }
-                });
-                leftUserIcon.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
+                }
+            });
+            leftUserIcon.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (onItemClickListener != null) {
                         onItemClickListener.onUserIconLongClick(view, msg);
-                        return true;
                     }
-                });
-                rightUserIcon.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                    return true;
+                }
+            });
+            rightUserIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onItemClickListener != null) {
                         onItemClickListener.onUserIconClick(view, msg);
                     }
-                });
-            }
+                }
+            });
+        }
 
-            if (msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL) {
-                msgContentFrame.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (onItemClickListener != null) {
-                            onItemClickListener.onMessageClick(msgContentFrame, msg);
-                        }
+        if (msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL) {
+            msgContentFrame.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onMessageClick(msgContentFrame, msg);
                     }
-                });
-            }
+                }
+            });
         }
     }
 
@@ -445,14 +456,23 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             renderedView = rightUserIcon;
         }
 
+        Glide.with(itemView.getContext()).clear(renderedView);
+        int defaultIconResId = TUIThemeManager.getAttrResId(leftUserIcon.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_user_icon);
+        RequestBuilder<Drawable> placeholderRequest = Glide.with(itemView.getContext())
+                .load(defaultIconResId)
+                .transform(new RoundedCorners(radius))
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
         RequestBuilder<Drawable> errorRequestBuilder = Glide.with(itemView.getContext())
-                .load(TUIThemeManager.getAttrResId(leftUserIcon.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_user_icon))
-                .placeholder(TUIThemeManager.getAttrResId(leftUserIcon.getContext(), com.tencent.qcloud.tuikit.timcommon.R.attr.core_default_user_icon))
-                .transform(new RoundedCorners(radius));
-
+                .load(defaultIconResId)
+                .transform(new RoundedCorners(radius))
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
         Glide.with(itemView.getContext())
                 .load(faceUrl)
+                .thumbnail(placeholderRequest)
                 .transform(new RoundedCorners(radius))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .skipMemoryCache(false)
+                .dontAnimate()
                 .error(errorRequestBuilder)
                 .into(renderedView);
     }
@@ -503,7 +523,8 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         optimizeMessageContent(isShowAvatar);
     }
 
-    protected void optimizeMessageContent(boolean isShowAvatar) {}
+    protected void optimizeMessageContent(boolean isShowAvatar) {
+    }
 
     private void setMessageGravity() {
         if (isLayoutOnStart) {
@@ -641,7 +662,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         Map<String, Object> param = new HashMap<>();
         param.put(TUIConstants.TUIChat.Extension.MessageReactPreviewExtension.MESSAGE, messageBean);
         param.put(TUIConstants.TUIChat.Extension.MessageReactPreviewExtension.VIEW_TYPE,
-            TUIConstants.TUIChat.Extension.MessageReactPreviewExtension.VIEW_TYPE_MINIMALIST);
+                TUIConstants.TUIChat.Extension.MessageReactPreviewExtension.VIEW_TYPE_MINIMALIST);
         TUICore.raiseExtension(TUIConstants.TUIChat.Extension.MessageReactPreviewExtension.EXTENSION_ID, reactionArea, param);
     }
 

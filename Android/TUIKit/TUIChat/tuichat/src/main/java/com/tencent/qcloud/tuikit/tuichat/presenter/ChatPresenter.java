@@ -9,13 +9,16 @@ import android.util.Log;
 import android.util.Pair;
 import android.webkit.MimeTypeMap;
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import com.google.gson.Gson;
 import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMSendCallback;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.push.OfflinePushExtInfo;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
@@ -27,6 +30,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.component.highlight.HighlightPresenter;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
@@ -40,6 +44,8 @@ import com.tencent.qcloud.tuikit.tuichat.bean.LocalTipsMessage;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflinePushInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.UserStatusBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.ChatbotMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.ChatbotPlaceholderMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FaceMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
@@ -73,6 +79,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 
@@ -134,6 +141,12 @@ public abstract class ChatPresenter {
     private static final Map<String, TUIMessageBean> processingMessages = Collections.synchronizedMap(new LinkedHashMap<>());
     private static final List<WeakReference<ChatPresenter>> existsInstances = new CopyOnWriteArrayList<>();
 
+    public MutableLiveData<Boolean> isChatbotMessageFinished = new MutableLiveData<>(true);
+    private TUIMessageBean receivingChatbotMessage = null;
+    private static final int SEND_INTERRUPT_MESSAGE_INTERVAL = 1000;
+    private long lastSendInterruptMessageTime = 0L;
+    private static final Map<String, TUIMessageBean> waitingResponseMessages = Collections.synchronizedMap(new LinkedHashMap<>());
+
     public ChatPresenter() {
         TUIChatLog.i(TAG, "ChatPresenter Init");
         existsInstances.add(new WeakReference<>(this));
@@ -185,6 +198,27 @@ public abstract class ChatPresenter {
     public void clearMessage() {
         loadedMessageInfoList.clear();
         updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_REFRESH, 0);
+    }
+
+    public void clearHistoryMessage() {
+        if (!isChatbotMessageFinished.getValue()) {
+            ToastUtil.toastShortMessage(TUIChatService.getAppContext().getString(R.string.chat_ai_waiting_tips));
+            return;
+        }
+        waitingResponseMessages.remove(getChatInfo().getId());
+
+        clearMessage();
+        provider.clearHistoryMessage(getChatInfo().getId(), getChatInfo() instanceof GroupChatInfo, new TUICallback() {
+            @Override
+            public void onSuccess() {
+                TUIChatLog.i(TAG, "clearHistoryMessage success");
+            }
+
+            @Override
+            public void onError(int errorCode, String errorMessage) {
+                TUIChatLog.e(TAG, "clearHistoryMessage failed, errorCode: " + errorCode + ", errorMessage: " + errorMessage);
+            }
+        });
     }
 
     public void scrollToNewestMessage() {
@@ -519,6 +553,7 @@ public abstract class ChatPresenter {
         }
         if (!isHaveMoreNewMessage) {
             addProcessingMessages(data);
+            addChatbotPlaceHolderMessage(data);
         }
         if (isForward || isTwoWay || isLocate) {
             removeDuplication(data);
@@ -542,6 +577,21 @@ public abstract class ChatPresenter {
         }
 
         isLoading = false;
+    }
+
+    protected void addChatbotPlaceHolderMessage(List<TUIMessageBean> data) {
+        ChatInfo chatInfo = getChatInfo();
+        if (!data.isEmpty()) {
+            TUIMessageBean messageBean = data.get(data.size() - 1);
+            if (!(messageBean instanceof ChatbotMessageBean) && messageBean.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL) {
+                TUIMessageBean placeholderMessage = waitingResponseMessages.get(chatInfo.getId());
+                if (placeholderMessage != null) {
+                    data.add(placeholderMessage);
+                }
+            } else {
+                waitingResponseMessages.remove(chatInfo.getId());
+            }
+        }
     }
 
     protected void addProcessingMessages(List<TUIMessageBean> data) {
@@ -581,35 +631,34 @@ public abstract class ChatPresenter {
     protected void processQuoteMessage(List<TUIMessageBean> data) {
         List<String> msgIdList = new ArrayList<>();
         List<QuoteMessageBean> quoteMessageList = new ArrayList<>();
-        boolean hasQuoteMessage = false;
         for (TUIMessageBean messageBean : data) {
             if (messageBean instanceof QuoteMessageBean) {
                 quoteMessageList.add((QuoteMessageBean) messageBean);
                 msgIdList.add(((QuoteMessageBean) messageBean).getOriginMsgId());
-                hasQuoteMessage = true;
             }
         }
         Set<TUIMessageBean> updateSet = new HashSet<>();
         updateSet.addAll(quoteMessageList);
         CountDownLatch latch = new CountDownLatch(2);
         List<TUIMessageBean> originMessageBeans = new ArrayList<>();
-        Iterator<String> iterator = msgIdList.iterator();
-        List<TUIMessageBean> loadedData = getLoadedMessageList();
-        while (iterator.hasNext()) {
-            String msgID = iterator.next();
-            for (TUIMessageBean messageBean : loadedData) {
-                if (TextUtils.equals(messageBean.getId(), msgID)) {
-                    originMessageBeans.add(messageBean);
-                    iterator.remove();
-                    break;
+        if (!msgIdList.isEmpty()) {
+            Iterator<String> iterator = msgIdList.iterator();
+            List<TUIMessageBean> loadedData = getLoadedMessageList();
+            while (iterator.hasNext()) {
+                String msgID = iterator.next();
+                for (TUIMessageBean messageBean : loadedData) {
+                    if (TextUtils.equals(messageBean.getId(), msgID)) {
+                        originMessageBeans.add(messageBean);
+                        iterator.remove();
+                        break;
+                    }
                 }
             }
         }
-        boolean finalHasQuoteMessage = hasQuoteMessage;
         Runnable findMessageRunnable = new Runnable() {
             @Override
             public void run() {
-                if (!finalHasQuoteMessage) {
+                if (msgIdList.isEmpty()) {
                     latch.countDown();
                     return;
                 }
@@ -757,8 +806,8 @@ public abstract class ChatPresenter {
             TUIChatLog.w(TAG, "addMessage unSafetyCall");
             return;
         }
+        processChatbotMessage(messageInfo);
         addMessageAfterPreProcess(messageInfo);
-
         processMessageAsync(Collections.singletonList(messageInfo));
     }
 
@@ -1089,6 +1138,7 @@ public abstract class ChatPresenter {
         String msgId = provider.sendMessage(message, getChatInfo(), onlineUserOnly, new IUIKitCallback<TUIMessageBean>() {
             @Override
             public void onSuccess(TUIMessageBean data) {
+                processSendToChatbotMessage(getChatInfo().getId(), getChatInfo() instanceof GroupChatInfo);
                 message.setStatus(TUIMessageBean.MSG_STATUS_SEND_SUCCESS);
                 message.setSending(false);
                 ProgressPresenter.updateProgress(data.getId(), 100);
@@ -1501,6 +1551,11 @@ public abstract class ChatPresenter {
             return;
         }
 
+        if (TIMCommonUtil.isChatbot(id)) {
+            ToastUtil.toastShortMessage(TUIChatService.getAppContext().getString(R.string.chat_forward_to_ai_tips));
+            return;
+        }
+
         for (TUIMessageBean messageBean : msgInfos) {
             if (messageBean instanceof TextMessageBean) {
                 TUIChatLog.d(TAG, "chatprensetor forwardMessage onTextSelected selectedText = " + ((TextMessageBean) messageBean).getSelectText());
@@ -1886,6 +1941,7 @@ public abstract class ChatPresenter {
     }
 
     protected void onRecvMessageModified(TUIMessageBean messageBean) {
+        processChatbotMessage(messageBean);
         int size = loadedMessageInfoList.size();
         boolean isFound = false;
         for (int i = 0; i < size; i++) {
@@ -2108,6 +2164,93 @@ public abstract class ChatPresenter {
                 TUIChatLog.i(TAG, "insertMessage failed, errorCode: " + errorCode + ", errorMessage: " + errorMessage);
             }
         });
+    }
+
+    private void processSendToChatbotMessage(String chatID, boolean isGroup) {
+        if (TIMCommonUtil.isChatbot(chatID)) {
+            ChatbotPlaceholderMessageBean placeholderMessageBean = new ChatbotPlaceholderMessageBean();
+            String messageID = "Chatbot" + UUID.randomUUID().toString();
+            placeholderMessageBean.setId(messageID);
+            placeholderMessageBean.setProcessing(true);
+            placeholderMessageBean.setSelf(false);
+            if (isGroup) {
+                placeholderMessageBean.setGroupId(chatID);
+            } else {
+                placeholderMessageBean.setUserId(chatID);
+            }
+
+            removeWaitingResponseMessage(chatID);
+
+            waitingResponseMessages.put(chatID, placeholderMessageBean);
+            isChatbotMessageFinished.postValue(false);
+            addMessageToUI(placeholderMessageBean, true);
+        }
+    }
+
+    private void processChatbotMessage(TUIMessageBean messageBean) {
+        if (messageBean instanceof ChatbotMessageBean) {
+            ChatbotMessageBean chatbotMessageBean = (ChatbotMessageBean) messageBean;
+            removeWaitingResponseMessage(getChatInfo().getId());
+
+            isChatbotMessageFinished.postValue(chatbotMessageBean.isFinished());
+            if (!chatbotMessageBean.isFinished()) {
+                receivingChatbotMessage = chatbotMessageBean;
+            } else {
+                receivingChatbotMessage = null;
+            }
+        }
+    }
+
+    private void removeWaitingResponseMessage(String chatID) {
+        TUIMessageBean oldMessageBean = waitingResponseMessages.remove(chatID);
+        if (oldMessageBean != null) {
+            for (WeakReference<ChatPresenter> instance : existsInstances) {
+                ChatPresenter presenter = instance.get();
+                if (presenter != null) {
+                    presenter.onMessageDeleted(oldMessageBean);
+                }
+            }
+        }
+    }
+
+    public void sendChatbotInterruptMessage() {
+        if (lastSendInterruptMessageTime != 0 && System.currentTimeMillis() - lastSendInterruptMessageTime < SEND_INTERRUPT_MESSAGE_INTERVAL) {
+            return;
+        }
+        lastSendInterruptMessageTime = System.currentTimeMillis();
+        TUIMessageBean messageBean = receivingChatbotMessage;
+        if (messageBean == null) {
+            return;
+        }
+        V2TIMMessage message = ChatMessageBuilder.buildChatbotInterruptMessage(messageBean);
+        if (message == null) {
+            return;
+        }
+        message.setExcludedFromLastMessage(true);
+        message.setExcludedFromUnreadCount(true);
+        ChatInfo chatInfo = getChatInfo();
+        String groupID = null;
+        String userID = null;
+        if (chatInfo instanceof GroupChatInfo) {
+            groupID = chatInfo.getId();
+        } else {
+            userID = chatInfo.getId();
+        }
+        V2TIMManager.getMessageManager().sendMessage(
+            message, userID, groupID, V2TIMMessage.V2TIM_PRIORITY_DEFAULT, true, null, new V2TIMSendCallback<V2TIMMessage>() {
+                @Override
+                public void onProgress(int progress) {}
+
+                @Override
+                public void onSuccess(V2TIMMessage v2TIMMessage) {
+                    TUIChatLog.i(TAG, "sendChatbotInterruptMessage success");
+                }
+
+                @Override
+                public void onError(int code, String desc) {
+                    TUIChatLog.i(TAG, "sendChatbotInterruptMessage failed " + code + " " + desc);
+                }
+            });
     }
 
     static class MessageReadReportHandler extends Handler {

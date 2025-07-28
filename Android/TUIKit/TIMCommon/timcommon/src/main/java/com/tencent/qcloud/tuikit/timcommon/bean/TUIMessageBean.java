@@ -35,6 +35,7 @@ public abstract class TUIMessageBean implements Serializable {
     private String extra;
     private String id;
     private boolean isGroup;
+    private boolean isSelf = true;
     private int status;
     private String selectText;
     private boolean excludeFromHistory;
@@ -213,7 +214,11 @@ public abstract class TUIMessageBean implements Serializable {
         if (v2TIMMessage != null) {
             return v2TIMMessage.isSelf();
         }
-        return true;
+        return isSelf;
+    }
+
+    public void setSelf(boolean self) {
+        isSelf = self;
     }
 
     public String getSender() {

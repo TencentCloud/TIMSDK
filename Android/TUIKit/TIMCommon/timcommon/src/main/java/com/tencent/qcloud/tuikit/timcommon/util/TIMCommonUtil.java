@@ -9,4 +9,9 @@ public class TIMCommonUtil {
         String conversationIdPrefix = isGroup ? CONVERSATION_GROUP_PREFIX : CONVERSATION_C2C_PREFIX;
         return conversationIdPrefix + chatID;
     }
+
+
+    public static boolean isChatbot(String chatID) {
+        return chatID.startsWith("@RBT#");
+    }
 }

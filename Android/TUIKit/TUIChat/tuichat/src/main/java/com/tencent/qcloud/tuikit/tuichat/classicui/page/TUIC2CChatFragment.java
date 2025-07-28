@@ -1,16 +1,23 @@
 package com.tencent.qcloud.tuikit.tuichat.classicui.page;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
 import androidx.annotation.Nullable;
+import androidx.core.graphics.drawable.DrawableCompat;
+
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
+import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
+import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.C2CChatInfo;
@@ -18,6 +25,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.presenter.C2CChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.presenter.FriendProfilePresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -63,6 +71,30 @@ public class TUIC2CChatFragment extends TUIBaseChatFragment {
     }
 
     private void setTitleBarExtension() {
+        if (TIMCommonUtil.isChatbot(chatInfo.getId())) {
+            titleBar.setRightIcon(R.drawable.chat_chatbot_clear_message_icon);
+            Drawable drawable = titleBar.getRightIcon().getDrawable();
+            if (drawable != null) {
+                drawable = DrawableCompat.wrap(drawable);
+                DrawableCompat.setTint(drawable, 0x444444);
+                titleBar.getRightIcon().setImageDrawable(drawable);
+            }
+            titleBar.setOnRightClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new TUIKitDialog(getContext())
+                        .builder()
+                        .setCancelable(true)
+                        .setCancelOutside(true)
+                        .setTitle(getContext().getString(R.string.clear_msg_tip))
+                        .setDialogWidth(0.75f)
+                        .setPositiveButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.sure), v13 -> presenter.clearHistoryMessage())
+                        .setNegativeButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.cancel), v14 -> {})
+                        .show();
+                }
+            });
+            return;
+        }
         titleBar.setRightIcon(R.drawable.chat_title_bar_more_menu_icon);
         titleBar.setOnRightClickListener(new View.OnClickListener() {
             @Override

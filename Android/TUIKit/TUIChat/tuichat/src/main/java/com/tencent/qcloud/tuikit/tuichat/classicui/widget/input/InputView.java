@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuichat.classicui.widget.input;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -21,8 +22,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.LifecycleOwner;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -39,6 +43,7 @@ import com.tencent.qcloud.tuikit.timcommon.interfaces.ChatInputMoreListener;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnFaceInputListener;
 import com.tencent.qcloud.tuikit.timcommon.util.ActivityResultResolver;
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
@@ -59,7 +64,6 @@ import com.tencent.qcloud.tuikit.tuichat.component.inputedittext.TIMMentionEditT
 import com.tencent.qcloud.tuikit.tuichat.config.GeneralConfig;
 import com.tencent.qcloud.tuikit.tuichat.config.classicui.TUIChatConfigClassic;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.AlbumPickerListener;
-import com.tencent.qcloud.tuikit.tuichat.interfaces.IMultimediaRecorder;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
@@ -129,6 +133,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     protected FragmentActivity mActivity;
     protected View mInputMoreView;
+    protected ImageView mChatboxInterruptView;
     protected ChatInfo mChatInfo;
     protected List<InputMoreItem> mInputMoreActionList = new ArrayList<>();
 
@@ -185,6 +190,13 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         mActivity = (FragmentActivity) getContext();
         inflate(mActivity, R.layout.chat_input_layout, this);
         mInputMoreView = findViewById(R.id.more_groups);
+        mChatboxInterruptView = findViewById(R.id.chatbot_interrupt_button);
+        Drawable drawable = mChatboxInterruptView.getDrawable();
+        if (drawable != null) {
+            drawable = DrawableCompat.wrap(drawable);
+            DrawableCompat.setTint(drawable, 0xE0000000);
+            mChatboxInterruptView.setImageDrawable(drawable);
+        }
         mSendAudioButton = findViewById(R.id.chat_voice_input);
         mAudioInputSwitchButton = findViewById(R.id.voice_input_switch);
         mEmojiInputButton = findViewById(R.id.face_btn);
@@ -355,6 +367,32 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 mTextInput.setSelection(selectedIndex + insertStr.length());
             }
             showSoftInput();
+        }
+    }
+
+    private void initChatbot() {
+        if (TIMCommonUtil.isChatbot(mChatInfo.getId())) {
+            disableAudioInput(true);
+            disableEmojiInput(true);
+            mMoreInputDisable = true;
+            mMoreInputButton.setVisibility(GONE);
+            presenter.isChatbotMessageFinished.observe((LifecycleOwner) getContext(), isChatbotMessageStopped -> {
+                if (isChatbotMessageStopped) {
+                    mChatboxInterruptView.setVisibility(View.GONE);
+                    if (!TextUtils.isEmpty(mTextInput.getText())) {
+                        mSendTextButton.setVisibility(VISIBLE);
+                    }
+                } else {
+                    mChatboxInterruptView.setVisibility(View.VISIBLE);
+                    mSendTextButton.setVisibility(GONE);
+                }
+            });
+            mChatboxInterruptView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    presenter.sendChatbotInterruptMessage();
+                }
+            });
         }
     }
 
@@ -913,15 +951,14 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     public void afterTextChanged(Editable s) {
         if (TextUtils.isEmpty(s.toString().trim())) {
             mSendEnable = false;
-            showSendTextButton(View.GONE);
+            mSendTextButton.setVisibility(GONE);
             showMoreInputButton(View.VISIBLE);
-
             if (mChatInputHandler != null) {
                 mChatInputHandler.onUserTyping(false, V2TIMManager.getInstance().getServerTime());
             }
         } else {
             mSendEnable = true;
-            showSendTextButton(View.VISIBLE);
+            showSendTextButton();
             showMoreInputButton(View.GONE);
             if (mTextInput.getLineCount() != mLastMsgLineCount) {
                 mLastMsgLineCount = mTextInput.getLineCount();
@@ -1007,6 +1044,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 mTextInput.setSelection(mTextInput.getText().length());
             }
         }
+        initChatbot();
     }
 
     public void setChatLayout(IChatLayout chatLayout) {
@@ -1229,11 +1267,12 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         mMoreInputButton.setVisibility(visibility);
     }
 
-    protected void showSendTextButton(int visibility) {
-        if (mMoreInputDisable) {
+    protected void showSendTextButton() {
+        boolean isChatbotMessageFinished = presenter.isChatbotMessageFinished.getValue();
+        if (isChatbotMessageFinished) {
             mSendTextButton.setVisibility(VISIBLE);
         } else {
-            mSendTextButton.setVisibility(visibility);
+            mSendTextButton.setVisibility(GONE);
         }
     }
 

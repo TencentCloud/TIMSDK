@@ -40,6 +40,9 @@ public class MessageParser {
     }
 
     public static MessageFeature isSupportTyping(TUIMessageBean messageBean) {
+        if (messageBean.getV2TIMMessage() == null) {
+            return null;
+        }
         String cloudCustomData = messageBean.getV2TIMMessage().getCloudCustomData();
         if (TextUtils.isEmpty(cloudCustomData)) {
             return null;

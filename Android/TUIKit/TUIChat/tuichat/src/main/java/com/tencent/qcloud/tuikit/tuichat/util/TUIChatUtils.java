@@ -4,38 +4,34 @@ import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATI
 import static com.tencent.qcloud.tuicore.TUIConstants.TUIConversation.CONVERSATION_GROUP_PREFIX;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.View;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
-import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.v2.V2TIMConversation;
-import com.tencent.imsdk.v2.V2TIMImageElem;
 import com.tencent.imsdk.v2.V2TIMManager;
-import com.tencent.imsdk.v2.V2TIMMessage;
-import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
-import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
-import com.tencent.qcloud.tuicore.util.SPUtils;
+import com.tencent.qcloud.tuicore.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
-import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
+import com.tencent.qcloud.tuikit.timcommon.component.GifSpan;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
-import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.ChatEventListener;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class TUIChatUtils {
-
     public static <T> void callbackOnError(IUIKitCallback<T> callBack, String module, int errCode, String desc) {
         if (callBack != null) {
             callBack.onError(module, errCode, ErrorMessageConverter.convertIMError(errCode, desc));
@@ -88,7 +84,6 @@ public class TUIChatUtils {
     }
 
     public static boolean isTopicGroup(String groupID) {
-        
         if (!isCommunityGroup(groupID)) {
             return false;
         }
@@ -96,7 +91,6 @@ public class TUIChatUtils {
     }
 
     public static String getGroupIDFromTopicID(String topicID) {
-        
         int index = topicID.indexOf("@TOPIC#_");
         return topicID.substring(0, index);
     }
@@ -143,7 +137,6 @@ public class TUIChatUtils {
         TUICore.notifyEvent(TUIConstants.TUIChat.Event.MessageStatus.KEY, TUIConstants.TUIChat.Event.MessageStatus.SUB_KEY_PROCESS_MESSAGE, param);
     }
 
-
     public static String convertGroupTypeText(String groupType) {
         String groupText = "";
         if (TextUtils.isEmpty(groupType)) {
@@ -159,5 +152,22 @@ public class TUIChatUtils {
             groupText = TUIChatService.getAppContext().getString(R.string.community_group);
         }
         return groupText;
+    }
+
+    @NonNull
+    public static SpannableString getWaitingSpan(Context context) {
+        SpannableString spannableString = new SpannableString("a");
+        Drawable drawable;
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
+            drawable = ContextCompat.getDrawable(context, R.drawable.chat_chatbot_waiting_icon);
+        } else {
+            drawable = ContextCompat.getDrawable(context, R.drawable.chat_chatbot_waiting_icon_static);
+        }
+        int width = ScreenUtil.dip2px(24);
+        int height = ScreenUtil.dip2px(24);
+        drawable.setBounds(0, 0, width, height);
+        GifSpan gifSpan = new GifSpan(drawable);
+        spannableString.setSpan(gifSpan, 0, 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        return spannableString;
     }
 }

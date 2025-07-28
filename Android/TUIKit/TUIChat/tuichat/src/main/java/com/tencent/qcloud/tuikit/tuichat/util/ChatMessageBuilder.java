@@ -3,11 +3,11 @@ package com.tencent.qcloud.tuikit.tuichat.util;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.text.TextUtils;
-
 import com.google.gson.Gson;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuicore.ServiceInitializer;
+import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
@@ -15,6 +15,7 @@ import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonConstants;
 import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.bean.MessageCustom;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FaceMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
@@ -28,10 +29,12 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.config.TUIChatConfigs;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class ChatMessageBuilder {
     public static final String TAG = ChatMessageBuilder.class.getSimpleName();
@@ -178,11 +181,11 @@ public class ChatMessageBuilder {
      *
      * create a video message
      *
-     * @param imgPath   
-     * @param videoPath 
-     * @param width     
-     * @param height    
-     * @param duration  
+     * @param imgPath
+     * @param videoPath
+     * @param width
+     * @param height
+     * @param duration
      * @return
      */
     public static TUIMessageBean buildVideoMessage(String imgPath, String videoPath, int width, int height, long duration) {
@@ -204,8 +207,8 @@ public class ChatMessageBuilder {
      *
      * create a audio message
      *
-     * @param recordPath 
-     * @param duration   
+     * @param recordPath
+     * @param duration
      * @return
      */
     public static TUIMessageBean buildAudioMessage(String recordPath, int duration) {
@@ -221,7 +224,7 @@ public class ChatMessageBuilder {
      *
      * create a text message
      *
-     * @param fileUri 
+     * @param fileUri
      * @return
      */
     public static TUIMessageBean buildFileMessage(Uri fileUri) {
@@ -246,7 +249,7 @@ public class ChatMessageBuilder {
      *
      * create a forward message
      *
-     * @param v2TIMMessage 
+     * @param v2TIMMessage
      * @return
      */
     public static TUIMessageBean buildForwardMessage(V2TIMMessage v2TIMMessage) {
@@ -284,7 +287,7 @@ public class ChatMessageBuilder {
      *
      * @param data        ，
      * @param description ，
-     * @param extension   
+     * @param extension
      * @return
      */
     public static TUIMessageBean buildCustomMessage(String data, String description, byte[] extension) {
@@ -353,4 +356,21 @@ public class ChatMessageBuilder {
         return previewBean;
     }
 
+    public static V2TIMMessage buildChatbotInterruptMessage(TUIMessageBean messageBean) {
+        if (messageBean == null || messageBean.getV2TIMMessage() == null) {
+            return null;
+        }
+        Map<String, Object> interruptMessageContent = new HashMap<>();
+        interruptMessageContent.put("chatbotPlugin", 2);
+        interruptMessageContent.put("src", 22);
+        interruptMessageContent.put("msgKey", generateMessageKey(messageBean));
+        Gson gson = new Gson();
+        String data = gson.toJson(interruptMessageContent);
+        V2TIMMessage message = V2TIMManager.getMessageManager().createCustomMessage(data.getBytes(StandardCharsets.UTF_8));
+        return message;
+    }
+
+    public static String generateMessageKey(TUIMessageBean messageBean) {
+        return messageBean.getMsgSeq() + "_" + messageBean.getV2TIMMessage().getRandom() + "_" + messageBean.getV2TIMMessage().getTimestamp();
+    }
 }

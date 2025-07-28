@@ -10,6 +10,7 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonUtil;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.bean.C2CChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
@@ -17,6 +18,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.GroupChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.classicui.page.FriendProfileActivity;
 import com.tencent.qcloud.tuikit.tuichat.presenter.GroupChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 
 public class TUIGroupChatMinimalistFragment extends TUIBaseChatMinimalistFragment {
     private static final String TAG = TUIGroupChatMinimalistFragment.class.getSimpleName();
@@ -62,6 +64,9 @@ public class TUIGroupChatMinimalistFragment extends TUIBaseChatMinimalistFragmen
     }
 
     private void setTitleBarClickAction() {
+        if (TIMCommonUtil.isChatbot(chatInfo.getId())) {
+            return;
+        }
         chatView.setOnAvatarClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -660,6 +660,7 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
         addCustomMessageType(TUIChatConstants.BUSINESS_ID_CUSTOM_ORDER, CustomOrderMessageBean.class);
         addCustomMessageType(TUIChatConstants.BUSINESS_ID_CUSTOM_TYPING, MessageTypingBean.class);
         addCustomMessageType(TUIChatConstants.BUSINESS_ID_LOCAL_TIPS, TipsMessageBean.class);
+        addCustomMessageType(TUIChatConstants.BUSINESS_ID_LOCAL_TIPS, TipsMessageBean.class);
     }
 
     /**
@@ -697,7 +698,7 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
         return extensionMessageClass;
     }
 
-    private List<GroupChatEventListener> getGroupChatEventListenerList() {
+    private synchronized List<GroupChatEventListener> getGroupChatEventListenerList() {
         List<GroupChatEventListener> listeners = new ArrayList<>();
         Iterator<WeakReference<GroupChatEventListener>> iterator = groupChatEventListenerList.listIterator();
         while (iterator.hasNext()) {
@@ -712,7 +713,7 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
         return listeners;
     }
 
-    public void addGroupChatEventListener(GroupChatEventListener groupChatListener) {
+    public synchronized void addGroupChatEventListener(GroupChatEventListener groupChatListener) {
         if (groupChatListener == null) {
             return;
         }
@@ -724,7 +725,7 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
         groupChatEventListenerList.add(new WeakReference<>(groupChatListener));
     }
 
-    private List<C2CChatEventListener> getC2CChatEventListenerList() {
+    private synchronized List<C2CChatEventListener> getC2CChatEventListenerList() {
         List<C2CChatEventListener> listeners = new ArrayList<>();
         Iterator<WeakReference<C2CChatEventListener>> iterator = c2CChatEventListenerList.listIterator();
         while (iterator.hasNext()) {
@@ -739,7 +740,7 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
         return listeners;
     }
 
-    public void addC2CChatEventListener(C2CChatEventListener c2cChatEventListener) {
+    public synchronized void addC2CChatEventListener(C2CChatEventListener c2cChatEventListener) {
         if (c2cChatEventListener == null) {
             return;
         }
@@ -751,7 +752,7 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
         c2CChatEventListenerList.add(new WeakReference<>(c2cChatEventListener));
     }
 
-    public void removeC2CChatEventListener(C2CChatEventListener c2cChatEventListener) {
+    public synchronized void removeC2CChatEventListener(C2CChatEventListener c2cChatEventListener) {
         Iterator<WeakReference<C2CChatEventListener>> iterator = c2CChatEventListenerList.listIterator();
         while (iterator.hasNext()) {
             WeakReference<C2CChatEventListener> listenerWeakReference = iterator.next();
@@ -766,7 +767,7 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
         messageSender = new WeakReference<>(baseMessageSender);
     }
 
-    public void addUnreadCountListener(TotalUnreadCountListener unreadCountListener) {
+    public synchronized void addUnreadCountListener(TotalUnreadCountListener unreadCountListener) {
         if (unreadCountListener == null) {
             return;
         }
@@ -778,7 +779,7 @@ public class TUIChatService implements TUIInitializer, ITUIService, ITUINotifica
         unreadCountListenerList.add(new WeakReference<>(unreadCountListener));
     }
 
-    private List<TotalUnreadCountListener> getUnreadCountListenerList() {
+    private synchronized List<TotalUnreadCountListener> getUnreadCountListenerList() {
         List<TotalUnreadCountListener> listeners = new ArrayList<>();
         Iterator<WeakReference<TotalUnreadCountListener>> iterator = unreadCountListenerList.listIterator();
         while (iterator.hasNext()) {

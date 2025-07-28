@@ -323,6 +323,8 @@
     <string name="contact_no_status">暫無個性簽名</string>
 
     <string name="contact_account_tag">ID：</string>
-    <string name="add_friend">添加好友</string>
+    <string name="chat_ai_interrupt_text" translatable="false">點擊打斷</string>
+    <string name="chat_ai_waiting_tips">請等待繼續或點擊停止回答</string>
+    <string name="chat_forward_to_ai_tips">無法轉發消息到 AI 聊天</string>
 
 </resources>

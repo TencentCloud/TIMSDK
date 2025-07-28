@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -23,7 +24,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.LifecycleOwner;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -35,12 +39,15 @@ import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.ChatFace;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
+import com.tencent.qcloud.tuikit.timcommon.component.dialog.MinimalistToast;
+import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.ChatInputMoreListener;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnFaceInputListener;
 import com.tencent.qcloud.tuikit.timcommon.util.ActivityResultResolver;
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
@@ -105,6 +112,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     private boolean mIsSending = false;
 
     protected View mInputMoreLayout;
+    protected ImageView mChatboxInterruptView;
     protected Button mSendAudioButton;
     protected ViewGroup mSendAudioButtonLayout;
     protected VoiceWaveView mVoiceWaveView;
@@ -178,6 +186,13 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         voiceBtn = findViewById(R.id.input_voice_btn);
         imageBtn = findViewById(R.id.input_image_btn);
         mInputMoreLayout = findViewById(R.id.more_groups);
+        mChatboxInterruptView = findViewById(R.id.chatbot_interrupt_button);
+        Drawable drawable = mChatboxInterruptView.getDrawable();
+        if (drawable != null) {
+            drawable = DrawableCompat.wrap(drawable);
+            DrawableCompat.setTint(drawable, 0x66000000);
+            mChatboxInterruptView.setImageDrawable(drawable);
+        }
         mSendAudioButton = findViewById(R.id.chat_voice_input);
         mSendAudioButtonLayout = findViewById(R.id.chat_voice_input_layout);
         mTextInputLayout = findViewById(R.id.text_input_layout);
@@ -336,6 +351,9 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     private void sendTextMessage() {
         if (mSendEnable) {
+            if (!checkChatbotFinished()) {
+                return;
+            }
             if (mMessageHandler != null) {
                 if (mChatLayout == null) {
                     mMessageHandler.sendMessage(ChatMessageBuilder.buildTextMessage(mTextInput.getText().toString()));
@@ -366,6 +384,14 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             mIsSending = true;
             mTextInput.setText("");
         }
+    }
+
+    private boolean checkChatbotFinished() {
+        boolean isFinished = presenter.isChatbotMessageFinished.getValue();
+        if (!isFinished) {
+            MinimalistToast.show(getContext(), getContext().getString(R.string.chat_ai_waiting_tips));
+        }
+        return isFinished;
     }
 
     private void initVoiceWaveView() {
@@ -1261,6 +1287,31 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 mTextInput.setText(content);
                 mTextInput.setSelection(mTextInput.getText().length());
             }
+        }
+        initChatbot();
+    }
+
+
+    private void initChatbot() {
+        if (TIMCommonUtil.isChatbot(mChatInfo.getId())) {
+            voiceBtn.setVisibility(GONE);
+            imageBtn.setVisibility(GONE);
+            disableEmojiInput(true);
+            mMoreInputDisable = true;
+            inputMoreBtn.setVisibility(GONE);
+            presenter.isChatbotMessageFinished.observe((LifecycleOwner) getContext(), isChatbotMessageStopped -> {
+                if (isChatbotMessageStopped) {
+                    mChatboxInterruptView.setVisibility(View.GONE);
+                } else {
+                    mChatboxInterruptView.setVisibility(View.VISIBLE);
+                }
+            });
+            mChatboxInterruptView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    presenter.sendChatbotInterruptMessage();
+                }
+            });
         }
     }
 

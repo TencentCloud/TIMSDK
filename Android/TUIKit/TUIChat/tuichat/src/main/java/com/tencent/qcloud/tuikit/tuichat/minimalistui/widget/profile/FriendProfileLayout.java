@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.profile;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
@@ -18,6 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
@@ -31,10 +34,15 @@ import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.config.FriendConfig;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.FriendProfileListener;
+import com.tencent.qcloud.tuikit.tuichat.minimalistui.page.TUIC2CChatMinimalistActivity;
 import com.tencent.qcloud.tuikit.tuichat.presenter.FriendProfilePresenter;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -217,11 +225,18 @@ public class FriendProfileLayout extends LinearLayout {
     }
 
     private void setupExtension() {
+        List<TUIExtensionInfo> allInfoList = new ArrayList<>();
+        warningExtensionListView.removeAllViews();
+        addMessageItem(allInfoList);
+        if (TIMCommonUtil.isChatbot(friendProfileBean.getUserId())) {
+            return;
+        }
         HashMap<String, Object> param = new HashMap<>();
         param.put(TUIConstants.TUIContact.Extension.FriendProfileItem.USER_ID, friendProfileBean.getUserId());
         List<TUIExtensionInfo> extensionInfoList = TUICore.getExtensionList(TUIConstants.TUIContact.Extension.FriendProfileItem.MINIMALIST_EXTENSION_ID, param);
         Collections.sort(extensionInfoList);
-        profileItemAdapter.setExtensionInfoList(extensionInfoList);
+        allInfoList.addAll(extensionInfoList);
+        profileItemAdapter.setExtensionInfoList(allInfoList);
         profileItemAdapter.notifyDataSetChanged();
 
         List<TUIExtensionInfo> warningExtensionList = TUICore.getExtensionList(TUIConstants.TUIContact.Extension.FriendProfileWarningButton.EXTENSION_ID, null);
@@ -240,6 +255,26 @@ public class FriendProfileLayout extends LinearLayout {
             });
             warningExtensionListView.addView(itemView);
         }
+    }
+
+    private void addMessageItem(List<TUIExtensionInfo> allInfoList) {
+        TUIExtensionInfo chatExtension = new TUIExtensionInfo();
+        chatExtension.setWeight(400);
+        chatExtension.setIcon(R.drawable.chat_contact_profile_item_extension_message_icon);
+        chatExtension.setText(getContext().getString(R.string.chat_contact_profile_message));
+        chatExtension.setExtensionListener(new TUIExtensionEventListener() {
+            @Override
+            public void onClicked(Map<String, Object> param) {
+                Intent intent = new Intent(getContext(), TUIC2CChatMinimalistActivity.class);
+                intent.putExtra(TUIConstants.TUIChat.CHAT_TYPE, V2TIMConversation.V2TIM_C2C);
+                intent.putExtra(TUIConstants.TUIChat.CHAT_ID, friendProfileBean.getUserId());
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getContext().startActivity(intent);
+            }
+        });
+        allInfoList.add(chatExtension);
+        profileItemAdapter.setExtensionInfoList(allInfoList);
+        profileItemAdapter.notifyDataSetChanged();
     }
 
     private void setOnClickListener() {

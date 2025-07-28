@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuichat.classicui.widget.profile;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -14,8 +15,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
+
+import com.tencent.imsdk.v2.V2TIMConversation;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.interfaces.TUIExtensionEventListener;
 import com.tencent.qcloud.tuicore.interfaces.TUIExtensionInfo;
 import com.tencent.qcloud.tuikit.timcommon.bean.FriendProfileBean;
 import com.tencent.qcloud.tuikit.timcommon.component.LineControllerView;
@@ -25,13 +29,19 @@ import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
+import com.tencent.qcloud.tuikit.tuichat.classicui.page.TUIC2CChatActivity;
 import com.tencent.qcloud.tuikit.tuichat.config.FriendConfig;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.FriendProfileListener;
 import com.tencent.qcloud.tuikit.tuichat.presenter.FriendProfilePresenter;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FriendProfileLayout extends LinearLayout {
     private static final String TAG = "FriendProfileLayout";
@@ -196,11 +206,16 @@ public class FriendProfileLayout extends LinearLayout {
     }
 
     private void setupExtension() {
+        extensionListView.removeAllViews();
+        addMessageItem();
+
+        if (TIMCommonUtil.isChatbot(friendProfileBean.getUserId())) {
+            return;
+        }
         HashMap<String, Object> param = new HashMap<>();
         param.put(TUIConstants.TUIContact.Extension.FriendProfileItem.USER_ID, friendProfileBean.getUserId());
         List<TUIExtensionInfo> extensionInfoList = TUICore.getExtensionList(TUIConstants.TUIContact.Extension.FriendProfileItem.CLASSIC_EXTENSION_ID, param);
         Collections.sort(extensionInfoList);
-        extensionListView.removeAllViews();
         for (TUIExtensionInfo extensionInfo : extensionInfoList) {
             View itemView = LayoutInflater.from(getContext()).inflate(R.layout.contact_friend_profile_item_layout, null);
             TextView itemButton = itemView.findViewById(R.id.item_button);
@@ -227,6 +242,20 @@ public class FriendProfileLayout extends LinearLayout {
             });
             warningExtensionListView.addView(itemView);
         }
+    }
+
+    private void addMessageItem() {
+        View itemView = LayoutInflater.from(getContext()).inflate(R.layout.contact_friend_profile_item_layout, null);
+        TextView itemButton = itemView.findViewById(R.id.item_button);
+        itemButton.setText(R.string.chat_contact_profile_message);
+        itemButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), TUIC2CChatActivity.class);
+            intent.putExtra(TUIConstants.TUIChat.CHAT_TYPE, V2TIMConversation.V2TIM_C2C);
+            intent.putExtra(TUIConstants.TUIChat.CHAT_ID, friendProfileBean.getUserId());
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getContext().startActivity(intent);
+        });
+        extensionListView.addView(itemView);
     }
 
     public void setOnClickListener() {

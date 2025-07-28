@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.tencent.imsdk.message.Message;
@@ -21,11 +20,13 @@ import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonConstants;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.CallModel;
+import com.tencent.qcloud.tuikit.tuichat.bean.ChatbotData;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageCustom;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageTyping;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingTipsMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.ChatbotMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomLinkMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.EmptyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FaceMessageBean;
@@ -200,8 +201,28 @@ public class ChatMessageParser {
                 }
             }
         } else {
+            TUIMessageBean otherMessage = parseOtherMessage(v2TIMMessage);
+            if (otherMessage != null) {
+                if (otherMessage instanceof ChatbotMessageBean && v2TIMMessage.isExcludedFromLastMessage()) {
+                    return null;
+                }
+                return otherMessage;
+            }
             return unsupportBean;
         }
+    }
+
+    private static TUIMessageBean parseOtherMessage(V2TIMMessage v2TIMMessage) {
+        if (v2TIMMessage.getCustomElem() == null || v2TIMMessage.getCustomElem().getData() == null) {
+            return null;
+        }
+        String dataStr = new String(v2TIMMessage.getCustomElem().getData());
+        ChatbotData chatbotData = ChatbotData.parseJson(dataStr);
+        if (chatbotData != null && chatbotData.chatbotPlugin == 2) {
+            return new ChatbotMessageBean();
+        }
+
+        return null;
     }
 
     private static TUIMessageBean parseReplyMessage(V2TIMMessage v2TIMMessage) {

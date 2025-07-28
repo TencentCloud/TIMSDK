@@ -47,6 +47,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.interfaces.ITitleBarLayout;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.ChatInputMoreListener;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnChatPopActionClickListener;
+import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
@@ -452,6 +453,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
             chatInfo.getLocateMessage(), chatInfo.getLocateMessage() == null ? TUIChatConstants.GET_MESSAGE_FORWARD : TUIChatConstants.GET_MESSAGE_TWO_WAY);
         setTotalUnread();
         initExtension();
+        initChatbot();
         setShortcutView();
     }
 
@@ -497,6 +499,23 @@ public class ChatView extends LinearLayout implements IChatLayout {
         topExtensionParam.put(TUIConstants.TUIChat.Extension.ChatViewTopAreaExtension.CHAT_ID, mChatInfo.getId());
         topExtensionParam.put(TUIConstants.TUIChat.Extension.ChatViewTopAreaExtension.IS_GROUP, ChatInfo.TYPE_GROUP == mChatInfo.getType());
         TUICore.raiseExtension(TUIConstants.TUIChat.Extension.ChatViewTopAreaExtension.EXTENSION_ID, topExtensionLayout, topExtensionParam);
+    }
+
+    private void initChatbot() {
+        if (TIMCommonUtil.isChatbot(mChatInfo.getId())) {
+            mChatInfo.setNeedReadReceipt(false);
+            mChatInfo.setEnableVideoCall(false);
+            mChatInfo.setEnableAudioCall(false);
+            mChatInfo.setPopMenuEnableCopy(true);
+            mChatInfo.setPopMenuEnableDelete(true);
+            mChatInfo.setPopMenuEnableForward(true);
+            mChatInfo.setPopMenuEnableExtension(false);
+            mChatInfo.setPopMenuEnableQuote(false);
+            mChatInfo.setPopMenuEnableReply(false);
+            mChatInfo.setPopMenuEnableRevoke(false);
+            mChatInfo.setPopMenuEnableMultiSelect(false);
+            mChatInfo.setPopMenuEnableInfo(false);
+        }
     }
 
     private void setShortcutView() {

@@ -17,6 +17,8 @@ import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
+
+import com.tencent.qcloud.tuicore.ServiceInitializer;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 public class ActivityResultResolver {
+    private static final String TAG = "ActivityResultResolver";
     public static final String CONTENT_TYPE_ALL = "*/*";
     public static final String CONTENT_TYPE_IMAGE = "image/*";
     public static final String CONTENT_TYPE_VIDEO = "video/*";
@@ -130,16 +133,18 @@ public class ActivityResultResolver {
         @NonNull
         @Override
         public Intent createIntent(@NonNull Context context, @NonNull Pair<String[], Boolean> input) {
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             String[] type = input.first;
-            boolean allowMultiple = input.second;
             if (type.length == 1) {
                 intent.setType(type[0]);
             } else if (type.length > 1) {
                 intent.setType(type[0]);
                 intent.putExtra(Intent.EXTRA_MIME_TYPES, type);
             }
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+            boolean allowMultiple = input.second;
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, allowMultiple);
             return intent;
         }
@@ -150,7 +155,17 @@ public class ActivityResultResolver {
             if (intent == null || resultCode != Activity.RESULT_OK) {
                 return Collections.emptyList();
             } else {
-                return getClipDataUris(intent);
+                List<Uri> uris =  getClipDataUris(intent);
+
+                for (Uri uri : uris) {
+                    try {
+                        ServiceInitializer.getAppContext().getContentResolver().takePersistableUriPermission(
+                                uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    } catch (SecurityException e) {
+                        TIMCommonLog.e(TAG, "takePersistableUriPermission failed " + e.getMessage());
+                    }
+                }
+                return uris;
             }
         }
 

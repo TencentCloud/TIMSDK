@@ -35,6 +35,97 @@ public class ChatInfo implements Serializable {
     boolean needReadReceipt = true;
     private DraftInfo draft;
 
+    private boolean popMenuEnableCopy = true;
+    private boolean popMenuEnableForward = true;
+    private boolean popMenuEnableMultiSelect = true;
+    private boolean popMenuEnableQuote = true;
+    private boolean popMenuEnableReply = true;
+    private boolean popMenuEnableDelete = true;
+    private boolean popMenuEnableRevoke = true;
+    private boolean popMenuEnableExtension = true;
+    private boolean popMenuEnablePin = true;
+    private boolean popMenuEnableInfo = true;
+
+    public boolean isPopMenuEnableCopy() {
+        return popMenuEnableCopy;
+    }
+
+    public void setPopMenuEnableCopy(boolean popMenuEnableCopy) {
+        this.popMenuEnableCopy = popMenuEnableCopy;
+    }
+
+    public boolean isPopMenuEnableForward() {
+        return popMenuEnableForward;
+    }
+
+    public void setPopMenuEnableForward(boolean popMenuEnableForward) {
+        this.popMenuEnableForward = popMenuEnableForward;
+    }
+
+    public boolean isPopMenuEnableMultiSelect() {
+        return popMenuEnableMultiSelect;
+    }
+
+    public void setPopMenuEnableMultiSelect(boolean popMenuEnableMultiSelect) {
+        this.popMenuEnableMultiSelect = popMenuEnableMultiSelect;
+    }
+
+    public boolean isPopMenuEnableQuote() {
+        return popMenuEnableQuote;
+    }
+
+    public void setPopMenuEnableQuote(boolean popMenuEnableQuote) {
+        this.popMenuEnableQuote = popMenuEnableQuote;
+    }
+
+    public boolean isPopMenuEnableReply() {
+        return popMenuEnableReply;
+    }
+
+    public void setPopMenuEnableReply(boolean popMenuEnableReply) {
+        this.popMenuEnableReply = popMenuEnableReply;
+    }
+
+    public boolean isPopMenuEnableDelete() {
+        return popMenuEnableDelete;
+    }
+
+    public void setPopMenuEnableDelete(boolean popMenuEnableDelete) {
+        this.popMenuEnableDelete = popMenuEnableDelete;
+    }
+
+    public boolean isPopMenuEnableRevoke() {
+        return popMenuEnableRevoke;
+    }
+
+    public void setPopMenuEnableRevoke(boolean popMenuEnableRevoke) {
+        this.popMenuEnableRevoke = popMenuEnableRevoke;
+    }
+
+    public boolean isPopMenuEnableExtension() {
+        return popMenuEnableExtension;
+    }
+
+    public void setPopMenuEnableExtension(boolean popMenuEnableExtension) {
+        this.popMenuEnableExtension = popMenuEnableExtension;
+    }
+
+    public boolean isPopMenuEnablePin() {
+        return popMenuEnablePin;
+    }
+
+    public void setPopMenuEnablePin(boolean popMenuEnablePin) {
+        this.popMenuEnablePin = popMenuEnablePin;
+    }
+
+    public void setPopMenuEnableInfo(boolean popMenuEnableInfo) {
+        this.popMenuEnableInfo = popMenuEnableInfo;
+    }
+
+    public boolean isPopMenuEnableInfo() {
+        return popMenuEnableInfo;
+    }
+
     /**
      *
      * Get the title of the chat, usually the name of the other party for a single chat, and the group name for a group chat

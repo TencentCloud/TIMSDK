@@ -30,6 +30,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
@@ -49,6 +50,7 @@ import com.tencent.qcloud.tuikit.timcommon.interfaces.ChatInputMoreListener;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnChatPopActionClickListener;
 import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
@@ -134,6 +136,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
 
     private LinearLayout extensionArea;
     private View chatHeaderBackBtn;
+    private ImageView clearMessageButton;
     private TextView chatName;
     private TextView chatDescription;
     private SynthesizedImageView chatAvatar;
@@ -237,6 +240,13 @@ public class ChatView extends LinearLayout implements IChatLayout {
         chatName = findViewById(R.id.chat_name);
         chatDescription = findViewById(R.id.chat_description);
         chatAvatar = findViewById(R.id.avatar_img);
+        clearMessageButton = findViewById(R.id.clear_message_button);
+        Drawable drawable = clearMessageButton.getDrawable();
+        if (drawable != null) {
+            drawable = DrawableCompat.wrap(drawable);
+            DrawableCompat.setTint(drawable, 0xFF1C66E5);
+            clearMessageButton.setImageDrawable(drawable);
+        }
         chatHeaderBackBtn = findViewById(R.id.back_btn);
         chatHeaderBackBtn.getBackground().setAutoMirrored(true);
         userNameArea = findViewById(R.id.user_name_area);
@@ -459,11 +469,47 @@ public class ChatView extends LinearLayout implements IChatLayout {
         loadPinnedMessage();
         loadMessages(
             chatInfo.getLocateMessage(), chatInfo.getLocateMessage() == null ? TUIChatConstants.GET_MESSAGE_FORWARD : TUIChatConstants.GET_MESSAGE_TWO_WAY);
+        initChatbot();
         initHeader();
     }
 
+    private void initChatbot() {
+        if (TIMCommonUtil.isChatbot(mChatInfo.getId())) {
+            mChatInfo.setNeedReadReceipt(false);
+            mChatInfo.setEnableVideoCall(false);
+            mChatInfo.setEnableAudioCall(false);
+            mChatInfo.setPopMenuEnableCopy(true);
+            mChatInfo.setPopMenuEnableDelete(true);
+            mChatInfo.setPopMenuEnableForward(true);
+            mChatInfo.setPopMenuEnableExtension(false);
+            mChatInfo.setPopMenuEnableQuote(false);
+            mChatInfo.setPopMenuEnableReply(false);
+            mChatInfo.setPopMenuEnableRevoke(false);
+            mChatInfo.setPopMenuEnableMultiSelect(false);
+            mChatInfo.setPopMenuEnableInfo(false);
+        }
+    }
+
     private void initHeader() {
-        initExtension();
+        if (!TIMCommonUtil.isChatbot(mChatInfo.getId())) {
+            initExtension();
+        } else {
+            clearMessageButton.setVisibility(VISIBLE);
+            clearMessageButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new TUIKitDialog(getContext())
+                            .builder()
+                            .setCancelable(true)
+                            .setCancelOutside(true)
+                            .setTitle(getContext().getString(R.string.clear_msg_tip))
+                            .setDialogWidth(0.75f)
+                            .setPositiveButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.sure), v13 -> presenter.clearHistoryMessage())
+                            .setNegativeButton(getContext().getString(com.tencent.qcloud.tuicore.R.string.cancel), v14 -> {})
+                            .show();
+                }
+            });
+        }
         loadAvatar();
         loadChatName();
         if (TUIChatUtils.isGroupChat(mChatInfo.getType())) {

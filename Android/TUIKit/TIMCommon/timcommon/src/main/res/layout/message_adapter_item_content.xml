@@ -62,7 +62,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginStart="11.52dp"
             android:visibility="gone"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/left_user_name_tv"
@@ -166,9 +166,9 @@
                     <!-- emoji react area -->
                     <FrameLayout
                         android:id="@+id/message_reaction_area"
-                        android:paddingTop="5dp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp" />
 
                     <FrameLayout
                         android:id="@+id/risk_content_line"
@@ -200,12 +200,12 @@
         <!-- translation content area -->
         <LinearLayout
             android:id="@+id/bottom_content_area"
-            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/msg_content_ll"
             android:layout_toStartOf="@id/right_user_icon_view"
             android:layout_toEndOf="@id/left_user_icon_view"
-            android:layout_below="@id/msg_content_ll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/bottom_failed_iv"

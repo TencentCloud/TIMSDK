@@ -77,4 +77,13 @@
 
     </HorizontalScrollView>
 
+    <ImageView
+        android:id="@+id/clear_message_button"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:src="@drawable/chat_chatbot_clear_message_icon"
+        android:layout_marginStart="19dp"
+        tools:visibility="visible"
+        android:visibility="gone"/>
+
 </LinearLayout>

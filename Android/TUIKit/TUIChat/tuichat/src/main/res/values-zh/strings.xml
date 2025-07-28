@@ -335,4 +335,7 @@
     <string name="chat_to_top">置顶聊天</string>
     <string name="chat_add_friend">添加好友</string>
 
+    <string name="chat_ai_interrupt_text">点击打断</string>
+    <string name="chat_ai_waiting_tips">请等待继续或点击停止回答</string>
+    <string name="chat_forward_to_ai_tips">不能转发消息到 AI 聊天</string>
 </resources>

@@ -333,4 +333,9 @@
     <string name="clear_msg_tip">Are you sure you want to clear the chat history?</string>
     <string name="contact_delete_friend_tip">Are you sure you want to delete the contact?</string>
     <string name="chat_add_friend">Add Contact</string>
+
+    <string name="chat_ai_interrupt_text" translatable="false">Click to interrupt</string>
+    <string name="chat_ai_waiting_tips">Please wait to proceed or click to stop answering</string>
+    <string name="chat_forward_to_ai_tips">Cannot forward messages to AI chat</string>
+
 </resources>

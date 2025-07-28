@@ -34,6 +34,7 @@ import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
+import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
@@ -190,7 +191,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         }
         mChatPopMenu = new ChatPopMenu(getContext());
         mChatPopMenu.setMessageBean(messageInfo);
-        mChatPopMenu.setShowFaces(TUIChatConfigClassic.isEnableEmojiReaction());
+        mChatPopMenu.setShowFaces(TUIChatConfigClassic.isEnableEmojiReaction() && getChatInfo().isPopMenuEnableExtension());
         mChatPopMenu.setChatPopMenuActionList(mPopActions);
 
         int[] location = new int[2];
@@ -250,132 +251,165 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         }
         mPopActions.clear();
 
-        ChatPopMenu.ChatPopMenuAction speakerModeSwitchAction = null;
-        ChatPopMenu.ChatPopMenuAction copyAction = null;
-        ChatPopMenu.ChatPopMenuAction forwardAction = null;
-        ChatPopMenu.ChatPopMenuAction multiSelectAction = null;
-        ChatPopMenu.ChatPopMenuAction quoteAction = null;
-        ChatPopMenu.ChatPopMenuAction replyAction = null;
-        ChatPopMenu.ChatPopMenuAction revokeAction = null;
-        ChatPopMenu.ChatPopMenuAction deleteAction = null;
+        final boolean textIsAllSelected = isTextIsAllSelected(msg);
 
-        boolean textIsAllSelected = isTextIsAllSelected(msg);
+        final ChatPopMenu.ChatPopMenuAction speakerModeSwitchAction = createSpeakerModeSwitchAction(msg);
+        final ChatPopMenu.ChatPopMenuAction copyAction = createCopyAction(msg);
+        final ChatPopMenu.ChatPopMenuAction forwardAction = createForwardAction(msg);
+        final ChatPopMenu.ChatPopMenuAction multiSelectAction = createMultiSelectAction(msg, textIsAllSelected);
+        final ChatPopMenu.ChatPopMenuAction quoteAction = createQuoteAction(msg, textIsAllSelected);
+        final ChatPopMenu.ChatPopMenuAction replyAction = createReplyAction(msg, textIsAllSelected);
+        final ChatPopMenu.ChatPopMenuAction revokeAction = createRevokeAction(msg, textIsAllSelected);
+        final ChatPopMenu.ChatPopMenuAction deleteAction = createDeleteAction(msg, textIsAllSelected);
+        final ChatPopMenu.ChatPopMenuAction groupPinAction = getChatPopMenuAction(msg);
 
-        if (msg instanceof SoundMessageBean) {
-            speakerModeSwitchAction = new ChatPopMenu.ChatPopMenuAction();
-            int actionIcon = R.drawable.pop_menu_speaker;
-            String actionName = getContext().getString(R.string.chat_speaker_mode_on_action);
-            boolean isSpeakerMode = TUIChatConfigs.getGeneralConfig().isEnableSoundMessageSpeakerMode();
-            if (isSpeakerMode) {
-                actionIcon = R.drawable.pop_menu_ear;
-                actionName = getContext().getString(R.string.chat_speaker_mode_off_action);
-            }
-            speakerModeSwitchAction.setActionIcon(actionIcon);
-            speakerModeSwitchAction.setActionName(actionName);
-            speakerModeSwitchAction.setActionClickListener(() -> mOnPopActionClickListener.onSpeakerModeSwitchClick(msg));
-        }
-        if (msg instanceof TextMessageBean || msg instanceof QuoteMessageBean) {
-            copyAction = new ChatPopMenu.ChatPopMenuAction();
-            copyAction.setActionName(getContext().getString(R.string.copy_action));
-            copyAction.setActionIcon(R.drawable.pop_menu_copy);
-            copyAction.setActionClickListener(() -> mOnPopActionClickListener.onCopyClick(msg));
-        }
+        addActionIfEnabled(groupPinAction, TUIChatConfigClassic.isEnablePin() && getChatInfo().isPopMenuEnablePin(), 3000);
+        addActionIfEnabled(speakerModeSwitchAction, TUIChatConfigClassic.isEnableSpeakerModeSwitch(), 11000);
+        addActionIfEnabled(
+            multiSelectAction, TUIChatConfigClassic.isEnableSelect() && getChatInfo().isPopMenuEnableMultiSelect() && !msg.hasRiskContent(), 8000);
+        addActionIfEnabled(quoteAction, TUIChatConfigClassic.isEnableQuote() && getChatInfo().isPopMenuEnableQuote() && !msg.hasRiskContent(), 7000);
+        addActionIfEnabled(replyAction, TUIChatConfigClassic.isEnableReply() && getChatInfo().isPopMenuEnableReply() && !msg.hasRiskContent(), 6000);
+        addActionIfEnabled(revokeAction, TUIChatConfigClassic.isEnableRecall() && getChatInfo().isPopMenuEnableRevoke(), 5000);
+        addActionIfEnabled(deleteAction, TUIChatConfigClassic.isEnableDelete() && getChatInfo().isPopMenuEnableDelete(), 4000);
 
-        if (textIsAllSelected) {
-            deleteAction = new ChatPopMenu.ChatPopMenuAction();
-            deleteAction.setActionName(getContext().getString(R.string.delete_action));
-            deleteAction.setActionIcon(R.drawable.pop_menu_delete);
-            deleteAction.setActionClickListener(() -> mOnPopActionClickListener.onDeleteMessageClick(msg));
-            if (msg.isSelf()) {
-                if (msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL) {
-                    long timeInterval = TUIChatUtils.getServerTime() - msg.getMessageTime();
-                    if (timeInterval < TUIChatConfigClassic.getTimeIntervalForAllowedMessageRecall()) {
-                        revokeAction = new ChatPopMenu.ChatPopMenuAction();
-                        revokeAction.setActionName(getContext().getString(R.string.revoke_action));
-                        revokeAction.setActionIcon(R.drawable.pop_menu_revoke);
-                        revokeAction.setActionClickListener(() -> mOnPopActionClickListener.onRevokeMessageClick(msg));
-                    }
-                }
-            }
-
-            multiSelectAction = new ChatPopMenu.ChatPopMenuAction();
-            multiSelectAction.setActionName(getContext().getString(R.string.titlebar_mutiselect));
-            multiSelectAction.setActionIcon(R.drawable.pop_menu_multi_select);
-            multiSelectAction.setActionClickListener(() -> mOnPopActionClickListener.onMultiSelectMessageClick(msg));
-        }
-
-        if (msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL && !msg.hasRiskContent()) {
-            forwardAction = new ChatPopMenu.ChatPopMenuAction();
-            forwardAction.setActionName(getContext().getString(R.string.forward_button));
-            forwardAction.setActionIcon(R.drawable.pop_menu_forward);
-            forwardAction.setActionClickListener(() -> mOnPopActionClickListener.onForwardMessageClick(msg));
-        }
-
-        if (textIsAllSelected) {
-            if (msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL) {
-                replyAction = new ChatPopMenu.ChatPopMenuAction();
-                replyAction.setActionName(getContext().getString(R.string.reply_button));
-                replyAction.setActionIcon(R.drawable.pop_menu_reply);
-                replyAction.setActionClickListener(() -> mOnPopActionClickListener.onReplyMessageClick(msg));
-
-                quoteAction = new ChatPopMenu.ChatPopMenuAction();
-                quoteAction.setActionName(getContext().getString(R.string.quote_button));
-                quoteAction.setActionIcon(R.drawable.pop_menu_quote);
-                quoteAction.setActionClickListener(() -> mOnPopActionClickListener.onQuoteMessageClick(msg));
-            }
-        }
-
-        ChatPopMenu.ChatPopMenuAction groupPinAction = getChatPopMenuAction(msg);
-        if (groupPinAction != null && TUIChatConfigClassic.isEnablePin()) {
-            groupPinAction.setPriority(3000);
-            mPopActions.add(groupPinAction);
-        }
-
-        if (speakerModeSwitchAction != null && TUIChatConfigClassic.isEnableSpeakerModeSwitch()) {
-            speakerModeSwitchAction.setPriority(11000);
-            mPopActions.add(speakerModeSwitchAction);
-        }
-        if (multiSelectAction != null && TUIChatConfigClassic.isEnableSelect() && !msg.hasRiskContent()) {
-            multiSelectAction.setPriority(8000);
-            mPopActions.add(multiSelectAction);
-        }
-        if (quoteAction != null && TUIChatConfigClassic.isEnableQuote() && !msg.hasRiskContent()) {
-            quoteAction.setPriority(7000);
-            mPopActions.add(quoteAction);
-        }
-        if (replyAction != null && TUIChatConfigClassic.isEnableReply() && !msg.hasRiskContent()) {
-            replyAction.setPriority(6000);
-            mPopActions.add(replyAction);
-        }
-        if (revokeAction != null && TUIChatConfigClassic.isEnableRecall()) {
-            revokeAction.setPriority(5000);
-            mPopActions.add(revokeAction);
-        }
-        if (deleteAction != null && TUIChatConfigClassic.isEnableDelete()) {
-            deleteAction.setPriority(4000);
-            mPopActions.add(deleteAction);
-        }
-
-
-        if (isDefaultMessage(msg)) {
-            if (copyAction != null && TUIChatConfigClassic.isEnableCopy() && !msg.hasRiskContent()) {
-                copyAction.setPriority(10000);
-                mPopActions.add(copyAction);
-            }
-            if (forwardAction != null && TUIChatConfigClassic.isEnableForward()) {
-                forwardAction.setPriority(9000);
-                mPopActions.add(forwardAction);
-            }
-        }
+        addDefaultMessageActions(msg, copyAction, forwardAction);
 
         mPopActions.addAll(mMorePopActions);
-        mPopActions.addAll(getExtensionActions(msg));
-        Collections.sort(mPopActions, new Comparator<ChatPopMenu.ChatPopMenuAction>() {
-            @Override
-            public int compare(ChatPopMenu.ChatPopMenuAction o1, ChatPopMenu.ChatPopMenuAction o2) {
-                return o2.getPriority() - o1.getPriority();
-            }
-        });
+        if (getChatInfo().isPopMenuEnableExtension()) {
+            mPopActions.addAll(getExtensionActions(msg));
+        }
+
+        Collections.sort(mPopActions, (o1, o2) -> o2.getPriority() - o1.getPriority());
+    }
+
+    private ChatPopMenu.ChatPopMenuAction createSpeakerModeSwitchAction(TUIMessageBean msg) {
+        if (!(msg instanceof SoundMessageBean)) {
+            return null;
+        }
+
+        ChatPopMenu.ChatPopMenuAction action = new ChatPopMenu.ChatPopMenuAction();
+        boolean isSpeakerMode = TUIChatConfigs.getGeneralConfig().isEnableSoundMessageSpeakerMode();
+
+        int actionIcon = isSpeakerMode ? R.drawable.pop_menu_ear : R.drawable.pop_menu_speaker;
+        String actionName =
+            isSpeakerMode ? getContext().getString(R.string.chat_speaker_mode_off_action) : getContext().getString(R.string.chat_speaker_mode_on_action);
+
+        action.setActionIcon(actionIcon);
+        action.setActionName(actionName);
+        action.setActionClickListener(() -> mOnPopActionClickListener.onSpeakerModeSwitchClick(msg));
+        return action;
+    }
+
+    private ChatPopMenu.ChatPopMenuAction createCopyAction(TUIMessageBean msg) {
+        if (!(msg instanceof TextMessageBean || msg instanceof QuoteMessageBean)) {
+            return null;
+        }
+
+        ChatPopMenu.ChatPopMenuAction action = new ChatPopMenu.ChatPopMenuAction();
+        action.setActionName(getContext().getString(R.string.copy_action));
+        action.setActionIcon(R.drawable.pop_menu_copy);
+        action.setActionClickListener(() -> mOnPopActionClickListener.onCopyClick(msg));
+        return action;
+    }
+
+    private ChatPopMenu.ChatPopMenuAction createForwardAction(TUIMessageBean msg) {
+        if (msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL || msg.hasRiskContent()) {
+            return null;
+        }
+
+        ChatPopMenu.ChatPopMenuAction action = new ChatPopMenu.ChatPopMenuAction();
+        action.setActionName(getContext().getString(R.string.forward_button));
+        action.setActionIcon(R.drawable.pop_menu_forward);
+        action.setActionClickListener(() -> mOnPopActionClickListener.onForwardMessageClick(msg));
+        return action;
+    }
+
+    private ChatPopMenu.ChatPopMenuAction createMultiSelectAction(TUIMessageBean msg, boolean textIsAllSelected) {
+        if (!textIsAllSelected) {
+            return null;
+        }
+
+        ChatPopMenu.ChatPopMenuAction action = new ChatPopMenu.ChatPopMenuAction();
+        action.setActionName(getContext().getString(R.string.titlebar_mutiselect));
+        action.setActionIcon(R.drawable.pop_menu_multi_select);
+        action.setActionClickListener(() -> mOnPopActionClickListener.onMultiSelectMessageClick(msg));
+        return action;
+    }
+
+    private ChatPopMenu.ChatPopMenuAction createQuoteAction(TUIMessageBean msg, boolean textIsAllSelected) {
+        if (!textIsAllSelected || msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
+            return null;
+        }
+
+        ChatPopMenu.ChatPopMenuAction action = new ChatPopMenu.ChatPopMenuAction();
+        action.setActionName(getContext().getString(R.string.quote_button));
+        action.setActionIcon(R.drawable.pop_menu_quote);
+        action.setActionClickListener(() -> mOnPopActionClickListener.onQuoteMessageClick(msg));
+        return action;
+    }
+
+    private ChatPopMenu.ChatPopMenuAction createReplyAction(TUIMessageBean msg, boolean textIsAllSelected) {
+        if (!textIsAllSelected || msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
+            return null;
+        }
+
+        ChatPopMenu.ChatPopMenuAction action = new ChatPopMenu.ChatPopMenuAction();
+        action.setActionName(getContext().getString(R.string.reply_button));
+        action.setActionIcon(R.drawable.pop_menu_reply);
+        action.setActionClickListener(() -> mOnPopActionClickListener.onReplyMessageClick(msg));
+        return action;
+    }
+
+    private ChatPopMenu.ChatPopMenuAction createRevokeAction(TUIMessageBean msg, boolean textIsAllSelected) {
+        if (!textIsAllSelected || !msg.isSelf() || msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
+            return null;
+        }
+
+        long timeInterval = TUIChatUtils.getServerTime() - msg.getMessageTime();
+        if (timeInterval >= TUIChatConfigClassic.getTimeIntervalForAllowedMessageRecall()) {
+            return null;
+        }
+
+        ChatPopMenu.ChatPopMenuAction action = new ChatPopMenu.ChatPopMenuAction();
+        action.setActionName(getContext().getString(R.string.revoke_action));
+        action.setActionIcon(R.drawable.pop_menu_revoke);
+        action.setActionClickListener(() -> mOnPopActionClickListener.onRevokeMessageClick(msg));
+        return action;
+    }
+
+    private ChatPopMenu.ChatPopMenuAction createDeleteAction(TUIMessageBean msg, boolean textIsAllSelected) {
+        if (!textIsAllSelected) {
+            return null;
+        }
+
+        ChatPopMenu.ChatPopMenuAction action = new ChatPopMenu.ChatPopMenuAction();
+        action.setActionName(getContext().getString(R.string.delete_action));
+        action.setActionIcon(R.drawable.pop_menu_delete);
+        action.setActionClickListener(() -> mOnPopActionClickListener.onDeleteMessageClick(msg));
+        return action;
+    }
+
+    private void addActionIfEnabled(ChatPopMenu.ChatPopMenuAction action, boolean enabled, int priority) {
+        if (action != null && enabled) {
+            action.setPriority(priority);
+            mPopActions.add(action);
+        }
+    }
+
+    private void addDefaultMessageActions(TUIMessageBean msg, ChatPopMenu.ChatPopMenuAction copyAction, ChatPopMenu.ChatPopMenuAction forwardAction) {
+        if (!isDefaultMessage(msg)) {
+            return;
+        }
+
+        if (copyAction != null && TUIChatConfigClassic.isEnableCopy() && getChatInfo().isPopMenuEnableCopy() && !msg.hasRiskContent()) {
+            copyAction.setPriority(10000);
+            mPopActions.add(copyAction);
+        }
+
+        if (forwardAction != null && TUIChatConfigClassic.isEnableForward() && getChatInfo().isPopMenuEnableForward()) {
+            forwardAction.setPriority(9000);
+            mPopActions.add(forwardAction);
+        }
     }
 
     private static boolean isTextIsAllSelected(TUIMessageBean msg) {
@@ -396,8 +430,8 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         ChatPopMenu.ChatPopMenuAction groupPinAction = null;
 
         if (presenter instanceof GroupChatPresenter && TUIChatConfigs.getGeneralConfig().isEnableGroupChatPinMessage()
-                && ((GroupChatPresenter) presenter).canPinnedMessage() && msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL
-                && msg.getStatus() != TUIMessageBean.MSG_STATUS_SENDING && !msg.hasRiskContent()) {
+            && ((GroupChatPresenter) presenter).canPinnedMessage() && msg.getStatus() != TUIMessageBean.MSG_STATUS_SEND_FAIL
+            && msg.getStatus() != TUIMessageBean.MSG_STATUS_SENDING && !msg.hasRiskContent()) {
             groupPinAction = new ChatPopMenu.ChatPopMenuAction();
             if (((GroupChatPresenter) presenter).isMessagePinned(msg.getId())) {
                 groupPinAction.setActionName(getContext().getResources().getString(R.string.chat_group_unpin_message));
@@ -731,7 +765,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         ChatFileDownloadPresenter.downloadSound(messageBean, downloadSoundCallback);
     }
 
-
     private void showRootMessageReplyDetail(TUIMessageBean messageBean) {
         if (presenter.getChatInfo() == null) {
             return;
@@ -800,6 +833,10 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         mAdapter = adapter;
     }
 
+    private ChatInfo getChatInfo() {
+        return presenter.getChatInfo();
+    }
+
     public void loadMessageFinish() {
         if (chatDelegate != null) {
             chatDelegate.loadMessageFinish();
@@ -813,7 +850,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
     }
 
     public interface ChatDelegate {
-
         void displayBackToNewMessage(boolean display, String messageId, int count);
 
         void loadMessageFinish();

@@ -58,6 +58,7 @@ public class ForwardSelectLayout extends RelativeLayout {
         adapter.setSwipeEnabled(false);
         conversationList.setAdapter((IConversationListAdapter) adapter);
         presenter.setAdapter(adapter);
+        presenter.setForwardMessage(true);
         presenter.loadMoreConversation();
     }
 

@@ -49,6 +49,7 @@ public class ForwardSelectLayout extends RelativeLayout implements IConversation
         adapter.setForwardFragment(true);
         conversationList.setAdapter((IConversationListAdapter) adapter);
         presenter.setAdapter(adapter);
+        presenter.setForwardMessage(true);
         presenter.loadMoreConversation();
     }
 

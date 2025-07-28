@@ -17,6 +17,7 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
+import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationConstants;
 import com.tencent.qcloud.tuikit.tuiconversation.TUIConversationService;
@@ -67,6 +68,7 @@ public class ConversationPresenter {
     private boolean isUnreadStatusOfFoldItem;
     protected int conversationGroupType = ConversationGroupBean.CONVERSATION_GROUP_TYPE_DEFAULT;
     protected boolean isFocusing = true;
+    private boolean isForwardMessage = false;
 
     public ConversationPresenter() {
         provider = new ConversationProvider();
@@ -191,6 +193,7 @@ public class ConversationPresenter {
         provider.loadMoreConversation(GET_CONVERSATION_COUNT, new IUIKitCallback<List<ConversationInfo>>() {
             @Override
             public void onSuccess(List<ConversationInfo> data) {
+                filterConversationList(data);
                 onLoadConversationCompleted(data);
             }
 
@@ -201,6 +204,22 @@ public class ConversationPresenter {
                 }
             }
         });
+    }
+
+    private void filterConversationList(List<ConversationInfo> conversationInfoList) {
+        if (isForwardMessage) {
+            Iterator<ConversationInfo> iterator = conversationInfoList.listIterator();
+            while (iterator.hasNext()) {
+                ConversationInfo conversationInfo = iterator.next();
+                if (TIMCommonUtil.isChatbot(conversationInfo.getId())) {
+                    iterator.remove();
+                }
+            }
+        }
+    }
+
+    public void setForwardMessage(boolean forwardMessage) {
+        isForwardMessage = forwardMessage;
     }
 
     public void reLoadConversation() {}

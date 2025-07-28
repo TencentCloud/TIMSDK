@@ -25,6 +25,8 @@ import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingTipsMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.ChatbotMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.ChatbotPlaceholderMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomEvaluationMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomLinkMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CustomOrderMessageBean;
@@ -65,6 +67,8 @@ import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.reply.Sound
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.reply.TextReplyQuoteView;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.reply.VideoReplyQuoteView;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.CallingMessageHolder;
+import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.ChatbotMessageHolder;
+import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.ChatbotPlaceholderMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.CustomEvaluationMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.CustomLinkMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.message.viewholder.CustomOrderMessageHolder;
@@ -145,6 +149,8 @@ public class MinimalistUIService implements TUIInitializer, ITUIService, ITUIExt
         addMessageType(CustomOrderMessageBean.class, CustomOrderMessageHolder.class);
         addMessageType(MessageTypingBean.class, null);
         addMessageType(EmptyMessageBean.class, EmptyMessageHolder.class, true);
+        addMessageType(ChatbotMessageBean.class, ChatbotMessageHolder.class);
+        addMessageType(ChatbotPlaceholderMessageBean.class, ChatbotPlaceholderMessageHolder.class);
     }
 
     public void addMessageType(Class<? extends TUIMessageBean> beanClazz, Class<? extends RecyclerView.ViewHolder> holderClazz) {
@@ -208,33 +214,10 @@ public class MinimalistUIService implements TUIInitializer, ITUIService, ITUIExt
 
     @Override
     public List<TUIExtensionInfo> onGetExtension(String extensionID, Map<String, Object> param) {
-        if (TextUtils.equals(extensionID, TUIConstants.TUIContact.Extension.FriendProfileItem.MINIMALIST_EXTENSION_ID)) {
-            return getMinimalistFriendProfileExtension(param);
-        } else if (TextUtils.equals(extensionID, TUIConstants.TUIContact.Extension.GroupProfileItem.MINIMALIST_EXTENSION_ID)) {
+        if (TextUtils.equals(extensionID, TUIConstants.TUIContact.Extension.GroupProfileItem.MINIMALIST_EXTENSION_ID)) {
             return getMinimalistGroupProfileExtension(param);
         }
         return null;
-    }
-
-    private List<TUIExtensionInfo> getMinimalistFriendProfileExtension(Map<String, Object> param) {
-        TUIExtensionInfo chatExtension = new TUIExtensionInfo();
-        chatExtension.setWeight(400);
-        chatExtension.setIcon(R.drawable.chat_contact_profile_item_extension_message_icon);
-        chatExtension.setText(getAppContext().getString(R.string.chat_contact_profile_message));
-        String userID = getOrDefault(param, TUIConstants.TUIContact.Extension.FriendProfileItem.USER_ID, null);
-        chatExtension.setExtensionListener(new TUIExtensionEventListener() {
-            @Override
-            public void onClicked(Map<String, Object> param) {
-                Intent intent = new Intent(getAppContext(), TUIC2CChatMinimalistActivity.class);
-                intent.putExtra(TUIConstants.TUIChat.CHAT_TYPE, V2TIMConversation.V2TIM_C2C);
-                intent.putExtra(TUIConstants.TUIChat.CHAT_ID, userID);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getAppContext().startActivity(intent);
-            }
-        });
-        List<TUIExtensionInfo> extensionInfoList = new ArrayList<>();
-        extensionInfoList.add(chatExtension);
-        return extensionInfoList;
     }
 
     private List<TUIExtensionInfo> getMinimalistGroupProfileExtension(Map<String, Object> param) {

@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
 import com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView;
+import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -18,6 +19,7 @@ public class ChatPopDataHolder {
     private WeakReference<List<ChatPopActivity.ChatPopMenuAction>> actionList;
     private WeakReference<Drawable> msgAreaBackground;
     private WeakReference<RoundCornerImageView> imageMessageView;
+    private WeakReference<ChatInfo> chatInfo;
     private Rect messageViewGlobalRect;
 
     public static void setActionList(List<ChatPopActivity.ChatPopMenuAction> actionList) {
@@ -55,6 +57,14 @@ public class ChatPopDataHolder {
 
     public static void setImageMessageView(RoundCornerImageView imageMessageView) {
         instance.imageMessageView = new WeakReference<>(imageMessageView);
+    }
+
+    public static void setChatInfo(ChatInfo chatInfo) {
+        instance.chatInfo = new WeakReference<>(chatInfo);
+    }
+
+    public static ChatInfo getChatInfo() {
+        return instance.chatInfo.get();
     }
 
     public static RoundCornerImageView getImageMessageView() {

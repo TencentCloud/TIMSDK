@@ -272,7 +272,7 @@ public class ChatPopActivity extends AppCompatActivity {
     }
 
     public boolean isShowFaces() {
-        return TUIChatConfigMinimalist.isEnableEmojiReaction();
+        return TUIChatConfigMinimalist.isEnableEmojiReaction() && ChatPopDataHolder.getChatInfo().isPopMenuEnableExtension();
     }
 
     private ChatPopMenuAction getChatPopMenuAction(int position) {
