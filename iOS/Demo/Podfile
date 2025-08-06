@@ -10,10 +10,10 @@ target 'TUIKitDemo' do
 
   # Pods for Example
   pod 'TUICore','8.6.7019'
-  pod 'TUIChat', '8.6.7020' # support AI Chat
-  pod 'TIMCommon', '8.6.7020' # support AI Chat
-  pod 'TUIConversation', '8.6.7020' # support AI Chat
-  pod 'TUIContact', '8.6.7020' # support AI Chat
+  pod 'TUIChat', '8.6.7040' # support AI Chat
+  pod 'TIMCommon', '8.6.7040' # support AI Chat
+  pod 'TUIConversation', '8.6.7040' # support AI Chat
+  pod 'TUIContact', '8.6.7040' # support AI Chat
   pod 'TUISearch', '8.6.7019'
   pod 'TUIPollPlugin', '8.6.7019'
   pod 'TUIGroupNotePlugin', '8.6.7019'
