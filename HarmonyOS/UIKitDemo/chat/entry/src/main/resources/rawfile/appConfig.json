@@ -1,0 +1,32 @@
+{
+  "theme": {
+    "mode": "system",
+    "primaryColor": "#1C66E5"
+  },
+  "messageList": {
+    "alignment": "two-sided",
+    "messageActionList": [
+      "copy",
+      "recall",
+      "delete"
+    ]
+  },
+  "conversationList": {
+    "enableCreateConversation": true,
+    "conversationActionList": [
+      "delete",
+      "pin",
+      "markUnread",
+      "clearHistory"
+    ]
+  },
+  "messageInput": {
+    "hideSendButton": false
+  },
+  "search": {
+    "hideSearch": false
+  },
+  "avatar": {
+    "shape": "circular"
+  }
+}

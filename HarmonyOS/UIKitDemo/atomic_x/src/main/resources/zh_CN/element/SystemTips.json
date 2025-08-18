@@ -1,0 +1,240 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "merge_message_title",
+      "value": "合并消息"
+    },
+    {
+      "name": "message_type_image",
+      "value": "图片"
+    },
+    {
+      "name": "message_type_voice",
+      "value": "语音"
+    },
+    {
+      "name": "message_type_video",
+      "value": "视频"
+    },
+    {
+      "name": "message_type_file",
+      "value": "文件"
+    },
+    {
+      "name": "message_type_animate_emoji",
+      "value": "动画表情"
+    },
+    {
+      "name": "message_tips_unsupport_custom",
+      "value": "不支持的自定义消息"
+    },
+    {
+      "name": "group_create_tips_message",
+      "value": "创建群组"
+    },
+    {
+      "name": "community_create_tips_message",
+      "value": "创建社群"
+    },
+    {
+      "name": "community_create_tips_format",
+      "value": "%s创建社群"
+    },
+    {
+      "name": "group_create_tips_format",
+      "value": "%s创建群组"
+    },
+    {
+      "name": "message_tips_you_recall",
+      "value": "你撤回了一条消息"
+    },
+    {
+      "name": "message_tips_others_recall",
+      "value": "对方撤回了一条消息"
+    },
+    {
+      "name": "message_tips_recall",
+      "value": "撤回了一条消息"
+    },
+    {
+      "name": "message_tips_recall_format",
+      "value": "%s撤回了一条消息"
+    },
+    {
+      "name": "message_tips_normal_recall",
+      "value": "消息已撤回"
+    },
+    {
+      "name": "message_tips_join_group",
+      "value": "%s加入了群组"
+    },
+    {
+      "name": "message_tips_invite_join_group",
+      "value": "%s邀请%s加入群组"
+    },
+    {
+      "name": "message_tips_leave_group",
+      "value": "%s退出了群组"
+    },
+    {
+      "name": "message_tips_kickoff_group",
+      "value": "%s将%s移出群组"
+    },
+    {
+      "name": "you",
+      "value": "你"
+    },
+    {
+      "name": "message_tips_unmute",
+      "value": "被取消禁言"
+    },
+    {
+      "name": "message_tips_mute",
+      "value": "被禁言"
+    },
+    {
+      "name": "message_tips_mute_format",
+      "value": "%s %s"
+    },
+    {
+      "name": "message_tips_group_pin",
+      "value": "%s置顶了一条消息"
+    },
+    {
+      "name": "message_tips_group_unpin",
+      "value": "%s取消置顶了一条消息"
+    },
+    {
+      "name": "message_tips_set_admin",
+      "value": "%s被设置为管理员"
+    },
+    {
+      "name": "message_tips_cancel_admin",
+      "value": "%s被取消管理员"
+    },
+    {
+      "name": "message_tips_edit_group_name",
+      "value": "%s修改群名称为\"%s\""
+    },
+    {
+      "name": "message_tips_edit_group_intro",
+      "value": "%s修改群简介为\"%s\""
+    },
+    {
+      "name": "message_tips_edit_group_announce",
+      "value": "%s修改群公告为\"%s\""
+    },
+    {
+      "name": "message_tips_delete_group_announce",
+      "value": "%s删除了群公告"
+    },
+    {
+      "name": "message_tips_edit_group_avatar",
+      "value": "%s修改了群头像"
+    },
+    {
+      "name": "message_tips_edit_group_owner",
+      "value": "%s将群转让给\"%s\""
+    },
+    {
+      "name": "message_tips_shutup_all",
+      "value": "%s开启了全员禁言"
+    },
+    {
+      "name": "message_tips_cancel_shutup_all",
+      "value": "%s关闭了全员禁言"
+    },
+    {
+      "name": "message_tips_edit_group_join",
+      "value": "%s修改入群方式为\"%s\""
+    },
+    {
+      "name": "message_tips_edit_group_invite",
+      "value": "%s修改邀请方式为\"%s\""
+    },
+    {
+      "name": "group_join_disable",
+      "value": "禁止加群"
+    },
+    {
+      "name": "group_admin_approve",
+      "value": "管理员审批"
+    },
+    {
+      "name": "group_auto_approval",
+      "value": "自动批准"
+    },
+    {
+      "name": "group_invite_disable",
+      "value": "禁止邀请"
+    },
+    {
+      "name": "unknown",
+      "value": "未知"
+    },
+    {
+      "name": "sunday",
+      "value": "星期日"
+    },
+    {
+      "name": "monday",
+      "value": "星期一"
+    },
+    {
+      "name": "tuesday",
+      "value": "星期二"
+    },
+    {
+      "name": "wednesday",
+      "value": "星期三"
+    },
+    {
+      "name": "thursday",
+      "value": "星期四"
+    },
+    {
+      "name": "friday",
+      "value": "星期五"
+    },
+    {
+      "name": "saturday",
+      "value": "星期六"
+    },
+    {
+      "name": "group_id_empty",
+      "value": "群组ID不能为空"
+    },
+    {
+      "name": "message_empty",
+      "value": "消息不能为空"
+    },
+    {
+      "name": "fetch_members_first",
+      "value": "请先获取群成员列表"
+    },
+    {
+      "name": "fetch_members_failed",
+      "value": "获取群成员列表失败"
+    },
+    {
+      "name": "message_not_found",
+      "value": "消息不存在"
+    },
+    {
+      "name": "conversation_clear_message_failed",
+      "value": "清除历史消息失败"
+    },
+    {
+      "name": "conversation_mark_read_failed",
+      "value": "标记会话已/未读失败"
+    },
+    {
+      "name": "conversation_mark_unread_failed",
+      "value": "标记会话为未读失败"
+    }
+  ]
+}

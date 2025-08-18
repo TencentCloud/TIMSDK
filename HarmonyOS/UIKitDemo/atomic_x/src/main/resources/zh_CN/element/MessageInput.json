@@ -1,0 +1,72 @@
+{
+  "string": [
+    {
+      "name": "input_message_placeholder",
+      "value": "发送消息"
+    },
+    {
+      "name": "send_button",
+      "value": "发送"
+    },
+    {
+      "name": "permission_read_media",
+      "value": "读取媒体文件"
+    },
+    {
+      "name": "permission_write_media",
+      "value": "写入媒体文件"
+    },
+    {
+      "name": "permission_media_location",
+      "value": "本地媒体权限"
+    },
+    {
+      "name": "permission_camera",
+      "value": "使用相机权限"
+    },
+    {
+      "name": "permission_read_imagevideo",
+      "value": "需要读取图片和视频文件以选择和发送媒体消息"
+    },
+    {
+      "name": "permission_write_imagevideo",
+      "value": "需要保存接收的图片和视频文件"
+    },
+    {
+      "name": "permission_read_audio",
+      "value": "需要读取音频文件以选择和发送语音消息"
+    },
+    {
+      "name": "permission_read_storage",
+      "value": "读取用户存储"
+    },
+    {
+      "name": "permission_write_storage",
+      "value": "写入用户存储"
+    },
+    {
+      "name": "menu_image",
+      "value": "图片"
+    },
+    {
+      "name": "menu_photo",
+      "value": "照片"
+    },
+    {
+      "name": "menu_video",
+      "value": "视频"
+    },
+    {
+      "name": "menu_file",
+      "value": "文件"
+    },
+    {
+      "name": "menu_custom",
+      "value": "自定义"
+    },
+    {
+      "name": "cancel",
+      "value": "取消"
+    }
+  ]
+}

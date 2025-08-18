@@ -1,0 +1,100 @@
+{
+  "string": [
+    {
+      "name": "no_messages_title",
+      "value": "No Messages"
+    },
+    {
+      "name": "no_messages_desc",
+      "value": "Start a new conversation by tapping the + icon"
+    },
+    {
+      "name": "loading_message",
+      "value": "loading message..."
+    },
+    {
+      "name": "mark_unread",
+      "value": "Unread"
+    },
+    {
+      "name": "more_options",
+      "value": "More Options"
+    },
+    {
+      "name": "pin_conversation",
+      "value": "Pin Conversation"
+    },
+    {
+      "name": "unpin_conversation",
+      "value": "Unpin Conversation"
+    },
+    {
+      "name": "clear_messages",
+      "value": "Clear Messages"
+    },
+    {
+      "name": "delete_conversation",
+      "value": "Delete Conversation"
+    },
+    {
+      "name": "clear_messages_title",
+      "value": "Clear Messages"
+    },
+    {
+      "name": "clear_messages_confirm",
+      "value": "Are you sure you want to clear all messages in this conversation?"
+    },
+    {
+      "name": "delete_conversation_title",
+      "value": "Delete Conversation"
+    },
+    {
+      "name": "delete_conversation_confirm",
+      "value": "Are you sure you want to delete this conversation?"
+    },
+    {
+      "name": "mark_unread_failed",
+      "value": "Failed to mark as unread"
+    },
+    {
+      "name": "hide_conversation",
+      "value": "Hide Conversation"
+    },
+    {
+      "name": "mark_as_read",
+      "value": "Mark as Read"
+    },
+    {
+      "name": "mark_as_unread",
+      "value": "Mark as Unread"
+    },
+    {
+      "name": "demo_theme_button_name",
+      "value": "Theme"
+    },
+    {
+      "name": "theme_select_title",
+      "value": "Select Theme"
+    },
+    {
+      "name": "theme_light",
+      "value": "Light"
+    },
+    {
+      "name": "theme_dark",
+      "value": "Dark"
+    },
+    {
+      "name": "theme_system",
+      "value": "System"
+    },
+    {
+      "name": "conversationlist_title_placeholder",
+      "value": "conversation"
+    },
+    {
+      "name": "conversationlist_copyright",
+      "value": "© 2025 AtomicX. All Rights Reserved."
+    }
+  ]
+}

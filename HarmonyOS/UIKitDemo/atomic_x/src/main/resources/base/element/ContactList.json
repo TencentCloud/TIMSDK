@@ -1,0 +1,464 @@
+{
+  "string": [
+    {
+      "name": "new_contacts",
+      "value": "New Contacts"
+    },
+    {
+      "name": "group_chat_notifications",
+      "value": "Group Chat Notifications"
+    },
+    {
+      "name": "my_group",
+      "value": "My Groups"
+    },
+    {
+      "name": "the_blacklist",
+      "value": "Blacklist"
+    },
+    {
+      "name": "no_results_found",
+      "value": "No results found"
+    },
+    {
+      "name": "no_contacts_title",
+      "value": "No Contacts"
+    },
+    {
+      "name": "no_contacts_desc",
+      "value": "Start adding contacts to see them here"
+    },
+    {
+      "name": "loading_contacts",
+      "value": "Loading contacts..."
+    },
+    {
+      "name": "send_message",
+      "value": "Send Message"
+    },
+    {
+      "name": "search_contacts",
+      "value": "Search Contacts"
+    },
+    {
+      "name": "no_matching_contacts",
+      "value": "No related contacts found"
+    },
+    {
+      "name": "view_profile",
+      "value": "View Profile"
+    },
+    {
+      "name": "set_remark",
+      "value": "Set Remark"
+    },
+    {
+      "name": "add_to_blacklist",
+      "value": "Add to Blacklist"
+    },
+    {
+      "name": "delete_friend",
+      "value": "Delete Friend"
+    },
+    {
+      "name": "set_remark_title",
+      "value": "Set Remark"
+    },
+    {
+      "name": "set_remark_message",
+      "value": "Please enter remark name"
+    },
+    {
+      "name": "delete_friend_title",
+      "value": "Delete Friend"
+    },
+    {
+      "name": "delete_friend_message",
+      "value": "Are you sure you want to delete this friend? You will not be able to receive messages from them after deletion."
+    },
+    {
+      "name": "delete_friend_failed",
+      "value": "Failed to delete friend"
+    },
+    {
+      "name": "set_remark_failed",
+      "value": "Failed to set remark"
+    },
+    {
+      "name": "add_to_blacklist_failed",
+      "value": "Failed to add to blacklist"
+    },
+    {
+      "name": "contact_operation_failed",
+      "value": "Contact operation failed"
+    },
+    {
+      "name": "new_contacts_title",
+      "value": "New Contacts"
+    },
+    {
+      "name": "new_application_single",
+      "value": "New Application"
+    },
+    {
+      "name": "new_applications_multiple",
+      "value": "New Applications"
+    },
+    {
+      "name": "done_button",
+      "value": "Done"
+    },
+    {
+      "name": "agree_button",
+      "value": "Agree"
+    },
+    {
+      "name": "refuse_button",
+      "value": "Refuse"
+    },
+    {
+      "name": "no_friend_applications_title",
+      "value": "No Friend Applications"
+    },
+    {
+      "name": "no_friend_applications_desc",
+      "value": "No friend applications at the moment"
+    },
+    {
+      "name": "loading_applications",
+      "value": "Loading applications..."
+    },
+    {
+      "name": "processing_request",
+      "value": "Processing..."
+    },
+    {
+      "name": "request_processed_successfully",
+      "value": "Request processed successfully"
+    },
+    {
+      "name": "request_processing_failed",
+      "value": "Request processing failed"
+    },
+    {
+      "name": "back_button",
+      "value": "Back"
+    },
+    {
+      "name": "user_detail_title",
+      "value": "User Info"
+    },
+    {
+      "name": "group_detail_title",
+      "value": "Group Info"
+    },
+    {
+      "name": "friend_request_info",
+      "value": "Info"
+    },
+    {
+      "name": "validation_message",
+      "value": "Validation messages"
+    },
+    {
+      "name": "search_placeholder",
+      "value": "Search"
+    },
+    {
+      "name": "loading_groups",
+      "value": "Loading groups..."
+    },
+    {
+      "name": "loading_blacklist",
+      "value": "Loading blacklist..."
+    },
+    {
+      "name": "no_blacklist_users_title",
+      "value": "No Blacklist Users"
+    },
+    {
+      "name": "no_blacklist_users_desc",
+      "value": "No blacklist users at the moment"
+    },
+    {
+      "name": "unblock_user_title",
+      "value": "Unblock User"
+    },
+    {
+      "name": "unblock_user_message",
+      "value": "Are you sure you want to unblock"
+    },
+    {
+      "name": "unblock_button",
+      "value": "Unblock"
+    },
+    {
+      "name": "no_groups_title",
+      "value": "No Groups"
+    },
+    {
+      "name": "no_groups_desc",
+      "value": "No friend groups at the moment"
+    },
+    {
+      "name": "add_contacts_title",
+      "value": "Add Contacts"
+    },
+    {
+      "name": "my_user_id_label",
+      "value": "My User ID: "
+    },
+    {
+      "name": "id_label",
+      "value": "ID:"
+    },
+    {
+      "name": "search_user_placeholder",
+      "value": "Enter user ID or phone number"
+    },
+    {
+      "name": "contacts",
+      "value": "Contacts"
+    },
+    {
+      "name": "info",
+      "value": "Info"
+    },
+    {
+      "name": "searching",
+      "value": "Searching..."
+    },
+    {
+      "name": "no_users_found",
+      "value": "No information"
+    },
+    {
+      "name": "try_different_keyword",
+      "value": "Try a different search term"
+    },
+    {
+      "name": "add_contact",
+      "value": "Add Contact"
+    },
+    {
+      "name": "friend_request_default_message",
+      "value": "I'd like to add you as a friend."
+    },
+    {
+      "name": "adding_contact",
+      "value": "Adding..."
+    },
+    {
+      "name": "added_successfully",
+      "value": "Added Successfully"
+    },
+    {
+      "name": "add_contacts",
+      "value": "Add Contacts"
+    },
+    {
+      "name": "user_id_placeholder",
+      "value": "User ID"
+    },
+    {
+      "name": "search_users",
+      "value": "Search Users"
+    },
+    {
+      "name": "search_groups",
+      "value": "Search Groups"
+    },
+    {
+      "name": "group_id_placeholder",
+      "value": "Group ID"
+    },
+    {
+      "name": "search_group_placeholder",
+      "value": "Enter group ID"
+    },
+    {
+      "name": "join_group",
+      "value": "Join Group"
+    },
+    {
+      "name": "add_group_title",
+      "value": "Add Group"
+    },
+    {
+      "name": "create_group_chat",
+      "value": "Create Group Chat"
+    },
+    {
+      "name": "create_group_chat_message",
+      "value": "Create Group Chat"
+    },
+    {
+      "name": "create_group_desc",
+      "value": "Start a new group conversation"
+    },
+    {
+      "name": "join_group_chat",
+      "value": "Join Group Chat"
+    },
+    {
+      "name": "join_group_desc",
+      "value": "Join an existing group by ID"
+    },
+    {
+      "name": "remarks",
+      "value": "Remarks"
+    },
+    {
+      "name": "group",
+      "value": "Group"
+    },
+    {
+      "name": "my_friend",
+      "value": "My Friend"
+    },
+    {
+      "name": "remarks_and_grouping",
+      "value": "Remarks and Grouping"
+    },
+    {
+      "name": "fill_verification_info",
+      "value": "Fill in the verification information"
+    },
+    {
+      "name": "send",
+      "value": "Send"
+    },
+    {
+      "name": "sending",
+      "value": "Sending..."
+    },
+    {
+      "name": "personal_signature",
+      "value": "Personal signature"
+    },
+    {
+      "name": "create_group_chat_title",
+      "value": "Create Group Chat"
+    },
+    {
+      "name": "select_contacts_title",
+      "value": "Select Contacts"
+    },
+    {
+      "name": "next_step_button",
+      "value": "Next Step"
+    },
+    {
+      "name": "start_conversation_button",
+      "value": "Start Conversation"
+    },
+    {
+      "name": "group_type_selector_cancel",
+      "value": "Cancel"
+    },
+    {
+      "name": "group_type_selector_title",
+      "value": "Group Type"
+    },
+    {
+      "name": "group_portrait",
+      "value": "Group portrait"
+    },
+    {
+      "name": "more",
+      "value": "More"
+    },
+    {
+      "name": "frequently_contacted",
+      "value": "Frequently Contacted"
+    },
+    {
+      "name": "selected_count_prefix",
+      "value": "Selected "
+    },
+    {
+      "name": "group_type_work_title",
+      "value": "Work Group"
+    },
+    {
+      "name": "group_type_work_description",
+      "value": "Work groups are similar to regular WeChat groups. After creation, only friends already in the group can invite others to join, without requiring approval from the invitees or group owner. See product documentation for details."
+    },
+    {
+      "name": "group_type_public_title",
+      "value": "Public Group"
+    },
+    {
+      "name": "group_type_public_description",
+      "value": "Public groups are similar to QQ groups. After creation, the group owner can designate group administrators. Users need to search for the group ID and apply to join, requiring approval from the group owner or administrators. See product documentation for details."
+    },
+    {
+      "name": "group_type_meeting_title",
+      "value": "Meeting Group"
+    },
+    {
+      "name": "group_type_meeting_description",
+      "value": "Meeting groups allow users to join and leave freely, with support for viewing messages sent before joining. Suitable for audio/video conference scenarios, online education scenarios, and other scenarios combined with real-time audio/video products. See product documentation for details."
+    },
+    {
+      "name": "group_type_avchatroom_title",
+      "value": "Live Streaming Group"
+    },
+    {
+      "name": "group_type_avchatroom_description",
+      "value": "Live streaming groups allow users to join and leave freely with no limit on the number of group members, but do not support historical message storage. Suitable for combination with live streaming products for bullet chat scenarios. See product documentation for details."
+    },
+    {
+      "name": "view_product_documentation",
+      "value": "View Product Documentation"
+    },
+    {
+      "name": "no_group_applications_title",
+      "value": "no group applications"
+    },
+    {
+      "name": "request_message",
+      "value": "Verification"
+    },
+    {
+      "name": "group_request_info",
+      "value": "Info"
+    },
+    {
+      "name": "loading_group_applications",
+      "value": "Loading..."
+    },
+    {
+      "name": "new_group_requests",
+      "value": "New Group Requests"
+    },
+    {
+      "name": "group_application_refused",
+      "value": "Refused"
+    },
+    {
+      "name": "group_application_accepted",
+      "value": "Accepted"
+    },
+    {
+      "name": "enter_verification_info",
+      "value": "Please enter verification"
+    },
+    {
+      "name": "friend_request_sent",
+      "value": "Friend request sent"
+    },
+    {
+      "name": "add_friend_failed",
+      "value": "Failed to add friend"
+    },
+    {
+      "name": "group_request_sent",
+      "value": "Group request sent"
+    },
+    {
+      "name": "already_in_group",
+      "value": "Already in group"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "app": {
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compatibleSdkVersion": "5.0.0(12)",
+        "runtimeOS": "HarmonyOS",
+        "buildOption": {
+          "strictMode": {
+            "caseSensitiveCheck": true,
+            "useNormalizedOHMUrl": true
+          }
+        }
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug"
+      },
+      {
+        "name": "release"
+      }
+    ],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/yiliangwang/.ohos/config/default_chat_7ljsRX5hVOM2KiLlOsNDVSdFb314LrWJkvtbym0jaHY=.cer",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B843DA86DCD61456465E215A126A20A086D7537D6AD7E0748AA925F287E6B32DC3BC201A5AC107C",
+          "profile": "/Users/yiliangwang/.ohos/config/default_chat_7ljsRX5hVOM2KiLlOsNDVSdFb314LrWJkvtbym0jaHY=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/yiliangwang/.ohos/config/default_chat_7ljsRX5hVOM2KiLlOsNDVSdFb314LrWJkvtbym0jaHY=.p12",
+          "storePassword": "0000001BFE8CD09FAC48CD41F5608F306232A3DD297A7AF79815A0C7FE681D495F2CC2B90717F00FC10118"
+        }
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "atomic_x",
+      "srcPath": "../atomic_x",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}

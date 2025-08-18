@@ -1,0 +1,296 @@
+{
+  "string": [
+    {
+      "name": "TUIEmoji_Smile",
+      "value": "微笑"
+    },
+    {
+      "name": "TUIEmoji_Expect",
+      "value": "期待"
+    },
+    {
+      "name": "TUIEmoji_Blink",
+      "value": "眨眼"
+    },
+    {
+      "name": "TUIEmoji_Guffaw",
+      "value": "大笑"
+    },
+    {
+      "name": "TUIEmoji_KindSmile",
+      "value": "姨母笑"
+    },
+    {
+      "name": "TUIEmoji_Haha",
+      "value": "哈哈哈"
+    },
+    {
+      "name": "TUIEmoji_Cheerful",
+      "value": "愉快"
+    },
+    {
+      "name": "TUIEmoji_Speechless",
+      "value": "无语"
+    },
+    {
+      "name": "TUIEmoji_Amazed",
+      "value": "惊讶"
+    },
+    {
+      "name": "TUIEmoji_Sorrow",
+      "value": "悲伤"
+    },
+    {
+      "name": "TUIEmoji_Complacent",
+      "value": "得意"
+    },
+    {
+      "name": "TUIEmoji_Silly",
+      "value": "傻了"
+    },
+    {
+      "name": "TUIEmoji_Lustful",
+      "value": "色"
+    },
+    {
+      "name": "TUIEmoji_Giggle",
+      "value": "憨笑"
+    },
+    {
+      "name": "TUIEmoji_Kiss",
+      "value": "亲亲"
+    },
+    {
+      "name": "TUIEmoji_Wail",
+      "value": "大哭"
+    },
+    {
+      "name": "TUIEmoji_TearsLaugh",
+      "value": "哭笑"
+    },
+    {
+      "name": "TUIEmoji_Trapped",
+      "value": "困"
+    },
+    {
+      "name": "TUIEmoji_Mask",
+      "value": "口罩"
+    },
+    {
+      "name": "TUIEmoji_Fear",
+      "value": "恐惧"
+    },
+    {
+      "name": "TUIEmoji_BareTeeth",
+      "value": "龇牙"
+    },
+    {
+      "name": "TUIEmoji_FlareUp",
+      "value": "发怒"
+    },
+    {
+      "name": "TUIEmoji_Yawn",
+      "value": "打哈欠"
+    },
+    {
+      "name": "TUIEmoji_Tact",
+      "value": "机智"
+    },
+    {
+      "name": "TUIEmoji_Stareyes",
+      "value": "星星眼"
+    },
+    {
+      "name": "TUIEmoji_ShutUp",
+      "value": "闭嘴"
+    },
+    {
+      "name": "TUIEmoji_Sigh",
+      "value": "叹气"
+    },
+    {
+      "name": "TUIEmoji_Hehe",
+      "value": "呵呵"
+    },
+    {
+      "name": "TUIEmoji_Silent",
+      "value": "收声"
+    },
+    {
+      "name": "TUIEmoji_Surprised",
+      "value": "惊喜"
+    },
+    {
+      "name": "TUIEmoji_Askance",
+      "value": "白眼"
+    },
+    {
+      "name": "TUIEmoji_Ok",
+      "value": "OK"
+    },
+    {
+      "name": "TUIEmoji_Shit",
+      "value": "便便"
+    },
+    {
+      "name": "TUIEmoji_Monster",
+      "value": "怪兽"
+    },
+    {
+      "name": "TUIEmoji_Daemon",
+      "value": "恶魔"
+    },
+    {
+      "name": "TUIEmoji_Rage",
+      "value": "恶魔怒"
+    },
+    {
+      "name": "TUIEmoji_Fool",
+      "value": "衰"
+    },
+    {
+      "name": "TUIEmoji_Pig",
+      "value": "猪"
+    },
+    {
+      "name": "TUIEmoji_Cow",
+      "value": "牛"
+    },
+    {
+      "name": "TUIEmoji_Ai",
+      "value": "AI"
+    },
+    {
+      "name": "TUIEmoji_Skull",
+      "value": "骷髅"
+    },
+    {
+      "name": "TUIEmoji_Bombs",
+      "value": "炸弹"
+    },
+    {
+      "name": "TUIEmoji_Coffee",
+      "value": "咖啡"
+    },
+    {
+      "name": "TUIEmoji_Cake",
+      "value": "蛋糕"
+    },
+    {
+      "name": "TUIEmoji_Beer",
+      "value": "啤酒"
+    },
+    {
+      "name": "TUIEmoji_Flower",
+      "value": "花"
+    },
+    {
+      "name": "TUIEmoji_Watermelon",
+      "value": "瓜"
+    },
+    {
+      "name": "TUIEmoji_Rich",
+      "value": "壕"
+    },
+    {
+      "name": "TUIEmoji_Heart",
+      "value": "爱心"
+    },
+    {
+      "name": "TUIEmoji_Moon",
+      "value": "月亮"
+    },
+    {
+      "name": "TUIEmoji_Sun",
+      "value": "太阳"
+    },
+    {
+      "name": "TUIEmoji_Star",
+      "value": "星星"
+    },
+    {
+      "name": "TUIEmoji_RedPacket",
+      "value": "红包"
+    },
+    {
+      "name": "TUIEmoji_Celebrate",
+      "value": "庆祝"
+    },
+    {
+      "name": "TUIEmoji_Bless",
+      "value": "福"
+    },
+    {
+      "name": "TUIEmoji_Fortune",
+      "value": "发"
+    },
+    {
+      "name": "TUIEmoji_Convinced",
+      "value": "服"
+    },
+    {
+      "name": "TUIEmoji_Prohibit",
+      "value": "禁"
+    },
+    {
+      "name": "TUIEmoji_666",
+      "value": "666"
+    },
+    {
+      "name": "TUIEmoji_857",
+      "value": "857"
+    },
+    {
+      "name": "TUIEmoji_Knife",
+      "value": "刀"
+    },
+    {
+      "name": "TUIEmoji_Like",
+      "value": "赞"
+    },
+    {
+      "name": "emoji_category_recent",
+      "value": "最近使用"
+    },
+    {
+      "name": "emoji_category_all",
+      "value": "所有表情"
+    },
+    {
+      "name": "emoji_category_people",
+      "value": "人物"
+    },
+    {
+      "name": "emoji_category_nature",
+      "value": "自然"
+    },
+    {
+      "name": "emoji_category_food",
+      "value": "食物"
+    },
+    {
+      "name": "emoji_category_activity",
+      "value": "活动"
+    },
+    {
+      "name": "emoji_category_travel",
+      "value": "旅行"
+    },
+    {
+      "name": "emoji_category_objects",
+      "value": "物品"
+    },
+    {
+      "name": "emoji_category_symbols",
+      "value": "符号"
+    },
+    {
+      "name": "emoji_type_normal",
+      "value": "普通表情"
+    },
+    {
+      "name": "emoji_type_large",
+      "value": "大表情"
+    }
+  ]
+}

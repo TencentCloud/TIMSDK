@@ -1,0 +1,176 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "Tencent Cloud Chat"
+    },
+    {
+      "name": "demo_title",
+      "value": "Tencent Cloud Chat"
+    },
+    {
+      "name": "demo_conversation_tab_name",
+      "value": "Message"
+    },
+    {
+      "name": "demo_contact_tab_name",
+      "value": "Contacts"
+    },
+    {
+      "name": "demo_profile_tab_name",
+      "value": "Settings"
+    },
+    {
+      "name": "demo_profile_signature_label",
+      "value": "Signature: "
+    },
+    {
+      "name": "demo_dev_login_user_name",
+      "value": "UserName"
+    },
+    {
+      "name": "demo_login_button_name",
+      "value": "Login"
+    },
+    {
+      "name": "demo_logout_button_name",
+      "value": "Logout"
+    },
+    {
+      "name": "demo_switch_language_button_name",
+      "value": "Switch Language"
+    },
+    {
+      "name": "demo_about_button_name",
+      "value": "About"
+    },
+    {
+      "name": "chat_title",
+      "value": "Chat"
+    },
+    {
+      "name": "search_placeholder",
+      "value": "Search"
+    },
+    {
+      "name": "cancel_button",
+      "value": "Cancel"
+    },
+    {
+      "name": "delete_button",
+      "value": "Delete"
+    },
+    {
+      "name": "no_messages_title",
+      "value": "No Messages"
+    },
+    {
+      "name": "no_messages_desc",
+      "value": "Start a new conversation by tapping the + icon"
+    },
+    {
+      "name": "demo_theme_button_name",
+      "value": "Theme"
+    },
+    {
+      "name": "theme_select_title",
+      "value": "Select Theme"
+    },
+    {
+      "name": "theme_light",
+      "value": "Light"
+    },
+    {
+      "name": "theme_dark",
+      "value": "Dark"
+    },
+    {
+      "name": "theme_system",
+      "value": "System"
+    },
+    {
+      "name": "cancel",
+      "value": "Cancel"
+    },
+    {
+      "name": "permission_read_media",
+      "value": "Need to read media files to select and send images, videos and other media messages"
+    },
+    {
+      "name": "permission_write_media",
+      "value": "Need to save received images, videos and other media files"
+    },
+    {
+      "name": "permission_media_location",
+      "value": "Need to access location information of media files"
+    },
+    {
+      "name": "permission_camera",
+      "value": "Need to use camera to take photos and record videos to send messages"
+    },
+    {
+      "name": "permission_microphone",
+      "value": "Need to use microphone to record voice messages"
+    },
+    {
+      "name": "permission_read_imagevideo",
+      "value": "Need to read image and video files to select and send media messages"
+    },
+    {
+      "name": "permission_write_imagevideo",
+      "value": "Need to save received image and video files"
+    },
+    {
+      "name": "permission_read_audio",
+      "value": "Need to read audio files to select and send voice messages"
+    },
+    {
+      "name": "permission_file_access",
+      "value": "Need to access file system to select and send file messages"
+    },
+    {
+      "name": "contacts_title",
+      "value": "Contacts"
+    },
+    {
+      "name": "contacts_search_placeholder",
+      "value": "Search"
+    },
+    {
+      "name": "add_friend",
+      "value": "Add Friend"
+    },
+    {
+      "name": "add_group_chat",
+      "value": "Add Group Chat"
+    },
+    {
+      "name": "add_contacts",
+      "value": "Add Contacts"
+    },
+    {
+      "name": "user_id_placeholder",
+      "value": "User ID"
+    },
+    {
+      "name": "start_conversation",
+      "value": "Start Conversation"
+    },
+    {
+      "name": "create_group_chat",
+      "value": "Create Group Chat"
+    },
+    {
+      "name": "setting_title",
+      "value": "Setting"
+    }
+  ]
+} 

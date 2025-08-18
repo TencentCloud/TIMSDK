@@ -1,0 +1,66 @@
+{
+  "string": [
+    {
+      "name": "action_copy",
+      "value": "复制"
+    },
+    {
+      "name": "action_forward",
+      "value": "转发"
+    },
+    {
+      "name": "action_multi_select",
+      "value": "多选"
+    },
+    {
+      "name": "action_quote",
+      "value": "引用"
+    },
+    {
+      "name": "action_more",
+      "value": "更多"
+    },
+    {
+      "name": "action_reply",
+      "value": "回复"
+    },
+    {
+      "name": "action_translate",
+      "value": "翻译"
+    },
+    {
+      "name": "action_recall",
+      "value": "撤回"
+    },
+    {
+      "name": "action_delete",
+      "value": "删除"
+    },
+    {
+      "name": "action_back",
+      "value": "返回"
+    },
+    { "name": "messagelist_loading", "value": "加载中..." },
+    { "name": "messagelist_loading_history", "value": "加载历史消息..." },
+    { "name": "messagelist_loading_new", "value": "加载新消息..." },
+    { "name": "messagelist_delete_failed_invalid_state", "value": "删除失败：消息列表状态无效" },
+    { "name": "messagelist_message_deleted", "value": "消息已删除" },
+    { "name": "messagelist_delete_message_failed", "value": "删除消息失败" },
+    { "name": "messagelist_delete_failed_not_found", "value": "删除失败：未找到消息" },
+    { "name": "messagelist_recall_failed_invalid_state", "value": "撤回失败：消息列表状态无效" },
+    { "name": "messagelist_recall_only_own", "value": "只能撤回自己发送的消息" },
+    { "name": "messagelist_recall_failed", "value": "撤回失败" },
+    { "name": "messagelist_recall_failed_not_found", "value": "撤回失败：未找到消息" },
+    { "name": "messagelist_image_load_failed", "value": "图片加载失败" },
+    { "name": "messagelist_unknown_file", "value": "未知文件" },
+    { "name": "messagelist_downloading", "value": "下载中..." },
+    { "name": "messagelist_file_download_success", "value": "文件下载成功" },
+    { "name": "messagelist_file_download_failed", "value": "文件下载失败" },
+    { "name": "messagelist_unknown_size", "value": "未知大小" },
+    { "name": "messagelist_copy_unsupported", "value": "该类型消息不支持复制" },
+    { "name": "messagelist_copy_failed", "value": "复制失败" },
+    { "name": "messagelist_copied", "value": "已复制" },
+    { "name": "messagelist_recall_failed_no_callback", "value": "撤回失败：未设置撤回回调" },
+    { "name": "messagelist_delete_failed_no_callback", "value": "删除失败：未设置删除回调" }
+  ]
+}

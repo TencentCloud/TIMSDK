@@ -1,0 +1,22 @@
+{
+  "string": [
+    { "name": "search_cancel", "value": "Cancel" },
+    { "name": "search_back", "value": "Back" },
+    { "name": "search_loading", "value": "Loading..." },
+    { "name": "search_loading_more", "value": "Loading more..." },
+    { "name": "search_no_results", "value": "No results" },
+    { "name": "search_no_contacts", "value": "No contacts" },
+    { "name": "search_no_groups", "value": "No groups" },
+    { "name": "search_no_messages", "value": "No messages" },
+    { "name": "search_no_matched_messages", "value": "No matched messages" },
+    { "name": "search_search_placeholder", "value": "Search" },
+    { "name": "search_search_contacts_placeholder", "value": "Search contacts" },
+    { "name": "search_search_messages_placeholder", "value": "Search messages" },
+    { "name": "search_search_in_conversation_placeholder", "value": "Search in conversation" },
+    { "name": "search_suggest_text", "value": "Search contacts, groups, or messages" },
+    { "name": "search_contacts_title", "value": "Contacts" },
+    { "name": "search_groups_title", "value": "Groups" },
+    { "name": "search_messages_title", "value": "Messages" }
+  ]
+}
+

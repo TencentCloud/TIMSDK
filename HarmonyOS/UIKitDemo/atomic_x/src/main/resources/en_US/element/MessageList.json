@@ -1,0 +1,132 @@
+{
+  "string": [
+    {
+      "name": "action_copy",
+      "value": "Copy"
+    },
+    {
+      "name": "action_forward",
+      "value": "Forward"
+    },
+    {
+      "name": "action_multi_select",
+      "value": "Multi Select"
+    },
+    {
+      "name": "action_quote",
+      "value": "Quote"
+    },
+    {
+      "name": "action_more",
+      "value": "More"
+    },
+    {
+      "name": "action_reply",
+      "value": "Reply"
+    },
+    {
+      "name": "action_translate",
+      "value": "Translate"
+    },
+    {
+      "name": "action_recall",
+      "value": "Recall"
+    },
+    {
+      "name": "action_delete",
+      "value": "Delete"
+    },
+    {
+      "name": "action_back",
+      "value": "Back"
+    },
+    {
+      "name": "messagelist_loading",
+      "value": "Loading..."
+    },
+    {
+      "name": "messagelist_loading_history",
+      "value": "Loading history..."
+    },
+    {
+      "name": "messagelist_loading_new",
+      "value": "Loading new messages..."
+    },
+    {
+      "name": "messagelist_delete_failed_invalid_state",
+      "value": "Delete failed: invalid state"
+    },
+    {
+      "name": "messagelist_message_deleted",
+      "value": "Message deleted"
+    },
+    {
+      "name": "messagelist_delete_message_failed",
+      "value": "Failed to delete message"
+    },
+    {
+      "name": "messagelist_delete_failed_not_found",
+      "value": "Delete failed: message not found"
+    },
+    {
+      "name": "messagelist_recall_failed_invalid_state",
+      "value": "Recall failed: invalid state"
+    },
+    {
+      "name": "messagelist_recall_only_own",
+      "value": "You can only recall your own message"
+    },
+    {
+      "name": "messagelist_recall_failed",
+      "value": "Recall failed"
+    },
+    {
+      "name": "messagelist_recall_failed_not_found",
+      "value": "Recall failed: message not found"
+    },
+    {
+      "name": "messagelist_image_load_failed",
+      "value": "Image load failed"
+    },
+    {
+      "name": "messagelist_unknown_file",
+      "value": "unknown file"
+    },
+    {
+      "name": "messagelist_downloading",
+      "value": "downloading..."
+    },
+    {
+      "name": "messagelist_file_download_success",
+      "value": "file download success"
+    },
+    {
+      "name": "messagelist_file_download_failed",
+      "value": "file download failed"
+    },
+    {
+      "name": "messagelist_unknown_size",
+      "value": "unknown size"
+    },
+    {
+      "name": "messagelist_copy_unsupported",
+      "value": "This message type cannot be copied"
+    },
+    {
+      "name": "messagelist_copy_failed",
+      "value": "Copy failed"
+    },
+    {
+      "name": "messagelist_copied",
+      "value": "Copied"
+    },
+    {
+      "name": "messagelist_recall_failed_no_callback",
+      "value": "Recall failed: no callback"
+    },
+    {
+      "name": "messagelist_delete_failed_no_callback",
+      "value": "Delete failed: no callback"
+    }
+  ]
+}

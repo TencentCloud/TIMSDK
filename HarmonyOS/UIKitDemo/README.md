@@ -67,7 +67,7 @@
 
 ### 步骤 4：编译运行
 
-1. 打开 鸿蒙 NextDemo（路径：`TIMSDK/HarmonyOS/UIKitDemo/uikit-next/harmony`），配置签名：
+1. 打开 鸿蒙 NextDemo（路径：`TIMSDK/HarmonyOS/UIKitDemo/chat`），配置签名：
 
    ![](https://im.sdk.qcloud.com/doc/HarmonyOS/doc-image/6.png)
 
@@ -76,6 +76,8 @@
 2. 连接真机，编译运行：  ohpm install
 
    ![](https://im.sdk.qcloud.com/doc/HarmonyOS/doc-image/8.png)
+
+3. 选择 entry 选择模拟器运行
 
 ## 交流与反馈
 

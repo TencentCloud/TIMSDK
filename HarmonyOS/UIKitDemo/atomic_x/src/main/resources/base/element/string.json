@@ -1,0 +1,20 @@
+{
+  "string": [
+    {
+      "name": "shared_desc",
+      "value": "description"
+    },
+    {
+      "name": "no_group_applications_desc",
+      "value": "no group applications"
+    },
+    {
+      "name": "cancel_button",
+      "value": "Cancel"
+    },
+    {
+      "name": "delete_button",
+      "value": "Delete"
+    }
+  ]
+}
