@@ -831,7 +831,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = F8A3GH6Q4W;
+				DEVELOPMENT_TEAM = FN2V63AD2J;
 				INFOPLIST_FILE = pushservice/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1219,12 +1219,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = TUIKitDemo/TUIKitDemo.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+                CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				COMPRESS_PNG_FILES = NO;
 				CURRENT_PROJECT_VERSION = 1.1.1.1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = F8A3GH6Q4W;
+				DEVELOPMENT_TEAM = FN2V63AD2J;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
