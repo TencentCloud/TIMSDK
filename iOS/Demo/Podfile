@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-source 'https://github.com/CocoaPods/Specs.git'
+#source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '13.0'
 install! 'cocoapods', :disable_input_output_paths => true
 
