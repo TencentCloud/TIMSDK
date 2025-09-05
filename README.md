@@ -154,11 +154,25 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 8.6.7040 @2025.07.18
+## Latest Enhanced Version 8.7.7201 @2025.09.05
 ### SDK
-- Added support for Japan site.
-- Fixed stability issues on Android platform.
-- Fixed signaling issues for Flutter on iOS.
-- Fixed push token configuration errors in Flutter for Android.
-
-
+- Long connection channels now support standard TLS protocol.
+- Added backup CN domain for long network connection DNS addresses.
+- Long connections now include built-in HTTP-type IP addresses.
+- Supports RoomEngine synchronous query of commercial capability bits.
+- RoomEngine can pull the first 20 messages before joining live rooms.
+- Push supports OPPO private message channel templates.
+- Push supports FCM message priority configuration.
+- Push supports vivo notification type settings.
+- Added data reporting for "joining multiple avchatrooms simultaneously".
+- HarmonyOS platform IMSDK now supports building C++ interfaces.
+- Supports sending group-directed messages in communities.
+- Supports inserting local messages after login failure.
+- Supports setting group approval options when creating Work groups.
+- Unity SDK now integrates cloud search APIs.
+- Optimized error message descriptions when sending messages after being kicked offline.
+- Added cloud-controlled frequency limiting when pulling avchatroom member lists.
+- Supports triggering callbacks on SDK threads for iOS/Mac platforms.
+- Fixed Android platform Zip extraction security vulnerability.
+- Fixed token reporting errors in self-integrated Flutter push notifications.
+- Fixed occasional missing callbacks when pulling historical messages.
