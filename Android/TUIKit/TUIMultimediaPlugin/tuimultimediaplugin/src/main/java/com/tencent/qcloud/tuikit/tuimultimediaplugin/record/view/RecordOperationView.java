@@ -5,13 +5,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import com.tencent.imsdk.BuildConfig;
 import com.tencent.imsdk.base.ThreadUtils;
 import com.tencent.liteav.base.util.LiteavLog;
-import com.tencent.qcloud.tuikit.tuimultimediacore.TUIMultimediaSignatureChecker;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.R;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaConstants;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaAuthorizationPrompter;
@@ -35,6 +34,8 @@ public class RecordOperationView extends LinearLayout {
     private RecordButtonView mRecordButtonView;
     private TextView mRecordOperationTipsView;
     private TextView mRecordTimeTextView;
+    private ImageView mCancelRecordView;
+    private ImageView mSwitchCameraView;
     private Float mLastRecordProcess = 0.0f;
     private String mLastRecordTime;
 
@@ -42,20 +43,19 @@ public class RecordOperationView extends LinearLayout {
         @Override
         public void onChanged(RecordStatus recordStatus) {
             if (recordStatus == RecordStatus.RECORDING || recordStatus == RecordStatus.TAKE_PHOTOING) {
-                findViewById(R.id.cancel_record_button).setVisibility(INVISIBLE);
-                findViewById(R.id.record_switch_camera).setVisibility(INVISIBLE);
                 hideRecordOperationTips();
+                showRecordOperationButton(false);
             } else {
                 mRecordButtonView.setProcess(0);
                 mLastRecordProcess = 0.0f;
                 mLastRecordTime = null;
+
                 if (recordStatus == RecordStatus.STOP && !mRecordInfo.recordResult.isSuccess
                         && mRecordInfo.recordResult.code == TXRecordCommon.RECORD_RESULT_OK_LESS_THAN_MINDURATION) {
                     mRecordCore.takePhoto(
                             TUIMultimediaFileUtil.generateFilePath(MultimediaPluginFileType.PICTURE_FILE));
                 } else {
-                    findViewById(R.id.cancel_record_button).setVisibility(VISIBLE);
-                    findViewById(R.id.record_switch_camera).setVisibility(VISIBLE);
+                    showRecordOperationButton(true);
                 }
             }
         }
@@ -97,14 +97,17 @@ public class RecordOperationView extends LinearLayout {
     public void initView() {
         LayoutInflater.from(mContext).inflate(R.layout.multimedia_plugin_record_operation_view, this, true);
 
-        findViewById(R.id.record_switch_camera).setOnClickListener(v -> {
-            boolean is_front_camera = mRecordInfo.tuiDataIsFontCamera.get();
-            mRecordCore.switchCamera(!is_front_camera);
-        });
-
-        findViewById(R.id.cancel_record_button).setOnClickListener(v -> {
+        mCancelRecordView = findViewById(R.id.cancel_record_button);
+        mCancelRecordView.setOnClickListener(v -> {
             ((Activity) mContext).setResult(Activity.RESULT_CANCELED, null);
             ((Activity) mContext).finish();
+        });
+
+
+        mSwitchCameraView = findViewById(R.id.record_switch_camera);
+        mSwitchCameraView.setOnClickListener(v -> {
+            boolean is_front_camera = mRecordInfo.tuiDataIsFontCamera.get();
+            mRecordCore.switchCamera(!is_front_camera);
         });
 
         mRecordTimeTextView = findViewById(R.id.record_time);
@@ -121,11 +124,10 @@ public class RecordOperationView extends LinearLayout {
     @SuppressLint("ClickableViewAccessibility")
     private void initRecordButtonForVideoRecode() {
         mRecordButtonView.setOnLongClickListener(v -> {
-            if (!TUIMultimediaAuthorizationPrompter.verifyPermissionGranted(mContext)) {
-                return false;
+            int result = mRecordCore.startRecord(TUIMultimediaFileUtil.generateFilePath(MultimediaPluginFileType.RECODE_FILE));
+            if (result == TXRecordCommon.START_RECORD_ERR_LICENCE_VERIFICATION_FAILED) {
+                TUIMultimediaAuthorizationPrompter.showPermissionPrompterDialog(mContext);
             }
-
-            mRecordCore.startRecord(TUIMultimediaFileUtil.generateFilePath(MultimediaPluginFileType.RECODE_FILE));
             return false;
         });
 
@@ -139,12 +141,12 @@ public class RecordOperationView extends LinearLayout {
 
         mRecordButtonView.setOnClickListener(
                 v -> {
-                    if (!TUIMultimediaAuthorizationPrompter.verifyPermissionGranted(mContext)) {
-                        return;
-                    }
-
-                    mRecordCore.takePhoto(
+                    int result = mRecordCore.takePhoto(
                             TUIMultimediaFileUtil.generateFilePath(MultimediaPluginFileType.PICTURE_FILE));
+
+                    if (result == TXRecordCommon.START_RECORD_ERR_LICENCE_VERIFICATION_FAILED) {
+                        TUIMultimediaAuthorizationPrompter.showPermissionPrompterDialog(mContext);
+                    }
                 });
         mRecordOperationTipsView.setText(R.string.multimedia_plugin_record_operation_tips);
         mRecordButtonView.setIsOnlySupportTakePhoto(false);
@@ -161,12 +163,12 @@ public class RecordOperationView extends LinearLayout {
 
         mRecordButtonView.setOnClickListener(
                 v -> {
-                    if (!TUIMultimediaAuthorizationPrompter.verifyPermissionGranted(mContext)) {
-                        mRecordInfo.tuiDataRecordStatus.set(RecordStatus.IDLE);
-                        return;
-                    }
-                    mRecordCore.takePhoto(
+                    int result = mRecordCore.takePhoto(
                             TUIMultimediaFileUtil.generateFilePath(MultimediaPluginFileType.PICTURE_FILE));
+
+                    if (result == TXRecordCommon.START_RECORD_ERR_LICENCE_VERIFICATION_FAILED) {
+                        TUIMultimediaAuthorizationPrompter.showPermissionPrompterDialog(mContext);
+                    }
                 });
 
         mRecordOperationTipsView.setText(R.string.multimedia_plugin_record_take_phone_operation_tips);
@@ -200,5 +202,15 @@ public class RecordOperationView extends LinearLayout {
             mRecordOperationTipsView.setVisibility(INVISIBLE);
         }
         isNeedShowOperationTipsView = false;
+    }
+
+    private void showRecordOperationButton(boolean isShow) {
+        if (mSwitchCameraView == null || mCancelRecordView == null) {
+            return;
+        }
+
+        int visibility = isShow ? VISIBLE : INVISIBLE;
+        mSwitchCameraView.setVisibility(visibility);
+        mCancelRecordView.setVisibility(visibility);
     }
 }

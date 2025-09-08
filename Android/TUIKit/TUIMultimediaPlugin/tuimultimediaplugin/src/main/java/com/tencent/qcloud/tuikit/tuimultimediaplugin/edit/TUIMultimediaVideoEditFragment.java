@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.tencent.liteav.base.util.LiteavLog;
+import com.tencent.qcloud.tuikit.tuimultimediacore.TUIMultimediaSignatureChecker;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.R;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaConstants;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaIConfig;
@@ -26,6 +27,7 @@ import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.bgm.BGMEditListener;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.record.view.ProgressRingView;
 import com.tencent.ugc.TXVideoEditConstants.TXGenerateResult;
 import com.tencent.ugc.TXVideoEditer.TXVideoGenerateListener;
+import com.tencent.ugc.UGCLicenseChecker;
 
 public class TUIMultimediaVideoEditFragment extends Fragment {
 
@@ -41,6 +43,7 @@ public class TUIMultimediaVideoEditFragment extends Fragment {
     private float mAspectRatio = 9.0f / 16.0f;
 
     private boolean mIsRecordFile = false;
+    private String mSourceFilePath;
 
     public TUIMultimediaVideoEditFragment(Context context) {
         mContext = context;
@@ -102,9 +105,6 @@ public class TUIMultimediaVideoEditFragment extends Fragment {
         mTuiMultiMediaEditCommonCtrlView.setBGMListener(new BGMEditListener() {
             @Override
             public void onAddBGM(String bgmPath) {
-                if (!TUIMultimediaAuthorizationPrompter.verifyPermissionGranted(mContext)) {
-                    return;
-                }
                 mTUIMultimediaVideoEditorCore.setBGMPath(bgmPath);
             }
 
@@ -143,6 +143,7 @@ public class TUIMultimediaVideoEditFragment extends Fragment {
 
     private void previewVideo(String videoFilePath) {
         LiteavLog.i(TAG, "preview video. file path = " + videoFilePath);
+        mSourceFilePath = videoFilePath;
         if (videoFilePath == null || videoFilePath.isEmpty()) {
             LiteavLog.e(TAG, "vide file path is null");
             return;
@@ -155,12 +156,24 @@ public class TUIMultimediaVideoEditFragment extends Fragment {
     }
 
     private void generateVideo() {
-        if (!TUIMultimediaAuthorizationPrompter.verifyPermissionGranted(mContext)) {
+        mTUIMultimediaVideoEditorCore.stopPreview();
+        mTUIMultimediaVideoEditorCore.setPasterList(mTuiMultiMediaEditCommonCtrlView.getPaster());
+
+        if (!mIsRecordFile && !mTUIMultimediaVideoEditorCore.isVideoEdited()) {
+            finishEdit(null);
             return;
         }
 
-        mTUIMultimediaVideoEditorCore.stopPreview();
-        mTUIMultimediaVideoEditorCore.setPasterList(mTuiMultiMediaEditCommonCtrlView.getPaster());
+        if (!TUIMultimediaSignatureChecker.getInstance().isSupportFunction()) {
+            if (mTUIMultimediaVideoEditorCore.isVideoEdited()) {
+                TUIMultimediaAuthorizationPrompter.showPermissionPrompterDialog(getContext());
+                mTuiMultiMediaEditCommonCtrlView.showOperationView(true);
+                mTUIMultimediaVideoEditorCore.reStartPreview();
+            } else {
+                finishEdit(mSourceFilePath);
+            }
+            return;
+        }
 
         if (!mIsRecordFile && !mTUIMultimediaVideoEditorCore.isVideoEdited()) {
             finishEdit(null);

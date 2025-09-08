@@ -9,86 +9,36 @@
     android:adjustViewBounds="true"
     android:maxWidth="480dp">
 
-    <LinearLayout
-        android:id="@+id/ll_mute"
+    <com.tencent.qcloud.tuikit.tuicallkit.view.component.function.ControlButton
+        android:id="@+id/cb_mic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
+        app:cbIcon="@drawable/tuicallkit_bg_mute_mic"
+        app:cbText="@string/tuicallkit_toast_disable_mute"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/ll_hangup"
+        app:layout_constraintEnd_toStartOf="@+id/cb_hangup"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/img_mute"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/tuicallkit_bg_mute_mic" />
-
-        <TextView
-            android:id="@+id/tv_mic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center"
-            android:text="@string/tuicallkit_toast_disable_mute"
-            android:textColor="@color/tuicallkit_color_white"
-            android:textSize="@dimen/tuicallkit_text_size_hint" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_hangup"
+    <com.tencent.qcloud.tuikit.tuicallkit.view.component.function.ControlButton
+        android:id="@+id/cb_hangup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
+        app:cbIcon="@drawable/tuicallkit_bg_hangup"
+        app:cbText="@string/tuicallkit_text_hangup"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/ll_audio_device"
-        app:layout_constraintStart_toEndOf="@+id/ll_mute"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toStartOf="@+id/cb_audio_device"
+        app:layout_constraintStart_toEndOf="@+id/cb_mic"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/img_hangup"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/tuicallkit_bg_hangup" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center"
-            android:text="@string/tuicallkit_text_hangup"
-            android:textColor="@color/tuicallkit_color_white"
-            android:textSize="@dimen/tuicallkit_text_size_hint" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_audio_device"
+    <com.tencent.qcloud.tuikit.tuicallkit.view.component.function.ControlButton
+        android:id="@+id/cb_audio_device"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
+        app:cbIcon="@drawable/tuicallkit_bg_audio_device"
+        app:cbText="@string/tuicallkit_toast_use_earpiece"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ll_hangup"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/img_audio_device"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/tuicallkit_bg_audio_device" />
-
-        <TextView
-            android:id="@+id/tv_audio_device"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center"
-            android:text="@string/tuicallkit_toast_use_earpiece"
-            android:textColor="@color/tuicallkit_color_white"
-            android:textSize="@dimen/tuicallkit_text_size_hint" />
-    </LinearLayout>
+        app:layout_constraintStart_toEndOf="@+id/cb_hangup"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

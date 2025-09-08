@@ -2,8 +2,11 @@ package com.tencent.qcloud.tuikit.tuicallkit
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import com.tencent.cloud.tuikit.engine.call.TUICallDefine
 import com.tencent.cloud.tuikit.engine.call.TUICallDefine.CallParams
+import com.tencent.cloud.tuikit.engine.call.TUICallDefine.Role
 import com.tencent.cloud.tuikit.engine.call.TUICallEngine
 import com.tencent.cloud.tuikit.engine.call.TUICallObserver
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine
@@ -11,8 +14,10 @@ import com.tencent.cloud.tuikit.engine.common.TUICommonDefine.Callback
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine.RoomId
 import com.tencent.qcloud.tuicore.TUIConstants
 import com.tencent.qcloud.tuicore.TUICore
+import com.tencent.qcloud.tuicore.TUILogin
 import com.tencent.qcloud.tuicore.permission.PermissionCallback
 import com.tencent.qcloud.tuicore.permission.PermissionRequester
+import com.tencent.qcloud.tuicore.util.TUIBuild
 import com.tencent.qcloud.tuicore.util.ToastUtil
 import com.tencent.qcloud.tuikit.tuicallkit.common.config.OfflinePushInfoConfig
 import com.tencent.qcloud.tuikit.tuicallkit.common.data.Constants
@@ -25,6 +30,7 @@ import com.tencent.qcloud.tuikit.tuicallkit.manager.UserManager
 import com.tencent.qcloud.tuikit.tuicallkit.state.GlobalState
 import com.tencent.qcloud.tuikit.tuicallkit.state.UserState
 import com.tencent.qcloud.tuikit.tuicallkit.state.ViewState
+import com.tencent.qcloud.tuikit.tuicallkit.view.CallAdapter
 import com.tencent.qcloud.tuikit.tuicallkit.view.CallMainActivity
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.floatwindow.FloatWindowView
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.incomingbanner.IncomingFloatBanner
@@ -32,6 +38,7 @@ import com.tencent.qcloud.tuikit.tuicallkit.view.component.incomingbanner.Incomi
 import com.trtc.tuikit.common.livedata.Observer
 import com.trtc.tuikit.common.ui.floatwindow.FloatWindowManager
 import com.trtc.tuikit.common.ui.floatwindow.FloatWindowObserver
+import java.util.Collections
 
 
 class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
@@ -41,7 +48,8 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
         showAntiFraudReminder()
 
         if (it != TUICallDefine.Status.Waiting
-            || CallManager.instance.userState.selfUser.get().callRole == TUICallDefine.Role.Caller) {
+            || CallManager.instance.userState.selfUser.get().callRole == TUICallDefine.Role.Caller
+        ) {
             return@Observer
         }
         handleNewCall()
@@ -90,18 +98,55 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
     override fun calls(
         userIdList: List<String?>?, mediaType: TUICallDefine.MediaType, params: CallParams?, callback: Callback?
     ) {
+        val list = userIdList?.toHashSet()?.toMutableList()
+        list?.remove(TUILogin.getLoginUser())
+        list?.removeAll(Collections.singleton(null))
+        if (list.isNullOrEmpty()) {
+            Logger.e(TAG, "calls failed, userIdList is empty")
+            callback?.onError(TUICallDefine.ERROR_PARAM_INVALID, "calls failed, userIdList is empty")
+            return
+        }
         PermissionRequest.requestPermissions(context, mediaType, object : PermissionCallback() {
             override fun onGranted() {
                 CallManager.instance.calls(userIdList, mediaType, createDefaultCallParams(params), object : Callback {
                     override fun onSuccess() {
-                        startCallActivity()
                         callback?.onSuccess()
                     }
 
                     override fun onError(errCode: Int, errMsg: String?) {
                         callback?.onError(errCode, errMsg)
+                        CallManager.instance.reset()
                     }
                 })
+                val selfUser = CallManager.instance.userState.selfUser.get()
+                selfUser.id = TUILogin.getLoginUser() ?: ""
+                selfUser.avatar.set(TUILogin.getFaceUrl())
+                selfUser.nickname.set(TUILogin.getNickName())
+                selfUser.callRole = TUICallDefine.Role.Caller
+                selfUser.callStatus.set(TUICallDefine.Status.Waiting)
+                val userList = ArrayList<UserState.User>()
+                for (userId in list) {
+                    if (userId.isNullOrEmpty()) {
+                        continue
+                    }
+                    val user = UserState.User()
+                    user.id = userId
+                    UserManager.instance.updateUserInfo(user)
+                    user.callRole = TUICallDefine.Role.Called
+                    user.callStatus.set(TUICallDefine.Status.Waiting)
+                    userList.add(user)
+                }
+                CallManager.instance.userState.remoteUserList.addAll(userList)
+                CallManager.instance.callState.mediaType.set(mediaType)
+                var scene = TUICallDefine.Scene.SINGLE_CALL
+                if (params != null && !params.chatGroupId.isNullOrEmpty()) {
+                    scene = TUICallDefine.Scene.GROUP_CALL
+                } else if (list.size >= 2) {
+                    scene = TUICallDefine.Scene.MULTI_CALL
+                }
+                CallManager.instance.callState.scene.set(scene)
+                initCameraAndAudioDeviceState()
+                startCallActivity()
             }
 
             override fun onDenied() {
@@ -116,14 +161,24 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
             override fun onGranted() {
                 CallManager.instance.join(callId, object : Callback {
                     override fun onSuccess() {
-                        startCallActivity()
                         callback?.onSuccess()
                     }
 
                     override fun onError(errCode: Int, errMsg: String?) {
                         callback?.onError(errCode, errMsg)
+                        CallManager.instance.reset()
                     }
                 })
+                val selfUser = CallManager.instance.userState.selfUser.get()
+                selfUser.id = TUILogin.getLoginUser() ?: ""
+                selfUser.avatar.set(TUILogin.getFaceUrl())
+                selfUser.nickname.set(TUILogin.getNickName())
+                selfUser.callRole = TUICallDefine.Role.Called
+                selfUser.callStatus.set(TUICallDefine.Status.Accept)
+                CallManager.instance.callState.mediaType.set(TUICallDefine.MediaType.Audio)
+                CallManager.instance.callState.scene.set(TUICallDefine.Scene.MULTI_CALL)
+                initCameraAndAudioDeviceState()
+                startCallActivity()
             }
 
             override fun onDenied() {
@@ -159,6 +214,15 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
 
     override fun setScreenOrientation(orientation: Int) {
         CallManager.instance.setScreenOrientation(orientation)
+    }
+
+    override fun disableControlButton(button: Constants.ControlButton?) {
+        CallManager.instance.disableControlButton(button)
+    }
+
+    override fun setAdapter(adapter: CallAdapter?) {
+        Logger.i(TAG, "setAdapter, adapter: $adapter")
+        GlobalState.instance.callAdapter = adapter
     }
 
     override fun call(userId: String, callMediaType: TUICallDefine.MediaType) {
@@ -301,7 +365,6 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
         if (enableIncomingBanner) {
             when {
                 floatPermission -> startSmallScreenView(IncomingFloatBanner(context))
-                notificationPermission -> startSmallScreenView(IncomingNotificationBanner(context))
                 else -> startFullScreenView()
             }
         } else {
@@ -405,6 +468,10 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
     }
 
     private fun startFloatWindow() {
+        if (FloatWindowManager.sharedInstance().isPictureInPictureSupported && GlobalState.instance.enablePipMode) {
+            CallManager.instance.viewState.enterPipMode.set(true)
+            return
+        }
         if (FloatWindowManager.sharedInstance().isShowing) {
             Logger.w(TAG, "There is already a floatWindow on display, do not open it again.")
             return
@@ -419,6 +486,15 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
         }
     }
 
+    private fun isPictureInPictureSupported(): Boolean {
+        if (TUIBuild.getVersionInt() < Build.VERSION_CODES.O) {
+            return false
+        }
+        return context.packageManager.hasSystemFeature(
+            PackageManager.FEATURE_PICTURE_IN_PICTURE
+        )
+    }
+
     private fun startCallActivity() {
         val intent = Intent(context, CallMainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -426,6 +502,7 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
     }
 
     private fun showAntiFraudReminder() {
+        notifyCallEndEvent()
         if (TUICallDefine.Status.Accept != CallManager.instance.userState.selfUser.get().callStatus.get()) {
             return
         }
@@ -440,6 +517,23 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
         )
     }
 
+    private fun notifyCallEndEvent() {
+        val selfUser = CallManager.instance.userState.selfUser.get()
+        if (selfUser.callStatus.get() == TUICallDefine.Status.None) {
+            TUICore.notifyEvent(
+                TUIConstants.Privacy.EVENT_ROOM_STATE_CHANGED, TUIConstants.Privacy.EVENT_SUB_KEY_ROOM_STATE_STOP, null
+            )
+            if (selfUser.callRole == Role.Caller) {
+
+                TUICore.notifyEvent(EVENT_KEY_TIME_LIMIT, EVENT_SUB_KEY_COUNTDOWN_END, null)
+            }
+            return
+        }
+        if (selfUser.callStatus.get() == TUICallDefine.Status.Accept && selfUser.callRole == Role.Caller) {
+            TUICore.notifyEvent(EVENT_KEY_TIME_LIMIT, EVENT_SUB_KEY_COUNTDOWN_START, null)
+        }
+    }
+
     private fun createDefaultCallParams(params: CallParams?): CallParams {
         val callParams = params ?: CallParams().apply {
             offlinePushInfo = OfflinePushInfoConfig.createOfflinePushInfo(context)
@@ -449,8 +543,23 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
         return callParams
     }
 
+    private fun initCameraAndAudioDeviceState() {
+        if (TUICallDefine.MediaType.Video == CallManager.instance.callState.mediaType.get()) {
+            CallManager.instance.selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Speakerphone)
+            CallManager.instance.mediaState.isCameraOpened.set(true)
+        } else {
+            CallManager.instance.selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Earpiece)
+            CallManager.instance.mediaState.isCameraOpened.set(false)
+        }
+        CallManager.instance.mediaState.isMicrophoneMuted.set(false)
+        CallManager.instance.userState.selfUser.get().audioAvailable.set(true)
+    }
+
     companion object {
         private const val TAG = "IncomingView"
+        private const val EVENT_KEY_TIME_LIMIT = "RTCRoomTimeLimitService"
+        private const val EVENT_SUB_KEY_COUNTDOWN_START = "CountdownStart"
+        private const val EVENT_SUB_KEY_COUNTDOWN_END = "CountdownEnd"
         private var instance: TUICallKitImpl? = null
         fun createInstance(context: Context): TUICallKitImpl {
             if (instance == null) {

@@ -46,7 +46,7 @@ import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
-import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.GroupMemberBean;
 import com.tencent.qcloud.tuikit.tuichat.config.GroupConfig;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.GroupProfileListener;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.page.GroupNoticeMinimalistActivity;
@@ -200,7 +200,6 @@ public class GroupInfoLayout extends LinearLayout {
         profileItemListView.setAdapter(profileItemAdapter);
     }
 
-
     public void setGroupProfilePresenter(GroupProfilePresenter groupProfilePresenter) {
         this.groupProfilePresenter = groupProfilePresenter;
 
@@ -208,11 +207,6 @@ public class GroupInfoLayout extends LinearLayout {
             @Override
             public void onGroupProfileLoaded(GroupProfileBean groupProfileBean) {
                 setProfileBean(groupProfileBean);
-            }
-
-            @Override
-            public void onSelfInfoLoaded(GroupMemberBean groupMemberBean) {
-                setSelfInfo(groupMemberBean);
             }
 
             @Override
@@ -283,7 +277,7 @@ public class GroupInfoLayout extends LinearLayout {
         if (profileBean.canManage()) {
             editGroupNameView.setVisibility(VISIBLE);
         }
-
+        mSelfNameCardView.setContent(profileBean.getSelfInfo().getNameCard());
         mMemberView.setContent(profileBean.getMemberCount() + "");
 
         loadGroupFaceUrl();

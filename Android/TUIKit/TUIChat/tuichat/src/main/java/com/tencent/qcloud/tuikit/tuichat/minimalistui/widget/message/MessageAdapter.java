@@ -485,14 +485,20 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         if (last == 0) {
             last = 1;
         }
-        if (mDataSource == null || mDataSource.size() == 0 || first > last) {
+        if (mDataSource == null || mDataSource.isEmpty() || first > last) {
             return new ArrayList<>(0);
         }
         if (first >= mDataSource.size() + 1) {
             return new ArrayList<>(0);
         }
 
-        return new ArrayList<>(mDataSource.subList(first - 1, last - 1));
+        int start = first - 1;
+        int end = last - 1;
+
+        if (end > mDataSource.size() || start > end) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<>(mDataSource.subList(start, end));
     }
 
     @Override

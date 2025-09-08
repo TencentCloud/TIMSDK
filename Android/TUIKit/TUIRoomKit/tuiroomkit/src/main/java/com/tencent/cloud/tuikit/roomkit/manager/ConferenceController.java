@@ -44,11 +44,14 @@ import com.tencent.cloud.tuikit.roomkit.R;
 import com.tencent.cloud.tuikit.roomkit.common.utils.BusinessSceneUtil;
 import com.tencent.cloud.tuikit.roomkit.common.utils.DrawOverlaysPermissionUtil;
 import com.tencent.cloud.tuikit.roomkit.common.utils.RoomPermissionUtil;
-import com.tencent.cloud.tuikit.roomkit.view.basic.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.manager.eventcenter.ConferenceEventCenter;
 import com.tencent.cloud.tuikit.roomkit.manager.eventcenter.ConferenceEventConstant;
-import com.tencent.cloud.tuikit.roomkit.state.ConferenceState;
+import com.tencent.cloud.tuikit.roomkit.manager.observer.ConferenceListObserver;
+import com.tencent.cloud.tuikit.roomkit.manager.observer.RoomEngineObserver;
+import com.tencent.cloud.tuikit.roomkit.manager.observer.TRTCObserver;
+import com.tencent.cloud.tuikit.roomkit.manager.observer.TUILoginStateObserver;
 import com.tencent.cloud.tuikit.roomkit.state.ASRState;
+import com.tencent.cloud.tuikit.roomkit.state.ConferenceState;
 import com.tencent.cloud.tuikit.roomkit.state.InvitationState;
 import com.tencent.cloud.tuikit.roomkit.state.MediaState;
 import com.tencent.cloud.tuikit.roomkit.state.RoomState;
@@ -58,12 +61,10 @@ import com.tencent.cloud.tuikit.roomkit.state.ViewState;
 import com.tencent.cloud.tuikit.roomkit.state.entity.TakeSeatRequestEntity;
 import com.tencent.cloud.tuikit.roomkit.state.entity.UserEntity;
 import com.tencent.cloud.tuikit.roomkit.state.entity.UserModel;
-import com.tencent.cloud.tuikit.roomkit.manager.observer.ConferenceListObserver;
-import com.tencent.cloud.tuikit.roomkit.manager.observer.RoomEngineObserver;
-import com.tencent.cloud.tuikit.roomkit.manager.observer.TRTCObserver;
-import com.tencent.cloud.tuikit.roomkit.manager.observer.TUILoginStateObserver;
+import com.tencent.cloud.tuikit.roomkit.view.basic.RoomToast;
 import com.tencent.cloud.tuikit.roomkit.view.main.RoomWindowManager;
 import com.tencent.cloud.tuikit.roomkit.view.main.floatchat.store.FloatChatStore;
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuicore.permission.PermissionCallback;
@@ -77,7 +78,10 @@ import java.util.List;
 import java.util.Map;
 
 public class ConferenceController {
-    private static final String TAG = "ConferenceController";
+    private static final String TAG                           = "ConferenceController";
+    public static final  String EVENT_KEY_TIME_LIMIT          = "RTCRoomTimeLimitService";
+    public static final  String EVENT_SUB_KEY_COUNTDOWN_START = "CountdownStart";
+    public static final  String EVENT_SUB_KEY_COUNTDOWN_END   = "CountdownEnd";
 
     private static ConferenceController sInstance;
 
@@ -520,6 +524,7 @@ public class ConferenceController {
                         params.put(KEY_ERROR, TUICommonDefine.Error.SUCCESS);
                         params.put(KEY_ROOM_ID, roomInfo.roomId);
                         ConferenceEventCenter.getInstance().notifyEngineEvent(LOCAL_USER_CREATE_ROOM, params);
+                        TUICore.notifyEvent(EVENT_KEY_TIME_LIMIT, EVENT_SUB_KEY_COUNTDOWN_START, null);
                         if (callback != null) {
                             callback.onSuccess();
                         }
@@ -950,6 +955,10 @@ public class ConferenceController {
             @Override
             public void onSuccess() {
                 Log.d(TAG, "exitRoom onSuccess");
+                TUICore.notifyEvent(
+                        TUIConstants.Privacy.EVENT_ROOM_STATE_CHANGED, TUIConstants.Privacy.EVENT_SUB_KEY_ROOM_STATE_STOP, null
+                );
+                TUICore.notifyEvent(EVENT_KEY_TIME_LIMIT, EVENT_SUB_KEY_COUNTDOWN_END, null);
                 ConferenceEventCenter.getInstance().notifyEngineEvent(UPDATE_CONFERENCE_LIST, null);
             }
 
@@ -967,6 +976,10 @@ public class ConferenceController {
             @Override
             public void onSuccess() {
                 Log.d(TAG, "destroyRoom onSuccess");
+                TUICore.notifyEvent(
+                        TUIConstants.Privacy.EVENT_ROOM_STATE_CHANGED, TUIConstants.Privacy.EVENT_SUB_KEY_ROOM_STATE_STOP, null
+                );
+                TUICore.notifyEvent(EVENT_KEY_TIME_LIMIT, EVENT_SUB_KEY_COUNTDOWN_END, null);
                 destroyInstance();
                 notifyDestroyRoomResult(TUICommonDefine.Error.SUCCESS);
                 if (callback != null) {

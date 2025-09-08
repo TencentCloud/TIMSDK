@@ -36,4 +36,12 @@ object Constants {
         LandScape,
         Auto
     }
+
+    enum class ControlButton {
+        Microphone,
+        AudioPlaybackDevice,
+        Camera,
+        SwitchCamera,
+        InviteUser
+    }
 }

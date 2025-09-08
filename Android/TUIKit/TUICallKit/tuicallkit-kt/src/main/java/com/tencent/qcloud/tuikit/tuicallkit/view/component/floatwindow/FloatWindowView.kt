@@ -68,8 +68,8 @@ class FloatWindowView(context: Context) : RelativeLayout(context) {
         CallManager.instance.userState.selfUser.get().videoAvailable.observe(mediaAvailableObserver)
         CallManager.instance.userState.selfUser.get().audioAvailable.observe(mediaAvailableObserver)
         CallManager.instance.callState.callDurationCount.observe(callDurationObserver)
-
-        if (CallManager.instance.callState.scene.get() == TUICallDefine.Scene.GROUP_CALL) {
+        val scene = CallManager.instance.callState.scene.get()
+        if (scene == TUICallDefine.Scene.GROUP_CALL || scene == TUICallDefine.Scene.MULTI_CALL) {
             CallManager.instance.userState.selfUser.get().playoutVolume.observe(observer)
             for (user in CallManager.instance.userState.remoteUserList.get()) {
                 user.playoutVolume.observe(observer)
@@ -83,7 +83,8 @@ class FloatWindowView(context: Context) : RelativeLayout(context) {
         CallManager.instance.userState.selfUser.get().audioAvailable.removeObserver(mediaAvailableObserver)
         CallManager.instance.callState.callDurationCount.removeObserver(callDurationObserver)
 
-        if (CallManager.instance.callState.scene.get() == TUICallDefine.Scene.GROUP_CALL) {
+        val scene = CallManager.instance.callState.scene.get()
+        if (scene == TUICallDefine.Scene.GROUP_CALL || scene == TUICallDefine.Scene.MULTI_CALL) {
             CallManager.instance.userState.selfUser.get().playoutVolume.removeObserver(observer)
             for (user in CallManager.instance.userState.remoteUserList.get()) {
                 user.playoutVolume.removeObserver(observer)
@@ -110,7 +111,8 @@ class FloatWindowView(context: Context) : RelativeLayout(context) {
             return
         }
 
-        if (CallManager.instance.callState.scene.get() == TUICallDefine.Scene.GROUP_CALL) {
+        val scene = CallManager.instance.callState.scene.get()
+        if (scene == TUICallDefine.Scene.GROUP_CALL || scene == TUICallDefine.Scene.MULTI_CALL) {
             updateGroupCallLayout()
         } else {
             updateSingleCallLayout()
@@ -206,7 +208,8 @@ class FloatWindowView(context: Context) : RelativeLayout(context) {
     }
 
     private fun updateSelfAudioAndVideoView() {
-        if (CallManager.instance.callState.scene.get() != TUICallDefine.Scene.GROUP_CALL) {
+        val scene = CallManager.instance.callState.scene.get()
+        if (scene != TUICallDefine.Scene.GROUP_CALL && scene != TUICallDefine.Scene.MULTI_CALL) {
             return
         }
         val selfUser = CallManager.instance.userState.selfUser.get()

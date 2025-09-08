@@ -130,23 +130,26 @@ public class RecordSettingView extends RelativeLayout {
             return;
         }
 
-        SettingItemViewHolder mBeautyItemTorch = addSettingItem(R.drawable.multimedia_plugin_record_beauty, R.string.multimedia_plugin_beauty);
-        mBeautyItemTorch.setOnClickListener(v ->
-                mBeautyPanelView.setVisibility(!mRecordInfo.tuiDataShowBeautyView.get() ? VISIBLE : INVISIBLE));
+        SettingItemViewHolder mBeautySetting = addSettingItem(R.drawable.multimedia_plugin_record_beauty, R.string.multimedia_plugin_beauty);
+        mBeautySetting.setOnClickListener(view -> {
+            createBeautyPanelViewIfNeed();
+            mBeautyPanelView.setVisibility(!mRecordInfo.tuiDataShowBeautyView.get() ? VISIBLE : INVISIBLE);
+        });
 
         if (mRecordInfo.beautyInfo == null) {
             mRecordInfo.beautyInfo = BeautyInfo.CreateDefaultBeautyInfo();
         }
 
-        if (mBeautyPanelView == null) {
-            mBeautyPanelView = new BeautyPanelView(getContext(), mRecordCore, mRecordInfo);
-            mBeautyPanelView.setVisibility(INVISIBLE);
-        }
-
         mBeautyPanelViewContainer = findViewById(R.id.rl_beauty_panel_view_container);
         mBeautyPanelViewContainer.removeAllViews();
-        mBeautyPanelViewContainer
-                .addView(mBeautyPanelView, new RelativeLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+    }
+
+    private void createBeautyPanelViewIfNeed() {
+        if (mBeautyPanelView != null) {
+            return;
+        }
+        mBeautyPanelView = new BeautyPanelView(getContext(), mRecordCore, mRecordInfo);
+        mBeautyPanelViewContainer.addView(mBeautyPanelView, new LayoutParams(MATCH_PARENT, WRAP_CONTENT));
     }
 
     private void initScrollBeautyFilterView() {

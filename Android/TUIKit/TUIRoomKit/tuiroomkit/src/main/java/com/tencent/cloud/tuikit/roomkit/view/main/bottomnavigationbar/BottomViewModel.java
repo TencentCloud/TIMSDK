@@ -13,6 +13,7 @@ import static com.tencent.cloud.tuikit.roomkit.manager.eventcenter.ConferenceEve
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,11 +43,14 @@ import com.tencent.cloud.tuikit.roomkit.view.basic.BaseDialogFragment;
 import com.tencent.cloud.tuikit.roomkit.view.basic.TipToast;
 import com.tencent.cloud.tuikit.roomkit.view.main.chat.ChatActivity;
 import com.tencent.cloud.tuikit.roomkit.view.main.aisssistant.AIAssistantDialog;
+import com.tencent.cloud.tuikit.roomkit.view.component.ForbidScreenShareTipDialog;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.interfaces.ITUIService;
 import com.tencent.qcloud.tuicore.interfaces.TUIServiceCallback;
 import com.tencent.qcloud.tuicore.util.TUIBuild;
+import com.tencent.qcloud.tuicore.util.ToastUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
 import com.trtc.tuikit.common.system.ContextProvider;
 
 import java.util.ArrayList;
@@ -62,10 +66,11 @@ public class BottomViewModel implements ConferenceEventCenter.RoomEngineEventRes
 
     private static final int ITEM_NUM_EACH_LINE = 5;
 
-    private Context              mContext;
-    private BottomView           mBottomView;
-    private ConferenceState      mConferenceState;
-    private List<BottomItemData> mItemDataList;
+    private Context                    mContext;
+    private BottomView                 mBottomView;
+    private ConferenceState            mConferenceState;
+    private List<BottomItemData>       mItemDataList;
+    private ForbidScreenShareTipDialog mFeatureInactivatedDialog;
 
     private int mType;
 
@@ -74,6 +79,7 @@ public class BottomViewModel implements ConferenceEventCenter.RoomEngineEventRes
         mBottomView = bottomView;
         mConferenceState = ConferenceController.sharedInstance().getConferenceState();
         mItemDataList = new ArrayList<>();
+        mFeatureInactivatedDialog = new ForbidScreenShareTipDialog(mContext);
         subscribeEngineEvent();
     }
 
@@ -263,7 +269,13 @@ public class BottomViewModel implements ConferenceEventCenter.RoomEngineEventRes
                 if (ConferenceController.sharedInstance().getConferenceState().videoModel.isScreenSharing()) {
                     mBottomView.stopScreenShareDialog();
                 } else {
-                    showScreenShareTip();
+                    Map<String, Boolean> featureMap = mConferenceState.blackListFeatureMap;
+                    boolean isScreenShareForbidden = featureMap.getOrDefault("screen_share",false);
+                    if (Boolean.TRUE.equals(isScreenShareForbidden)) {
+                        mFeatureInactivatedDialog.show();
+                    } else {
+                        showScreenShareTip();
+                    }
                 }
             }
         });

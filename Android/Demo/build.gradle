@@ -56,16 +56,16 @@ subprojects {
 
 ext {
     compileSdkVersion = 33
-    minSdkVersion = 19
+    minSdkVersion = 23
     targetSdkVersion = 33
     versionCode = 1
-    versionName = "8.6.7019"
+    versionName = "8.7.7201"
     abiFilters = ['armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
     //['armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
     arguments = "-DANDROID_STL=c++_static"
     cppFlags = "-std=c++11"
 
-    liteavSdk = "com.tencent.liteav:LiteAVSDK_Professional:12.4.+"
+    liteavSdk = "com.tencent.liteav:LiteAVSDK_Professional:12.6+"
 }
 
 task clean(type: Delete) {

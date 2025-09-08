@@ -24,6 +24,7 @@ import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.request.RequestOptions;
 import com.tencent.liteav.base.util.LiteavLog;
+import com.tencent.qcloud.tuikit.tuimultimediacore.TUIMultimediaSignatureChecker;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.R;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaConstants;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaAuthorizationPrompter;
@@ -33,6 +34,7 @@ import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.TUIMultiMediaEditCommo
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.TUIMultiMediaEditCommonCtrlView.EditType;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.TUIMultiMediaEditCommonCtrlView.PictureCropListener;
 import com.tencent.ugc.TXVideoEditConstants.TXPaster;
+import com.tencent.ugc.UGCLicenseChecker;
 import com.tencent.ugc.videobase.utils.CollectionUtils;
 import java.io.File;
 import java.security.MessageDigest;
@@ -50,6 +52,7 @@ public class TUIMultimediaPictureEditFragment extends Fragment {
     private Bitmap mBeforeCropBitmap;
     private Bitmap mOriginBitmap;
     private ImageView mImageView;
+    private TUIMultiMediaEditCommonCtrlView mEditCommonCtrlView;
     private boolean mIsRecordFile = true;
 
     public TUIMultimediaPictureEditFragment(Context context) {
@@ -109,10 +112,9 @@ public class TUIMultimediaPictureEditFragment extends Fragment {
     public void initView() {
         initExternalParameters();
 
-        TUIMultiMediaEditCommonCtrlView editCommonCtrlView = new TUIMultiMediaEditCommonCtrlView(mContext,
-                EditType.PHOTO, mIsRecordFile);
+        mEditCommonCtrlView = new TUIMultiMediaEditCommonCtrlView(mContext, EditType.PHOTO, mIsRecordFile);
         ((RelativeLayout) mRootView.findViewById(R.id.edit_common_ctrl_view_container))
-                .addView(editCommonCtrlView, new RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+                .addView(mEditCommonCtrlView, new RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
         LiteavLog.i(TAG, "preview picture. file path = " + mPictureFilePath);
         mOriginBitmap = TUIMultimediaFileUtil.decodeBitmap(mPictureFilePath);
@@ -123,40 +125,23 @@ public class TUIMultimediaPictureEditFragment extends Fragment {
         }
 
         mImageView = new ImageView(mContext);
-        editCommonCtrlView.setMediaView(mImageView);
-        editCommonCtrlView.setMediaAspectRatio(mCurrentBitmap.getWidth() * 1.0f / mCurrentBitmap.getHeight());
-        editCommonCtrlView.setPicture(mCurrentBitmap);
+        mEditCommonCtrlView.setMediaView(mImageView);
+        mEditCommonCtrlView.setMediaAspectRatio(mCurrentBitmap.getWidth() * 1.0f / mCurrentBitmap.getHeight());
+        mEditCommonCtrlView.setPicture(mCurrentBitmap);
         previewPicture(0);
         mTuiMultimediaPictureEditorCore.setSourcePicture(mCurrentBitmap);
-        editCommonCtrlView.setCommonMediaEditListener(new CommonMediaEditListener() {
+        mEditCommonCtrlView.setCommonMediaEditListener(new CommonMediaEditListener() {
             @Override
             public void onGenerateMedia() {
-                if (!TUIMultimediaAuthorizationPrompter.verifyPermissionGranted(mContext)) {
-                    return;
-                }
-
-                List<TXPaster> pasterList = editCommonCtrlView.getNormalizedPaster();
-                LiteavLog.i(TAG, "on generate media." + " is recordFile: " + mIsRecordFile + " pasterList size is:" + (
-                        pasterList != null ? pasterList.size() : 0));
-                if (CollectionUtils.isEmpty(pasterList)) {
-                    Bitmap bitmap = mTuiMultimediaPictureEditorCore.getSourcePicture();
-                    if (bitmap == mOriginBitmap && !mIsRecordFile) {
-                        finishEdit(null);
-                    } else {
-                        finishEdit(savaBitmapToLocalFile(bitmap));
-                    }
-                } else {
-                    mTuiMultimediaPictureEditorCore.setPasterList(pasterList);
-                    mTuiMultimediaPictureEditorCore.processPicture(bitmap -> finishEdit(savaBitmapToLocalFile(bitmap)));
-                }
+                onGeneratePicture();
             }
 
             @Override
             public void onCancelEdit() {
-                cancelEdit();
+                onCancelGeneratePicture();
             }
         });
-        editCommonCtrlView.setPictureCropListener(new PictureCropListener() {
+        mEditCommonCtrlView.setPictureCropListener(new PictureCropListener() {
             @Override
             public void onConfirmCrop(RectF rectF, int rotation) {
 
@@ -168,8 +153,8 @@ public class TUIMultimediaPictureEditFragment extends Fragment {
                     previewPicture(0);
                     mTuiMultimediaPictureEditorCore.resetEditor();
                     mTuiMultimediaPictureEditorCore.setSourcePicture(mCurrentBitmap);
-                    editCommonCtrlView.setMediaAspectRatio(mCurrentBitmap.getWidth() * 1.0f / mCurrentBitmap.getHeight());
-                    editCommonCtrlView.setPicture(mCurrentBitmap);
+                    mEditCommonCtrlView.setMediaAspectRatio(mCurrentBitmap.getWidth() * 1.0f / mCurrentBitmap.getHeight());
+                    mEditCommonCtrlView.setPicture(mCurrentBitmap);
                 });
             }
 
@@ -181,9 +166,8 @@ public class TUIMultimediaPictureEditFragment extends Fragment {
 
             @Override
             public void onStartCrop() {
-                TUIMultimediaAuthorizationPrompter.verifyPermissionGranted(mContext);
                 mTuiMultimediaPictureEditorCore
-                        .setPasterList(editCommonCtrlView.getNormalizedPaster());
+                        .setPasterList(mEditCommonCtrlView.getNormalizedPaster());
                 mBeforeCropBitmap = mCurrentBitmap;
                 mTuiMultimediaPictureEditorCore.processPicture(bitmap -> {
                     mCurrentBitmap = bitmap;
@@ -217,7 +201,41 @@ public class TUIMultimediaPictureEditFragment extends Fragment {
                 .into(mImageView);
     }
 
-    private void cancelEdit() {
+    private void onGeneratePicture() {
+        if (!TUIMultimediaSignatureChecker.getInstance().isSupportFunction()) {
+            onGeneratePictureWithoutValidSignature();
+            return;
+        }
+        
+        List<TXPaster> pasterList = mEditCommonCtrlView != null ? mEditCommonCtrlView.getNormalizedPaster() : null;
+        LiteavLog.i(TAG, "on generate media." + " is recordFile: " + mIsRecordFile + " pasterList size is:" + (
+                pasterList != null ? pasterList.size() : 0));
+
+        if (CollectionUtils.isEmpty(pasterList)) {
+            Bitmap bitmap = mTuiMultimediaPictureEditorCore.getSourcePicture();
+            if (bitmap == mOriginBitmap && !mIsRecordFile) {
+                finishEdit(null);
+            } else {
+                finishEdit(savaBitmapToLocalFile(bitmap));
+            }
+        } else {
+            mTuiMultimediaPictureEditorCore.setPasterList(pasterList);
+            mTuiMultimediaPictureEditorCore.processPicture(bitmap -> finishEdit(savaBitmapToLocalFile(bitmap)));
+        }
+    }
+
+    private void onGeneratePictureWithoutValidSignature() {
+        LiteavLog.i(TAG,"on generate picture without valid signature.");
+        List<TXPaster> pasterList = mEditCommonCtrlView != null ? mEditCommonCtrlView.getNormalizedPaster() : null;
+        if (!CollectionUtils.isEmpty(pasterList)) {
+            TUIMultimediaAuthorizationPrompter.showPermissionPrompterDialog(getContext());
+            return;
+        }
+
+        finishEdit(savaBitmapToLocalFile(mOriginBitmap));
+    }
+
+    private void onCancelGeneratePicture() {
         if (mIsRecordFile) {
             ((AppCompatActivity) mContext).getSupportFragmentManager().popBackStack();
         } else {

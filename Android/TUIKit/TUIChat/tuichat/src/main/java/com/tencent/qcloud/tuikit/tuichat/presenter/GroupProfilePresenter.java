@@ -16,7 +16,8 @@ import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuikit.timcommon.bean.GroupProfileBean;
 import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonUtil;
-import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.GroupMemberBean;
+import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.GroupProfileListener;
 import com.tencent.qcloud.tuikit.tuichat.model.ProfileProvider;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
@@ -61,7 +62,19 @@ public class GroupProfilePresenter {
                                     groupProfileBean.setRoleInGroup(GroupMemberInfo.MEMBER_ROLE_OWNER);
                                 }
                             } else if (groupProfileBean.isOwner()) {
-                                groupProfileBean.setRoleInGroup(GroupMemberInfo.MEMBER_ROLE_MEMBER);
+                                ThreadUtils.postOnUiThreadDelayed(() -> {
+                                    loadSelfInfo(groupID, new TUICallback() {
+                                        @Override
+                                        public void onSuccess() {
+                                            onGroupChanged(changeInfo);
+                                        }
+
+                                        @Override
+                                        public void onError(int errorCode, String errorMessage) {
+                                            TUIChatLog.e(TAG, "onGroupInfoChanged loadSelfInfo errorCode:" + errorCode + " errorMessage:" + errorMessage);
+                                        }
+                                    });
+                                }, 100);
                             }
                         }
                         onGroupChanged(changeInfo);
@@ -88,12 +101,50 @@ public class GroupProfilePresenter {
             public void onMemberKicked(String groupID, V2TIMGroupMemberInfo opUser, List<V2TIMGroupMemberInfo> memberList) {
                 onMemberCountChanged(groupID);
             }
+
+            @Override
+            public void onGrantAdministrator(String groupID, V2TIMGroupMemberInfo opUser, List<V2TIMGroupMemberInfo> memberList) {
+                if (groupProfileBean != null && TextUtils.equals(groupProfileBean.getGroupID(), groupID)) {
+                    GroupProfilePresenter.this.onGrantAdministrator(memberList);
+                }
+            }
+
+            @Override
+            public void onRevokeAdministrator(String groupID, V2TIMGroupMemberInfo opUser, List<V2TIMGroupMemberInfo> memberList) {
+                if (groupProfileBean != null && TextUtils.equals(groupProfileBean.getGroupID(), groupID)) {
+                    GroupProfilePresenter.this.onRevokeAdministrator(memberList);
+                }
+            }
         };
         V2TIMManager.getInstance().addGroupListener(groupListener);
     }
 
     public void unregisterGroupListener() {
         V2TIMManager.getInstance().removeGroupListener(groupListener);
+    }
+
+    private void onGrantAdministrator(List<V2TIMGroupMemberInfo> memberList) {
+        for (V2TIMGroupMemberInfo info : memberList) {
+            if (TextUtils.equals(info.getUserID(), TUILogin.getLoginUser())) {
+                groupProfileBean.setRoleInGroup(GroupMemberInfo.MEMBER_ROLE_ADMINISTRATOR);
+                if (groupProfileListener != null) {
+                    groupProfileListener.onGroupProfileLoaded(groupProfileBean);
+                }
+                break;
+            }
+        }
+    }
+
+    private void onRevokeAdministrator(List<V2TIMGroupMemberInfo> memberList) {
+        for (V2TIMGroupMemberInfo info : memberList) {
+            if (TextUtils.equals(info.getUserID(), TUILogin.getLoginUser())) {
+                groupProfileBean.setRoleInGroup(GroupMemberInfo.MEMBER_ROLE_MEMBER);
+                if (groupProfileListener != null) {
+                    groupProfileListener.onGroupProfileLoaded(groupProfileBean);
+                }
+                break;
+            }
+        }
     }
 
     private void onMemberCountChanged(String groupID) {
@@ -128,11 +179,25 @@ public class GroupProfilePresenter {
     public void loadGroupProfile(String groupID) {
         provider.getGroupsProfile(groupID, new TUIValueCallback<GroupProfileBean>() {
             @Override
-            public void onSuccess(GroupProfileBean object) {
-                groupProfileBean = object;
-                if (groupProfileListener != null) {
-                    groupProfileListener.onGroupProfileLoaded(object);
-                }
+            public void onSuccess(GroupProfileBean groupProfileBean) {
+                GroupProfilePresenter.this.groupProfileBean = groupProfileBean;
+                List<String> userIDList = Collections.singletonList(V2TIMManager.getInstance().getLoginUser());
+                provider.getGroupMembersProfile(groupID, userIDList, new TUIValueCallback<List<GroupMemberBean>>() {
+                    @Override
+                    public void onSuccess(List<GroupMemberBean> memberList) {
+                        if (!memberList.isEmpty()) {
+                            GroupProfilePresenter.this.groupProfileBean.setSelfInfo(memberList.get(0));
+                            if (groupProfileListener != null) {
+                                groupProfileListener.onGroupProfileLoaded(groupProfileBean);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(int errorCode, String errorMessage) {
+                        TUIChatLog.e(TAG, "loadSelfInfo errorCode:" + errorCode + " errorMessage:" + errorMessage);
+                    }
+                });
             }
 
             @Override
@@ -162,21 +227,21 @@ public class GroupProfilePresenter {
         });
     }
 
-    public void loadSelfInfo(String groupID) {
+    private void loadSelfInfo(String groupID, TUICallback callback) {
         List<String> userIDList = Collections.singletonList(V2TIMManager.getInstance().getLoginUser());
         provider.getGroupMembersProfile(groupID, userIDList, new TUIValueCallback<List<GroupMemberBean>>() {
             @Override
             public void onSuccess(List<GroupMemberBean> object) {
                 if (!object.isEmpty()) {
-                    if (groupProfileListener != null) {
-                        groupProfileListener.onSelfInfoLoaded(object.get(0));
-                    }
+                    groupProfileBean.setSelfInfo(object.get(0));
                 }
+                TUICallback.onSuccess(callback);
             }
 
             @Override
             public void onError(int errorCode, String errorMessage) {
                 TUIChatLog.e(TAG, "loadSelfInfo errorCode:" + errorCode + " errorMessage:" + errorMessage);
+                TUICallback.onError(callback, errorCode, errorMessage);
             }
         });
     }

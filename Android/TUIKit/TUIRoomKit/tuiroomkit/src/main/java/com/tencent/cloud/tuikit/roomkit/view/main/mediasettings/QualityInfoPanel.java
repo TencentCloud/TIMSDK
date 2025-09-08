@@ -4,6 +4,7 @@ import static com.tencent.trtc.TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -141,6 +142,13 @@ public class QualityInfoPanel extends BaseBottomDialog implements ConferenceEven
         mTextVideoFrameUpload.setText(STATISTICS_ORIGINAL_VALUE + VIDEO_FRAME_UNITS);
         mTextVideoBitrateUpload.setText(STATISTICS_ORIGINAL_VALUE + BITRATE_UNITS);
         mTextVideoBitrateDownload.setText(STATISTICS_ORIGINAL_VALUE + BITRATE_UNITS);
+
+        findViewById(R.id.tuiroomkit_quality_info_hide).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
 }

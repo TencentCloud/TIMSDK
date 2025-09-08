@@ -39,6 +39,12 @@ public class FriendProfileMinimalistActivity extends BaseMinimalistLightActivity
 
         layout.setPresenter(presenter);
         layout.loadFriendProfile(userID);
+
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
         layout.setOnButtonClickListener(new FriendProfileLayout.OnButtonClickListener() {
             @Override
             public void onDeleteFriendClick(String id) {
@@ -67,7 +73,7 @@ public class FriendProfileMinimalistActivity extends BaseMinimalistLightActivity
                 intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, itemHeight);
                 intent.putExtra(ImageSelectActivity.DATA, faceList);
                 if (TextUtils.isEmpty(mChatBackgroundThumbnailUrl)
-                    || TextUtils.equals(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL, mChatBackgroundThumbnailUrl)) {
+                        || TextUtils.equals(TUIConstants.TUIChat.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL, mChatBackgroundThumbnailUrl)) {
                     intent.putExtra(ImageSelectActivity.SELECTED, defaultFace);
                 } else {
                     intent.putExtra(ImageSelectActivity.SELECTED, new ImageSelectActivity.ImageBean(mChatBackgroundThumbnailUrl, "", false));

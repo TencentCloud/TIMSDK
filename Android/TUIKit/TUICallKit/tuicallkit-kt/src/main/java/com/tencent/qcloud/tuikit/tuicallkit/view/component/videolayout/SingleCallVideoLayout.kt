@@ -36,9 +36,7 @@ class SingleCallVideoLayout(context: Context) : ConstraintLayout(context) {
 
     private var remoteUserAvatarObserver = Observer<String> {
         if (!it.isNullOrEmpty()) {
-            ImageLoader.load(
-                context.applicationContext, imageAvatar, it, R.drawable.tuicallkit_ic_avatar
-            )
+            ImageLoader.load(context.applicationContext, imageAvatar, it, R.drawable.tuicallkit_ic_avatar)
         }
     }
     private var remoteUserNicknameObserver = Observer<String> {
@@ -68,11 +66,11 @@ class SingleCallVideoLayout(context: Context) : ConstraintLayout(context) {
         if (remoteUserList != null && remoteUserList.size > 0) {
             remoteUser = remoteUserList.first()
         }
+        initView()
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        initView()
         registerObserver()
     }
 
@@ -87,18 +85,14 @@ class SingleCallVideoLayout(context: Context) : ConstraintLayout(context) {
         remoteUser.avatar.observe(remoteUserAvatarObserver)
         remoteUser.nickname.observe(remoteUserNicknameObserver)
         CallManager.instance.userState.selfUser.get().callStatus.observe(callStatusObserver)
-        CallManager.instance.viewState.isVirtualBackgroundOpened.observe(
-            isVirtualBackgroundOpenedObserver
-        )
+        CallManager.instance.viewState.isVirtualBackgroundOpened.observe(isVirtualBackgroundOpenedObserver)
     }
 
     private fun unregisterObserver() {
         remoteUser.avatar.removeObserver(remoteUserAvatarObserver)
         remoteUser.nickname.removeObserver(remoteUserNicknameObserver)
         CallManager.instance.userState.selfUser.get().callStatus.removeObserver(callStatusObserver)
-        CallManager.instance.viewState.isVirtualBackgroundOpened.removeObserver(
-            isVirtualBackgroundOpenedObserver
-        )
+        CallManager.instance.viewState.isVirtualBackgroundOpened.removeObserver(isVirtualBackgroundOpenedObserver)
     }
 
     private fun initView() {
@@ -150,22 +144,16 @@ class SingleCallVideoLayout(context: Context) : ConstraintLayout(context) {
         imageAvatar.visibility = visibility
         textUserName.visibility = visibility
         if (show) {
-            ImageLoader.load(
-                context, imageAvatar, remoteUser.avatar.get(), R.drawable.tuicallkit_ic_avatar
-            )
+            ImageLoader.load(context, imageAvatar, remoteUser.avatar.get(), R.drawable.tuicallkit_ic_avatar)
             textUserName.text = remoteUser.nickname.get()
         }
     }
 
     private fun initBigVideoView() {
-        videoViewBig = VideoFactory.instance.createVideoView(
-            context,
-            CallManager.instance.userState.selfUser.get()
-        )
+        videoViewBig = VideoFactory.instance.createVideoView(context, CallManager.instance.userState.selfUser.get())
         resetView(videoViewBig)
         layoutRenderBig.removeAllViews()
         layoutRenderBig.addView(videoViewBig)
-
         val isCameraOpen = CallManager.instance.mediaState.isCameraOpened.get()
         val isFrontCamera = CallManager.instance.mediaState.isFrontCamera.get()
         if (isCameraOpen) {
@@ -210,12 +198,7 @@ class SingleCallVideoLayout(context: Context) : ConstraintLayout(context) {
             val option = ImageOptions.Builder().setPlaceImage(R.drawable.tuicallkit_ic_avatar)
                 .setBlurEffect(80f).build()
             ImageLoader.load(context, imageBackground, remoteUser.avatar.get(), option)
-            imageBackground.setColorFilter(
-                ContextCompat.getColor(
-                    context,
-                    R.color.tuicallkit_color_blur_mask
-                )
-            )
+            imageBackground.setColorFilter(ContextCompat.getColor(context, R.color.tuicallkit_color_blur_mask))
         }
     }
 

@@ -76,7 +76,7 @@
 
     <string name="authorization_prompter">由于您未开通多媒体插件使用权限，您当前功能将受限</string>
     <string name="authorization_prompter_accessing_documents">1. 您可以访问下面的文档开通多媒体插件使用权限：多媒体插件开通指引</string>
-    <string name="authorization_prompter_remove_module">2. 您也可以在工程的settings文件中删除 tuimultimediaplugin和tuimultimediacore模块，使用项目自带的基础多媒体功能</string>
+    <string name="authorization_prompter_remove_module">2. 您也可以在模块的config文件中屏蔽相应的高级功能，详细方法请阅读模块下的READ.ME文件</string>
     <string name="authorization_prompter_documents_title">多媒体插件开通指引</string>
     <string name="prompter">提示</string>
     <string name="link_error">无法打开链接</string>

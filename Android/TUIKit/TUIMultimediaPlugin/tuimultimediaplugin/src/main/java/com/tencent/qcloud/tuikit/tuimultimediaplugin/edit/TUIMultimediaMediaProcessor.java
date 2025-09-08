@@ -139,8 +139,7 @@ public class TUIMultimediaMediaProcessor {
 
         private void getVideoInfo() {
             for (Uri uri : mUriQueue) {
-                TXVideoInfo videoInfo = TUIMultimediaVideoEditorCore
-                        .getVideoFileInfo(TUIMultimediaPlugin.getAppContext(), uri.toString());
+                TXVideoInfo videoInfo = TUIMultimediaVideoEditorCore.getVideoFileInfo(uri.toString());
                 mVideoInfoMap.put(uri, videoInfo);
             }
         }
@@ -188,7 +187,8 @@ public class TUIMultimediaMediaProcessor {
                 mListener.onTranscodeFinished(transcodeResult);
             }
             LiteavLog.i(TAG, "onTranscodeFinished  source media uri is " + originalUri
-                    + " new media uri is " + transcodeMediaUri);
+                    + " new media uri is " + transcodeMediaUri + " errorCode is " + errorCode
+                    + " errorString = " + errorString);
         }
 
         private boolean isNeedTranscode(TXVideoInfo videoInfo) {

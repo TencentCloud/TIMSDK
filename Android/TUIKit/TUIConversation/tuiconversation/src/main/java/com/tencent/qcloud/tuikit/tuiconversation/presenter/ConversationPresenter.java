@@ -839,9 +839,6 @@ public class ConversationPresenter {
         while (iterator.hasNext()) {
             Map.Entry<String, ConversationInfo> entry = iterator.next();
             ConversationInfo conversationInfo = entry.getValue();
-            if (conversationInfo.isShowDisturbIcon()) {
-                continue;
-            }
 
             if (conversationInfo.isMarkUnread()) {
                 conversationInfos.add(conversationInfo);

@@ -71,4 +71,14 @@
     <string name="tuicallkit_blur_background">背景をぼかす</string>
     <string name="tuicallkit_notification_channel_group_id">つうわかんり</string>
     <string name="tuicallkit_notification_channel_id">おんせい・えいぞうつうわ</string>
+
+    <string name="tuicallkit_audio_route_bluetooth_headset">ブルートゥースイヤホン</string>
+    <string name="tuicallkit_audio_route_wired_headset">有線イヤホン</string>
+    <string name="tuicallkit_audio_route_unknown_device">未知のデバイス</string>
+
+    <string name="tuicallkit_speaker_on">スピーカーがオンになっています</string>
+    <string name="tuicallkit_speaker_off">スピーカーがオフになっています</string>
+
+    <string name="tuicallkit_enter_pip_mode_fail_hint">ピクチャーインピクチャーモードへの移行に失敗しました。権限が有効になっているか確認してください。</string>
+
 </resources>

@@ -23,8 +23,10 @@ import android.widget.RelativeLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import com.tencent.liteav.base.util.LiteavLog;
+import com.tencent.qcloud.tuikit.tuimultimediacore.TUIMultimediaSignatureChecker;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.R;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaIConfig;
+import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaAuthorizationPrompter;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaResourceUtils;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.bgm.BGMEditListener;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.bgm.BGMManager;
@@ -41,6 +43,7 @@ import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.subtitlePaster.Subtitl
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.subtitlePaster.SubtitlePasterFloatLayerView;
 import com.tencent.ugc.TXVideoEditConstants.TXPaster;
 import com.tencent.ugc.TXVideoEditConstants.TXRect;
+import com.tencent.ugc.UGCLicenseChecker;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -393,6 +396,7 @@ public class TUIMultiMediaEditCommonCtrlView extends RelativeLayout {
     }
 
     private void addSubtitlePaster() {
+        showPermissionPrompterDialogIfNeed();
         initFloatLayerViewGroup();
 
         if (mSubtitlePanelView == null) {
@@ -421,6 +425,7 @@ public class TUIMultiMediaEditCommonCtrlView extends RelativeLayout {
     }
 
     private void addPicturePaster() {
+        showPermissionPrompterDialogIfNeed();
         initFloatLayerViewGroup();
 
         if (mPicturePasterPanelView == null) {
@@ -448,6 +453,7 @@ public class TUIMultiMediaEditCommonCtrlView extends RelativeLayout {
     }
 
     private void addBGMPanel() {
+        showPermissionPrompterDialogIfNeed();
         if (mBGMPanelView == null) {
             mBGMPanelView = new BGMPanelView(mContext, mBGMManager);
             RelativeLayout bgmPanelViewContainer = mRootView.findViewById(R.id.rl_bgm_panel_view_container);
@@ -501,6 +507,7 @@ public class TUIMultiMediaEditCommonCtrlView extends RelativeLayout {
 
         if (enableBrush) {
             enableBrush(brushMode);
+            showPermissionPrompterDialogIfNeed();
         } else {
             disableBrush();
         }
@@ -570,6 +577,7 @@ public class TUIMultiMediaEditCommonCtrlView extends RelativeLayout {
     }
 
     private void startCrop() {
+        showPermissionPrompterDialogIfNeed();
         showOperationView(false);
         mPreviewContainer.reset();
         mPictureCropControlView = new PictureCropControlView(mContext, mPreviewContainer);
@@ -751,5 +759,12 @@ public class TUIMultiMediaEditCommonCtrlView extends RelativeLayout {
 
     public boolean isSupportEditCrop() {
         return mEditType == EditType.PHOTO && TUIMultimediaIConfig.getInstance().isSupportPictureEditCrop();
+    }
+
+    private void showPermissionPrompterDialogIfNeed() {
+        if (TUIMultimediaSignatureChecker.getInstance().isSupportFunction()) {
+            return;
+        }
+        TUIMultimediaAuthorizationPrompter.showPermissionPrompterDialog(mContext);
     }
 }

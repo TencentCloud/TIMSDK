@@ -3,11 +3,7 @@ package com.tencent.qcloud.tuicore;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
-
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
-
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -16,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import org.json.JSONObject;
 
 /**
  * TUI configuration, such as file path configuration, user information
@@ -267,50 +264,52 @@ public class TUIConfig {
      * init file path
      */
     public static void initPath() {
-        File f = new File(getMediaDir());
-        if (!f.exists()) {
-            f.mkdirs();
-        }
+        new Thread(() -> {
+            File f = new File(getMediaDir());
+            if (!f.exists()) {
+                f.mkdirs();
+            }
 
-        f = new File(getRecordDir());
-        if (!f.exists()) {
-            f.mkdirs();
-        }
+            f = new File(getRecordDir());
+            if (!f.exists()) {
+                f.mkdirs();
+            }
 
-        f = new File(getRecordDownloadDir());
-        if (!f.exists()) {
-            f.mkdirs();
-        }
+            f = new File(getRecordDownloadDir());
+            if (!f.exists()) {
+                f.mkdirs();
+            }
 
-        f = new File(getVideoDownloadDir());
-        if (!f.exists()) {
-            f.mkdirs();
-        }
+            f = new File(getVideoDownloadDir());
+            if (!f.exists()) {
+                f.mkdirs();
+            }
 
-        f = new File(getImageDownloadDir());
-        if (!f.exists()) {
-            f.mkdirs();
-        }
+            f = new File(getImageDownloadDir());
+            if (!f.exists()) {
+                f.mkdirs();
+            }
 
-        f = new File(getImageBaseDir());
-        if (!f.exists()) {
-            f.mkdirs();
-        }
+            f = new File(getImageBaseDir());
+            if (!f.exists()) {
+                f.mkdirs();
+            }
 
-        f = new File(getVideoBaseDir());
-        if (!f.exists()) {
-            f.mkdirs();
-        }
+            f = new File(getVideoBaseDir());
+            if (!f.exists()) {
+                f.mkdirs();
+            }
 
-        f = new File(getFileDownloadDir());
-        if (!f.exists()) {
-            f.mkdirs();
-        }
+            f = new File(getFileDownloadDir());
+            if (!f.exists()) {
+                f.mkdirs();
+            }
 
-        f = new File(getCrashLogDir());
-        if (!f.exists()) {
-            f.mkdirs();
-        }
+            f = new File(getCrashLogDir());
+            if (!f.exists()) {
+                f.mkdirs();
+            }
+        }).start();
     }
 
     public static Context getAppContext() {

@@ -152,17 +152,6 @@ public class PictureCropControlView extends RelativeLayout implements PictureCro
         }
     }
 
-//    private Size getCropPictureSize(RectF normalizedCropRect) {
-//        Size srcBitmapSize =  TUIMultimediaPictureEditorCore.getInstance(mContext).getBitmapSize();
-//        int outSizeWidth = Math.min(1080, srcBitmapSize.width);
-//        int outSizeHeight = (int) (outSizeWidth * normalizedCropRect.height() / normalizedCropRect.width());
-//        if (mRotation == 90 || mRotation == 270) {
-//            return new Size(outSizeHeight, outSizeWidth);
-//        } else {
-//            return new Size(outSizeWidth, outSizeHeight);
-//        }
-//    }
-
     private RectF getNormalizedCropRect() {
         Rect corpRect = mPictureCropView.getCropRect();
         Rect previewRect = mPreviewLayout.getContentRect();

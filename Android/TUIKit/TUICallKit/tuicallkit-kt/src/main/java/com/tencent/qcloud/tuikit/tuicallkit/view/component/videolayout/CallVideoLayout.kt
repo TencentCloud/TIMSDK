@@ -6,16 +6,15 @@ import com.tencent.cloud.tuikit.engine.call.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallkit.manager.CallManager
 
 class CallVideoLayout(context: Context) : ConstraintLayout(context) {
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
+    init {
         initView()
     }
 
     private fun initView() {
-        layoutParams.width = LayoutParams.MATCH_PARENT
-        layoutParams.height = LayoutParams.MATCH_PARENT
+        this.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
 
-        if (CallManager.instance.callState.scene.get() == TUICallDefine.Scene.GROUP_CALL) {
+        val scene = CallManager.instance.callState.scene.get()
+        if (scene == TUICallDefine.Scene.GROUP_CALL || scene == TUICallDefine.Scene.MULTI_CALL) {
             addView(MultiCallVideoLayout(context), layoutParams)
         } else {
             addView(SingleCallVideoLayout(context), layoutParams)

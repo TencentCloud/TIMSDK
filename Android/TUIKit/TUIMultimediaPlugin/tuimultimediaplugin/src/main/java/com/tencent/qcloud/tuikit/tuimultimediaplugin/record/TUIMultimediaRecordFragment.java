@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.liteav.base.util.LiteavLog;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.R;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaConstants;
@@ -24,6 +25,7 @@ import com.tencent.qcloud.tuikit.tuimultimediaplugin.record.data.RecordInfo.Reco
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.record.view.RecordFunctionView;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.record.view.RecordVideoView;
 import com.tencent.ugc.TXRecordCommon;
+import org.json.JSONObject;
 
 public class TUIMultimediaRecordFragment extends Fragment {
 

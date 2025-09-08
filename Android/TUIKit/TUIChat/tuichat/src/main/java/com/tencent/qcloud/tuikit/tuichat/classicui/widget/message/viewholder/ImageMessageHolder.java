@@ -21,11 +21,14 @@ import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.imagevideobrowse.ImageVideoBrowseActivity;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ChatRingProgressBar;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ProgressPresenter;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatFileDownloadPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
+
 import java.io.Serializable;
 
 public class ImageMessageHolder extends MessageContentHolder {
@@ -86,18 +89,9 @@ public class ImageMessageHolder extends MessageContentHolder {
     }
 
     private ViewGroup.LayoutParams getImageParams(ViewGroup.LayoutParams params, final ImageMessageBean msg) {
-        if (msg.getImgWidth() == 0 || msg.getImgHeight() == 0) {
-            params.width = DEFAULT_MAX_SIZE;
-            params.height = DEFAULT_MAX_SIZE;
-            return params;
-        }
-        if (msg.getImgWidth() > msg.getImgHeight()) {
-            params.width = DEFAULT_MAX_SIZE;
-            params.height = DEFAULT_MAX_SIZE * msg.getImgHeight() / msg.getImgWidth();
-        } else {
-            params.width = DEFAULT_MAX_SIZE * msg.getImgWidth() / msg.getImgHeight();
-            params.height = DEFAULT_MAX_SIZE;
-        }
+        int[] size = TUIChatUtils.calculateOptimalSizePx(msg.getImgWidth(), msg.getImgHeight());
+        params.width = size[0];
+        params.height = size[1];
         return params;
     }
 

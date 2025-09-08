@@ -195,6 +195,19 @@ public class RoomVideoFloatViewModel implements ConferenceEventCenter.RoomEngine
             return;
         }
         UserEntity user = ConferenceController.sharedInstance().getConferenceState().allUserList.get(position);
+        updateUserInfoForRoleChanged(user);
+        changedStreamForRoomOwnerChanged(user);
+    }
+
+    private void updateUserInfoForRoleChanged(UserEntity user) {
+        if (!TextUtils.equals(user.getUserId(), mFloatUser.getUserId())) {
+            return;
+        }
+        mFloatUser.setRole(user.getRole());
+        mRoomVideoFloatView.onNotifyUserInfoChanged(mFloatUser);
+    }
+
+    private void changedStreamForRoomOwnerChanged(UserEntity user) {
         if (user.getRole() != TUIRoomDefine.Role.ROOM_OWNER) {
             return;
         }
@@ -210,7 +223,6 @@ public class RoomVideoFloatViewModel implements ConferenceEventCenter.RoomEngine
             startVideoPlay(mFloatUser);
         }
         mRoomVideoFloatView.onNotifyAudioStreamStateChanged(mFloatUser.isHasAudioStream());
-        mRoomVideoFloatView.onNotifyUserInfoChanged(mFloatUser);
     }
 
     private void handleUserLeave(String userId) {

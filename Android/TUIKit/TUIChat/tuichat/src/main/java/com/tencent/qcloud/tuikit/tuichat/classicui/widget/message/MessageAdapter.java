@@ -474,13 +474,18 @@ public class MessageAdapter extends RecyclerView.Adapter implements IMessageAdap
         if (last == 0) {
             last = 1;
         }
-        if (dataSource == null || dataSource.size() == 0 || first > last) {
+        if (dataSource == null || dataSource.isEmpty() || first > last) {
             return new ArrayList<>(0);
         }
         if (first >= dataSource.size() + 1) {
             return new ArrayList<>(0);
         }
+        int start = first - 1;
+        int end = last - 1;
 
-        return new ArrayList<>(dataSource.subList(first - 1, last - 1));
+        if (end > dataSource.size() || start > end) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<>(dataSource.subList(start, end));
     }
 }

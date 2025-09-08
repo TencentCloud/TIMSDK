@@ -12,11 +12,11 @@ public class GroupProfileBean implements Serializable {
     private String groupIntroduction;
     private String groupFaceUrl;
     private int memberCount;
-    private int roleInGroup;
     private int recvOpt;
     private int approveOpt;
     private int addOpt;
     private boolean isAllMuted = false;
+    private GroupMemberBean selfInfo;
 
     public String getGroupName() {
         return groupName;
@@ -74,24 +74,32 @@ public class GroupProfileBean implements Serializable {
         this.memberCount = memberCount;
     }
 
-    public int getRoleInGroup() {
-        return roleInGroup;
+    public void setSelfInfo(GroupMemberBean selfInfo) {
+        this.selfInfo = selfInfo;
     }
 
-    public void setRoleInGroup(int roleInGroup) {
-        this.roleInGroup = roleInGroup;
+    public GroupMemberBean getSelfInfo() {
+        return selfInfo;
+    }
+
+    public int getRoleInGroup() {
+        return selfInfo.getRole();
+    }
+
+    public void setRoleInGroup(int role) {
+        selfInfo.setRole(role);
     }
 
     public boolean canManage() {
-        return roleInGroup == GroupMemberInfo.MEMBER_ROLE_OWNER || roleInGroup == GroupMemberInfo.MEMBER_ROLE_ADMINISTRATOR;
+        return selfInfo.getRole() == GroupMemberInfo.MEMBER_ROLE_OWNER || selfInfo.getRole() == GroupMemberInfo.MEMBER_ROLE_ADMINISTRATOR;
     }
 
     public boolean isOwner() {
-        return roleInGroup == GroupMemberInfo.MEMBER_ROLE_OWNER;
+        return selfInfo.getRole() == GroupMemberInfo.MEMBER_ROLE_OWNER;
     }
 
     public boolean isAdmin() {
-        return roleInGroup == GroupMemberInfo.MEMBER_ROLE_ADMINISTRATOR;
+        return selfInfo.getRole() == GroupMemberInfo.MEMBER_ROLE_ADMINISTRATOR;
     }
 
     public void setAllMuted(boolean allMuted) {

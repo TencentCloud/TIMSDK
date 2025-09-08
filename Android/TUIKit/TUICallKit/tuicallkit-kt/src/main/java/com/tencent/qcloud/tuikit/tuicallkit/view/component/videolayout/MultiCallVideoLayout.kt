@@ -69,11 +69,11 @@ class MultiCallVideoLayout(context: Context) : ConstraintLayout(context) {
     init {
         userList.add(CallManager.instance.userState.selfUser.get())
         userList.addAll(CallManager.instance.userState.remoteUserList.get())
+        initView()
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        initView()
         registerObserver()
     }
 

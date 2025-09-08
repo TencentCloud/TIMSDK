@@ -56,7 +56,6 @@ public class GroupInfoFragment extends Fragment  {
         groupInfoLayout = baseView.findViewById(R.id.group_info_layout);
         groupInfoLayout.setGroupProfilePresenter(groupProfilePresenter);
         groupProfilePresenter.loadGroupProfile(groupId);
-        groupProfilePresenter.loadSelfInfo(groupId);
 
         groupInfoLayout.setOnChangeChatBackgroundListener(new GroupInfoLayout.OnChangeChatBackgroundListener() {
             @Override

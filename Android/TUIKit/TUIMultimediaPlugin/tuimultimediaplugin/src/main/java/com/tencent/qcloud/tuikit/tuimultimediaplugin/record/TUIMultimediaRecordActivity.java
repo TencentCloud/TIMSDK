@@ -3,6 +3,7 @@ package com.tencent.qcloud.tuikit.tuimultimediaplugin.record;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import com.tencent.liteav.base.util.LiteavLog;
+import com.tencent.qcloud.tuikit.tuimultimediacore.TUIMultimediaSignatureChecker;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.R;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaFullScreen;
 

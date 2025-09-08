@@ -2,6 +2,7 @@ package com.tencent.qcloud.tuikit.tuicallkit.view
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -24,15 +25,23 @@ import com.trtc.tuikit.common.imageloader.ImageOptions
 class GroupCallView(context: Context) : ConstraintLayout(context) {
     private val activityContext: Context = context
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
+    init {
         initView()
     }
 
     private fun initView() {
         LayoutInflater.from(activityContext).inflate(R.layout.tuicallkit_root_view_group, this)
 
-        addVideoLayout()
+        val callVideoLayout = CallVideoLayout(activityContext)
+        val callAdapter = GlobalState.instance.callAdapter
+        val view = callAdapter?.onCreateStreamView(callVideoLayout)
+        if (view != null) {
+            val lp = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+            this.addView(view, lp)
+            return
+        }
+
+        addVideoLayout(callVideoLayout)
         addFunctionLayout()
         addCallTimeView()
         addCallHintView()
@@ -41,9 +50,9 @@ class GroupCallView(context: Context) : ConstraintLayout(context) {
         setBackground()
     }
 
-    private fun addVideoLayout() {
+    private fun addVideoLayout(videoLayout: CallVideoLayout) {
         val layoutVideo: FrameLayout = findViewById(R.id.rl_layout_video_group)
-        layoutVideo.addView(CallVideoLayout(activityContext))
+        layoutVideo.addView(videoLayout)
     }
 
     private fun addFunctionLayout() {
@@ -71,10 +80,11 @@ class GroupCallView(context: Context) : ConstraintLayout(context) {
     }
 
     private fun addFloatButton() {
-        val floatButton: ImageView = findViewById(R.id.image_float_icon_group)
         if (!GlobalState.instance.enableFloatWindow) {
-            floatButton.visibility = GONE
+            return
         }
+        val floatButton: ImageView = findViewById(R.id.image_float_icon_group)
+        floatButton.visibility = View.VISIBLE
         // TODO: 仅支持悬浮窗, 后续支持画中画
         floatButton.setOnClickListener {
             TUICore.notifyEvent(Constants.KEY_TUI_CALLKIT, Constants.SUB_KEY_SHOW_FLOAT_WINDOW, null)
@@ -82,10 +92,14 @@ class GroupCallView(context: Context) : ConstraintLayout(context) {
     }
 
     private fun addInviteUserButton() {
+        if (GlobalState.instance.disableControlButtonSet.contains(Constants.ControlButton.InviteUser)) {
+            return
+        }
         if (CallManager.instance.callState.chatGroupId.isNullOrEmpty()) {
             return
         }
         val inviteUserButton: FrameLayout = findViewById(R.id.rl_layout_invite_user)
+        inviteUserButton.visibility = View.VISIBLE
         inviteUserButton.addView(InviteUserButton(activityContext))
     }
 

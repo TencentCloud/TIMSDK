@@ -90,6 +90,8 @@ public class MediaSettingPanel extends BaseBottomDialog {
         initAudioVolumeEvaluationView();
         initQualityInfoView();
 
+        initDismissPanelButton();
+
         mViewModel.updateViewInitState();
     }
 
@@ -136,6 +138,15 @@ public class MediaSettingPanel extends BaseBottomDialog {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mViewModel.enableFloatChat(isChecked);
+            }
+        });
+    }
+
+    private void initDismissPanelButton() {
+        findViewById(R.id.tuiroomkit_settings_hide).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
             }
         });
     }

@@ -29,7 +29,7 @@ public class TUIMultimediaEditActivity extends TUIMultimediaFullScreen {
         }
 
         TXVideoInfo videoInfo = TUIMultimediaVideoEditorCore
-                .getVideoFileInfo(this, bundle.getString(TUIMultimediaConstants.PARAM_NAME_EDIT_FILE_PATH));
+                .getVideoFileInfo(bundle.getString(TUIMultimediaConstants.PARAM_NAME_EDIT_FILE_PATH));
 
         if (TUIMultimediaVideoEditorCore.isValidVideo(videoInfo)) {
             fragment = new TUIMultimediaVideoEditFragment(this);

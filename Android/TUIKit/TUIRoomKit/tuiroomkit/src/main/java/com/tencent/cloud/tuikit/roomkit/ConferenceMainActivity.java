@@ -1,6 +1,5 @@
 package com.tencent.cloud.tuikit.roomkit;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,7 +14,6 @@ import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.tencent.cloud.tuikit.roomkit.common.utils.RoomPermissionUtil;
@@ -73,7 +71,7 @@ public class ConferenceMainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        startKeepAliveInBackground();
+        startForegroundService();
         if (mNewIntent == null) {
             return;
         }
@@ -185,14 +183,6 @@ public class ConferenceMainActivity extends AppCompatActivity {
         } else if (sdkVersion >= Build.VERSION_CODES.KITKAT) {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
-    }
-
-    private void startKeepAliveInBackground() {
-        if (RoomPermissionUtil.hasNotificationPermission()) {
-            startForegroundService();
-            return;
-        }
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, POST_NOTIFICATIONS_REQUEST_CODE);
     }
 
     private void startForegroundService() {

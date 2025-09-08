@@ -7,6 +7,7 @@ import static com.tencent.imsdk.v2.V2TIMMessage.V2TIM_MSG_STATUS_SEND_FAIL;
 
 import android.text.TextUtils;
 import android.util.Pair;
+
 import com.google.gson.Gson;
 import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.v2.V2TIMCallback;
@@ -64,6 +65,7 @@ import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.OfflinePushInfoUtils;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -368,6 +370,12 @@ public class ChatProvider {
         v2TIMOfflinePushInfo.enableIOSBackgroundNotification(false);
         v2TIMOfflinePushInfo.setAndroidHonorImportance("NORMAL");
         v2TIMOfflinePushInfo.setAndroidMeizuNotifyType(1);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("fcmPriority", "high");
+        map.put("vivoNotifyType", 4);
+        String params = new Gson().toJson(map);
+        v2TIMOfflinePushInfo.setVendorParams(params);
 
         return v2TIMOfflinePushInfo;
     }

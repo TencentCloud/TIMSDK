@@ -7,113 +7,58 @@
     android:layout_centerHorizontal="true"
     android:layout_marginBottom="40dp"
     android:adjustViewBounds="true"
-    android:maxWidth="480dp">
+    android:maxWidth="480dp"
+    app:layout_constraintHorizontal_chainStyle="spread">
 
-    <LinearLayout
-        android:id="@+id/ll_cancel"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <com.tencent.qcloud.tuikit.tuicallkit.view.component.function.ControlButton
+        android:id="@+id/cb_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
+        android:layout_marginTop="12dp"
+        app:cbIcon="@drawable/tuicallkit_bg_hangup"
+        app:cbText="@string/tuicallkit_btn_cancel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_switch">
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
 
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/tuicallkit_bg_hangup" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center"
-            android:text="@string/tuicallkit_btn_cancel"
-            android:textColor="@color/tuicallkit_color_white"
-            android:textSize="@dimen/tuicallkit_text_size_hint" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_switch"
+    <com.tencent.qcloud.tuikit.tuicallkit.view.component.function.ControlButton
+        android:id="@+id/cb_switch_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/ll_cancel"
-        app:layout_constraintEnd_toStartOf="@+id/ll_blur"
+        app:cbIcon="@drawable/tuicallkit_ic_switch_camera_group"
+        app:cbText="@string/tuicallkit_toast_switch_camera"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toStartOf="@+id/cb_blur"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/img_switch_camera"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/tuicallkit_ic_switch_camera_group" />
-
-        <TextView
-            android:id="@+id/tv_switch_camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center"
-            android:text="@string/tuicallkit_toast_switch_camera"
-            android:textColor="@color/tuicallkit_color_white"
-            android:textSize="12sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_blur"
+    <com.tencent.qcloud.tuikit.tuicallkit.view.component.function.ControlButton
+        android:id="@+id/cb_blur"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@+id/ll_camera"
-        app:layout_constraintStart_toEndOf="@+id/ll_switch"
-        app:layout_constraintTop_toTopOf="@+id/ll_switch">
+        app:cbIcon="@drawable/tuicallkit_bg_blur_background"
+        app:cbText="@string/tuicallkit_blur_background"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toStartOf="@+id/cb_camera"
+        app:layout_constraintStart_toEndOf="@+id/cb_switch_camera"
+        app:layout_constraintTop_toTopOf="@+id/cb_switch_camera" />
 
-        <ImageView
-            android:id="@+id/iv_video_blur"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/tuicallkit_bg_blur_background" />
-
-        <TextView
-            android:id="@+id/tv_blur"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/tuicallkit_blur_background"
-            android:textColor="@color/tuicallkit_color_white"
-            android:textSize="12sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_camera"
+    <com.tencent.qcloud.tuikit.tuicallkit.view.component.function.ControlButton
+        android:id="@+id/cb_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
+        app:cbIcon="@drawable/tuicallkit_bg_camera"
+        app:cbText="@string/tuicallkit_toast_enable_camera"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ll_blur"
-        app:layout_constraintTop_toTopOf="@+id/ll_switch">
-
-        <ImageView
-            android:id="@+id/img_camera"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/tuicallkit_bg_camera" />
-
-        <TextView
-            android:id="@+id/tv_camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/tuicallkit_toast_enable_camera"
-            android:textColor="@color/tuicallkit_color_white"
-            android:textSize="12sp" />
-    </LinearLayout>
-
+        app:layout_constraintStart_toEndOf="@+id/cb_blur"
+        app:layout_constraintTop_toTopOf="@+id/cb_switch_camera" />
 </androidx.constraintlayout.widget.ConstraintLayout>

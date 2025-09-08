@@ -91,6 +91,7 @@
                     android:textSize="@dimen/multimedia_plugin_common_tab_text_size" />
 
                 <LinearLayout
+                    android:id="@+id/full_image_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

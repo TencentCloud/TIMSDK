@@ -53,7 +53,8 @@ class CallHintView(context: Context) : AppCompatTextView(context) {
         setTextColor(ContextCompat.getColor(context, R.color.tuicallkit_color_white))
         gravity = Gravity.CENTER
 
-        text = if (Scene.GROUP_CALL == CallManager.instance.callState.scene.get()) {
+        val scene = CallManager.instance.callState.scene.get()
+        text = if (Scene.GROUP_CALL == scene || scene == Scene.MULTI_CALL) {
             if (TUICallDefine.Role.Caller == CallManager.instance.userState.selfUser.get().callRole) {
                 context.getString(R.string.tuicallkit_wait_response)
             } else {
@@ -78,7 +79,7 @@ class CallHintView(context: Context) : AppCompatTextView(context) {
 
     private fun updateStatusText(): String {
         val callStatus = CallManager.instance.userState.selfUser.get().callStatus.get()
-        if (Scene.GROUP_CALL == CallManager.instance.callState.scene.get() && TUICallDefine.Status.Accept == callStatus) {
+        if (Scene.SINGLE_CALL != CallManager.instance.callState.scene.get() && TUICallDefine.Status.Accept == callStatus) {
             visibility = View.GONE
             return ""
         }

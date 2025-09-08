@@ -41,7 +41,7 @@ dependencies {
     api 'androidx.appcompat:appcompat:1.3.1'
     api 'com.google.android.material:material:1.4.0'
     api 'androidx.recyclerview:recyclerview:1.2.1'
-    api 'androidx.constraintlayout:constraintlayout:1.1.3'
+    api 'androidx.constraintlayout:constraintlayout:2.1.4'
     api "com.google.code.gson:gson:2.9.1"
 
     def projects = this.rootProject.getAllprojects().stream().map { project -> project.name }.collect()
@@ -54,12 +54,12 @@ dependencies {
     if (projects.contains("engine_source")) {
         api project(':engine_source')
     } else {
-        api rootProject.getProperties().containsKey("liteavSdk") ? rootProject.ext.liteavSdk : "com.tencent.liteav:LiteAVSDK_Professional:12.4+"
-        api rootProject.getProperties().containsKey("roomEngineSdk") ? rootProject.ext.roomEngineSdk : "io.trtc.uikit:rtc_room_engine:3.1.+"
+        api rootProject.getProperties().containsKey("liteavSdk") ? rootProject.ext.liteavSdk : "com.tencent.liteav:LiteAVSDK_Professional:12.7+"
+        api rootProject.getProperties().containsKey("roomEngineSdk") ? rootProject.ext.roomEngineSdk : "io.trtc.uikit:rtc_room_engine:3.2.+"
     }
     if (projects.contains("common")) {
         api project(':common')
     } else {
-        api 'io.trtc.uikit:common:3.1.0.946'
+        api 'io.trtc.uikit:common:3.2.+'
     }
 }

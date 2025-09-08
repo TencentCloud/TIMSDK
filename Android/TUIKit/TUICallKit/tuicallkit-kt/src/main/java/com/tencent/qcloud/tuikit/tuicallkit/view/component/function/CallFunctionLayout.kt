@@ -1,14 +1,13 @@
 package com.tencent.qcloud.tuikit.tuicallkit.view.component.function
 
 import android.content.Context
-import android.widget.RelativeLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.tencent.cloud.tuikit.engine.call.TUICallDefine
 import com.tencent.qcloud.tuikit.tuicallkit.manager.CallManager
 import com.trtc.tuikit.common.livedata.Observer
 
 class CallFunctionLayout(context: Context) : ConstraintLayout(context) {
-    private var functionLayout: RelativeLayout? = null
+    private var functionLayout: ConstraintLayout? = null
     private val callStatusObserver = Observer<TUICallDefine.Status> {
         if (it == TUICallDefine.Status.Accept) {
             updateLayout()
@@ -45,7 +44,8 @@ class CallFunctionLayout(context: Context) : ConstraintLayout(context) {
     }
 
     private fun updateLayout() {
-        if (CallManager.instance.callState.scene.get() == TUICallDefine.Scene.GROUP_CALL) {
+        val scene = CallManager.instance.callState.scene.get()
+        if (scene == TUICallDefine.Scene.GROUP_CALL || scene == TUICallDefine.Scene.MULTI_CALL) {
             updateGroupCallLayout()
         } else {
             updateSingleCallLayout()

@@ -31,6 +31,8 @@ import com.tencent.qcloud.tuikit.tuicallkit.state.ViewState
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.VideoFactory
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.videolayout.VideoView
 import com.tencent.trtc.TRTCCloud
+import com.tencent.trtc.TRTCCloudDef.TRTC_AUDIO_ROUTE_EARPIECE
+import com.tencent.trtc.TRTCCloudDef.TRTC_AUDIO_ROUTE_SPEAKER
 import org.json.JSONObject
 import java.util.Collections
 
@@ -84,7 +86,7 @@ class CallManager private constructor(context: Context) : ITUINotification {
                 callState.scene.set(TUICallDefine.Scene.SINGLE_CALL)
                 callState.mediaType.set(mediaType)
 
-                initAudioPlayDevice()
+                initCameraAndAudioDeviceState()
                 callback?.onSuccess()
             }
 
@@ -152,7 +154,7 @@ class CallManager private constructor(context: Context) : ITUINotification {
                     callState.chatGroupId = groupId
                     callState.mediaType.set(mediaType)
 
-                    initAudioPlayDevice()
+                    initCameraAndAudioDeviceState()
                     callback?.onSuccess()
                 }
 
@@ -188,36 +190,44 @@ class CallManager private constructor(context: Context) : ITUINotification {
         userState.selfUser.get().id = TUILogin.getLoginUser() ?: ""
         userState.selfUser.get().avatar.set(TUILogin.getFaceUrl())
         userState.selfUser.get().nickname.set(TUILogin.getNickName())
+        callState.chatGroupId = params?.chatGroupId
 
         TUICallEngine.createInstance(context).calls(list, mediaType, params, object : TUICommonDefine.Callback {
             override fun onSuccess() {
                 Logger.i(TAG, "calls success. list: $list")
-                val userList = ArrayList<UserState.User>()
-                for (userId in list) {
-                    if (userId.isNullOrEmpty()) {
-                        continue
+                if (userState.remoteUserList.get().isNullOrEmpty()) {
+                    val userList = ArrayList<UserState.User>()
+                    for (userId in list) {
+                        if (userId.isNullOrEmpty()) {
+                            continue
+                        }
+                        val user = UserState.User()
+                        user.id = userId
+                        UserManager.instance.updateUserInfo(user)
+                        user.callRole = TUICallDefine.Role.Called
+                        user.callStatus.set(TUICallDefine.Status.Waiting)
+                        userList.add(user)
                     }
-                    val user = UserState.User()
-                    user.id = userId
-                    UserManager.instance.updateUserInfo(user)
-                    user.callRole = TUICallDefine.Role.Called
-                    user.callStatus.set(TUICallDefine.Status.Waiting)
-                    userList.add(user)
+                    userState.remoteUserList.addAll(userList)
                 }
-                userState.remoteUserList.addAll(userList)
                 UserManager.instance.updateUserListInfo(list, null)
 
                 userState.selfUser.get().callRole = TUICallDefine.Role.Caller
-                userState.selfUser.get().callStatus.set(TUICallDefine.Status.Waiting)
-                var scene = TUICallDefine.Scene.SINGLE_CALL
-                if (list.size >= 2 || (params != null && !params.chatGroupId.isNullOrEmpty())) {
-                    scene = TUICallDefine.Scene.GROUP_CALL
+                if (userState.selfUser.get().callStatus.get() == TUICallDefine.Status.None) {
+                    userState.selfUser.get().callStatus.set(TUICallDefine.Status.Waiting)
                 }
-                callState.scene.set(scene)
+
+                if (callState.scene.get() == TUICallDefine.Scene.NONE) {
+                    var scene = TUICallDefine.Scene.SINGLE_CALL
+                    if (params != null && !params.chatGroupId.isNullOrEmpty()) {
+                        scene = TUICallDefine.Scene.GROUP_CALL
+                    } else if (list.size >= 2) {
+                        scene = TUICallDefine.Scene.MULTI_CALL
+                    }
+                    callState.scene.set(scene)
+                }
                 callState.chatGroupId = params?.chatGroupId
                 callState.mediaType.set(mediaType)
-
-                initAudioPlayDevice()
                 callback?.onSuccess()
             }
 
@@ -245,11 +255,11 @@ class CallManager private constructor(context: Context) : ITUINotification {
         TUICallEngine.createInstance(context).join(callId, object : TUICommonDefine.Callback {
             override fun onSuccess() {
                 userState.selfUser.get().callRole = TUICallDefine.Role.Called
-
-                callState.scene.set(TUICallDefine.Scene.GROUP_CALL)
                 callState.mediaType.set(TUICallDefine.MediaType.Audio)
 
-                initAudioPlayDevice()
+                if (callState.scene.get() == TUICallDefine.Scene.NONE) {
+                    callState.scene.set(TUICallDefine.Scene.MULTI_CALL)
+                }
                 callback?.onSuccess()
             }
 
@@ -299,7 +309,7 @@ class CallManager private constructor(context: Context) : ITUINotification {
                     callState.roomId = roomId
                     callState.mediaType.set(mediaType)
 
-                    initAudioPlayDevice()
+                    initCameraAndAudioDeviceState()
                     callback?.onSuccess()
                 }
 
@@ -452,6 +462,8 @@ class CallManager private constructor(context: Context) : ITUINotification {
     fun selectAudioPlaybackDevice(device: TUICommonDefine.AudioPlaybackDevice) {
         TUICallEngine.createInstance(context).selectAudioPlaybackDevice(device)
         mediaState.audioPlayoutDevice.set(device)
+        val currentAudioRoute = if (device == TUICommonDefine.AudioPlaybackDevice.Speakerphone) TRTC_AUDIO_ROUTE_SPEAKER else TRTC_AUDIO_ROUTE_EARPIECE
+        mediaState.selectedAudioDevice.set(currentAudioRoute)
     }
 
     fun startRemoteView(userId: String, videoView: VideoView?, callback: TUICommonDefine.PlayCallback?) {
@@ -527,6 +539,11 @@ class CallManager private constructor(context: Context) : ITUINotification {
                 Logger.e(TAG, "setBlurBackground failed, errCode: $errCode, errMsg: $errMsg")
             }
         })
+    }
+
+    fun disableControlButton(button: Constants.ControlButton?) {
+        Logger.i(TAG, "disableControlButton, button: $button")
+        button?.let { GlobalState.instance.disableControlButtonSet.add(it) }
     }
 
     fun reverse1v1CallRenderView(reverse: Boolean) {
@@ -631,7 +648,7 @@ class CallManager private constructor(context: Context) : ITUINotification {
             })
     }
 
-    private fun initAudioPlayDevice() {
+    private fun initCameraAndAudioDeviceState() {
         if (TUICallDefine.MediaType.Video == callState.mediaType.get()) {
             selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Speakerphone)
             mediaState.isCameraOpened.set(true)

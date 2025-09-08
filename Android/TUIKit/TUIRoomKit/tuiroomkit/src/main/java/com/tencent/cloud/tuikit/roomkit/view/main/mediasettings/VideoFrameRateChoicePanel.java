@@ -60,6 +60,13 @@ public class VideoFrameRateChoicePanel extends BaseBottomDialog implements Confe
                 break;
             }
         }
+
+        findViewById(R.id.tuiroomkit_choice_video_frame_rate_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
     @Override

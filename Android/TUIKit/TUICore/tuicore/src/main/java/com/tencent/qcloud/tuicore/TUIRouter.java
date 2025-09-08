@@ -35,7 +35,7 @@ import java.util.WeakHashMap;
 /**
  * For Activity routing jump, only used inside TUICore, not exposed to the outside
  */
-class TUIRouter {
+public class TUIRouter {
     private static final String TAG = TUIRouter.class.getSimpleName();
 
     private static final TUIRouter router = new TUIRouter();
@@ -53,7 +53,13 @@ class TUIRouter {
 
     private static boolean initialized = false;
 
+    private static boolean enableStartActivityForResult = true;
+
     private TUIRouter() {}
+
+    public static void disableStartActivityForResult() {
+        enableStartActivityForResult = false;
+    }
 
     public static synchronized void init(Context context) {
         if (initialized) {
@@ -65,7 +71,9 @@ class TUIRouter {
             return;
         }
         initRouter(context);
-        initActivityResultLauncher(context);
+        if (enableStartActivityForResult) {
+            initActivityResultLauncher(context);
+        }
         initialized = true;
     }
 
@@ -100,25 +108,32 @@ class TUIRouter {
     private static void initActivityResultLauncher(Context context) {
         if (context instanceof Application) {
             ((Application) context).registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
+                final FragmentManager.FragmentLifecycleCallbacks fragmentLifecycleCallbacks = new FragmentManager.FragmentLifecycleCallbacks() {
+                    @Override
+                    public void onFragmentCreated(@NonNull FragmentManager fragmentManager, @NonNull Fragment fragment, @Nullable Bundle savedInstanceState) {
+                        if (fragment instanceof ActivityResultCaller) {
+                            registerForActivityResult(fragment);
+                        } else {
+                            Log.e(TAG, "initActivityResultLauncher onFragmentCreated error: fragment not instance of ActivityResultCaller");
+                        }
+                    }
+
+                    @Override
+                    public void onFragmentDestroyed(@NonNull FragmentManager fm, @NonNull Fragment fragment) {
+                        if (fragment instanceof ActivityResultCaller) {
+                            clearLauncher(fragment);
+                        } else {
+                            Log.e(TAG, "initActivityResultLauncher onFragmentDestroyed error: fragment not instance of ActivityResultCaller");
+                        }
+                    }
+                };
                 @Override
                 public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
                     if (activity instanceof ActivityResultCaller) {
                         registerForActivityResult((ActivityResultCaller) activity);
                         if (activity instanceof FragmentActivity) {
-                            ((FragmentActivity) activity)
-                                .getSupportFragmentManager()
-                                .registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
-                                    @Override
-                                    public void onFragmentCreated(
-                                        @NonNull FragmentManager fragmentManager, @NonNull Fragment fragment, @Nullable Bundle savedInstanceState) {
-                                        registerForActivityResult(fragment);
-                                    }
-
-                                    @Override
-                                    public void onFragmentDestroyed(@NonNull FragmentManager fm, @NonNull Fragment fragment) {
-                                        clearLauncher(fragment);
-                                    }
-                                }, true);
+                            ((FragmentActivity) activity).getSupportFragmentManager().unregisterFragmentLifecycleCallbacks(fragmentLifecycleCallbacks);
+                            ((FragmentActivity) activity).getSupportFragmentManager().registerFragmentLifecycleCallbacks(fragmentLifecycleCallbacks, true);
                         }
                     }
                 }
@@ -131,6 +146,12 @@ class TUIRouter {
 
                 private void clearLauncher(ActivityResultCaller resultCaller) {
                     activityResultLauncherMap.remove(resultCaller);
+                    if (resultCaller instanceof FragmentActivity) {
+                        List<Fragment> fragments = ((FragmentActivity) resultCaller).getSupportFragmentManager().getFragments();
+                        for (Fragment fragment : fragments) {
+                            clearLauncher(fragment);
+                        }
+                    }
                 }
 
                 @Override
@@ -150,6 +171,9 @@ class TUIRouter {
 
                 @Override
                 public void onActivityDestroyed(@NonNull Activity activity) {
+                    if (activity instanceof FragmentActivity) {
+                        ((FragmentActivity) activity).getSupportFragmentManager().unregisterFragmentLifecycleCallbacks(fragmentLifecycleCallbacks);
+                    }
                     if (activity instanceof ActivityResultCaller) {
                         clearLauncher((ActivityResultCaller) activity);
                     }
