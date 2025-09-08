@@ -36,13 +36,13 @@ android {
 }
 
 dependencies {
-    api rootProject.getProperties().containsKey("liteavSdk") ? rootProject.ext.liteavSdk : "com.tencent.liteav:LiteAVSDK_Professional:12.4.+"
+    api rootProject.getProperties().containsKey("liteavSdk") ? rootProject.ext.liteavSdk : "com.tencent.liteav:LiteAVSDK_Professional:12.6+"
     def projects = this.rootProject.getAllprojects().stream().map { project -> project.name }.collect()
     println "all projects : {$projects}"
     if (projects.contains("tuimultimediacore")) {
         api project(':tuimultimediacore')
     } else {
-        api "com.tencent.imsdk:tuimultimediacore:8.6.7019"
+        api "com.tencent.imsdk:tuimultimediacore:8.7.7201"
     }
     api project(':tuichat')
     implementation 'androidx.appcompat:appcompat:1.3.0'

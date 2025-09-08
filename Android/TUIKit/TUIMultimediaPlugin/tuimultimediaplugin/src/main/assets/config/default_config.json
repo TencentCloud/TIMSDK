@@ -16,5 +16,7 @@
   "support_picture_edit_mosaic": "true",
   "support_picture_edit_paster": "true",
   "support_picture_edit_subtitle": "true",
-  "support_picture_edit_crop": "true"
+  "support_picture_edit_crop": "true",
+  "support_album_picker_edit": "true",
+  "support_album_picker_transcode_select": "true"
 }

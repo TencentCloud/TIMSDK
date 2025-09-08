@@ -20,7 +20,7 @@ import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuikit.timcommon.bean.FriendProfileBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.GroupProfileBean;
 import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonUtil;
-import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.GroupMemberBean;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,7 +43,6 @@ public class ProfileProvider {
                         groupProfileBean.setGroupID(groupInfo.getGroupID());
                         groupProfileBean.setGroupName(groupInfo.getGroupName());
                         groupProfileBean.setGroupFaceUrl(groupInfo.getFaceUrl());
-                        groupProfileBean.setRoleInGroup(groupInfo.getRole());
                         groupProfileBean.setGroupType(groupInfo.getGroupType());
                         groupProfileBean.setNotification(groupInfo.getNotification());
                         groupProfileBean.setMemberCount(groupInfo.getMemberCount());

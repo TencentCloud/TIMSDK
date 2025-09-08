@@ -1,8 +1,8 @@
 <resources>
     <string name="tuicallkit_toast_enable_mute">麦克风已关</string>
     <string name="tuicallkit_toast_disable_mute">麦克风已开</string>
-    <string name="tuicallkit_toast_speaker">扬声器已开</string>
-    <string name="tuicallkit_toast_use_earpiece">扬声器已关</string>
+    <string name="tuicallkit_toast_speaker">扬声器</string>
+    <string name="tuicallkit_toast_use_earpiece">听筒</string>
     <string name="tuicallkit_toast_callee_hangup">对方已挂断，通话结束</string>
     <string name="tuicallkit_toast_callee_reject">对方拒绝了通话请求</string>
     <string name="tuicallkit_toast_callee_no_response">对方未响应</string>
@@ -71,4 +71,14 @@
     <string name="tuicallkit_blur_background">模糊背景</string>
     <string name="tuicallkit_notification_channel_group_id">通话管理</string>
     <string name="tuicallkit_notification_channel_id">音视频通话</string>
+
+    <string name="tuicallkit_audio_route_bluetooth_headset">蓝牙耳机</string>
+    <string name="tuicallkit_audio_route_wired_headset">有线耳机</string>
+    <string name="tuicallkit_audio_route_unknown_device">未知设备</string>
+
+    <string name="tuicallkit_speaker_on">扬声器已开</string>
+    <string name="tuicallkit_speaker_off">扬声器已关</string>
+
+    <string name="tuicallkit_enter_pip_mode_fail_hint">进入画中画失败，请检查是否开启权限</string>
+
 </resources>

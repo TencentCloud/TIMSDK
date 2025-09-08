@@ -72,4 +72,12 @@
     <string name="tuicallkit_blur_background">模糊背景</string>
     <string name="tuicallkit_notification_channel_group_id">通話管理</string>
     <string name="tuicallkit_notification_channel_id">音視頻通話</string>
+
+    <string name="tuicallkit_audio_route_bluetooth_headset">藍牙耳機</string>
+    <string name="tuicallkit_audio_route_wired_headset">有線耳機</string>
+    <string name="tuicallkit_audio_route_unknown_device">未知設備</string>
+    <string name="tuicallkit_speaker_on">揚聲器已開</string>
+    <string name="tuicallkit_speaker_off">揚聲器已關</string>
+
+    <string name="tuicallkit_enter_pip_mode_fail_hint">進入畫中畫失敗，請檢查是否開啟權限</string>
 </resources>

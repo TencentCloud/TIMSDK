@@ -30,9 +30,9 @@ import com.tencent.qcloud.tuikit.tuimultimediacore.pick.ui.picker.AlbumGridView;
 import com.tencent.qcloud.tuikit.tuimultimediacore.pick.ui.previewer.SelectedPhotosView;
 import com.tencent.qcloud.tuikit.tuimultimediacore.pick.utils.TUIMultimediaCoreUtil;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.R;
+import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaIConfig;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.TUIMultimediaMediaProcessor;
 import com.tencent.qcloud.tuikit.tuimultimediacore.pick.beans.BaseBean;
-import com.tencent.qcloud.tuikit.tuimultimediacore.pick.beans.ImageBean;
 import com.tencent.qcloud.tuikit.tuimultimediacore.pick.beans.VideoBean;
 
 import java.util.List;
@@ -122,6 +122,14 @@ public class AlbumPreviewFragment extends DialogFragment {
         fullImageCheckbox = rootView.findViewById(R.id.full_image_checkbox);
         fullImageButton = rootView.findViewById(R.id.full_image_button);
         editButton = rootView.findViewById(R.id.edit_button);
+        if (!TUIMultimediaIConfig.getInstance().isSupportAlbumPickerEdit()) {
+            editButton.setVisibility(View.GONE);
+        }
+
+        if (!TUIMultimediaIConfig.getInstance().isSupportAlbumPickerTranscodeSelect()) {
+            fullImageButton.setVisibility(View.GONE);
+        }
+
         setData();
         setOnClickListener();
         return rootView;
@@ -391,7 +399,9 @@ public class AlbumPreviewFragment extends DialogFragment {
 
                 @Override
                 public void onViewDetachedFromWindow(@NonNull View v) {
-                    videoView.resume();
+                    if (videoView.isPlaying()) {
+                        videoView.stopPlayback();
+                    }
                     playButton.setVisibility(View.VISIBLE);
                     previewImage.setVisibility(View.VISIBLE);
                 }

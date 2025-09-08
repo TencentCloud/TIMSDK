@@ -11,14 +11,13 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.utils.widget.ImageFilterView;
 
 import com.tencent.cloud.tuikit.engine.common.TUIVideoView;
+import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
 import com.tencent.cloud.tuikit.roomkit.R;
+import com.tencent.cloud.tuikit.roomkit.common.utils.CommonUtils;
 import com.tencent.cloud.tuikit.roomkit.common.utils.MetricsStats;
 import com.tencent.cloud.tuikit.roomkit.common.utils.ImageLoader;
 import com.tencent.cloud.tuikit.roomkit.state.entity.UserEntity;
-import com.tencent.cloud.tuikit.roomkit.manager.ConferenceController;
 import com.tencent.cloud.tuikit.roomkit.view.main.videoseat.ui.view.UserVolumePromptView;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RoomVideoFloatView extends FrameLayout {
     private OnTouchListener mTouchListener;
@@ -26,7 +25,8 @@ public class RoomVideoFloatView extends FrameLayout {
     private Context              mContext;
     private TUIVideoView         mVideoView;
     private ImageFilterView      mUserAvatarIv;
-    private CircleImageView      mRoomOwnerView;
+    private ImageFilterView      mRoleView;
+    private ImageFilterView      mRobotView;
     private UserVolumePromptView mUserVolumePromptView;
     private TextView             mUserNameTv;
 
@@ -43,7 +43,8 @@ public class RoomVideoFloatView extends FrameLayout {
 
         LayoutInflater.from(mContext).inflate(R.layout.tuiroomkit_room_video_float_layout, this);
         mVideoView = findViewById(R.id.tuiroomkit_room_float_video_view);
-        mRoomOwnerView = findViewById(R.id.tuiroomkit_master_avatar_iv);
+        mRoleView = findViewById(R.id.tuiroomkit_ifv_video_float_role);
+        mRobotView = findViewById(R.id.tuiroomkit_ifv_video_float_robot);
         mUserAvatarIv = findViewById(R.id.tuiroomkit_room_float_avatar_view);
         mUserVolumePromptView = findViewById(R.id.tuiroomkit_user_mic);
         mUserNameTv = findViewById(R.id.tuiroomkit_user_name_tv);
@@ -77,11 +78,17 @@ public class RoomVideoFloatView extends FrameLayout {
     }
 
     public void onNotifyUserInfoChanged(UserEntity userInfo) {
-        mRoomOwnerView.setVisibility(TextUtils.equals(userInfo.getUserId(),
-                ConferenceController.sharedInstance().getConferenceState().roomInfo.ownerId) ? VISIBLE : GONE);
         String name = TextUtils.isEmpty(userInfo.getNameCard()) ? userInfo.getUserName() : userInfo.getNameCard();
         mUserNameTv.setText(TextUtils.isEmpty(name) ? userInfo.getUserId() : name);
         ImageLoader.loadImage(mContext, mUserAvatarIv, userInfo.getAvatarUrl(), R.drawable.tuivideoseat_head);
+
+        mRoleView.setVisibility(userInfo.getRole() == TUIRoomDefine.Role.GENERAL_USER ? GONE : VISIBLE);
+        if (userInfo.getRole() == TUIRoomDefine.Role.ROOM_OWNER) {
+            mRoleView.setBackgroundResource(R.drawable.tuiroomkit_icon_video_room_owner);
+        } else if (userInfo.getRole() == TUIRoomDefine.Role.MANAGER) {
+            mRoleView.setBackgroundResource(R.drawable.tuiroomkit_icon_video_room_manager);
+        }
+        mRobotView.setVisibility(CommonUtils.isRobot(userInfo.getUserId()) ? VISIBLE : GONE);
     }
 
     @Override

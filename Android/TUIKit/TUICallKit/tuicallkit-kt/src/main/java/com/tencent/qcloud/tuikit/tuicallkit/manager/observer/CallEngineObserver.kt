@@ -22,6 +22,9 @@ class CallEngineObserver : TUICallObserver() {
 
     override fun onError(errCode: Int, errMsg: String) {
         Logger.e(TAG, "onError, errCode: $errCode, errMsg: $errMsg")
+        if (errCode == TUICommonDefine.Error.CAMERA_OCCUPIED.value) {
+            CallManager.instance.closeCamera()
+        }
     }
 
     override fun onCallReceived(
@@ -43,11 +46,14 @@ class CallEngineObserver : TUICallObserver() {
             return
         }
         val groupId = info?.chatGroupId
-        if (!groupId.isNullOrEmpty() || calleeIdList.size > 1) {
-            CallManager.instance.callState.scene.set(TUICallDefine.Scene.GROUP_CALL)
-        } else {
-            CallManager.instance.callState.scene.set(TUICallDefine.Scene.SINGLE_CALL)
+        var scene = TUICallDefine.Scene.SINGLE_CALL
+        if (!groupId.isNullOrEmpty()) {
+            scene = TUICallDefine.Scene.GROUP_CALL
+        } else if (calleeIdList.size > 1) {
+            scene = TUICallDefine.Scene.MULTI_CALL
         }
+        CallManager.instance.callState.scene.set(scene)
+
         CallManager.instance.callState.callId = callId ?: ""
         CallManager.instance.callState.chatGroupId = groupId
         CallManager.instance.callState.mediaType.set(mediaType)
@@ -363,7 +369,8 @@ class CallEngineObserver : TUICallObserver() {
     }
 
     private fun startForegroundService() {
-        if (CallManager.instance.callState.scene.get() == TUICallDefine.Scene.GROUP_CALL
+        val scene = CallManager.instance.callState.scene.get()
+        if (scene == TUICallDefine.Scene.GROUP_CALL || scene == TUICallDefine.Scene.MULTI_CALL
             || CallManager.instance.callState.mediaType.get() == TUICallDefine.MediaType.Video) {
             VideoForegroundService.start(TUIConfig.getAppContext(), "", "", 0)
         } else if (CallManager.instance.callState.mediaType.get() == TUICallDefine.MediaType.Audio) {

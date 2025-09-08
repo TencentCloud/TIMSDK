@@ -61,8 +61,20 @@ public class ReplyMessageHolder extends MessageContentHolder {
             performMsgAbstract(replyMessageBean);
             quoteFrameLayout.setVisibility(View.VISIBLE);
         } else {
+            originMsgLayout.setOnClickListener(null);
             quoteFrameLayout.setVisibility(View.GONE);
         }
+
+        originMsgLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onMessageLongClick(msgArea, replyMessageBean);
+                }
+                return true;
+            }
+        });
+
         TUIMessageBean replyContentBean = replyMessageBean.getContentMessageBean();
         String replyContent = replyContentBean.getExtra();
         if (!TextUtils.isEmpty(replyContent)) {
@@ -91,24 +103,20 @@ public class ReplyMessageHolder extends MessageContentHolder {
             performNotFound(replyQuoteBean, replyMessageBean);
         }
 
-        originMsgLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onReplyMessageClick(v, replyMessageBean);
+        if (replyQuoteBean != null && replyQuoteBean.hasRiskContent()) {
+            originMsgLayout.setOnClickListener(null);
+        } else if (replyMessageBean.getOriginMessageBean() != null && replyMessageBean.getOriginMessageBean().hasRiskContent()) {
+            originMsgLayout.setOnClickListener(null);
+        } else {
+            originMsgLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onReplyMessageClick(v, replyMessageBean);
+                    }
                 }
-            }
-        });
-
-        originMsgLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onMessageLongClick(msgArea, replyMessageBean);
-                }
-                return true;
-            }
-        });
+            });
+        }
     }
 
     private void performNotFound(TUIReplyQuoteBean replyQuoteBean, ReplyMessageBean replyMessageBean) {

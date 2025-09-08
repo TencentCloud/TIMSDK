@@ -372,4 +372,8 @@
     <string name="tuiroomkit_select_schedule_participant">Select member</string>
     <string name="tuiroomkit_hint_search_member_id_or_name">Enter user ID or name</string>
     <string name="tuiroomkit_invalid_for_robot">This operation is not valid for robot</string>
+    <string name="tuiroomkit_unable_to_shared_screen">If you wish to experience this function, please contact us</string>
+
+    <string name="tuiroomkit_tips">Tips</string>
+    <string name="tuiroomkit_contact_us">Contact us</string>
 </resources>

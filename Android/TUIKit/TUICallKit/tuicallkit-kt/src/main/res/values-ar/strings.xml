@@ -71,4 +71,13 @@
     <string name="tuicallkit_blur_background">الخلفية الغائمة</string>
     <string name="tuicallkit_notification_channel_group_id">إدارة المكالمات</string>
     <string name="tuicallkit_notification_channel_id">مكالمات الصوت والفيديو</string>
+
+    <string name="tuicallkit_audio_route_bluetooth_headset">رأس بلوتوث</string>
+    <string name="tuicallkit_audio_route_wired_headset">الرأس السلكي</string>
+    <string name="tuicallkit_audio_route_unknown_device">جهاز غير معروف</string>
+
+    <string name="tuicallkit_speaker_on">مكبر الصوت مفتوح</string>
+    <string name="tuicallkit_speaker_off">مكبر الصوت مغلق</string>
+
+    <string name="tuicallkit_enter_pip_mode_fail_hint">فشل في الدخول إلى وضع الصورة داخل الصورة. يرجى التحقق مما إذا كانت الأذونات مفعلة</string>
 </resources>

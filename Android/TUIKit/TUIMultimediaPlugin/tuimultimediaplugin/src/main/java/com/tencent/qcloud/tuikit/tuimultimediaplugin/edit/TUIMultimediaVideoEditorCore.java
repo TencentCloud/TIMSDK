@@ -1,8 +1,12 @@
 package com.tencent.qcloud.tuikit.tuimultimediaplugin.edit;
 
 import android.content.Context;
+import android.os.Build;
+import android.text.TextUtils;
 import androidx.annotation.NonNull;
+import com.tencent.liteav.base.system.LiteavSystemInfo;
 import com.tencent.liteav.base.util.LiteavLog;
+import com.tencent.qcloud.tuikit.tuimultimediacore.TUIMultimediaSignatureChecker;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaConstants.VideoQuality;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.TUIMultimediaPasterInfo.PasterType;
 import com.tencent.rtmp.ui.TXCloudVideoView;
@@ -15,6 +19,9 @@ import com.tencent.ugc.TXVideoEditConstants.TXVideoInfo;
 import com.tencent.ugc.TXVideoEditer;
 import com.tencent.ugc.TXVideoEditer.TXVideoPreviewListener;
 import com.tencent.ugc.TXVideoInfoReader;
+import com.tencent.ugc.common.MediaExtractorBuilder;
+import com.tencent.ugc.retriver.FFmpegMediaRetriever;
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -48,6 +55,7 @@ public class TUIMultimediaVideoEditorCore {
 
     public TUIMultimediaVideoEditorCore(Context context) {
         LiteavLog.i(TAG, "TUIMultimediaEditorCore construct.");
+        TUIMultimediaSignatureChecker.getInstance().setSignature();
         mEditorSDK = new TXVideoEditer(context);
     }
 
@@ -239,15 +247,6 @@ public class TUIMultimediaVideoEditorCore {
         }
     }
 
-    public static TXVideoInfo getVideoFileInfo(Context context, String filePath) {
-        try {
-            return TXVideoInfoReader.getInstance(context).getVideoFileInfo(filePath);
-        } catch (Exception e) {
-            LiteavLog.i(TUIMultimediaVideoEditorCore.class.getSimpleName(),"getVideoFileInfo  Exception e = ",e);
-            return null;
-        }
-    }
-
     public static boolean isValidVideo(TXVideoInfo videoInfo) {
         if (videoInfo == null) {
             return false;
@@ -267,5 +266,37 @@ public class TUIMultimediaVideoEditorCore {
             aspect = videoInfo.width * 1.0f / videoInfo.height;
         }
         return aspect;
+    }
+
+    static public TXVideoEditConstants.TXVideoInfo getVideoFileInfo(String videoSource) {
+        if (LiteavSystemInfo.getSystemOSVersionInt() < Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            return null;
+        }
+        if (TextUtils.isEmpty(videoSource)) {
+            return null;
+        }
+        if (!MediaExtractorBuilder.isContentUri(videoSource)) {
+            File file = new File(videoSource);
+            if (!file.exists() || !file.canRead()) {
+                return null;
+            }
+        }
+        TXVideoEditConstants.TXVideoInfo videoInfo = new TXVideoEditConstants.TXVideoInfo();
+
+        FFmpegMediaRetriever retriever = new FFmpegMediaRetriever();
+        retriever.setDataSource(videoSource);
+        videoInfo.duration = retriever.getVideoDurationMs();
+        videoInfo.fps = retriever.getFPS();
+        videoInfo.bitrate = (int) (retriever.getVideoBitrate() / 1024);
+        videoInfo.audioSampleRate = retriever.getSampleRate();
+        int rotation = retriever.getRotation();
+        if (rotation == 90 || rotation == 270) {
+            videoInfo.width = retriever.getVideoHeight();
+            videoInfo.height = retriever.getVideoWidth();
+        } else {
+            videoInfo.width = retriever.getVideoWidth();
+            videoInfo.height = retriever.getVideoHeight();
+        }
+        return videoInfo;
     }
 }

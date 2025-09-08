@@ -307,7 +307,7 @@ public class VideoSeatViewModel extends TUIRoomObserver
                                   List<TUIRoomDefine.SeatInfo> userLeftList) {
         Log.d(TAG, "onSeatListChanged");
         removeLeftUsers(userLeftList);
-        addNewUsers(userSeatedList, false);
+        addNewUsers(userSeatedList, true);
     }
 
     @Override
@@ -320,6 +320,9 @@ public class VideoSeatViewModel extends TUIRoomObserver
         UserEntity userEntity = getNewFreeUser(userInfo);
         addMemberEntity(userEntity);
         notifyUiForUserListChanged();
+        if (userEntity.isCameraAvailable()) {
+            onUserVideoStateChanged(userEntity.getUserId(), TUIRoomDefine.VideoStreamType.CAMERA_STREAM, true, TUIRoomDefine.ChangeReason.BY_SELF);
+        }
     }
 
     @Override

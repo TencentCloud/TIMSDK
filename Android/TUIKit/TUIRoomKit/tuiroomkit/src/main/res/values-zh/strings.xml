@@ -372,4 +372,8 @@
     <string name="tuiroomkit_select_schedule_participant">选择成员</string>
     <string name="tuiroomkit_hint_search_member_id_or_name">输入用户ID或名称</string>
     <string name="tuiroomkit_invalid_for_robot">此操作对机器人无效</string>
+    <string name="tuiroomkit_unable_to_shared_screen">如需体验该功能请联系我们</string>
+    <string name="tuiroomkit_tips">温馨提示</string>
+    <string name="tuiroomkit_contact_us">联系我们</string>
+
 </resources>

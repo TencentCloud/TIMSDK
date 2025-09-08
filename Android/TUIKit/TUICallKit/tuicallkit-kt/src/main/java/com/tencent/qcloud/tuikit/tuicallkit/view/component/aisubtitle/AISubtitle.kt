@@ -18,6 +18,7 @@ class AISubtitle(context: Context, attrs: AttributeSet?) : AppCompatTextView(con
     private val messages = mutableListOf<Message>()
     private var hideTimer: Timer? = null
     private val mainHandler = Handler(Looper.getMainLooper())
+    private val showDuration: Long = 8
 
     data class Message(
         val sender: String,
@@ -41,10 +42,11 @@ class AISubtitle(context: Context, attrs: AttributeSet?) : AppCompatTextView(con
                 if (type == AI_MESSAGE_TYPE) {
                     val sender = jsonObject.optString("sender")
                     val payload = jsonObject.optJSONObject("payload")
+                    val text = payload?.optString("text")
                     val translationText = payload?.optString("translation_text")
 
                     if (sender.isNotEmpty() && !translationText.isNullOrEmpty()) {
-                        updateSubtitle(sender, translationText)
+                        updateSubtitle(sender, "${translationText}(${text})")
                     }
                 }
             } catch (e: Exception) {
@@ -79,7 +81,7 @@ class AISubtitle(context: Context, attrs: AttributeSet?) : AppCompatTextView(con
                                         visibility = GONE
                                     }
                                 }
-                            }, 2000)
+                            }, showDuration * 1000)
                         }
                     }
                 }

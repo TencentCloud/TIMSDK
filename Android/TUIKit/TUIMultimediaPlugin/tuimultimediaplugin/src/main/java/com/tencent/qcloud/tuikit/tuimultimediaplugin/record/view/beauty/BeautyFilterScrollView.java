@@ -18,8 +18,11 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import com.tencent.liteav.base.ThreadUtils;
 import com.tencent.liteav.base.util.LiteavLog;
+import com.tencent.qcloud.tuikit.tuimultimediacore.TUIMultimediaSignatureChecker;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.R;
+import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaAuthorizationPrompter;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.record.TUIMultimediaRecordCore;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.record.data.BeautyInfo;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.record.data.BeautyInnerType;
@@ -40,6 +43,7 @@ public class BeautyFilterScrollView extends RelativeLayout implements View.OnTou
     private FrameLayout mMaskLayout;
     private GestureDetector mGestureDetector;
     private ScaleGestureDetector mScaleGestureDetector;
+    private long mLastShowPrompterDialogTimestamp = 0;
 
     private int mLeftIndex = 0;
     private int mRightIndex = 1;
@@ -55,7 +59,7 @@ public class BeautyFilterScrollView extends RelativeLayout implements View.OnTou
     private float mScaleFactor;
     private final OnScaleGestureListener mOnScaleGestureListener = new OnScaleGestureListener() {
         @Override
-        public boolean onScale(ScaleGestureDetector detector) {
+        public boolean onScale(@NonNull ScaleGestureDetector detector) {
             return BeautyFilterScrollView.this.onScale(detector);
         }
 
@@ -66,14 +70,14 @@ public class BeautyFilterScrollView extends RelativeLayout implements View.OnTou
         }
 
         @Override
-        public void onScaleEnd(ScaleGestureDetector detector) {
+        public void onScaleEnd(@NonNull ScaleGestureDetector detector) {
         }
     };
     private Bitmap mLeftBitmap;
     private Bitmap mRightBitmap;
     private final OnGestureListener mOnGestureListener = new OnGestureListener() {
         @Override
-        public boolean onDown(MotionEvent e) {
+        public boolean onDown(@NonNull MotionEvent e) {
             mStartScroll = false;
             return false;
         }
@@ -86,20 +90,20 @@ public class BeautyFilterScrollView extends RelativeLayout implements View.OnTou
         }
 
         @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        public boolean onScroll(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
             return BeautyFilterScrollView.this.onScroll(e1, e2);
         }
 
         @Override
-        public void onShowPress(MotionEvent e) {
+        public void onShowPress(@NonNull MotionEvent e) {
         }
 
         @Override
-        public void onLongPress(MotionEvent e) {
+        public void onLongPress(@NonNull MotionEvent e) {
         }
 
         @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        public boolean onFling(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
             return true;
         }
     };
@@ -290,6 +294,10 @@ public class BeautyFilterScrollView extends RelativeLayout implements View.OnTou
             float leftSpecialRatio = (leftFilterItem != null ? leftFilterItem.getLevel() : 0) / 10.f;
             float rightSpecialRatio = (rightFilterItem != null ? rightFilterItem.getLevel() : 0) / 10.f;
             mRecordCore.setFilter(mLeftBitmap, leftSpecialRatio, mRightBitmap, rightSpecialRatio, leftBitmapRatio);
+
+            if (!TUIMultimediaSignatureChecker.getInstance().isSupportFunction()) {
+                showPermissionPrompterDialog();
+            }
             return true;
         }
     }
@@ -317,5 +325,15 @@ public class BeautyFilterScrollView extends RelativeLayout implements View.OnTou
         int zoomValue = Math.round(mScaleFactor * maxZoom);
         mRecordCore.setZoom(zoomValue);
         return false;
+    }
+
+    private void showPermissionPrompterDialog() {
+        if (System.currentTimeMillis() - mLastShowPrompterDialogTimestamp < 3000) {
+            return;
+        }
+
+        mLastShowPrompterDialogTimestamp = System.currentTimeMillis();
+        ThreadUtils.getUiThreadHandler().postDelayed(
+                () -> TUIMultimediaAuthorizationPrompter.showPermissionPrompterDialog(getContext()),200);
     }
 }

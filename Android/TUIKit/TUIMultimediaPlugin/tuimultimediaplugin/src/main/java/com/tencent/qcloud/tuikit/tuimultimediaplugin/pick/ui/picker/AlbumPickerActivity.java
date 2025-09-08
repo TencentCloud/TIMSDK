@@ -7,7 +7,6 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -21,6 +20,7 @@ import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.permission.PermissionCallback;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuimultimediacore.TUIMultimediaCore;
+import com.tencent.qcloud.tuikit.tuimultimediacore.TUIMultimediaSignatureChecker;
 import com.tencent.qcloud.tuikit.tuimultimediacore.pick.beans.BaseBean;
 import com.tencent.qcloud.tuikit.tuimultimediacore.pick.beans.BucketBean;
 import com.tencent.qcloud.tuikit.tuimultimediacore.pick.beans.VideoBean;
@@ -28,6 +28,8 @@ import com.tencent.qcloud.tuikit.tuimultimediacore.pick.interfaces.AlbumClickLis
 import com.tencent.qcloud.tuikit.tuimultimediacore.pick.interfaces.OnSelectedBucketChangedListener;
 import com.tencent.qcloud.tuikit.tuimultimediacore.pick.ui.picker.AlbumGridView;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.R;
+import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaIConfig;
+import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaAuthorizationPrompter;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.pick.permission.ImageVideoPermissionRequester;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.pick.ui.previewer.AlbumPreviewFragment;
 import java.util.ArrayList;
@@ -73,6 +75,16 @@ public class AlbumPickerActivity extends AppCompatActivity {
         fullImageCheckbox = findViewById(R.id.full_image_check_box);
         previewButton = findViewById(R.id.preview_button);
         sendTv = findViewById(R.id.send_button);
+
+        if(!TUIMultimediaIConfig.getInstance().isSupportAlbumPickerTranscodeSelect()) {
+            fullImageTv.setVisibility(View.GONE);
+            fullImageCheckbox.setVisibility(View.GONE);
+        }
+
+        if (!TUIMultimediaSignatureChecker.getInstance().isSupportFunction()) {
+            isFullImage = true;
+            fullImageCheckbox.setSelected(true);
+        }
 
         setOnClickListener();
     }
@@ -184,6 +196,10 @@ public class AlbumPickerActivity extends AppCompatActivity {
     }
 
     private void toggleFullImage() {
+        if (this.isFullImage && !TUIMultimediaSignatureChecker.getInstance().isSupportFunction()) {
+            TUIMultimediaAuthorizationPrompter.showPermissionPrompterDialog(this);
+        }
+
         this.isFullImage = !this.isFullImage;
         if (isFullImage) {
             fullImageCheckbox.setSelected(true);

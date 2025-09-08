@@ -76,6 +76,7 @@ public class ReplyMessageHolder extends MessageContentHolder {
             performMsgAbstract(replyMessageBean);
             quoteFrameLayout.setVisibility(View.VISIBLE);
         } else {
+            originMsgLayout.setOnClickListener(null);
             quoteFrameLayout.setVisibility(View.GONE);
         }
         setThemeColor(msg);

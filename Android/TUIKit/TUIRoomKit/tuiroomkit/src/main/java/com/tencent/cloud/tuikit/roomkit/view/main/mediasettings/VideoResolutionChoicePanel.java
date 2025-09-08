@@ -67,6 +67,13 @@ public class VideoResolutionChoicePanel extends BaseBottomDialog implements Conf
                 break;
             }
         }
+
+        findViewById(R.id.tuiroomkit_single_choice_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
     @Override

@@ -7,6 +7,8 @@ import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.IMultimediaRecorder;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.MultimediaRecorderListener;
+import com.tencent.qcloud.tuikit.tuimultimediacore.TUIMultimediaSignatureChecker;
+import com.tencent.qcloud.tuikit.tuimultimediacore.TUIMultimediaSignatureChecker.SignatureCheckListener;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaConstants;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaIConfig;
 

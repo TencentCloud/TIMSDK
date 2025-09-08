@@ -372,4 +372,7 @@
     <string name="tuiroomkit_select_schedule_participant">اختر الأعضاء</string>
     <string name="tuiroomkit_hint_search_member_id_or_name">أدخلIDالمستخدم أو الاسم</string>
     <string name="tuiroomkit_invalid_for_robot">هذه العملية ليست صالحة للروبوت</string>
+    <string name="tuiroomkit_unable_to_shared_screen">إذا لزم تجربة هذه الميزة يرجى الاتصال بنا</string>
+    <string name="tuiroomkit_tips">تلميح دافئ</string>
+    <string name="tuiroomkit_contact_us">اتصل بنا</string>
 </resources>

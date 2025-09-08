@@ -25,7 +25,7 @@ public class RecordVideoView extends FrameLayout {
 
     private TXCloudVideoView mVideoView;
 
-    private final TUIMultimediaDataObserver<Integer> mAspectRatioObserver = this::setVideoViewSize;
+    //private final TUIMultimediaDataObserver<Integer> mAspectRatioObserver = this::setVideoViewSize;
 
     public RecordVideoView(@NonNull Context context, TUIMultimediaRecordCore recordCore, RecordInfo recordInfo) {
         super(context);
@@ -54,16 +54,16 @@ public class RecordVideoView extends FrameLayout {
     public void initView() {
         LayoutInflater.from(mContext).inflate(R.layout.multimedia_plugin_record_video_play_view, this, true);
         mVideoView = findViewById(R.id.record_video_view);
-        setVideoViewSize(mRecordInfo.tuiDataAspectRatio.get());
+        setVideoViewSize(TXRecordCommon.VIDEO_ASPECT_RATIO_9_16);
         mRecordCore.startCameraPreview(mVideoView);
     }
 
     public void addObserver() {
-        mRecordInfo.tuiDataAspectRatio.observe(mAspectRatioObserver);
+        //mRecordInfo.tuiDataAspectRatio.observe(mAspectRatioObserver);
     }
 
     public void removeObserver() {
-        mRecordInfo.tuiDataAspectRatio.removeObserver(mAspectRatioObserver);
+        //mRecordInfo.tuiDataAspectRatio.removeObserver(mAspectRatioObserver);
     }
 
     private void setVideoViewSize(int aspectRatio) {

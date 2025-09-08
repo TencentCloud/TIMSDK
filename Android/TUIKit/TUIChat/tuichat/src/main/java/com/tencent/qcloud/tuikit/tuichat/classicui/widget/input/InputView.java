@@ -1268,7 +1268,10 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     }
 
     protected void showSendTextButton() {
-        boolean isChatbotMessageFinished = presenter.isChatbotMessageFinished.getValue();
+        boolean isChatbotMessageFinished = true;
+        if (presenter != null) {
+            isChatbotMessageFinished = presenter.isChatbotMessageFinished.getValue();
+        }
         if (isChatbotMessageFinished) {
             mSendTextButton.setVisibility(VISIBLE);
         } else {

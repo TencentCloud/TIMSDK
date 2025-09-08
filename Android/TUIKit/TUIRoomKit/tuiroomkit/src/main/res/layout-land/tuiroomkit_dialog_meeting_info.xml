@@ -146,7 +146,7 @@
             <ImageButton
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginStart="6dp"
+                android:layout_marginStart="3dp"
                 android:layout_gravity="center_vertical"
                 android:background="@color/tuiroomkit_transparent"
                 android:src="@drawable/tuiroomkit_ic_copy_white" />
@@ -154,7 +154,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
+                android:layout_marginStart="3dp"
                 android:layout_gravity="center_vertical"
                 android:textSize="12sp"
                 android:textColor="#B2BBD1"
@@ -203,7 +203,7 @@
             <ImageButton
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginStart="6dp"
+                android:layout_marginStart="3dp"
                 android:layout_gravity="center_vertical"
                 android:background="@color/tuiroomkit_transparent"
                 android:src="@drawable/tuiroomkit_ic_copy_white" />
@@ -211,7 +211,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
+                android:layout_marginStart="3dp"
                 android:layout_gravity="center_vertical"
                 android:textSize="12sp"
                 android:textColor="#B2BBD1"
@@ -264,7 +264,7 @@
             <ImageButton
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginStart="6dp"
+                android:layout_marginStart="3dp"
                 android:layout_gravity="center_vertical"
                 android:background="@color/tuiroomkit_transparent"
                 android:src="@drawable/tuiroomkit_ic_copy_white" />
@@ -272,7 +272,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
+                android:layout_marginStart="3dp"
                 android:layout_gravity="center_vertical"
                 android:textSize="12sp"
                 android:textColor="#B2BBD1"

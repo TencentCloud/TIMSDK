@@ -13,7 +13,9 @@ import com.tencent.qcloud.tuicore.permission.PermissionRequester
 import com.tencent.qcloud.tuikit.tuicallkit.TUICallKitImpl
 import com.tencent.qcloud.tuikit.tuicallkit.common.data.Constants
 import com.tencent.qcloud.tuikit.tuicallkit.manager.CallManager
+import com.tencent.qcloud.tuikit.tuicallkit.state.GlobalState
 import com.tencent.qcloud.tuikit.tuicallkit.view.CallMainActivity
+import com.trtc.tuikit.common.ui.floatwindow.FloatWindowManager
 
 /**
  * `TUICallKit` uses `ContentProvider` to be registered with `TUICore`.
@@ -82,6 +84,9 @@ class Initializer : ServiceInitializer() {
             return
         }
         if (!PermissionRequester.newInstance(PermissionRequester.FLOAT_PERMISSION).has()) {
+            return
+        }
+        if (FloatWindowManager.sharedInstance().isPictureInPictureSupported && GlobalState.instance.enablePipMode) {
             return
         }
         TUICore.notifyEvent(Constants.KEY_TUI_CALLKIT, Constants.SUB_KEY_SHOW_FLOAT_WINDOW, null)

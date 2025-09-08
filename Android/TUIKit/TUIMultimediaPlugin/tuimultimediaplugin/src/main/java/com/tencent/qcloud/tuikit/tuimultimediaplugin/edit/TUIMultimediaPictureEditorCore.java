@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import androidx.core.math.MathUtils;
 import com.tencent.liteav.base.util.LiteavLog;
+import com.tencent.qcloud.tuikit.tuimultimediacore.TUIMultimediaSignatureChecker;
 import com.tencent.ugc.TXPictureEditer;
 import com.tencent.ugc.TXPictureEditer.PictureProcessListener;
 import com.tencent.ugc.TXVideoEditConstants.TXPaster;
@@ -22,6 +23,7 @@ public class TUIMultimediaPictureEditorCore {
     public TUIMultimediaPictureEditorCore(Context context) {
         LiteavLog.i(TAG,"TUIMultimedia Picture Editor Core Construct");
         mContext = context;
+        TUIMultimediaSignatureChecker.getInstance().setSignature();
         mPictureEditer = TXPictureEditer.create(context);
     }
 

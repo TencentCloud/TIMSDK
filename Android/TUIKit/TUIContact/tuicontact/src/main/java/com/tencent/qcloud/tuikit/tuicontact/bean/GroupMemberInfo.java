@@ -44,6 +44,8 @@ public class GroupMemberInfo extends UserBean implements Serializable {
         setNameCard(info.getNameCard());
         setFaceUrl(info.getFaceUrl());
         setNickName(info.getNickName());
+        setFriendRemark(info.getFriendRemark());
+
         return this;
     }
 }

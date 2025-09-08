@@ -71,4 +71,13 @@
     <string name="tuicallkit_blur_background">Blur Background</string>
     <string name="tuicallkit_notification_channel_group_id">Call Manager</string>
     <string name="tuicallkit_notification_channel_id">TUICallKit</string>
+
+    <string name="tuicallkit_audio_route_bluetooth_headset">BluetoothHead</string>
+    <string name="tuicallkit_audio_route_wired_headset">WiredHead</string>
+    <string name="tuicallkit_audio_route_unknown_device">UnknownDevice</string>
+
+    <string name="tuicallkit_speaker_on">Speaker On</string>
+    <string name="tuicallkit_speaker_off">Speaker Off</string>
+    <string name="tuicallkit_enter_pip_mode_fail_hint">Failed to enter Picture-in-Picture mode, Please check if the permission is enabled.</string>
+
 </resources>

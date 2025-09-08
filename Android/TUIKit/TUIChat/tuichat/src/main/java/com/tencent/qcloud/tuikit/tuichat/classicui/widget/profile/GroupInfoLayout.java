@@ -40,7 +40,7 @@ import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
-import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberBean;
+import com.tencent.qcloud.tuikit.timcommon.bean.GroupMemberBean;
 import com.tencent.qcloud.tuikit.tuichat.classicui.page.GroupNoticeActivity;
 import com.tencent.qcloud.tuikit.tuichat.config.GroupConfig;
 import com.tencent.qcloud.tuikit.tuichat.interfaces.GroupProfileListener;
@@ -172,11 +172,6 @@ public class GroupInfoLayout extends LinearLayout {
             }
 
             @Override
-            public void onSelfInfoLoaded(GroupMemberBean groupMemberBean) {
-                setSelfInfo(groupMemberBean);
-            }
-
-            @Override
             public void onConversationCheckResult(boolean isPinned, boolean isFolded) {
                 mTopSwitchView.setChecked(isPinned);
                 mTopSwitchView.setVisibility(VISIBLE);
@@ -245,6 +240,7 @@ public class GroupInfoLayout extends LinearLayout {
                 mLayoutFold.setVisibility(View.GONE);
             }
         }
+        mSelfNameCardView.setContent(profileBean.getSelfInfo().getNameCard());
 
         setupExtension();
         applyCustomConfig();
@@ -557,10 +553,6 @@ public class GroupInfoLayout extends LinearLayout {
         if (!GroupConfig.isShowDismiss()) {
             mDissolveBtn.setVisibility(GONE);
         }
-    }
-
-    public void setSelfInfo(GroupMemberBean selfInfo) {
-        mSelfNameCardView.setContent(selfInfo.getNameCard());
     }
 
     private void clearHistoryMessage() {

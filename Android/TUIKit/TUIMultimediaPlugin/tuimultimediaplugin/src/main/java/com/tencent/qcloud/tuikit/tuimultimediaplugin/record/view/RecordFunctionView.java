@@ -9,7 +9,9 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
+import com.tencent.qcloud.tuikit.tuimultimediacore.TUIMultimediaSignatureChecker;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.R;
+import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaAuthorizationPrompter;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaResourceUtils;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaData.TUIMultimediaDataObserver;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.record.TUIMultimediaRecordCore;
@@ -36,6 +38,10 @@ public class RecordFunctionView extends LinearLayout {
         public void onChanged(Boolean isShowBeautyView) {
             if (mOperationViewContainer != null) {
                 mOperationViewContainer.setVisibility(isShowBeautyView ? GONE : VISIBLE);
+            }
+
+            if (isShowBeautyView && !TUIMultimediaSignatureChecker.getInstance().isSupportFunction()) {
+                TUIMultimediaAuthorizationPrompter.showPermissionPrompterDialog(mContext);
             }
         }
     };
@@ -102,7 +108,7 @@ public class RecordFunctionView extends LinearLayout {
         if (mRecordOperationView == null) {
             mRecordOperationView = new RecordOperationView(mContext, mRecordCore, mRecordInfo);
         }
-        adjustRecordOperationViewPosition(mRecordInfo.tuiDataAspectRatio.get());
+        adjustRecordOperationViewPosition(TXRecordCommon.VIDEO_ASPECT_RATIO_9_16);
     }
 
     private void adjustRecordOperationViewPosition(int aspectRation) {
@@ -129,12 +135,12 @@ public class RecordFunctionView extends LinearLayout {
     private void addObserver() {
         mRecordInfo.tuiDataShowBeautyView.observe(mIsShowBeautyView);
         mRecordInfo.tuiDataRecordStatus.observe(mRecodeStatusOnChanged);
-        mRecordInfo.tuiDataAspectRatio.observe(this::adjustRecordOperationViewPosition);
+        //mRecordInfo.tuiDataAspectRatio.observe(this::adjustRecordOperationViewPosition);
     }
 
     private void removeObserver() {
         mRecordInfo.tuiDataShowBeautyView.removeObserver(mIsShowBeautyView);
         mRecordInfo.tuiDataRecordStatus.removeObserver(mRecodeStatusOnChanged);
-        mRecordInfo.tuiDataAspectRatio.removeObserver(this::adjustRecordOperationViewPosition);
+        //mRecordInfo.tuiDataAspectRatio.removeObserver(this::adjustRecordOperationViewPosition);
     }
 }

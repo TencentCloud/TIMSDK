@@ -41,6 +41,8 @@ class RecentCallsFragment(style: String) : Fragment() {
     private var type = TYPE_ALL
     private var needCloseMultiMode = false
 
+    constructor() : this(style = RecentCalls.UI_STYLE_CLASSIC)
+
     private val callHistoryObserver = object : LiveListObserver<CallRecords>() {
         override fun onDataChanged(list: List<CallRecords>) {
             if (listAdapter != null && TYPE_ALL == type) {

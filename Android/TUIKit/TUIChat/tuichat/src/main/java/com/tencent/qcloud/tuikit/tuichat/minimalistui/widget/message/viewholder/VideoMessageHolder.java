@@ -16,6 +16,8 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
@@ -58,18 +60,9 @@ public class VideoMessageHolder extends ImageMessageHolder {
     }
 
     private ViewGroup.LayoutParams getImageParams(ViewGroup.LayoutParams params, final VideoMessageBean msg) {
-        if (msg.getImgWidth() == 0 || msg.getImgHeight() == 0) {
-            params.width = DEFAULT_MAX_SIZE;
-            params.height = DEFAULT_MAX_SIZE;
-            return params;
-        }
-        if (msg.getImgWidth() > msg.getImgHeight()) {
-            params.width = DEFAULT_MAX_SIZE;
-            params.height = DEFAULT_MAX_SIZE * msg.getImgHeight() / msg.getImgWidth();
-        } else {
-            params.width = DEFAULT_MAX_SIZE * msg.getImgWidth() / msg.getImgHeight();
-            params.height = DEFAULT_MAX_SIZE;
-        }
+        int[] size = TUIChatUtils.calculateOptimalSizePx(msg.getImgWidth(), msg.getImgHeight());
+        params.width = size[0];
+        params.height = size[1];
         return params;
     }
 

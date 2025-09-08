@@ -2,6 +2,8 @@ package com.tencent.cloud.tuikit.roomkit.view.main.videoseat;
 
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 
+import static com.tencent.cloud.tuikit.roomkit.view.main.videoseat.constant.Constants.ONE_PAGE_MEMBER_COUNT;
+
 import android.content.Context;
 import android.content.res.Configuration;
 import android.text.TextUtils;
@@ -550,9 +552,13 @@ public class TUIVideoSeatView extends RelativeLayout {
     }
 
     public void notifyItemInserted(int position) {
-        if (mMemberListAdapter != null) {
-            mMemberListAdapter.notifyItemInserted(position);
-            updateCircleIndicator();
+        if (mMemberListAdapter == null) {
+            return;
+        }
+        mMemberListAdapter.notifyItemInserted(position);
+        updateCircleIndicator();
+        if (mMemberEntityList.size() < ONE_PAGE_MEMBER_COUNT) {
+            mVisibleRange.updateRange(0, mMemberEntityList.size() -1);
         }
     }
 

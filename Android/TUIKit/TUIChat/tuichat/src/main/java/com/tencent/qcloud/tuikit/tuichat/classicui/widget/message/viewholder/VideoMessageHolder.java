@@ -30,6 +30,8 @@ import com.tencent.qcloud.tuikit.tuichat.component.progress.ChatRingProgressBar;
 import com.tencent.qcloud.tuikit.tuichat.component.progress.ProgressPresenter;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatFileDownloadPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
+import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
+
 import java.io.Serializable;
 
 public class VideoMessageHolder extends MessageContentHolder {
@@ -94,18 +96,9 @@ public class VideoMessageHolder extends MessageContentHolder {
     }
 
     private ViewGroup.LayoutParams getImageParams(ViewGroup.LayoutParams params, final VideoMessageBean msg) {
-        if (msg.getImgWidth() == 0 || msg.getImgHeight() == 0) {
-            params.width = DEFAULT_MAX_SIZE;
-            params.height = DEFAULT_MAX_SIZE;
-            return params;
-        }
-        if (msg.getImgWidth() > msg.getImgHeight()) {
-            params.width = DEFAULT_MAX_SIZE;
-            params.height = DEFAULT_MAX_SIZE * msg.getImgHeight() / msg.getImgWidth();
-        } else {
-            params.width = DEFAULT_MAX_SIZE * msg.getImgWidth() / msg.getImgHeight();
-            params.height = DEFAULT_MAX_SIZE;
-        }
+        int[] size = TUIChatUtils.calculateOptimalSizePx(msg.getImgWidth(), msg.getImgHeight());
+        params.width = size[0];
+        params.height = size[1];
         return params;
     }
 

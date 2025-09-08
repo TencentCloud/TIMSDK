@@ -28,14 +28,12 @@ android {
     }
 
     def chatSourceJavaVersion = JavaVersion.VERSION_1_8
-    VersionNumber currentGradleVersion = VersionNumber.parse(gradle.gradleVersion)
-    if (currentGradleVersion.major >= 8) {
-        chatSourceJavaVersion = JavaVersion.VERSION_17
-    }
-
     compileOptions {
         sourceCompatibility chatSourceJavaVersion
         targetCompatibility chatSourceJavaVersion
+    }
+    kotlinOptions {
+        jvmTarget = chatSourceJavaVersion.toString()
     }
 
     sourceSets {

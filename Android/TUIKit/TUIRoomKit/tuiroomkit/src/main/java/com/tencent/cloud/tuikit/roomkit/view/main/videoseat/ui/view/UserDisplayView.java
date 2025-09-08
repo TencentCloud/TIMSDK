@@ -115,9 +115,7 @@ public class UserDisplayView extends FrameLayout {
     }
 
     private void updateRobotFlag(UserEntity user) {
-        if (CommonUtils.isRobot(user.getUserId())) {
-            mIfvRoomRobot.setVisibility(VISIBLE);
-        }
+        mIfvRoomRobot.setVisibility(CommonUtils.isRobot(user.getUserId()) ? VISIBLE : GONE);
     }
 
     private void updateUserAvatarIfNeeded(UserEntity oldUser, UserEntity newUser) {

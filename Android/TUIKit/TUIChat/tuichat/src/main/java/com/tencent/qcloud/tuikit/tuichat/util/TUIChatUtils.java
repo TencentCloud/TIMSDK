@@ -170,4 +170,42 @@ public class TUIChatUtils {
         spannableString.setSpan(gifSpan, 0, 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         return spannableString;
     }
+
+    public static int[] calculateOptimalSizePx(int originalWidth, int originalHeight) {
+        return calculateOptimalSizePx(originalWidth, originalHeight, 190, 80, 0.5f, 2.0f);
+    }
+
+    public static int[] calculateOptimalSizePx(
+            int originalWidth,
+            int originalHeight,
+            int maxSizeDp,
+            int minSizeDp,
+            float minAspectRatio,
+            float maxAspectRatio
+    ) {
+        int maxSizePx = ScreenUtil.dip2px(maxSizeDp);
+        int minSizePx = ScreenUtil.dip2px(minSizeDp);
+        if (originalWidth <= 0 || originalHeight <= 0) {
+            return new int[] { maxSizePx, maxSizePx };
+        }
+
+        float widthRatio = maxSizePx / (float) originalWidth;
+        float heightRatio = maxSizePx / (float) originalHeight;
+        float scale = Math.min(Math.min(widthRatio, heightRatio), 1f);
+
+        int displayWidth = Math.min(Math.round(originalWidth * scale), maxSizePx);
+        int displayHeight = Math.min(Math.round(originalHeight * scale), maxSizePx);
+
+        float aspect = displayWidth / (float) displayHeight;
+        if (aspect < minAspectRatio) {
+            displayWidth = Math.min(Math.round(displayHeight * minAspectRatio), maxSizePx);
+        } else if (aspect > maxAspectRatio) {
+            displayHeight = Math.min(Math.round(displayWidth / maxAspectRatio), maxSizePx);
+        }
+
+        displayWidth = Math.max(displayWidth, minSizePx);
+        displayHeight = Math.max(displayHeight, minSizePx);
+
+        return new int[] { displayWidth, displayHeight };
+    }
 }

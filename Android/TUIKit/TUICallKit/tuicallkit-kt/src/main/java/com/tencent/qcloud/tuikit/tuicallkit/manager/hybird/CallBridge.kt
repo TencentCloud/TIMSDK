@@ -76,13 +76,32 @@ class CallBridge private constructor(context: Context) {
         callback: TUICommonDefine.Callback?
     ) {
         runOnUiThread {
-            CallManager.instance.calls(userIdList, mediaType, params, callback)
+            CallManager.instance.calls(userIdList, mediaType, params, object : TUICommonDefine.Callback {
+                override fun onSuccess() {
+                    initCameraAndAudioDeviceState()
+                    callback?.onSuccess()
+                }
+
+                override fun onError(errCode: Int, errMsg: String?) {
+                    callback?.onError(errCode, errMsg)
+                }
+
+            })
         }
     }
 
     fun join(callId: String?, callback: TUICommonDefine.Callback?) {
         runOnUiThread {
-            CallManager.instance.join(callId, callback)
+            CallManager.instance.join(callId, object : TUICommonDefine.Callback {
+                override fun onSuccess() {
+                    initCameraAndAudioDeviceState()
+                    callback?.onSuccess()
+                }
+
+                override fun onError(errCode: Int, errMsg: String?) {
+                    callback?.onError(errCode, errMsg)
+                }
+            })
         }
     }
 
@@ -256,6 +275,18 @@ class CallBridge private constructor(context: Context) {
                 }
             })
         }
+    }
+
+    private fun initCameraAndAudioDeviceState() {
+        if (TUICallDefine.MediaType.Video == CallManager.instance.callState.mediaType.get()) {
+            selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Speakerphone)
+            CallManager.instance.mediaState.isCameraOpened.set(true)
+        } else {
+            selectAudioPlaybackDevice(TUICommonDefine.AudioPlaybackDevice.Earpiece)
+            CallManager.instance.mediaState.isCameraOpened.set(false)
+        }
+        CallManager.instance.mediaState.isMicrophoneMuted.set(false)
+        CallManager.instance.userState.selfUser.get().audioAvailable.set(true)
     }
 
     private fun runOnUiThread(r: Runnable) {

@@ -4,8 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
+import com.tencent.liteav.base.ThreadUtils;
 import com.tencent.liteav.base.util.LiteavLog;
 import com.tencent.liteav.beauty.TXBeautyManager;
+import com.tencent.qcloud.tuikit.tuimultimediacore.TUIMultimediaSignatureChecker;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaConstants;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaConstants.VideoQuality;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.record.data.RecordInfo;
@@ -38,6 +40,8 @@ public class TUIMultimediaRecordCore {
     private final static int DEFAULT_MAX_RECORD_DURATION_MS = 15000;
     private final static int DEFAULT_MIN_RECORD_DURATION_MS = 2000;
 
+    private static boolean sUseUnauthorizedAdvancedFeatures = false;
+
     private final String TAG = TUIMultimediaRecordCore.class.getSimpleName() + "_" + hashCode();
     private final TXUGCRecord mRecordSDK;
     private final RecordInfo mRecordInfo;
@@ -69,24 +73,12 @@ public class TUIMultimediaRecordCore {
         @Override
         public void onRecordComplete(TXRecordResult txRecordResult) {
             LiteavLog.i(TAG, "onRecordComplete retCode = " + txRecordResult);
-            stopProcessTimer();
-            if (txRecordResult.retCode == TXRecordCommon.RECORD_RESULT_OK ||
-                    txRecordResult.retCode == TXRecordCommon.RECORD_RESULT_OK_REACHED_MAXDURATION) {
-                mRecordInfo.recordResult.isSuccess = true;
-                mRecordInfo.recordResult.type = TUIMultimediaConstants.RECORD_TYPE_VIDEO;
-                mRecordInfo.recordResult.path = txRecordResult.videoPath;
-            } else {
-                mRecordInfo.recordResult.isSuccess = false;
-            }
-            mRecordInfo.recordResult.code = txRecordResult.retCode;
-            mRecordInfo.tuiDataRecordStatus.set(RecordStatus.STOP);
-            mRecordSDK.getPartsManager().deleteAllParts();
-            toggleTorch(false);
-            LiteavLog.i(TAG, "onRecordComplete finish");
+            handleRecordeCompleteOnUiThread(txRecordResult);
         }
     };
 
     public TUIMultimediaRecordCore(Context context, RecordInfo recordInfo) {
+        TUIMultimediaSignatureChecker.getInstance().setSignature();
         mRecordSDK = TXUGCRecord.getInstance(context);
         mRecordInfo = recordInfo;
     }
@@ -124,19 +116,24 @@ public class TUIMultimediaRecordCore {
         mRecordSDK.stopCameraPreview();
     }
 
-    public void startRecord(String videoFilePath) {
+    public int startRecord(String videoFilePath) {
         if (mRecordInfo.tuiDataRecordStatus.get() == RecordStatus.RECORDING) {
             LiteavLog.e(TAG, "start record, but current status is recording.");
-            return;
+            return 0;
         }
         LiteavLog.i(TAG, "start record. vide file Path is " + videoFilePath);
-        mRecordInfo.tuiDataRecordStatus.set(RecordStatus.RECORDING);
         mRecordSDK.setVideoRecordListener(mVideoRecordListener);
-        mRecordSDK.startRecord(videoFilePath, null);
+        int result = mRecordSDK.startRecord(videoFilePath, null);
+        if (result >= 0) {
+            mRecordInfo.tuiDataRecordStatus.set(RecordStatus.RECORDING);
+        } else {
+            LiteavLog.e(TAG,"record start fail");
+        }
+        return result;
     }
 
     public void stopRecord() {
-        LiteavLog.i(TAG, "stop record.current stats is " + mRecordInfo.tuiDataRecordStatus.get());
+        LiteavLog.i(TAG, "stop record.current status is " + mRecordInfo.tuiDataRecordStatus.get());
         if (mRecordInfo.tuiDataRecordStatus.get() != RecordStatus.RECORDING) {
             return;
         }
@@ -150,35 +147,26 @@ public class TUIMultimediaRecordCore {
         mRecordSDK.setAspectRatio(aspectRatio);
     }
 
-    public void takePhoto(String photoFilePath) {
+    public int takePhoto(String photoFilePath) {
         LiteavLog.i(TAG, "take photo.current status is " + mRecordInfo.tuiDataRecordStatus.get());
         if (mRecordInfo.tuiDataRecordStatus.get() == RecordStatus.RECORDING) {
-            return;
+            return 0;
         }
+
         mRecordInfo.tuiDataRecordStatus.set(RecordStatus.TAKE_PHOTOING);
+
+        LiteavLog.i(TAG,"signature valid is " + TUIMultimediaSignatureChecker.getInstance().isSupportFunction()  +
+                (sUseUnauthorizedAdvancedFeatures ? " use " : " don use ")  + " advanced features ");
+        if (!TUIMultimediaSignatureChecker.getInstance().isSupportFunction() && sUseUnauthorizedAdvancedFeatures) {
+            mRecordInfo.tuiDataRecordStatus.set(RecordStatus.STOP);
+            return TXRecordCommon.START_RECORD_ERR_LICENCE_VERIFICATION_FAILED;
+        }
+
         mRecordSDK.snapshot(bitmap -> {
             LiteavLog.i(TAG, "onSnapshot. snap file Path is " + photoFilePath);
-            toggleTorch(false);
-            FileOutputStream outputStream = null;
-            try {
-                outputStream = new FileOutputStream(photoFilePath);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
-                mRecordInfo.recordResult.type = TUIMultimediaConstants.RECORD_TYPE_PHOTO;
-                mRecordInfo.recordResult.path = photoFilePath;
-                mRecordInfo.recordResult.isSuccess = true;
-                mRecordInfo.tuiDataRecordStatus.set(RecordStatus.STOP);
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (outputStream != null) {
-                    try {
-                        outputStream.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+            handleSnapshotCompleteOnUIThread(bitmap, photoFilePath);
         });
+        return 0;
     }
 
     public void switchCamera(boolean isFront) {
@@ -222,22 +210,27 @@ public class TUIMultimediaRecordCore {
         }
         beautyManager.setBeautyStyle(style);
         beautyManager.setBeautyLevel(level);
+        sUseUnauthorizedAdvancedFeatures |= level > 0;
     }
 
     public void setWhitenessLevel(float whitenessLevel) {
         LiteavLog.i(TAG, "set whiteness level:" + whitenessLevel);
         TXBeautyManager beautyManager = getBeautyManager();
-        if (beautyManager != null) {
-            beautyManager.setWhitenessLevel(whitenessLevel);
+        if (beautyManager == null) {
+            return;
         }
+        beautyManager.setWhitenessLevel(whitenessLevel);
+        sUseUnauthorizedAdvancedFeatures |= whitenessLevel > 0;
     }
 
     public void setRuddyLevel(float ruddyLevel) {
         LiteavLog.i(TAG, "set ruddy level:" + ruddyLevel);
         TXBeautyManager beautyManager = getBeautyManager();
-        if (beautyManager != null) {
-            beautyManager.setRuddyLevel(ruddyLevel);
+        if (beautyManager == null) {
+            return;
         }
+        beautyManager.setRuddyLevel(ruddyLevel);
+        sUseUnauthorizedAdvancedFeatures |= ruddyLevel > 0;
     }
 
     public void setFilterAndStrength(Bitmap bitmap, int strength) {
@@ -250,8 +243,10 @@ public class TUIMultimediaRecordCore {
         if (mFilterBitmap != bitmap) {
             beautyManager.setFilter(bitmap);
             mFilterBitmap = bitmap;
+            sUseUnauthorizedAdvancedFeatures |= (bitmap != null);
         }
 
+        strength = (bitmap == null) ? 0 : strength;
         beautyManager.setFilterStrength(strength / 10.0f);
     }
 
@@ -259,6 +254,7 @@ public class TUIMultimediaRecordCore {
             float rightIntensity, float leftRatio) {
         LiteavLog.i(TAG, "set filter. left intensity is " + leftIntensity
                 + "  right intensity is " + " left ration is " + leftRatio);
+        sUseUnauthorizedAdvancedFeatures = true;
         mRecordSDK.setFilter(leftBitmap, leftIntensity, rightBitmap, rightIntensity, leftRatio);
         mFilterBitmap = null;
     }
@@ -283,6 +279,37 @@ public class TUIMultimediaRecordCore {
     public void setIsNeedEdit(Boolean isNeedEdit) {
         mIsNeedEdit = isNeedEdit;
     }
+    
+    private void handleRecordeCompleteOnUiThread(TXRecordResult txRecordResult) {
+        ThreadUtils.getUiThreadHandler().post(() -> {
+            toggleTorch(false);
+            stopProcessTimer();
+            if (txRecordResult.retCode == TXRecordCommon.RECORD_RESULT_OK ||
+                    txRecordResult.retCode == TXRecordCommon.RECORD_RESULT_OK_REACHED_MAXDURATION) {
+                mRecordInfo.recordResult.isSuccess = true;
+                mRecordInfo.recordResult.type = TUIMultimediaConstants.RECORD_TYPE_VIDEO;
+                mRecordInfo.recordResult.path = txRecordResult.videoPath;
+            } else {
+                mRecordInfo.recordResult.isSuccess = false;
+            }
+            mRecordInfo.recordResult.code = txRecordResult.retCode;
+            mRecordInfo.tuiDataRecordStatus.set(RecordStatus.STOP);
+            mRecordSDK.getPartsManager().deleteAllParts();
+            LiteavLog.i(TAG, "on Record Complete finish");
+        });
+    }
+
+    private void handleSnapshotCompleteOnUIThread(Bitmap bitmap, String photoFilePath) {
+        ThreadUtils.getUiThreadHandler().post(() -> {
+            toggleTorch(false);
+            savaBitmap(bitmap, photoFilePath);
+            mRecordInfo.recordResult.type = TUIMultimediaConstants.RECORD_TYPE_PHOTO;
+            mRecordInfo.recordResult.path = photoFilePath;
+            mRecordInfo.recordResult.isSuccess = true;
+            mRecordInfo.tuiDataRecordStatus.set(RecordStatus.STOP);
+            LiteavLog.i(TAG, "on Snapshot finish");
+        });
+    }
 
     private void initRecordConfig(TXRecordCommon.TXUGCCustomConfig customConfig) {
         setBaseVideoEncodeParamWithQuality(mVideoQuality, customConfig);
@@ -303,20 +330,24 @@ public class TUIMultimediaRecordCore {
             case HIGH:
                 customConfig.videoFps = HIGH_QUALITY_FPS;
                 customConfig.videoResolution = HIGH_QUALITY_RESOLUTION;
-                customConfig.videoBitrate = mIsNeedEdit ? EDIT_BITRATE : HIGH_QUALITY_BITRATE;
+                customConfig.videoBitrate = isUseEditBitRate() ? EDIT_BITRATE : HIGH_QUALITY_BITRATE;
                 break;
             case MEDIUM:
                 customConfig.videoFps = MEDIUM_QUALITY_FPS;
                 customConfig.videoResolution = MEDIUM_QUALITY_RESOLUTION;
-                customConfig.videoBitrate = mIsNeedEdit ? EDIT_BITRATE : MEDIUM_QUALITY_BITRATE;
+                customConfig.videoBitrate = isUseEditBitRate() ? EDIT_BITRATE : MEDIUM_QUALITY_BITRATE;
                 break;
             case LOW:
             default:
                 customConfig.videoFps = LOW_QUALITY_FPS;
                 customConfig.videoResolution = LOW_QUALITY_RESOLUTION;
-                customConfig.videoBitrate = mIsNeedEdit ? EDIT_BITRATE : LOW_QUALITY_BITRATE;
+                customConfig.videoBitrate = isUseEditBitRate() ? EDIT_BITRATE : LOW_QUALITY_BITRATE;
                 break;
         }
+    }
+
+    private boolean isUseEditBitRate() {
+        return TUIMultimediaSignatureChecker.getInstance().isSupportFunction() && mIsNeedEdit;
     }
 
     private void startProcessTimer(long progress) {
@@ -351,9 +382,24 @@ public class TUIMultimediaRecordCore {
         }
 
         mBeautyManager = mRecordSDK.getBeautyManager();
-        if (mBeautyManager != null) {
-            mBeautyManager.setBeautyStyle(TXBeautyManager.TXBeautyStyleSmooth);
-        }
         return mBeautyManager;
+    }
+
+    private void savaBitmap(Bitmap bitmap, String path) {
+        FileOutputStream outputStream = null;
+        try {
+            outputStream = new FileOutputStream(path);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
+        } catch (Throwable e) {
+            LiteavLog.e(TAG,"save bitmap fail,%s",e);
+        } finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (Exception e) {
+                    LiteavLog.e(TAG,"close bitmap file fail,%s",e);
+                }
+            }
+        }
     }
 }

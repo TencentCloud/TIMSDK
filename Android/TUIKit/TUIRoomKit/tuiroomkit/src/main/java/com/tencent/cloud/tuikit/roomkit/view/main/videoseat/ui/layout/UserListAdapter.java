@@ -167,9 +167,7 @@ public class UserListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             } else if (model.getRole() == TUIRoomDefine.Role.MANAGER) {
                 mIvRoomManage.setBackgroundResource(R.drawable.tuiroomkit_icon_video_room_manager);
             }
-            if (CommonUtils.isRobot(model.getUserId())) {
-                mIfvRoomRobot.setVisibility(VISIBLE);
-            }
+            mIfvRoomRobot.setVisibility(CommonUtils.isRobot(model.getUserId()) ? VISIBLE : GONE);
         }
 
         public void updateVolumeEffect(int volume) {

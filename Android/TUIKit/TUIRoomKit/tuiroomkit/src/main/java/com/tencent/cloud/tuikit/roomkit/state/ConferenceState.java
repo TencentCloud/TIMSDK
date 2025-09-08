@@ -46,6 +46,8 @@ public class ConferenceState {
     public List<UserEntity> allUserList;
     public List<UserEntity> seatUserList;
 
+    public Map<String, Boolean> blackListFeatureMap = new HashMap<>();
+
     public List<TakeSeatRequestEntity> takeSeatRequestList;
 
     private Class mainActivityClass;

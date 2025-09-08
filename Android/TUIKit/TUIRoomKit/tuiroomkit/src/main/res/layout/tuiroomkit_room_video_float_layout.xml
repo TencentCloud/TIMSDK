@@ -29,13 +29,23 @@
         android:background="@drawable/tuivideoseat_bg_anchor_info"
         android:paddingRight="8dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/tuiroomkit_master_avatar_iv"
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/tuiroomkit_ifv_video_float_role"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:background="@drawable/tuiroomkit_icon_video_room_owner"
             android:scaleType="centerCrop"
-            android:src="@drawable/tuiroomkit_icon_video_room_owner" />
+            app:roundPercent="1" />
+
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/tuiroomkit_ifv_video_float_robot"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:visibility="gone"
+            android:background="@drawable/tuiroomkit_ic_robot"
+            android:scaleType="centerCrop"
+            app:roundPercent="1"/>
 
         <com.tencent.cloud.tuikit.roomkit.view.main.videoseat.ui.view.UserVolumePromptView
             android:id="@+id/tuiroomkit_user_mic"

@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuimultimediaplugin;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
-import com.tencent.liteav.base.util.LiteavLog;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaConstants.VideoQuality;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaFileUtil;
@@ -72,6 +71,11 @@ public class TUIMultimediaIConfig {
     @SerializedName("support_picture_edit_crop")
     private boolean mIsSupportPictureEditCrop = true;
 
+    @SerializedName("support_album_picker_edit")
+    private boolean mIsSupportAlbumPickerEdit = true;
+
+    @SerializedName("support_album_picker_transcode_select")
+    private boolean mIsSupportAlbumPickerTranscodeSelect = true;
 
     private JsonObject mJsonObject;
 
@@ -82,7 +86,6 @@ public class TUIMultimediaIConfig {
             synchronized (TUIMultimediaIConfig.class) {
                 if (sInstance == null) {
                     String json = TUIMultimediaFileUtil.readTextFromFile(DEFAULT_JSON_PATH);
-                    LiteavLog.i(TAG, "initDefaultConfig json = " + json);
                     Gson gson = new Gson();
                     sInstance = gson.fromJson(json, TUIMultimediaIConfig.class);
                 }
@@ -96,7 +99,6 @@ public class TUIMultimediaIConfig {
             return;
         }
 
-        LiteavLog.i(TAG, "setConfigJsonString json = " + configJsonString);
         Gson gson = new Gson();
         mJsonObject = gson.fromJson(configJsonString, JsonObject.class);
     }
@@ -179,6 +181,14 @@ public class TUIMultimediaIConfig {
 
     public String getBGMConfigFilePath() {
         return getStringFromJsonObject("bgm_config_file_path", mBGMConfigFilePath);
+    }
+
+    public boolean isSupportAlbumPickerEdit() {
+        return getBoolFromJsonObject("support_album_picker_edit", mIsSupportAlbumPickerEdit);
+    }
+
+    public boolean isSupportAlbumPickerTranscodeSelect() {
+        return getBoolFromJsonObject("support_album_picker_transcode_select", mIsSupportAlbumPickerTranscodeSelect);
     }
 
     private int getIntFromJsonObject(String key, int defaultValue) {

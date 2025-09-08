@@ -792,7 +792,7 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
 
                 @Override
                 public void onError(String module, int errCode, String errMsg) {
-                    ToastUtil.toastShortMessage(getContext().getString(R.string.locate_origin_msg_failed_tip) + " code = " + errCode + " message = " + errMsg);
+                    ToastUtil.toastShortMessage(getContext().getString(R.string.locate_origin_msg_failed_tip));
                 }
             });
         }

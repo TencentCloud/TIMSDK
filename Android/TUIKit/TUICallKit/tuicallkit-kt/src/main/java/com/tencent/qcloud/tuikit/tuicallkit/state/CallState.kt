@@ -9,7 +9,7 @@ class CallState {
     var callId: String = ""
     var roomId: TUICommonDefine.RoomId? = null
     var chatGroupId: String? = ""
-    var scene: LiveData<TUICallDefine.Scene> = LiveData(TUICallDefine.Scene.SINGLE_CALL)
+    var scene: LiveData<TUICallDefine.Scene> = LiveData(TUICallDefine.Scene.NONE)
     var mediaType: LiveData<TUICallDefine.MediaType> = LiveData(TUICallDefine.MediaType.Unknown)
     var callDurationCount: LiveData<Int> = LiveData(0)
     var networkQualityReminder: LiveData<Constants.NetworkQualityHint> = LiveData(Constants.NetworkQualityHint.None)
@@ -18,7 +18,7 @@ class CallState {
         callId = ""
         roomId = null
         chatGroupId = ""
-        scene.set(TUICallDefine.Scene.SINGLE_CALL)
+        scene.set(TUICallDefine.Scene.NONE)
         mediaType.set(TUICallDefine.MediaType.Unknown)
         callDurationCount.set(0)
         networkQualityReminder.set(Constants.NetworkQualityHint.None)

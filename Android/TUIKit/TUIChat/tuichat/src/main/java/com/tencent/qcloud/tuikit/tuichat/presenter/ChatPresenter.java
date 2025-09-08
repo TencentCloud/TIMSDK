@@ -360,10 +360,12 @@ public abstract class ChatPresenter {
 
     private void loadToWayMessageAsync(
         String chatId, boolean isGroup, int getType, int loadCount, TUIMessageBean locateMessageInfo, IUIKitCallback<List<TUIMessageBean>> callback) {
+        isHaveMoreNewMessage = false;
+        isHaveMoreOldMessage = false;
+        ChatPresenter.this.locateMessage = locateMessageInfo;
         List<TUIMessageBean> firstLoadedData = new ArrayList<>();
         List<TUIMessageBean> secondLoadedData = new ArrayList<>();
         firstLoadedData.add(locateMessageInfo);
-        ChatPresenter.this.locateMessage = locateMessageInfo;
         CountDownLatch latch = new CountDownLatch(2);
         final boolean[] isFailed = {false};
         Runnable forwardRunnable = new Runnable() {
@@ -374,11 +376,7 @@ public abstract class ChatPresenter {
                         @Override
                         public void onSuccess(Pair<List<TUIMessageBean>, Integer> firstDataPair) {
                             List<TUIMessageBean> firstData = firstDataPair.first;
-                            if (firstDataPair.second >= loadCount / 2) {
-                                isHaveMoreNewMessage = true;
-                            } else {
-                                isHaveMoreNewMessage = false;
-                            }
+                            isHaveMoreNewMessage = firstDataPair.second >= loadCount / 2;
                             firstLoadedData.addAll(firstData);
                             latch.countDown();
                         }
@@ -402,9 +400,7 @@ public abstract class ChatPresenter {
                         @Override
                         public void onSuccess(Pair<List<TUIMessageBean>, Integer> secondDataPair) {
                             List<TUIMessageBean> secondData = secondDataPair.first;
-                            if (secondDataPair.second < loadCount / 2) {
-                                isHaveMoreOldMessage = false;
-                            }
+                            isHaveMoreOldMessage = secondDataPair.second >= loadCount / 2;
                             secondLoadedData.addAll(secondData);
                             latch.countDown();
                         }
@@ -461,11 +457,9 @@ public abstract class ChatPresenter {
             public void onSuccess(Pair<List<TUIMessageBean>, Integer> firstDataPair) {
                 List<TUIMessageBean> firstData = firstDataPair.first;
                 if (getType == TUIChatConstants.GET_MESSAGE_BACKWARD) {
-                    if (firstDataPair.second >= loadCount) {
-                        isHaveMoreNewMessage = true;
-                    } else {
-                        isHaveMoreNewMessage = false;
-                    }
+                    isHaveMoreNewMessage = firstDataPair.second >= loadCount;
+                } else if (getType == TUIChatConstants.GET_MESSAGE_FORWARD) {
+                    isHaveMoreOldMessage = firstDataPair.second >= loadCount;
                 }
                 onMessageLoadCompleted(firstData, getType);
                 TUIChatUtils.callbackOnSuccess(callback, firstData);
@@ -659,6 +653,8 @@ public abstract class ChatPresenter {
             @Override
             public void run() {
                 if (msgIdList.isEmpty()) {
+                    setQuoteMessageAbstractEnable();
+                    setOriginMessageBean();
                     latch.countDown();
                     return;
                 }
@@ -685,26 +681,27 @@ public abstract class ChatPresenter {
                         latch.countDown();
                     }
 
-                    private void setOriginMessageBean() {
-                        for (int i = 0; i < originMessageBeans.size(); i++) {
-                            TUIMessageBean originMessageBean = originMessageBeans.get(i);
-                            if (originMessageBean == null) {
-                                continue;
-                            }
-                            for (QuoteMessageBean messageBean : quoteMessageList) {
-                                if (TextUtils.equals(messageBean.getOriginMsgId(), originMessageBean.getId())) {
-                                    messageBean.setOriginMessageBean(originMessageBean);
-                                }
-                            }
-                        }
-                    }
-
-                    private void setQuoteMessageAbstractEnable() {
-                        for (QuoteMessageBean quoteMessageBean : quoteMessageList) {
-                            quoteMessageBean.setAbstractEnable(true);
-                        }
-                    }
                 });
+            }
+
+            private void setOriginMessageBean() {
+                for (int i = 0; i < originMessageBeans.size(); i++) {
+                    TUIMessageBean originMessageBean = originMessageBeans.get(i);
+                    if (originMessageBean == null) {
+                        continue;
+                    }
+                    for (QuoteMessageBean messageBean : quoteMessageList) {
+                        if (TextUtils.equals(messageBean.getOriginMsgId(), originMessageBean.getId())) {
+                            messageBean.setOriginMessageBean(originMessageBean);
+                        }
+                    }
+                }
+            }
+
+            private void setQuoteMessageAbstractEnable() {
+                for (QuoteMessageBean quoteMessageBean : quoteMessageList) {
+                    quoteMessageBean.setAbstractEnable(true);
+                }
             }
         };
         ThreadUtils.execute(findMessageRunnable);

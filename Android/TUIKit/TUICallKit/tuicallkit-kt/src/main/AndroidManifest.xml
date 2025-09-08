@@ -24,12 +24,13 @@
     <application>
         <activity
             android:name=".view.CallMainActivity"
-            android:configChanges="orientation|screenSize"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTask"
+            android:supportsPictureInPicture="true"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".view.component.inviteuser.SelectGroupMemberActivity"
-            android:configChanges="orientation|screenSize"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTask"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 

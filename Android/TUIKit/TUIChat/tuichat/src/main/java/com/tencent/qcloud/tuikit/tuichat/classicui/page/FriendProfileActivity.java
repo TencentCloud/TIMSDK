@@ -46,6 +46,11 @@ public class FriendProfileActivity extends BaseLightActivity {
         layout.loadFriendProfile(userID);
 
         mChatBackgroundThumbnailUrl = intent.getStringExtra(TUIChatConstants.CHAT_BACKGROUND_URI);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
 
         layout.setOnButtonClickListener(new FriendProfileLayout.OnButtonClickListener() {
 
@@ -76,7 +81,7 @@ public class FriendProfileActivity extends BaseLightActivity {
                 intent.putExtra(ImageSelectActivity.ITEM_HEIGHT, itemHeight);
                 intent.putExtra(ImageSelectActivity.DATA, faceList);
                 if (TextUtils.isEmpty(mChatBackgroundThumbnailUrl)
-                    || TextUtils.equals(TUIChatConstants.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL, mChatBackgroundThumbnailUrl)) {
+                        || TextUtils.equals(TUIChatConstants.CHAT_CONVERSATION_BACKGROUND_DEFAULT_URL, mChatBackgroundThumbnailUrl)) {
                     intent.putExtra(ImageSelectActivity.SELECTED, defaultFace);
                 } else {
                     intent.putExtra(ImageSelectActivity.SELECTED, new ImageSelectActivity.ImageBean(mChatBackgroundThumbnailUrl, "", false));

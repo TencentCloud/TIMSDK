@@ -149,9 +149,8 @@ public class ListUserInfoView extends FrameLayout {
     }
 
     private void updateRobotView(UserState.UserInfo userInfo) {
-        if (CommonUtils.isRobot(userInfo.userId)) {
-            mIfvRobot.setVisibility(VISIBLE);
-            mTvRobot.setVisibility(VISIBLE);
-        }
+        boolean isRobot = CommonUtils.isRobot(userInfo.userId);
+        mIfvRobot.setVisibility(isRobot ? VISIBLE : INVISIBLE);
+        mTvRobot.setVisibility(isRobot ? VISIBLE : INVISIBLE);
     }
 }

@@ -94,6 +94,12 @@ class VideoView(context: Context, userInfo: UserState.User) : RelativeLayout(con
         updateUserNameView()
     }
 
+    private val isInPipObserver = Observer<Boolean> {
+        buttonSwitchCamera.visibility = if (it) View.GONE else View.VISIBLE
+        buttonBlur.visibility = if (it) View.GONE else View.VISIBLE
+        textUserName.visibility = if (it) View.GONE else View.VISIBLE
+    }
+
     init {
         initView()
         registerObserver()
@@ -109,6 +115,7 @@ class VideoView(context: Context, userInfo: UserState.User) : RelativeLayout(con
         user.networkQualityReminder.observe(networkQualityObserver)
         CallManager.instance.viewState.showLargeViewUserId.observe(showLargeViewUserIdObserver)
         CallManager.instance.viewState.router.observe(viewRouterObserver)
+        CallManager.instance.viewState.enterPipMode.observe(isInPipObserver)
     }
 
     private fun unregisterObserver() {
@@ -121,6 +128,7 @@ class VideoView(context: Context, userInfo: UserState.User) : RelativeLayout(con
         user.networkQualityReminder.removeObserver(networkQualityObserver)
         CallManager.instance.viewState.showLargeViewUserId.removeObserver(showLargeViewUserIdObserver)
         CallManager.instance.viewState.router.removeObserver(viewRouterObserver)
+        CallManager.instance.viewState.enterPipMode.removeObserver(isInPipObserver)
     }
 
     private fun initView() {
@@ -166,8 +174,10 @@ class VideoView(context: Context, userInfo: UserState.User) : RelativeLayout(con
     }
 
     private fun updateImageLoadingView() {
-        if (TUICallDefine.Scene.GROUP_CALL == CallManager.instance.callState.scene.get()
-            && TUICallDefine.Status.Waiting == user.callStatus.get() && user.id != TUILogin.getLoginUser()) {
+        val scene = CallManager.instance.callState.scene.get()
+        if ((TUICallDefine.Scene.GROUP_CALL == scene || TUICallDefine.Scene.MULTI_CALL == scene)
+            && TUICallDefine.Status.Waiting == user.callStatus.get() && user.id != TUILogin.getLoginUser()
+        ) {
             imageLoading.visibility = View.VISIBLE
             imageLoading.startLoading()
         } else {
@@ -194,7 +204,6 @@ class VideoView(context: Context, userInfo: UserState.User) : RelativeLayout(con
             else -> imageAudioInput.visibility = View.GONE
         }
     }
-
     private fun updateNetworkHint() {
         if (isShowFloatWindow || CallManager.instance.callState.scene.get() == TUICallDefine.Scene.SINGLE_CALL) {
             imageNetworkBad.visibility = View.GONE
@@ -207,6 +216,10 @@ class VideoView(context: Context, userInfo: UserState.User) : RelativeLayout(con
     }
 
     private fun updateSwitchCameraButton() {
+        if (GlobalState.instance.disableControlButtonSet.contains(Constants.ControlButton.SwitchCamera)) {
+            buttonSwitchCamera.visibility = View.GONE
+            return
+        }
         if (isShowFloatWindow || CallManager.instance.callState.scene.get() == TUICallDefine.Scene.SINGLE_CALL) {
             buttonSwitchCamera.visibility = View.GONE
             return
@@ -255,7 +268,7 @@ class VideoView(context: Context, userInfo: UserState.User) : RelativeLayout(con
         }
 
         val layoutParams = imageAvatar.layoutParams
-        if (TUICallDefine.Scene.GROUP_CALL == CallManager.instance.callState.scene.get()) {
+        if (TUICallDefine.Scene.SINGLE_CALL != CallManager.instance.callState.scene.get()) {
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
             layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
             imageAvatar.round = 0f
@@ -281,7 +294,7 @@ class VideoView(context: Context, userInfo: UserState.User) : RelativeLayout(con
     }
 
     private fun updateBackground() {
-        if (user.videoAvailable.get() || CallManager.instance.callState.scene.get() == TUICallDefine.Scene.GROUP_CALL) {
+        if (user.videoAvailable.get() || CallManager.instance.callState.scene.get() != TUICallDefine.Scene.SINGLE_CALL) {
             imageBackground.visibility = View.GONE
             return
         }

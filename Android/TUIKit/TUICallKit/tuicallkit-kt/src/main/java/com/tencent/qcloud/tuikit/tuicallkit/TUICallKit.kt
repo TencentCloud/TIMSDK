@@ -5,6 +5,8 @@ import com.tencent.cloud.tuikit.engine.call.TUICallDefine
 import com.tencent.cloud.tuikit.engine.call.TUICallDefine.CallParams
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine.RoomId
+import com.tencent.qcloud.tuikit.tuicallkit.common.data.Constants
+import com.tencent.qcloud.tuikit.tuicallkit.view.CallAdapter
 
 abstract class TUICallKit {
     companion object {
@@ -79,12 +81,23 @@ abstract class TUICallKit {
     open fun setScreenOrientation(orientation: Int) {}
 
     /**
+     * Disable the control button
+     *
+     * @param button value: microphone, audioDevice, camera, switchCamera, inviteUser.
+     */
+    open fun disableControlButton(button: Constants.ControlButton?) {}
+
+    /**
+     * set call adapter to customize call ui
+     */
+    open fun setAdapter(adapter: CallAdapter?) {}
+
+    /**
      * Call experimental API
      *
      * @param jsonStr
      */
     open fun callExperimentalAPI(jsonStr: String) {}
-
 
     /**
      * Make a call
