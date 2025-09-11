@@ -1,0 +1,15 @@
+{
+    "name": "com.tencent.timpush.unity",
+    "version": "8.7.7201",
+    "displayName": "TIM Push SDK",
+    "description": "Unity plugin for TIM Push",
+    "unity": "2019.4",
+    "keywords": [
+      "Tencent Cloud",
+      "IM",
+      "Push"
+    ],
+    "dependencies": {
+      "com.unity.nuget.newtonsoft-json": "3.2.1"
+    }
+  }
