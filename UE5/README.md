@@ -8,7 +8,7 @@ English|[简体中文](./README_ZH.md)
 
 [Push Service](https://cloud.tencent.com/document/product/269/100621)
 
-[Push demo](https://github.com/TencentCloud/TIMSDK/tree/master/UE5/Push/pushdemo)
+[Push demo](https://github.com/TencentCloud/TIMSDK/tree/master/UE5/Push/pushdemo)（UE：5.6.0）
 
 
 ##### contact us

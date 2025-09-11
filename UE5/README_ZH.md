@@ -8,8 +8,7 @@
 
 [Push 服务](https://cloud.tencent.com/document/product/269/100621)
 
-[Push demo](https://github.com/TencentCloud/TIMSDK/tree/master/UE5/Push/pushdemo)
-
+[Push demo](https://github.com/TencentCloud/TIMSDK/tree/master/UE5/Push/pushdemo) （UE 环境：5.6.0）
 
 ##### 联系我们
 
