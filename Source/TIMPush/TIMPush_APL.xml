@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--LogicCore additions-->
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+	<!-- initialization-->
+  <init>
+    <log text="TIMPush init"/>
+  </init>
+
+  <!--Copy or delete files from Intermediate/Android/APK before ndk-build is compiled-->
+  <prebuildCopies>
+    <log text="TIMPush Copy Dirs Begin...... PluginDir is $S(PluginDir), BuildDir is $S(BuildDir)"/>
+  </prebuildCopies>
+
+  <!-- optional updates applied to AndroidManifest.xml -->
+  <androidManifestUpdates>
+    <log text="androidManifestUpdates begin" />
+
+    <log text="addPermission begin" />
+    <!--Permission start-->
+    <addPermission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!--Permission end-->
+
+  </androidManifestUpdates>
+  
+	<!--Copy files or directories to Intermediate/Android/APK -->
+	<resourceCopies>
+    <log text="TIMPush Copy Files Begin"/>
+
+    <log text="Copy TIMPush res..." />
+    <copyDir src="$S(PluginDir)/../ThirdParty/TIMPushLibrary/Android/TIMPush/assets" dst="$S(BuildDir)/assets"/>
+
+    <log text="Copy TIMPush json..." />
+    <!--Huawei agconnect-services.json -->
+    <copyFile src="$S(PluginDir)/../ThirdParty/TIMPushLibrary/Android/TIMPush/agconnect-services.json" dst="$S(BuildDir)/gradle/app/agconnect-services.json" />
+    <!--FCM google-services.json -->
+    <copyFile src="$S(PluginDir)/../ThirdParty/TIMPushLibrary/Android/TIMPush/google-services.json" dst="$S(BuildDir)/gradle/app/google-services.json" />
+    <!--Honor mcs-services.json -->
+    <copyFile src="$S(PluginDir)/../ThirdParty/TIMPushLibrary/Android/TIMPush/mcs-services.json" dst="$S(BuildDir)/gradle/app/mcs-services.json" />
+    
+  </resourceCopies>
+
+  <settingsGradleAdditions>
+    <insert>
+    </insert>
+  </settingsGradleAdditions>
+
+  <gradleProperties>
+    <insert>
+android.enableJetifier=true
+android.useAndroidX=true
+    </insert>
+  </gradleProperties>
+
+  <baseBuildGradleAdditions>
+    <insert>
+      allprojects {
+        repositories {
+            mavenCentral()
+            maven { url "https://mirrors.tencent.com/nexus/repository/maven-public/" }
+            maven { url "https://mirrors.tencent.com/repository/maven/liteavsdk/" }
+            maven { url 'https://developer.huawei.com/repo/' }
+            maven { url 'https://mirrors.tencent.com/repository/maven/SensitiveScan' }
+            maven { url 'https://developer.hihonor.com/repo' }
+        }
+      }
+
+      // UE 4.26.2
+      //allprojects {
+      //    def mappings = [
+      //            'android.support.annotation': 'androidx.annotation',
+      //            'android.arch.lifecycle': 'androidx.lifecycle',
+      //            'android.support.v4.app.NotificationCompat': 'androidx.core.app.NotificationCompat',
+      //            'android.support.v4.app.ActivityCompat': 'androidx.core.app.ActivityCompat',
+      //            'android.support.v4.content.ContextCompat': 'androidx.core.content.ContextCompat',
+      //            'android.support.v13.app.FragmentCompat': 'androidx.legacy.app.FragmentCompat',
+      //            'android.arch.lifecycle.Lifecycle': 'androidx.lifecycle.Lifecycle',
+      //            'android.arch.lifecycle.LifecycleObserver': 'androidx.lifecycle.LifecycleObserver',
+      //            'android.arch.lifecycle.OnLifecycleEvent': 'androidx.lifecycle.OnLifecycleEvent',
+      //            'android.arch.lifecycle.ProcessLifecycleOwner': 'androidx.lifecycle.ProcessLifecycleOwner',
+      //            'android.support.v4.content.FileProvider': 'androidx.core.content.FileProvider',
+      //            'android.support.v4.app.NotificationManagerCompat':'androidx.core.app.NotificationManagerCompat',
+      //    ]
+      //
+      //    beforeEvaluate { project ->
+      //        project.rootProject.projectDir.traverse(type: groovy.io.FileType.FILES, nameFilter: ~/.*\.java$/) { f ->
+      //            mappings.each { entry ->
+      //                if (f.getText('UTF-8').contains(entry.key)) {
+      //                    println "Updating ${entry.key} to ${entry.value} in file ${f}"
+      //                    ant.replace(file: f, token: entry.key, value: entry.value)
+      //                }
+      //            }
+      //        }
+      //    }
+      //}
+  </insert>
+  </baseBuildGradleAdditions>
+
+  <buildscriptGradleAdditions>
+		<insert>
+      repositories {
+          mavenCentral()
+          maven { url "https://mirrors.tencent.com/nexus/repository/maven-public/" }
+          maven { url "https://mirrors.tencent.com/repository/maven/liteavsdk/" }
+          maven { url 'https://developer.huawei.com/repo/' }
+          maven { url 'https://mirrors.tencent.com/repository/maven/SensitiveScan' }
+          maven { url 'https://developer.hihonor.com/repo' }
+      }
+      dependencies {
+        classpath 'com.google.gms:google-services:4.4.3' // FCM Plugin
+        classpath 'com.huawei.agconnect:agcp:1.9.1.300'  // Huawei Plugin
+        classpath 'com.hihonor.mcs:asplugin:2.0.1.300'   // Honor Plugin
+
+        // UE 4.26.2, gradle 6.1.1
+        //classpath 'com.google.gms:google-services:4.3.15' // FCM Plugin
+        //classpath 'com.huawei.agconnect:agcp:1.6.0.300'  // Huawei Plugin
+        //classpath 'com.hihonor.mcs:asplugin:2.0.1.300'   // Honor Plugin
+      }
+    </insert>
+	</buildscriptGradleAdditions>
+
+  <buildGradleAdditions>
+    <insert>
+      android {
+        defaultConfig {  
+
+          // UE 4.26.2
+          //buildToolsVersion "30.0.3"
+          //minSdkVersion 21
+
+          minSdkVersion 23
+          targetSdkVersion 33
+
+          manifestPlaceholders = [                
+              "VIVO_APPKEY" : "xxxxxxxx",    // VIVO AppKey            
+              "VIVO_APPID" : "11111111",                            // VIVO AppId
+              "HONOR_APPID" : "11111111"                            // Honor AppId
+          ]    
+        }
+
+        // UE 4.26.2
+        //compileOptions {
+        //  sourceCompatibility JavaVersion.VERSION_1_8
+        //  targetCompatibility JavaVersion.VERSION_1_8
+        //}
+      }
+      
+      repositories {
+        flatDir {
+            dirs 'src/main/libs', 'libs'
+        }
+      }
+      
+      dependencies {
+        // 推送主包必须要集成
+        implementation 'com.tencent.timpush:tpush:8.7.7201'
+      
+        // 按照需要集成对应厂商
+        implementation 'com.tencent.timpush:huawei:8.7.7201'
+        implementation 'com.tencent.timpush:xiaomi:8.7.7201'
+        implementation 'com.tencent.timpush:oppo:8.7.7201'
+        implementation 'com.tencent.timpush:vivo:8.7.7201'
+        implementation 'com.tencent.timpush:honor:8.7.7201'
+        implementation 'com.tencent.timpush:meizu:8.7.7201'
+        implementation 'com.tencent.timpush:fcm:8.7.7201'
+
+        // UE 4.26.2
+        //implementation 'com.google.android.gms:play-services-games:19.0.0'
+        
+      }
+      
+      apply plugin: 'com.google.gms.google-services'  // FCM Plugin
+      apply plugin: 'com.huawei.agconnect'            // Huawei Plugin
+      apply plugin: 'com.hihonor.mcs.asplugin'        // Honor Plugin
+    </insert>
+  </buildGradleAdditions>
+
+  <!-- import relative classes in GameActivity.java -->
+	<gameActivityImportAdditions>
+		<insert>
+      import com.tencent.qcloud.tim.push.TIMPushCallback;
+      import com.tencent.qcloud.tim.push.TIMPushListener;
+      import com.tencent.qcloud.tim.push.TIMPushManager;
+      import com.tencent.qcloud.tim.push.TIMPushMessage;
+      import com.tencent.qcloud.tim.push.utils.TIMPushLog;
+		</insert>
+	</gameActivityImportAdditions>
+
+  <!--GameActivity.java things to do after importing these classes -->
+  <gameActivityPostImportAdditions>
+  </gameActivityPostImportAdditions>
+
+  <!-- Add codes in GameActivity.java -->
+  <gameActivityClassAdditions>
+		<insert>
+      public void registerPush(int sdkAppId, String appKey, TIMPushCallback callback) {
+        TIMPushManager.getInstance().registerPush(getBaseContext(), sdkAppId, appKey, callback);
+      }
+      
+      public void unRegisterPush(TIMPushCallback callback) {
+        TIMPushManager.getInstance().unRegisterPush(callback);
+      }
+      
+      public void getRegistrationID(TIMPushCallback callback) {
+        TIMPushManager.getInstance().getRegistrationID(callback);
+      }
+      
+      public void setRegistrationID(String registrationID, TIMPushCallback callback) {
+        TIMPushManager.getInstance().setRegistrationID(registrationID, callback);
+      }
+      
+      public void addPushListener(TIMPushListener listener) {
+        TIMPushManager.getInstance().addPushListener(listener);
+      }
+      
+      public void removePushListener(TIMPushListener listener) {
+        TIMPushManager.getInstance().removePushListener(listener);
+      }
+      
+      public void forceUseFCMPushChannel(boolean enable) {
+        TIMPushManager.getInstance().forceUseFCMPushChannel(enable);
+      }
+      
+      public void disablePostNotificationInForeground(boolean disable) {
+        TIMPushManager.getInstance().disablePostNotificationInForeground(disable);
+      }
+      
+      public void callExperimentalAPI(String api, Object param, TIMPushCallback callback) {
+        TIMPushManager.getInstance().callExperimentalAPI(api, param, callback);
+      }
+		</insert>
+  </gameActivityClassAdditions>
+
+  
+  <!--GameActivity.java onCreate -->
+  <gameActivityOnCreateAdditions>
+    <insert>
+      android.util.Log.e("TIMPush Java", "before java device init");
+    </insert>
+  </gameActivityOnCreateAdditions>
+
+  <!--GameActivity.java OnDestroy-->
+  <gameActivityOnDestroyAdditions>
+  </gameActivityOnDestroyAdditions>
+  
+  <!--GameActivity.java OnStart-->
+  <gameActivityOnStartAdditions>
+  </gameActivityOnStartAdditions>
+  
+  <!--GameActivity.java OnRestart-->
+  <gameActivityOnRestartAdditions>
+  </gameActivityOnRestartAdditions>
+  
+  <!--GameActivity.java OnStop-->
+  <gameActivityOnStopAdditions>
+  </gameActivityOnStopAdditions>
+  
+  <!--GameActivity.java OnPause-->
+  <gameActivityOnPauseAdditions>
+    <insert> 
+    </insert>
+  </gameActivityOnPauseAdditions>
+  
+  <!--GameActivity.java onResume-->
+  <gameActivityOnResumeAdditions>
+	<insert> 
+	</insert>
+  </gameActivityOnResumeAdditions>
+  
+  <!-- GameActivity.java onActivityResult -->
+  <gameActivityOnActivityResultAdditions>
+  </gameActivityOnActivityResultAdditions>
+  
+  <!--GameActivity.java OnNewIntent-->
+  <gameActivityOnNewIntentAdditions>
+  </gameActivityOnNewIntentAdditions>
+
+  <proguardAdditions>
+    <insert>
+      -keep class com.epicgames.unreal.GameActivity { *; }
+      -dontwarn com.tencent.qcloud.**
+      -keep class com.tencent.qcloud.** { *;}
+      -keepclassmembers class com.tencent.qcloud.**{*;}
+
+      #------------------  Below are common exclusions  ----------------
+      # If the method name contains "JNI" characters, it is identified as a Java Native Interface method and is automatically excluded
+      # If the method name contains "JRI" characters, it is identified as the Java Reflection Interface method and automatically excluded
+
+      -keepclasseswithmembers class * {
+      ... *JNI*(...);
+      }
+
+      -keepclasseswithmembernames class * {
+      ... *JRI*(...);
+      }
+
+      -keep class **JNI* {*;}
+      -keep class android.app.** {
+      *;
+      }
+    </insert>
+  </proguardAdditions>
+</root>

@@ -1,0 +1,23 @@
+{
+	"FileVersion": 3,
+	"Version": 877201,
+	"VersionName": "8.7.7201",
+	"FriendlyName": "TIMPush",
+	"Description": "TIMPush UE Plugin",
+	"Category": "Other",
+	"CreatedBy": "Tencent",
+	"CreatedByURL": "https://cloud.tencent.com/document/product/269/100621",
+	"DocsURL": "https://cloud.tencent.com/document/product/269/100621",
+	"MarketplaceURL": "https://cloud.tencent.com/document/product/269/100621",
+	"SupportURL": "https://cloud.tencent.com/document/product/269/100621",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "TIMPush",
+			"Type": "Runtime",
+			"LoadingPhase": "PreDefault"
+		}
+	]
+}
