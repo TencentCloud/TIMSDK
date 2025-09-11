@@ -1,0 +1,6 @@
+framework module TPush {
+  umbrella header "TPush.h"
+
+  export *
+  module * { export * }
+}

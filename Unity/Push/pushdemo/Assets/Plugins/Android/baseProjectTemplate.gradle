@@ -1,0 +1,31 @@
+import org.gradle.util.GradleVersion
+
+buildscript {
+    dependencies {
+        def gradleVer = GradleVersion.version(gradle.gradleVersion)
+        if (gradleVer >= GradleVersion.version("8.0")) {
+            classpath 'com.android.tools.build:gradle:8.0.2'
+        } else if (gradleVer >= GradleVersion.version("7.0")) {
+            classpath 'com.android.tools.build:gradle:7.0.0'
+        } else {
+            classpath 'com.android.tools.build:gradle:4.2.0'
+        }
+        classpath 'com.google.gms:google-services:4.3.15'
+        classpath 'com.huawei.agconnect:agcp:1.6.0.300'
+        classpath 'com.hihonor.mcs:asplugin:2.0.1.300'
+    }
+}
+
+plugins {
+    // If you are changing the Android Gradle Plugin version, make sure it is compatible with the Gradle version preinstalled with Unity
+    // See which Gradle version is preinstalled with Unity here https://docs.unity3d.com/Manual/android-gradle-overview.html
+    // See official Gradle and Android Gradle Plugin compatibility table here https://developer.android.com/studio/releases/gradle-plugin#updating-gradle
+    // To specify a custom Gradle version in Unity, go do "Preferences > External Tools", uncheck "Gradle Installed with Unity (recommended)" and specify a path to a custom Gradle version
+    id 'com.android.application' version '7.4.2' apply false
+    id 'com.android.library' version '7.4.2' apply false
+    **BUILD_SCRIPT_DEPS**
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

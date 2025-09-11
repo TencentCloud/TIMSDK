@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "com.tencent.impushsdk.unity": {
+      "version": "file:../../IMPush",
+      "depth": 0,
+      "source": "local"
+    }
+  }
+}

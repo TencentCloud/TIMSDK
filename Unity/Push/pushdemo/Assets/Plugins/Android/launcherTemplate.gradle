@@ -1,0 +1,86 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.huawei.agconnect'
+apply plugin: 'com.hihonor.mcs.asplugin'
+
+dependencies {
+    implementation project(':unityLibrary')
+    }
+
+android {
+    namespace "**NAMESPACE**"
+    ndkPath "**NDKPATH**"
+
+    compileSdkVersion **APIVERSION**
+    buildToolsVersion '**BUILDTOOLS**'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    defaultConfig {
+        minSdkVersion **MINSDKVERSION**
+        targetSdkVersion **TARGETSDKVERSION**
+        applicationId '**APPLICATIONID**'
+        ndk {
+            abiFilters **ABIFILTERS**
+        }
+        versionCode **VERSIONCODE**
+        versionName '**VERSIONNAME**'
+
+        manifestPlaceholders = [
+                "VIVO_APPKEY": "xxxxxxxx",
+                "VIVO_APPID" : "11111111",
+
+                "HONOR_APPID": "11111111"
+        ]
+    }
+
+    aaptOptions {
+        noCompress = **BUILTIN_NOCOMPRESS** + unityStreamingAssets.tokenize(', ')
+        ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~"
+    }**SIGN**
+
+    lintOptions {
+        abortOnError false
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled **MINIFY_DEBUG**
+            proguardFiles getDefaultProguardFile('proguard-android.txt')**SIGNCONFIG**
+            jniDebuggable true
+        }
+        release {
+            minifyEnabled **MINIFY_RELEASE**
+            proguardFiles getDefaultProguardFile('proguard-android.txt')**SIGNCONFIG**
+        }
+    }**PACKAGING_OPTIONS****PLAY_ASSET_PACKS****SPLITS**
+**BUILT_APK_LOCATION**
+    bundle {
+        language {
+            enableSplit = false
+        }
+        density {
+            enableSplit = false
+        }
+        abi {
+            enableSplit = true
+        }
+    }
+}**SPLITS_VERSION_CODE****LAUNCHER_SOURCE_BUILD_SETUP**
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'com.tencent.timpush:tpush:8.7.7201'
+    // 按照需要集成对应厂商
+    implementation 'com.tencent.timpush:huawei:8.7.7201'
+    implementation 'com.tencent.timpush:xiaomi:8.7.7201'
+    implementation 'com.tencent.timpush:oppo:8.7.7201'
+    implementation 'com.tencent.timpush:vivo:8.7.7201'
+    implementation 'com.tencent.timpush:honor:8.7.7201'
+    implementation 'com.tencent.timpush:meizu:8.7.7201'
+    implementation 'com.tencent.timpush:fcm:8.7.7201'
+}

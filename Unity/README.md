@@ -1,12 +1,11 @@
 English|[简体中文](./README_ZH.md)
 
-#### Tencent cloud instant messaging IM Unity SDK source code
+#### 1. Tencent cloud instant messaging IM Unity SDK source code
 
 
 ##### Demo source code GitHub address
 
 [Chat-demo-unity](https://github.com/TencentCloud/chat-demo-unity)
-
 
 
 ##### No UI SDK GitHub address
@@ -15,8 +14,14 @@ English|[简体中文](./README_ZH.md)
 
 ##### Other
 
-1. unity sdk integration [documentation](https://cloud.tencent.com/document/product/269/54106)
-2. Unity api example usage [documentation](https://cloud.tencent.com/document/product/269/75289)
+①. unity sdk integration [documentation](https://cloud.tencent.com/document/product/269/54106)
+
+②. Unity api example usage [documentation](https://cloud.tencent.com/document/product/269/75289)
+
+#### 2. TIMPush
+
+[Push Service](https://cloud.tencent.com/document/product/269/100621)
+
 
 
 ##### contact us
