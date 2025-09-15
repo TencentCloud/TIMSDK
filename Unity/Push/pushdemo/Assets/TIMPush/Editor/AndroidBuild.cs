@@ -1,3 +1,4 @@
+#if UNITY_EDITOR && UNITY_ANDROID
 using System.IO;
 using System.Xml;
 using UnityEditor;
@@ -87,3 +88,4 @@ public class AndroidBuild : IPostGenerateGradleAndroidProject
         return v1sub > v2sub;
     }
 }
+#endif
