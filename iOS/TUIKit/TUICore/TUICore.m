@@ -284,13 +284,13 @@ static const void *navigateValueCallback = @"navigateValueCallback";
             if (pObject == nil || [(TUIWeakProxy *)pObject target] == nil) {
                 [removeEventList addObject:event];
             }
-            if (key == nil && subKey == nil && pObject == object) {
+            if (key == nil && subKey == nil && pObject && [(TUIWeakProxy *)pObject target] == object) {
                 [removeEventList addObject:event];
             } else if ([pkey isEqualToString:key] && subKey == nil && object == nil) {
                 [removeEventList addObject:event];
             } else if ([pkey isEqualToString:key] && [subKey isEqualToString:pSubKey] && object == nil) {
                 [removeEventList addObject:event];
-            } else if ([pkey isEqualToString:key] && [subKey isEqualToString:pSubKey] && pObject == object) {
+            } else if ([pkey isEqualToString:key] && [subKey isEqualToString:pSubKey] && pObject && [(TUIWeakProxy *)pObject target] == object) {
                 [removeEventList addObject:event];
             }
         }
