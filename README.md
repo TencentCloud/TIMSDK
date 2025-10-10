@@ -168,7 +168,6 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 - Unity SDK now integrates cloud search APIs.
 - Optimized error message descriptions when sending messages after being kicked offline.
 - Added cloud-controlled frequency limiting when pulling avchatroom member lists.
-- Supports triggering callbacks on SDK threads for iOS/Mac platforms.
 - Fixed Android platform Zip extraction security vulnerability.
 - Fixed token reporting errors in self-integrated Flutter push notifications.
 - Fixed occasional missing callbacks when pulling historical messages.
