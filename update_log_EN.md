@@ -3,16 +3,12 @@ English | [简体中文](./版本历史.md)
 # TIMSDK
 ## 8.7.7201 @2025.09.05 - Enhanced Version
 ### SDK
-- Long connection channels now support standard TLS protocol.
 - Added backup CN domain for long network connection DNS addresses.
 - Long connections now include built-in HTTP-type IP addresses.
-- Supports RoomEngine synchronous query of commercial capability bits.
-- RoomEngine can pull the first 20 messages before joining live rooms.
 - Push supports OPPO private message channel templates.
 - Push supports FCM message priority configuration.
 - Push supports vivo notification type settings.
 - Added data reporting for "joining multiple avchatrooms simultaneously".
-- HarmonyOS platform IMSDK now supports building C++ interfaces.
 - Supports sending group-directed messages in communities.
 - Supports inserting local messages after login failure.
 - Supports setting group approval options when creating Work groups.
