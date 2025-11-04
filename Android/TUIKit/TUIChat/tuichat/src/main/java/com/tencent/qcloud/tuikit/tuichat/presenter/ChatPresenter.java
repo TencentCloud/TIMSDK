@@ -2141,7 +2141,7 @@ public abstract class ChatPresenter {
     public static String insertLocalMessage(TUIMessageBean messageBean, String chatId, boolean isGroupChat) {
         for (WeakReference<ChatPresenter> instance : existsInstances) {
             ChatPresenter presenter = instance.get();
-            if (presenter != null) {
+            if (presenter != null && presenter.isChatFragmentShow) {
                 String messageID = presenter.internalInsertMessage(messageBean, chatId, isGroupChat);
                 if (messageID != null) {
                     return messageID;
