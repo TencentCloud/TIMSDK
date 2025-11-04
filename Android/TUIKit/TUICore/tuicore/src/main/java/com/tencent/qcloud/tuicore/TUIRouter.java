@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 import android.util.Pair;
+
+import androidx.activity.ComponentActivity;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultCaller;
@@ -25,12 +27,15 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 /**
  * For Activity routing jump, only used inside TUICore, not exposed to the outside
@@ -45,9 +50,6 @@ public class TUIRouter {
     }
 
     private static final Map<String, String> routerMap = new HashMap<>();
-
-    private static final Map<ActivityResultCaller, ActivityResultLauncher<Pair<Intent, ActivityResultCallback<ActivityResult>>>> activityResultLauncherMap =
-        new WeakHashMap<>();
 
     @SuppressLint("StaticFieldLeak") private static Context context;
 
@@ -105,6 +107,33 @@ public class TUIRouter {
         }
     }
 
+    public static class LauncherViewModel extends ViewModel {
+
+        private ActivityResultLauncher<Pair<Intent, ActivityResultCallback<ActivityResult>>> launcher;
+
+        public void setLauncher(ActivityResultLauncher<Pair<Intent, ActivityResultCallback<ActivityResult>>> launcher) {
+            clearLauncher();
+            this.launcher = launcher;
+        }
+
+        private void clearLauncher() {
+            if (launcher != null) {
+                try {
+                    launcher.unregister();
+                } catch (Exception e) {
+                    Log.e(TAG, "LauncherViewModel onCleared error: " + e.getMessage());
+                } finally {
+                    launcher = null;
+                }
+            }
+        }
+
+        @Override
+        protected void onCleared() {
+            clearLauncher();
+        }
+    }
+
     private static void initActivityResultLauncher(Context context) {
         if (context instanceof Application) {
             ((Application) context).registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
@@ -117,22 +146,12 @@ public class TUIRouter {
                             Log.e(TAG, "initActivityResultLauncher onFragmentCreated error: fragment not instance of ActivityResultCaller");
                         }
                     }
-
-                    @Override
-                    public void onFragmentDestroyed(@NonNull FragmentManager fm, @NonNull Fragment fragment) {
-                        if (fragment instanceof ActivityResultCaller) {
-                            clearLauncher(fragment);
-                        } else {
-                            Log.e(TAG, "initActivityResultLauncher onFragmentDestroyed error: fragment not instance of ActivityResultCaller");
-                        }
-                    }
                 };
                 @Override
                 public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
                     if (activity instanceof ActivityResultCaller) {
                         registerForActivityResult((ActivityResultCaller) activity);
                         if (activity instanceof FragmentActivity) {
-                            ((FragmentActivity) activity).getSupportFragmentManager().unregisterFragmentLifecycleCallbacks(fragmentLifecycleCallbacks);
                             ((FragmentActivity) activity).getSupportFragmentManager().registerFragmentLifecycleCallbacks(fragmentLifecycleCallbacks, true);
                         }
                     }
@@ -141,16 +160,12 @@ public class TUIRouter {
                 private void registerForActivityResult(ActivityResultCaller resultCaller) {
                     ActivityResultLauncher<Pair<Intent, ActivityResultCallback<ActivityResult>>> activityFragmentResultLauncher =
                         resultCaller.registerForActivityResult(new RouterActivityResultContract(), new RouterActivityResultCallback());
-                    activityResultLauncherMap.put(resultCaller, activityFragmentResultLauncher);
-                }
-
-                private void clearLauncher(ActivityResultCaller resultCaller) {
-                    activityResultLauncherMap.remove(resultCaller);
-                    if (resultCaller instanceof FragmentActivity) {
-                        List<Fragment> fragments = ((FragmentActivity) resultCaller).getSupportFragmentManager().getFragments();
-                        for (Fragment fragment : fragments) {
-                            clearLauncher(fragment);
-                        }
+                    LauncherViewModel viewModel = null;
+                    if (resultCaller instanceof ViewModelStoreOwner) {
+                        viewModel = new ViewModelProvider((ViewModelStoreOwner) resultCaller).get(LauncherViewModel.class);
+                    }
+                    if (viewModel != null) {
+                        viewModel.setLauncher(activityFragmentResultLauncher);
                     }
                 }
 
@@ -173,9 +188,6 @@ public class TUIRouter {
                 public void onActivityDestroyed(@NonNull Activity activity) {
                     if (activity instanceof FragmentActivity) {
                         ((FragmentActivity) activity).getSupportFragmentManager().unregisterFragmentLifecycleCallbacks(fragmentLifecycleCallbacks);
-                    }
-                    if (activity instanceof ActivityResultCaller) {
-                        clearLauncher((ActivityResultCaller) activity);
                     }
                 }
             });
@@ -441,12 +453,46 @@ public class TUIRouter {
                 return;
             }
             try {
-                ActivityResultLauncher<Pair<Intent, ActivityResultCallback<ActivityResult>>> launcher = activityResultLauncherMap.get(caller);
+                ActivityResultLauncher<Pair<Intent, ActivityResultCallback<ActivityResult>>> launcher = null;
+                if (caller instanceof ComponentActivity) {
+                    ComponentActivity activity = (ComponentActivity) caller;
+                    if (activity.isFinishing() || activity.isDestroyed()) {
+                        Log.e(TAG, "Activity is finishing or destroyed");
+                        if (callback != null) {
+                            callback.onActivityResult(new ActivityResult(Activity.RESULT_CANCELED, null));
+                        }
+                        return;
+                    }
+                } else if (caller instanceof Fragment) {
+                    Fragment fragment = (Fragment) caller;
+                    if (!fragment.isAdded() || fragment.isDetached()) {
+                        Log.e(TAG, "Fragment is not added or detached");
+                        if (callback != null) {
+                            callback.onActivityResult(new ActivityResult(Activity.RESULT_CANCELED, null));
+                        }
+                        return;
+                    }
+                }
+                LauncherViewModel viewModel = null;
+                if (caller instanceof ViewModelStoreOwner) {
+                    viewModel = new ViewModelProvider((ViewModelStoreOwner) caller).get(LauncherViewModel.class);
+                }
+                if (viewModel != null) {
+                    launcher = viewModel.launcher;
+                }
                 if (launcher != null) {
                     launcher.launch(Pair.create(intent, callback));
+                } else {
+                    Log.e(TAG, "launcher is null, ActivityResultLauncher not registered");
+                    if (callback != null) {
+                        callback.onActivityResult(new ActivityResult(Activity.RESULT_CANCELED, null));
+                    }
                 }
             } catch (Exception e) {
                 Log.e(TAG, "start activity failed, " + e.getLocalizedMessage());
+                if (callback != null) {
+                    callback.onActivityResult(new ActivityResult(Activity.RESULT_CANCELED, null));
+                }
             }
         }
 

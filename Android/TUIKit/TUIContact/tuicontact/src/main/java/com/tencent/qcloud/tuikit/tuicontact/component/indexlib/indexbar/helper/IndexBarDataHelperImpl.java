@@ -1,7 +1,7 @@
 package com.tencent.qcloud.tuikit.tuicontact.component.indexlib.indexbar.helper;
 
 import android.text.TextUtils;
-import com.github.promeg.pinyinhelper.Pinyin;
+import com.tencent.qcloud.tuikit.tuicontact.pinyinhelper.Pinyin;
 import com.tencent.qcloud.tuikit.tuicontact.component.indexlib.indexbar.bean.BaseIndexPinyinBean;
 import java.util.Collections;
 import java.util.Comparator;

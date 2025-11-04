@@ -51,7 +51,7 @@ public class ImageMessageBean extends TUIMessageBean {
                 ImageBean imageBean = new ImageBean();
                 imageBean.setV2TIMImage(v2TIMImage);
                 imageBeans.add(imageBean);
-                if (imageBean.getType() == IMAGE_TYPE_THUMB) {
+                if (imageBean.getType() == IMAGE_TYPE_ORIGIN) {
                     imgWidth = imageBean.getWidth();
                     imgHeight = imageBean.getHeight();
                 }

@@ -162,7 +162,7 @@ public class PermissionRequester {
             if (sIsRequesting.get()) {
                 Log.e(TAG, "can not request during requesting");
                 if (mPermissionCallback != null) {
-                    mPermissionCallback.onDenied();
+                    mPermissionCallback.onRequesting();
                 }
                 return;
             }

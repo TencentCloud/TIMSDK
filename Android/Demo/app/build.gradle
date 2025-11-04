@@ -1,7 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.huawei.agconnect'
-apply plugin: 'com.hihonor.mcs.asplugin'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion

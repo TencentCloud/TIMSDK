@@ -30,22 +30,10 @@ class VoiceWaveView @JvmOverloads constructor(
 
     private var waveList = LinkedList<Int>()
 
-    /**
-     * 线间距 px
-     */
     var lineSpace: Float = 10f
-    /**
-     * 线宽 px
-     */
     var lineWidth: Float = 20f
 
-    /**
-     * 动画持续时间
-     */
     var duration: Long = Long.MAX_VALUE
-    /**
-     * 线颜色
-     */
     var lineColor: Int = Color.BLUE
     var paintLine: Paint? = null
     var paintPathLine: Paint? = null
@@ -61,19 +49,10 @@ class VoiceWaveView @JvmOverloads constructor(
     var isStart: Boolean = false
         private set
 
-    /**
-     * 跳动模式
-     */
     var waveMode: WaveMode = WaveMode.UP_DOWN
 
-    /**
-     * 线条样式
-     */
     var lineType: LineType = LineType.BAR_CHART
 
-    /**
-     * 显示位置
-     */
     var showGravity: Int = Gravity.LEFT or Gravity.BOTTOM
 
     private var runnable: Runnable? = null
@@ -115,25 +94,16 @@ class VoiceWaveView @JvmOverloads constructor(
         paintPathLine?.setStyle(Paint.Style.STROKE);
     }
 
-    /**
-     * 线的高度 0,100 百分数
-     */
     fun addBody(num: Int) {
         checkNum(num)
         bodyWaveList.add(num)
     }
 
-    /**
-     * 头部线的高度 0,100 百分数
-     */
     fun addHeader(num: Int) {
         checkNum(num)
         headerWaveList.add(num)
     }
 
-    /**
-     * 尾部线的高度 0,100 百分数
-     */
     fun addFooter(num: Int) {
         checkNum(num)
         footerWaveList.add(num)
@@ -145,9 +115,6 @@ class VoiceWaveView @JvmOverloads constructor(
         }
     }
 
-    /**
-     * 开始
-     */
     fun start() {
         if (isStart) {
             return
@@ -198,7 +165,7 @@ class VoiceWaveView @JvmOverloads constructor(
             var endY = 0f
 
             var offset = 1f
-            if (i >= headerWaveList.size && i < (waveList.size - footerWaveList.size)) {//模式1 ，排除掉头尾
+            if (i >= headerWaveList.size && i < (waveList.size - footerWaveList.size)) {
                 offset = valueAnimatorOffset
             }
 
@@ -281,9 +248,6 @@ class VoiceWaveView @JvmOverloads constructor(
         }
     }
 
-    /**
-     * 停止 onDestroy call
-     */
     fun stop() {
         isStart = false
         if (runnable != null) {
