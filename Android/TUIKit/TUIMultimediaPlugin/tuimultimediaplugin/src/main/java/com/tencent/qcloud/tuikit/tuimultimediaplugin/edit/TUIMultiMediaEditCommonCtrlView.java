@@ -710,8 +710,18 @@ public class TUIMultiMediaEditCommonCtrlView extends RelativeLayout {
         }
 
         int previewHeight = (int) (previewContainerWidth / mAspectRatio);
+        int previewWidth = previewContainerWidth;
         int previewTop = (previewContainerHeight - previewHeight) / 2;
-        Rect previewRect = new Rect(0, previewTop, previewContainerWidth, previewTop + previewHeight);
+        int previewLeft = 0;
+
+        if (mAspectRatio < previewContainerWidth * 1.0f / previewContainerHeight) {
+            previewHeight = previewContainerHeight;
+            previewWidth = (int)(previewHeight * mAspectRatio);
+            previewTop = 0;
+            previewLeft = (previewContainerWidth - previewWidth) / 2;
+        }
+
+        Rect previewRect = new Rect(previewLeft, previewTop, previewWidth + previewLeft, previewTop + previewHeight);
 
         if (previewRect.equals(mPreviewRect)) {
             return;
@@ -735,29 +745,53 @@ public class TUIMultiMediaEditCommonCtrlView extends RelativeLayout {
     }
 
     public boolean isSupportEditGraffiti() {
+        if (!TUIMultimediaAuthorizationPrompter.isShowAdvanceFunction()) {
+            return false;
+        }
+
         return mEditType == EditType.VIDEO ? TUIMultimediaIConfig.getInstance().isSupportVideoEditGraffiti()
                 : TUIMultimediaIConfig.getInstance().isSupportPictureEditGraffiti();
     }
 
     public boolean isSupportEditMosaic() {
+        if (!TUIMultimediaAuthorizationPrompter.isShowAdvanceFunction()) {
+            return false;
+        }
+
         return mEditType == EditType.PHOTO && TUIMultimediaIConfig.getInstance().isSupportPictureEditMosaic();
     }
 
     public boolean isSupportEditPaster() {
+        if (!TUIMultimediaAuthorizationPrompter.isShowAdvanceFunction()) {
+            return false;
+        }
+
         return mEditType == EditType.VIDEO ? TUIMultimediaIConfig.getInstance().isSupportVideoEditPaster()
                 : TUIMultimediaIConfig.getInstance().isSupportPictureEditPaster();
     }
 
     public boolean isSupportEditSubtitle() {
+        if (!TUIMultimediaAuthorizationPrompter.isShowAdvanceFunction()) {
+            return false;
+        }
+
         return mEditType == EditType.VIDEO ? TUIMultimediaIConfig.getInstance().isSupportVideoEditSubtitle()
                 : TUIMultimediaIConfig.getInstance().isSupportPictureEditSubtitle();
     }
 
     public boolean isSupportEditBGM() {
+        if (!TUIMultimediaAuthorizationPrompter.isShowAdvanceFunction()) {
+            return false;
+        }
+
         return mEditType == EditType.VIDEO && TUIMultimediaIConfig.getInstance().isSupportVideoEditBGM();
     }
 
     public boolean isSupportEditCrop() {
+        if (!TUIMultimediaAuthorizationPrompter.isShowAdvanceFunction()) {
+            return false;
+        }
+
         return mEditType == EditType.PHOTO && TUIMultimediaIConfig.getInstance().isSupportPictureEditCrop();
     }
 

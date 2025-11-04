@@ -279,13 +279,14 @@ public class PictureCropView extends View {
             mCropRect.left = mMaxCropRect.left;
             mCropRect.right = mMaxCropRect.right;
             int cropHeight = (int) (mCropRect.width() / previewAspect);
-            mCropRect.top = (mMaxCropRect.bottom - cropHeight) / 2;
+            mCropRect.top = (mMaxCropRect.height() - cropHeight) / 2;
             mCropRect.bottom = mCropRect.top + cropHeight;
         } else {
             mCropRect.top = mMaxCropRect.top;
             mCropRect.bottom = mMaxCropRect.bottom;
-            int cropWidth = (int) (mCropRect.height() * maxCropAspect);
-            mCropRect.left = (getWidth() - cropWidth) / 2;
+            int cropWidth = (int) (mCropRect.height() * previewAspect);
+            mCropRect.left = (getWidth()- cropWidth) / 2;
+
             mCropRect.right = mCropRect.left + cropWidth;
         }
 

@@ -32,6 +32,14 @@ public class TUIMultimediaAuthorizationPrompter {
 
     private static final String IM_MULTIMEDIA_PLUGIN_DOCUMENT_URL = "https://cloud.tencent.com/document/product/269/113290";
 
+    public static boolean isShowAdvanceFunction() {
+        if (BuildConfig.DEBUG) {
+            return true;
+        }
+
+        return TUIMultimediaSignatureChecker.getInstance().isSupportFunction();
+    }
+
     public static void showPermissionPrompterDialog(Context context) {
         if (!BuildConfig.DEBUG) {
             return;

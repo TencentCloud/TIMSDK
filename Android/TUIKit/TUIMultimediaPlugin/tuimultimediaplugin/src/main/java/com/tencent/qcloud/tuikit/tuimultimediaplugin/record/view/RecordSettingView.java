@@ -16,7 +16,6 @@ import androidx.annotation.NonNull;
 import com.tencent.liteav.base.util.LiteavLog;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.R;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaIConfig;
-import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaData;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaResourceUtils;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaData.TUIMultimediaDataObserver;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.record.TUIMultimediaRecordCore;
@@ -24,6 +23,7 @@ import com.tencent.qcloud.tuikit.tuimultimediaplugin.record.data.BeautyInfo;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.record.data.RecordInfo;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.record.view.beauty.BeautyFilterScrollView;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.record.view.beauty.BeautyPanelView;
+import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaAuthorizationPrompter;
 
 public class RecordSettingView extends RelativeLayout {
 
@@ -126,7 +126,8 @@ public class RecordSettingView extends RelativeLayout {
     }
 
     private void initBeautyView() {
-        if (!TUIMultimediaIConfig.getInstance().isSupportRecordBeauty()) {
+        if (!TUIMultimediaIConfig.getInstance().isSupportRecordBeauty()
+                || !TUIMultimediaAuthorizationPrompter.isShowAdvanceFunction()) {
             return;
         }
 
@@ -153,7 +154,8 @@ public class RecordSettingView extends RelativeLayout {
     }
 
     private void initScrollBeautyFilterView() {
-        if (!TUIMultimediaIConfig.getInstance().isSupportRecordScrollFilter()) {
+        if (!TUIMultimediaIConfig.getInstance().isSupportRecordScrollFilter()
+                || !TUIMultimediaAuthorizationPrompter.isShowAdvanceFunction()) {
             return;
         }
 

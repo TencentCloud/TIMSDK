@@ -32,6 +32,7 @@ import com.tencent.qcloud.tuikit.tuimultimediacore.pick.utils.TUIMultimediaCoreU
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.R;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaIConfig;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.TUIMultimediaMediaProcessor;
+import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaAuthorizationPrompter;
 import com.tencent.qcloud.tuikit.tuimultimediacore.pick.beans.BaseBean;
 import com.tencent.qcloud.tuikit.tuimultimediacore.pick.beans.VideoBean;
 
@@ -122,11 +123,13 @@ public class AlbumPreviewFragment extends DialogFragment {
         fullImageCheckbox = rootView.findViewById(R.id.full_image_checkbox);
         fullImageButton = rootView.findViewById(R.id.full_image_button);
         editButton = rootView.findViewById(R.id.edit_button);
-        if (!TUIMultimediaIConfig.getInstance().isSupportAlbumPickerEdit()) {
+        if (!TUIMultimediaIConfig.getInstance().isSupportAlbumPickerEdit() ||
+                !TUIMultimediaAuthorizationPrompter.isShowAdvanceFunction()) {
             editButton.setVisibility(View.GONE);
         }
 
-        if (!TUIMultimediaIConfig.getInstance().isSupportAlbumPickerTranscodeSelect()) {
+        if (!TUIMultimediaIConfig.getInstance().isSupportAlbumPickerTranscodeSelect() ||
+                !TUIMultimediaAuthorizationPrompter.isShowAdvanceFunction()) {
             fullImageButton.setVisibility(View.GONE);
         }
 

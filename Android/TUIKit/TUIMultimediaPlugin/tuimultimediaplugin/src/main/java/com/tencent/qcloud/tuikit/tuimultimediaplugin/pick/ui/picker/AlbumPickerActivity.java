@@ -76,7 +76,8 @@ public class AlbumPickerActivity extends AppCompatActivity {
         previewButton = findViewById(R.id.preview_button);
         sendTv = findViewById(R.id.send_button);
 
-        if(!TUIMultimediaIConfig.getInstance().isSupportAlbumPickerTranscodeSelect()) {
+        if(!TUIMultimediaIConfig.getInstance().isSupportAlbumPickerTranscodeSelect() ||
+                !TUIMultimediaAuthorizationPrompter.isShowAdvanceFunction()) {
             fullImageTv.setVisibility(View.GONE);
             fullImageCheckbox.setVisibility(View.GONE);
         }

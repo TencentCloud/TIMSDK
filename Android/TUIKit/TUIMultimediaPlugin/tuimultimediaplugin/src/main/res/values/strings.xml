@@ -80,7 +80,7 @@
     <string name="authorization_prompter">Your access to multimedia features is limited because the required plugin permissions have not been enabled</string>
     <string name="authorization_prompter_accessing_documents">1. Access the guide below to enable multimedia plugin permissions: Permission Activation Guide</string>
     <string name="authorization_prompter_remove_module">2. You can also disable the corresponding premium features in the module\'s configuration file. For detailed methods, please read the READ.ME file located within the module directory.</string>
-    <string name="authorization_prompter_documents_title">Permission Activation Guide</string>
-    <string name="prompter">Prompt</string>
+    <string name="authorization_prompter_documents_title">Permission Activation Guide(Only Displayed In Debug Version)</string>
+    <string name="prompter">Prompt(Only Displayed In Debug)</string>
     <string name="link_error">Unable to open link </string>
 </resources>

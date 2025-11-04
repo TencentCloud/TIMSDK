@@ -149,6 +149,9 @@ public class TUIMultimediaPictureEditFragment extends Fragment {
                 mTuiMultimediaPictureEditorCore.setOutputRotation(rotation);
 
                 mTuiMultimediaPictureEditorCore.processPicture(bitmap -> {
+                    if (bitmap == null) {
+                        return;
+                    }
                     mCurrentBitmap = bitmap;
                     previewPicture(0);
                     mTuiMultimediaPictureEditorCore.resetEditor();
@@ -166,10 +169,18 @@ public class TUIMultimediaPictureEditFragment extends Fragment {
 
             @Override
             public void onStartCrop() {
+                List<TXPaster> pasterList =  mEditCommonCtrlView.getNormalizedPaster();
+                if (pasterList == null || pasterList.isEmpty()) {
+                    return;
+                }
+
                 mTuiMultimediaPictureEditorCore
                         .setPasterList(mEditCommonCtrlView.getNormalizedPaster());
                 mBeforeCropBitmap = mCurrentBitmap;
                 mTuiMultimediaPictureEditorCore.processPicture(bitmap -> {
+                    if (bitmap == null) {
+                        return;
+                    }
                     mCurrentBitmap = bitmap;
                     previewPicture(0);
                     mTuiMultimediaPictureEditorCore.setSourcePicture(mCurrentBitmap);
