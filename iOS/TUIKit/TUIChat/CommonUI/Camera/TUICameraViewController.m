@@ -4,7 +4,6 @@
 
 #import "TUICameraViewController.h"
 #import <AVFoundation/AVFoundation.h>
-#import <AssetsLibrary/AssetsLibrary.h>
 #import <CoreMedia/CMMetadata.h>
 #import <Photos/Photos.h>
 
