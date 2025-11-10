@@ -8,7 +8,6 @@
 
 #import "TUIChatMediaDataProvider.h"
 
-#import <AssetsLibrary/AssetsLibrary.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <Photos/Photos.h>
 #import <PhotosUI/PhotosUI.h>
@@ -739,22 +738,61 @@
         [NSFileManager.defaultManager removeItemAtPath:filePath error:nil];
     }
     NSURL *newUrl = [NSURL fileURLWithPath:filePath];
-    ALAssetsLibrary *assetLibrary = [[ALAssetsLibrary alloc] init];
-    [assetLibrary assetForURL:URL
-        resultBlock:^(ALAsset *asset) {
-          if (asset == nil) {
+    
+    PHFetchResult<PHAsset *> *fetchResult = [PHAsset fetchAssetsWithALAssetURLs:@[URL] options:nil];
+    PHAsset *asset = fetchResult.firstObject;
+    if (asset == nil) {
+        completion(NO, nil);
+        return;
+    }
+    
+    NSArray<PHAssetResource *> *resources = [PHAssetResource assetResourcesForAsset:asset];
+    if (resources.count == 0) {
+        completion(NO, nil);
+        return;
+    }
+    
+    PHAssetResourceRequestOptions *options = [[PHAssetResourceRequestOptions alloc] init];
+    options.networkAccessAllowed = YES;
+    
+    [NSFileManager.defaultManager createFileAtPath:filePath contents:nil attributes:nil];
+    NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];
+    if (fileHandle == nil) {
+        [NSFileManager.defaultManager removeItemAtPath:filePath error:nil];
+        completion(NO, nil);
+        return;
+    }
+    
+    [PHAssetResourceManager.defaultManager requestDataForAssetResource:resources.firstObject
+        options:options
+        dataReceivedHandler:^(NSData *_Nonnull data) {
+          if (@available(iOS 13.4, *)) {
+              NSError *error = nil;
+              [fileHandle writeData:data error:&error];
+          } else {
+              [fileHandle writeData:data];
+          }
+        }
+        completionHandler:^(NSError *_Nullable error) {
+          if (@available(iOS 13.0, *)) {
+              NSError *closeError = nil;
+              [fileHandle closeAndReturnError:&closeError];
+          } else {
+              [fileHandle closeFile];
+          }
+          
+          if (error != nil) {
+              NSLog(@"Error loading asset data: %@", error.localizedDescription);
+              [NSFileManager.defaultManager removeItemAtPath:filePath error:nil];
               completion(NO, nil);
               return;
           }
-          ALAssetRepresentation *rep = [asset defaultRepresentation];
-          Byte *buffer = (Byte *)malloc(rep.size);
-          NSUInteger buffered = [rep getBytes:buffer fromOffset:0.0 length:rep.size error:nil];
-          NSData *data = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];  // this is NSData may be what you want
-          BOOL flag = [NSFileManager.defaultManager createFileAtPath:filePath contents:data attributes:nil];
+          
+          BOOL flag = [NSFileManager.defaultManager fileExistsAtPath:filePath];
+          if (!flag) {
+              [NSFileManager.defaultManager removeItemAtPath:filePath error:nil];
+          }
           completion(flag, newUrl);
-        }
-        failureBlock:^(NSError *err) {
-          completion(NO, nil);
         }];
 }
 
