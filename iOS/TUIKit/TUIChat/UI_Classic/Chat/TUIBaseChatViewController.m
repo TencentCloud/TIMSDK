@@ -8,7 +8,6 @@
 
 #import "TUIBaseChatViewController.h"
 #import <AVFoundation/AVFoundation.h>
-#import <AssetsLibrary/AssetsLibrary.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <Photos/Photos.h>
 #import <TIMCommon/NSString+TUIEmoji.h>
