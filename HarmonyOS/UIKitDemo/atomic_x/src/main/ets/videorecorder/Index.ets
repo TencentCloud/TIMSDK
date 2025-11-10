@@ -1,1 +1,0 @@
-export { VideoRecorder } from './components/VideoRecorder';
