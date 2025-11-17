@@ -22,12 +22,6 @@ English | [简体中文](./README_ZH.md)
      <td style="text-align:center">Support Objective-C API and Mac catalyst</td>
      <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/8.7.7201/ImSDK_Plus_8.7.7201.xcframework.zip">ImSDK_Plus.xcframework</a></td>
   </tr>
-	
-  <tr >
-     <td style="text-align:center">Swift Edition</td>
-     <td style="text-align:center">Support Swift API and Mac catalyst</td>
-     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/8.7.7201/ImSDK_Plus_Swift_8.7.7201.xcframework.zip">ImSDK_Plus_Swift.xcframework</a></td>
-  </tr>
 
   <tr >
      <td style="text-align:center">Apple Vision Pro Edition</td>
