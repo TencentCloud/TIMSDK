@@ -22,12 +22,6 @@
      <td style="text-align:center">支持 Objective-C API 和 Mac catalyst</td>
      <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/8.7.7201/ImSDK_Plus_8.7.7201.xcframework.zip">ImSDK_Plus.xcframework</a></td>
   </tr>
-	
-  <tr >
-     <td style="text-align:center">Swift 版本</td>
-     <td style="text-align:center">支持 Swift API 和 Mac catalyst</td>
-     <td style="text-align:center"><a href="https://im.sdk.qcloud.com/download/plus/8.7.7201/ImSDK_Plus_Swift_8.7.7201.xcframework.zip">ImSDK_Plus_Swift.xcframework</a></td>
-  </tr>
 
   <tr >
      <td style="text-align:center">Apple Vision Pro 版本</td>
