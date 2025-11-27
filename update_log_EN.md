@@ -1,6 +1,10 @@
 English | [简体中文](./版本历史.md)
 
 # TIMSDK
+## 8.8.7351 @2025.11.27 - Enhanced Version
+### SDK
+- Fixed known stability issues.
+
 ## 8.7.7201 @2025.09.05 - Enhanced Version
 ### SDK
 - Added backup CN domain for long network connection DNS addresses.
