@@ -154,20 +154,6 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 8.7.7201 @2025.09.05
+## Latest Enhanced Version 8.8.7351 @2025.11.27
 ### SDK
-- Added backup CN domain for long network connection DNS addresses.
-- Long connections now include built-in HTTP-type IP addresses.
-- Push supports OPPO private message channel templates.
-- Push supports FCM message priority configuration.
-- Push supports vivo notification type settings.
-- Added data reporting for "joining multiple avchatrooms simultaneously".
-- Supports sending group-directed messages in communities.
-- Supports inserting local messages after login failure.
-- Supports setting group approval options when creating Work groups.
-- Unity SDK now integrates cloud search APIs.
-- Optimized error message descriptions when sending messages after being kicked offline.
-- Added cloud-controlled frequency limiting when pulling avchatroom member lists.
-- Fixed Android platform Zip extraction security vulnerability.
-- Fixed token reporting errors in self-integrated Flutter push notifications.
-- Fixed occasional missing callbacks when pulling historical messages.
+- Fixed known stability issues.
