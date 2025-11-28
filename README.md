@@ -154,6 +154,6 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 8.8.7351 @2025.11.27
+## Latest Enhanced Version 8.8.7354 @2025.11.27
 ### SDK
 - Fixed known stability issues.
