@@ -1,8 +1,8 @@
-# Chat SDK 8.8.7351 (Mac)
+# Chat SDK 8.8.7354 (Mac)
 
 ## Download Chat SDK
 
-[Download ImSDKForMac_Plus.framework Edition](https://im.sdk.qcloud.com/download/plus/8.8.7351/ImSDKForMac_Plus_8.8.7351.framework.zip)
+[Download ImSDKForMac_Plus.framework Edition](https://im.sdk.qcloud.com/download/plus/8.8.7354/ImSDKForMac_Plus_8.8.7354.framework.zip)
 
 Note: The SDK supports three types of APIs: Objective-C, C, and C++. It is strongly recommended that you choose one type of API and avoid mixing it with other types of APIs.
 
