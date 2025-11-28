@@ -1,7 +1,7 @@
 English | [简体中文](./版本历史.md)
 
 # TIMSDK
-## 8.8.7351 @2025.11.27 - Enhanced Version
+## 8.8.7354 @2025.11.27 - Enhanced Version
 ### SDK
 - Fixed known stability issues.
 
