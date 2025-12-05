@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_Plus_QuicPlugin_XCFramework'
-  spec.version      = '8.8.7354'
+  spec.version      = '8.8.7357'
   spec.platform     = :ios 
   spec.ios.deployment_target = '8.0'
   spec.license      = { :type => 'Proprietary',
@@ -17,7 +17,7 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.qcloud.com/download/plus/8.8.7354/TIMQuicPlugin_8.8.7354.xcframework.zip'}
+  spec.source = { :http => 'https://im.sdk.qcloud.com/download/plus/8.8.7357/TIMQuicPlugin_8.8.7357.xcframework.zip'}
   spec.vendored_frameworks = '**/TIMQuicPlugin.xcframework'
   spec.pod_target_xcconfig = {
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64'
