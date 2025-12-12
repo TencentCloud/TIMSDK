@@ -1,4 +1,4 @@
-# IM SDK 8.6.7019（HarmonyOS）
+# IM SDK 8.8.7354（HarmonyOS）
 
 ## 下载 IM SDK
 
