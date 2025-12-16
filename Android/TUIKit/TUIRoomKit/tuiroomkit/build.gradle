@@ -52,7 +52,7 @@ dependencies {
     implementation project(':timcommon')
 
     api rootProject.getProperties().containsKey("common") ? rootProject.ext.common : "io.trtc.uikit:common:2.8.0.634"
-    api rootProject.getProperties().containsKey("roomEngineSdk") ? rootProject.ext.roomEngineSdk : "io.trtc.uikit:rtc_room_engine:2.8.+"
+    api rootProject.getProperties().containsKey("roomEngineSdk") ? rootProject.ext.roomEngineSdk : "io.trtc.uikit:rtc_room_engine:2.9.+"
     api rootProject.getProperties().containsKey("liteavSdk") ? rootProject.ext.liteavSdk : "com.tencent.liteav:LiteAVSDK_Professional:12.5.+"
     api rootProject.getProperties().containsKey("liteavScreenCaptureSdk") ? rootProject.ext.liteavScreenCaptureSdk : "com.tencent.liteav:LiteAVSDK_ScreenCapture:12.5.+"
     if (projects.contains("tuicore")) {
