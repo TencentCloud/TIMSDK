@@ -401,7 +401,7 @@
     if (lastVC) {
         [self.navigationController popToViewController:lastVC animated:animated];
     } else {
-        [self.navigationController popViewControllerAnimated:animated];
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
 
