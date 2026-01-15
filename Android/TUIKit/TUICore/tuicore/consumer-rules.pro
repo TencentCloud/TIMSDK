@@ -1,0 +1,2 @@
+-keep class com.tencent.imsdk.** { *; }
+-keep class * implements com.tencent.qcloud.tuicore.interfaces.TUIInitializer {}

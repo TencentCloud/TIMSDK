@@ -1,5 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-import org.gradle.util.VersionNumber
+
+import org.gradle.util.GradleVersion
+
 
 buildscript {
     repositories {
@@ -10,19 +12,23 @@ buildscript {
         maven { url 'https://developer.hihonor.com/repo' }
     }
     dependencies {
-        VersionNumber currentGradleVersion = VersionNumber.parse(gradle.gradleVersion)
-        if (currentGradleVersion.major >= 8) {
-            classpath 'com.android.tools.build:gradle:8.0.2'
-        } else if (currentGradleVersion.major >= 7) {
+        def currentGradleVersion = GradleVersion.current()
+
+        if (currentGradleVersion >= GradleVersion.version('8.9')) {
+            classpath 'com.android.tools.build:gradle:8.7.0'
+        } else if (currentGradleVersion >= GradleVersion.version('8.6')) {
+            classpath 'com.android.tools.build:gradle:8.4.0'
+        } else if (currentGradleVersion >= GradleVersion.version('8.0')) {
+            classpath 'com.android.tools.build:gradle:8.0.0'
+        } else if (currentGradleVersion >= GradleVersion.version('7.2')) {
             classpath 'com.android.tools.build:gradle:7.0.0'
-        } else {
+        } else if (currentGradleVersion >= GradleVersion.version('6.7.1')) {
             classpath 'com.android.tools.build:gradle:4.2.0'
         }
-
-        if (currentGradleVersion.major >= 8) {
+        if (currentGradleVersion >= GradleVersion.version('8.0')) {
             classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0"
         } else {
-            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31"
+            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.21"
         }
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -56,13 +62,13 @@ ext {
     minSdkVersion = 23
     targetSdkVersion = 33
     versionCode = 1
-    versionName = "8.7.7201"
+    versionName = "8.8.7373"
     abiFilters = ['armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
     //['armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
     arguments = "-DANDROID_STL=c++_static"
     cppFlags = "-std=c++11"
 
-    liteavSdk = "com.tencent.liteav:LiteAVSDK_Professional:12.6+"
+    liteavSdk = "com.tencent.liteav:LiteAVSDK_Professional:12.8+"
 }
 
 task clean(type: Delete) {

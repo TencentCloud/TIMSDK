@@ -2,6 +2,8 @@
 <resources>
     <string name="new_friend">新的联系人</string>
     <string name="group">我的群聊</string>
+    <string name="contact_official_accounts">公众号</string>
+
     <string name="blacklist">黑名单</string>
     <string name="contact_title">通讯录</string>
 

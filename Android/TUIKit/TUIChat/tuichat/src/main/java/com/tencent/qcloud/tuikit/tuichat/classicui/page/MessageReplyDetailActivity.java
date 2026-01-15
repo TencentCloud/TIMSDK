@@ -11,6 +11,7 @@ import android.view.ViewTreeObserver;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
@@ -78,6 +79,24 @@ public class MessageReplyDetailActivity extends BaseLightActivity implements Inp
         inputView.disableAudioInput(true);
         inputView.disableShowCustomFace(true);
         inputView.setMessageHandler(this);
+        inputView.setChatInfo(chatInfo);
+        inputView.setOnInputViewListener(new InputView.OnInputViewListener() {
+            @Override
+            public void onStartGroupMemberSelectActivity() {
+                Bundle param = new Bundle();
+                param.putString(TUIConstants.TUIContact.StartActivity.GroupMemberSelect.GROUP_ID, chatInfo.getId());
+                TUICore.startActivityForResult(MessageReplyDetailActivity.this, "StartGroupMemberSelectActivity", param, result -> {
+                    if (result.getData() != null) {
+                        ArrayList<String> resultIds = result.getData().getStringArrayListExtra(TUIChatConstants.Selection.USER_ID_SELECT);
+                        ArrayList<String> resultNames = result.getData().getStringArrayListExtra(TUIChatConstants.Selection.USER_NAMECARD_SELECT);
+                        inputView.updateInputText(resultNames, resultIds);
+                    }
+                });
+            }
+
+            @Override
+            public void onUpdateChatBackground() {}
+        });
 
         repliesList = findViewById(R.id.replies_detail);
 
@@ -164,7 +183,7 @@ public class MessageReplyDetailActivity extends BaseLightActivity implements Inp
 
     @Override
     public void scrollToEnd() {
-        if (repliesList.getAdapter() != null) {
+        if (repliesList != null && repliesList.getAdapter() != null) {
             RecyclerView.LayoutManager layoutManager = repliesList.getLayoutManager();
             int itemCount = repliesList.getAdapter().getItemCount();
             if (layoutManager instanceof LinearLayoutManager && itemCount > 0) {

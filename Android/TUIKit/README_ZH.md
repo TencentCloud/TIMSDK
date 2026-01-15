@@ -4,34 +4,35 @@
 
 ## 下载地址
 
-[最新 TUIChat 下载](https://im.sdk.qcloud.com/download/tuikit/8.7.7201/android/TUIChat.zip)
+[最新 TUIChat 下载](https://im.sdk.qcloud.com/download/tuikit/8.8.7373/android/TUIChat.zip)
 
-[最新 TUIConversation 下载](https://im.sdk.qcloud.com/download/tuikit/8.7.7201/android/TUIConversation.zip)
+[最新 TUIConversation 下载](https://im.sdk.qcloud.com/download/tuikit/8.8.7373/android/TUIConversation.zip)
 
-[最新 TUIContact 下载](https://im.sdk.qcloud.com/download/tuikit/8.7.7201/android/TUIContact.zip)
+[最新 TUIContact 下载](https://im.sdk.qcloud.com/download/tuikit/8.8.7373/android/TUIContact.zip)
 
-[最新 TUISearch 下载](https://im.sdk.qcloud.com/download/tuikit/8.7.7201/android/TUISearch.zip)
+[最新 TUISearch 下载](https://im.sdk.qcloud.com/download/tuikit/8.8.7373/android/TUISearch.zip)
 
 [最新 TUICallKit 下载](https://im.sdk.qcloud.com/download/tuikit/8.7.7201/android/TUICallKit.zip)
 
-[最新 TUICommunity 下载](https://im.sdk.qcloud.com/download/tuikit/8.7.7201/android/TUICommunity.zip)
+[最新 TUICommunity 下载](https://im.sdk.qcloud.com/download/tuikit/8.8.7373/android/TUICommunity.zip)
 
-[最新 TUITranslation 下载](https://im.sdk.qcloud.com/download/tuikit/8.7.7201/android/TUITranslation.zip)
+[最新 TUITranslation 下载](https://im.sdk.qcloud.com/download/tuikit/8.8.7373/android/TUITranslation.zip)
 
-[最新 TUIVoiceToTextPlugin 下载](https://im.sdk.qcloud.com/download/tuikit/8.7.7201/android/TUIVoiceToTextPlugin.zip)
+[最新 TUIVoiceToTextPlugin 下载](https://im.sdk.qcloud.com/download/tuikit/8.8.7373/android/TUIVoiceToTextPlugin.zip)
 
-[最新 TUICustomerServicePlugin 下载](https://im.sdk.qcloud.com/download/tuikit/8.7.7201/android/TUICustomerServicePlugin.zip)
+[最新 TUICustomerServicePlugin 下载](https://im.sdk.qcloud.com/download/tuikit/8.8.7373/android/TUICustomerServicePlugin.zip)
 
-[最新 TUICore 下载](https://im.sdk.qcloud.com/download/tuikit/8.7.7201/android/TUICore.zip)
+[最新 TUICore 下载](https://im.sdk.qcloud.com/download/tuikit/8.8.7373/android/TUICore.zip)
 
-[最新 TIMCommon 下载](https://im.sdk.qcloud.com/download/tuikit/8.7.7201/android/TIMCommon.zip)
+[最新 TIMCommon 下载](https://im.sdk.qcloud.com/download/tuikit/8.8.7373/android/TIMCommon.zip)
 
 [最新 TUIRoomKit 下载](https://im.sdk.qcloud.com/download/tuikit/8.7.7201/android/TUIRoomKit.zip)
 
-[最新 TUIEmojiPlugin 下载](https://im.sdk.qcloud.com/download/tuikit/8.7.7201/android/TUIEmojiPlugin.zip)
+[最新 TUIEmojiPlugin 下载](https://im.sdk.qcloud.com/download/tuikit/8.8.7373/android/TUIEmojiPlugin.zip)
 
-[最新 TUIMultimediaPlugin 下载](https://im.sdk.qcloud.com/download/tuikit/8.7.7201/android/TUIMultimediaPlugin.zip)
+[最新 TUIMultimediaPlugin 下载](https://im.sdk.qcloud.com/download/tuikit/8.8.7373/android/TUIMultimediaPlugin.zip)
 
+[最新 TUIOfficialAccountPlugin 下载](https://im.sdk.qcloud.com/download/tuikit/8.8.7373/android/TUIOfficialAccountPlugin.zip)
 
 ## 交流&反馈
 

@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdk rootProject.ext.compileSdkVersion
     namespace "com.tencent.qcloud.tim.demo"
 
     defaultConfig {
@@ -39,12 +40,6 @@ android {
     }
 
 
-    repositories {
-        flatDir {
-            dirs 'libs'
-        }
-    }
-
     dexOptions {
         javaMaxHeapSize "4g"
     }
@@ -78,49 +73,49 @@ dependencies {
     if (projects.contains("timpush")) {
         api project(':timpush')
     } else {
-        api 'com.tencent.timpush:timpush:8.7.7201'
+        api 'com.tencent.timpush:timpush:8.8.7357'
     }
 
     if (projects.contains("fcmpush")) {
         api project(':fcmpush')
     } else {
-        api 'com.tencent.timpush:fcm:8.7.7201'
+        api 'com.tencent.timpush:fcm:8.8.7357'
     }
 
     if (projects.contains("xiaomipush")) {
         api project(':xiaomipush')
     } else {
-        api 'com.tencent.timpush:xiaomi:8.7.7201'
+        api 'com.tencent.timpush:xiaomi:8.8.7357'
     }
 
     if (projects.contains("meizupush")) {
         api project(':meizupush')
     } else {
-        api 'com.tencent.timpush:meizu:8.7.7201'
+        api 'com.tencent.timpush:meizu:8.8.7357'
     }
 
     if (projects.contains("oppopush")) {
         api project(':oppopush')
     } else {
-        api 'com.tencent.timpush:oppo:8.7.7201'
+        api 'com.tencent.timpush:oppo:8.8.7357'
     }
 
     if (projects.contains("vivopush")) {
         api project(':vivopush')
     } else {
-        api 'com.tencent.timpush:vivo:8.7.7201'
+        api 'com.tencent.timpush:vivo:8.8.7357'
     }
 
     if (projects.contains("huaweipush")) {
         api project(':huaweipush')
     } else {
-        api 'com.tencent.timpush:huawei:8.7.7201'
+        api 'com.tencent.timpush:huawei:8.8.7357'
     }
 
     if (projects.contains("honorpush")) {
         api project(':honorpush')
     } else {
-        api 'com.tencent.timpush:honor:8.7.7201'
+        api 'com.tencent.timpush:honor:8.8.7357'
     }
     // Will be added to the open source code START
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
@@ -174,6 +169,9 @@ dependencies {
     }
     if (projects.contains("tuimultimediaplugin")) {
         api project(':tuimultimediaplugin')
+    }
+    if (projects.contains("tuiofficialaccountplugin")) {
+        api project(':tuiofficialaccountplugin')
     }
     annotationProcessor 'com.google.auto.service:auto-service:1.1.1'
 

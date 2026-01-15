@@ -1,0 +1,2 @@
+-keep class com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaIConfig
+-keep class com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaConstants

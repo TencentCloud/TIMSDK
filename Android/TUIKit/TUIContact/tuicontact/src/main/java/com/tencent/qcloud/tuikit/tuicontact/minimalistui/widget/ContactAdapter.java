@@ -11,16 +11,13 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.tencent.imsdk.v2.V2TIMUserStatus;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
-import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.gatherimage.ShadeImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.impl.GlideEngine;
-import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
-import com.tencent.qcloud.tuikit.tuicontact.config.TUIContactConfig;
 import com.tencent.qcloud.tuikit.tuicontact.config.minimalistui.TUIContactConfigMinimalist;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 import java.util.ArrayList;
@@ -136,6 +133,9 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 controllerViewHolder.unreadText.setVisibility(View.GONE);
             } else if (TextUtils.equals(blokeListString, contactBean.getId())) {
                 controllerViewHolder.controllerName.setText(blokeListString);
+                controllerViewHolder.unreadText.setVisibility(View.GONE);
+            } else {
+                controllerViewHolder.controllerName.setText(contactBean.getId());
                 controllerViewHolder.unreadText.setVisibility(View.GONE);
             }
             controllerViewHolder.itemView.setOnClickListener(new View.OnClickListener() {

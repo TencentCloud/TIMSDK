@@ -13,6 +13,8 @@ android {
         versionName "1.0"
         renderscriptSupportModeEnabled false
         renderscriptTargetApi 33
+
+        consumerProguardFiles "consumer-rules.pro"
     }
     buildFeatures {
         buildConfig = false
@@ -28,15 +30,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    repositories {
-        flatDir {
-            dirs 'libs'
-        }
-    }
 }
 
 dependencies {
-    api rootProject.getProperties().containsKey("liteavSdk") ? rootProject.ext.liteavSdk : "com.tencent.liteav:LiteAVSDK_Professional:12.6+"
+    api rootProject.getProperties().containsKey("liteavSdk") ? rootProject.ext.liteavSdk : "com.tencent.liteav:LiteAVSDK_Professional:12.8+"
     def projects = this.rootProject.getAllprojects().stream().map { project -> project.name }.collect()
     println "all projects : {$projects}"
     if (projects.contains("tuimultimediacore")) {

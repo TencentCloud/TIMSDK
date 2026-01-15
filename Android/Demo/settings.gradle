@@ -74,3 +74,6 @@ project(':tuiemojiplugin').projectDir = new File(settingsDir, '../TUIKit/TUIEmoj
 
 include ':tuimultimediaplugin'
 project(':tuimultimediaplugin').projectDir = new File(settingsDir, '../TUIKit/TUIMultimediaPlugin/tuimultimediaplugin')
+
+include ':tuiofficialaccountplugin'
+project(':tuiofficialaccountplugin').projectDir = new File(settingsDir, '../TUIKit/TUIOfficialAccountPlugin/tuiofficialaccountplugin')

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="official_account_official_channel">公众号</string>
+    <string name="official_account_channel_fans_count">频道 %s 粉丝</string>
+    <string name="official_account_follow">关注</string>
+    <string name="official_account_following">已关注</string>
+    <string name="official_account_message_text">消息</string>
+    <string name="official_account_share">分享</string>
+    <string name="official_account_share_official_account_text">来看看这个公众号：%1$s（%2$s）</string>
+    <string name="official_account_download">下载</string>
+    <string name="official_account_download_success">已保存到相册</string>
+    <string name="official_account__no_storage_permission">存储权限被拒绝</string>
+
+    <string name="official_account_my_creations">我创建的</string>
+    <string name="official_account_my_followings">我关注的</string>
+    <string name="official_account_find_official_channels">发现更多公众号</string>
+
+    <string name="official_account_message">公众号消息</string>
+
+    <string name="official_account_load_official_account_info_failed">加载公众号信息失败</string>
+</resources>

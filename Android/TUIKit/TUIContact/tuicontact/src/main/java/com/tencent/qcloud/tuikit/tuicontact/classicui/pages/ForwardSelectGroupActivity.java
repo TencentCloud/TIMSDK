@@ -86,6 +86,7 @@ public class ForwardSelectGroupActivity extends BaseLightActivity {
 
         presenter = new ContactPresenter();
         mContactListView.setPresenter(presenter);
+        presenter.setIsForwardMessage(true);
         presenter.setFriendListListener();
         presenter.setContactListView(mContactListView);
 

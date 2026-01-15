@@ -346,7 +346,7 @@ public final class PermissionRequester {
         }
 
         private void requestPermission() {
-            if (instance.mPermissionsRequest != null) {
+            if (instance != null && instance.mPermissionsRequest != null) {
                 int size = instance.mPermissionsRequest.size();
                 if (size <= 0) {
                     instance.onRequestPermissionsResult(this);
@@ -358,6 +358,9 @@ public final class PermissionRequester {
         }
 
         private void fillContentView() {
+            if (instance == null) {
+                return;
+            }
             PermissionRequestContent info = permissionRequestContentMap.get(instance.mCurrentRequestPermission);
             int iconResId = instance.mIconId;
             String reasonTitle = instance.mReasonTitle;
@@ -396,7 +399,7 @@ public final class PermissionRequester {
 
         @Override
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-            if (instance.mPermissionsRequest != null) {
+            if (instance != null && instance.mPermissionsRequest != null) {
                 hideContentView();
                 instance.onRequestPermissionsResult(this);
             }
