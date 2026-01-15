@@ -1136,6 +1136,7 @@ public abstract class ChatPresenter {
             @Override
             public void onSuccess(TUIMessageBean data) {
                 processSendToChatbotMessage(getChatInfo().getId(), getChatInfo() instanceof GroupChatInfo);
+                processMessageAsync(Collections.singletonList(data));
                 message.setStatus(TUIMessageBean.MSG_STATUS_SEND_SUCCESS);
                 message.setSending(false);
                 ProgressPresenter.updateProgress(data.getId(), 100);
@@ -1258,7 +1259,7 @@ public abstract class ChatPresenter {
             if (loadedMessageInfoList.get(i) == null) {
                 continue;
             }
-            if (loadedMessageInfoList.get(i).getId().equals(messageInfo.getId())) {
+            if (TextUtils.equals(loadedMessageInfoList.get(i).getId(), messageInfo.getId())) {
                 loadedMessageInfoList.set(i, messageInfo);
                 updateAdapter(dataChangeType, messageInfo);
                 return;

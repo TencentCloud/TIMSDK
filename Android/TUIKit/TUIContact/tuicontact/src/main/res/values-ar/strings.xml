@@ -2,6 +2,7 @@
 <resources>
     <string name="new_friend">جهات اتصال جديدة</string>
     <string name="group">مجموعاتي</string>
+    <string name="contact_official_accounts">الحسابات الرسمية</string>
     <string name="blacklist">القائمة السوداء</string>
     <string name="contact_title">دليل الهاتف</string>
 

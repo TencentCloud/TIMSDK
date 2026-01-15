@@ -2,6 +2,7 @@
 <resources>
     <string name="new_friend">New Contacts</string>
     <string name="group">Group Chats</string>
+    <string name="contact_official_accounts">Official Accounts</string>
     <string name="blacklist">Blocked List</string>
     <string name="contact_title">Contacts</string>
     <string name="contact_add_friend_remark">Remark</string>

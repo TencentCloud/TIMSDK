@@ -46,6 +46,7 @@ public class ContactPresenter {
     private boolean isClassicStyle;
 
     private boolean isSelectForCall = false;
+    private boolean isForwardMessage = false;
 
     public ContactItemBean newContacts;
     public ContactItemBean groupChats;
@@ -151,6 +152,10 @@ public class ContactPresenter {
         this.isSelectForCall = isSelectForCall;
     }
 
+    public void setIsForwardMessage(boolean isForwardMessage) {
+        this.isForwardMessage = isForwardMessage;
+    }
+
     public void loadDataSource(int dataSourceType) {
         IUIKitCallback<List<ContactItemBean>> callback = new IUIKitCallback<List<ContactItemBean>>() {
             @Override
@@ -199,7 +204,7 @@ public class ContactPresenter {
         Iterator<ContactItemBean> iterator = data.iterator();
         while (iterator.hasNext()) {
             ContactItemBean loadedBean = iterator.next();
-            if (TIMCommonUtil.isChatbot(loadedBean.getId())) {
+            if (isForwardMessage && TIMCommonUtil.isChatbot(loadedBean.getId())) {
                 iterator.remove();
             }
         }
@@ -211,11 +216,11 @@ public class ContactPresenter {
 
     private List<ContactItemBean> getExtensionControllerMoreList() {
         List<ContactItemBean> contactItemBeanList = new ArrayList<>();
-        if (!isClassicStyle) {
-            return contactItemBeanList;
-        }
 
-        List<TUIExtensionInfo> extensionInfoList = TUICore.getExtensionList(TUIConstants.TUIContact.Extension.ContactItem.CLASSIC_EXTENSION_ID, null);
+        String extensionID = isClassicStyle
+            ? TUIConstants.TUIContact.Extension.ContactItem.CLASSIC_EXTENSION_ID
+            : TUIConstants.TUIContact.Extension.ContactItem.MINIMALIST_EXTENSION_ID;
+        List<TUIExtensionInfo> extensionInfoList = TUICore.getExtensionList(extensionID, null);
         for (TUIExtensionInfo extensionInfo : extensionInfoList) {
             if (extensionInfo != null) {
                 String name = extensionInfo.getText();

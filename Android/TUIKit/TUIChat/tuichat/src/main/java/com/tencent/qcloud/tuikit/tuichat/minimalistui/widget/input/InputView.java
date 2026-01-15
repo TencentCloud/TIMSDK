@@ -1240,6 +1240,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             Map<String, String> draftMap = new HashMap<>();
             draftMap.put("content", draftText);
             draftMap.put("reply", gson.toJson(replyPreviewBean));
+            draftMap.put("reply_message_sender_name", replyPreviewBean.getMessageSenderName());
             draftText = gson.toJson(draftMap);
         }
         if (presenter != null) {
@@ -1277,6 +1278,10 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                         String draftStr = (String) draftJsonMap.get("reply");
                         ReplyPreviewBean bean = gson.fromJson(draftStr, ReplyPreviewBean.class);
                         if (bean != null) {
+                            Object replyMessageSenderName = draftJsonMap.get("reply_message_sender_name");
+                            if (replyMessageSenderName instanceof String) {
+                                bean.setMessageSenderName((String) replyMessageSenderName);
+                            }
                             showReplyPreview(bean);
                         }
                     }

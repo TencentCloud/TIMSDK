@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- سلاسل الحساب الرسمي -->
+    <string name="official_account_official_channel">القناة الرسمية</string>
+    <string name="official_account_channel_fans_count">قناة %s معجبين</string>
+    <string name="official_account_follow">متابعة</string>
+    <string name="official_account_following">متابَع</string>
+    <string name="official_account_message_text">رسالة</string>
+    <string name="official_account_share">مشاركة</string>
+    <string name="official_account_share_official_account_text">تحقق من هذا الحساب الرسمي: %1$s (%2$s)</string>
+    <string name="official_account_download">تحميل</string>
+    <string name="official_account_download_success">تم الحفظ في الألبوم</string>
+    <string name="official_account__no_storage_permission">تم رفض إذن التخزين</string>
+    
+    <!-- سلاسل قائمة الحسابات الرسمية -->
+    <string name="official_account_my_creations">إنشاءاتي</string>
+    <string name="official_account_my_followings">متابعاتي</string>
+    <string name="official_account_find_official_channels">ابحث عن القنوات الرسمية لمتابعتها</string>
+    
+    <!-- سلاسل رسائل الحساب الرسمي -->
+    <string name="official_account_message">الحساب الرسمي</string>
+    
+    <!-- رسائل الخطأ -->
+    <string name="official_account_load_official_account_info_failed">فشل تحميل معلومات الحساب الرسمي</string>
+</resources>

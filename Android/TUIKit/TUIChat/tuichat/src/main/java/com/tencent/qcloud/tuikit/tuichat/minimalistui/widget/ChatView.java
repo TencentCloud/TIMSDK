@@ -399,7 +399,11 @@ public class ChatView extends LinearLayout implements IChatLayout {
         if (chatInfo == null) {
             return;
         }
-        mInputView.setChatInfo(chatInfo);
+        if (TIMCommonUtil.isOfficialAccount(chatInfo.getId())) {
+            mInputView.setVisibility(GONE);
+        } else {
+            mInputView.setChatInfo(chatInfo);
+        }
         setChatHandler();
 
         if (!TUIChatUtils.isC2CChat(chatInfo.getType())) {
@@ -492,7 +496,9 @@ public class ChatView extends LinearLayout implements IChatLayout {
 
     private void initHeader() {
         if (!TIMCommonUtil.isChatbot(mChatInfo.getId())) {
-            initExtension();
+            if (!TIMCommonUtil.isOfficialAccount(mChatInfo.getId())) {
+                initExtension();
+            }
         } else {
             clearMessageButton.setVisibility(VISIBLE);
             clearMessageButton.setOnClickListener(new OnClickListener() {
@@ -641,7 +647,10 @@ public class ChatView extends LinearLayout implements IChatLayout {
             resID = TUIUtil.getDefaultGroupIconResIDByGroupType(getContext(), ((GroupChatInfo) mChatInfo).getGroupType());
         }
 
-        Glide.with(this).load(faceUrl).apply(new RequestOptions().error(resID).placeholder(resID)).into(chatAvatar);
+        Glide.with(this)
+                .load(faceUrl)
+                .apply(new RequestOptions().centerCrop().error(resID).placeholder(resID))
+                .into(chatAvatar);
     }
 
     private void onHeaderUserClick(View v) {

@@ -84,7 +84,7 @@
         android:id="@+id/jump_view_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/chat_input_layout"
+        android:layout_alignBottom="@+id/chat_message_layout"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="-16dp"
         android:layout_marginBottom="35dp"

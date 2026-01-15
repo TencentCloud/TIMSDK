@@ -6,31 +6,36 @@ import android.graphics.Region;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
+import android.util.Log;
+import android.util.Patterns;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TextUtil {
+    public static final Pattern PHONE_NUMBER_PATTERN = Pattern.compile("(\\+?(\\d{1,4}[-\\s]?)?)?(\\(?\\d+\\)?[-\\s]?)?[\\d\\s-]{5,14}");
 
-    public static final Pattern PHONE_NUMBER_PATTERN =
-            Pattern.compile("(\\+?(\\d{1,4}[-\\s]?)?)?(\\(?\\d+\\)?[-\\s]?)?[\\d\\s-]{5,14}");
+    public static final Pattern MARKDOWN_LINK_PATTERN = Pattern.compile("\\[([^\\]]+)\\]\\(([^\\)]+)\\)");
 
     public static void linkifyUrls(TextView textView) {
+        CharSequence processedText = processMarkdownLinks(textView.getText());
+
+        textView.setText(processedText);
         Linkify.addLinks(textView, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
         Linkify.addLinks(textView, PHONE_NUMBER_PATTERN, "tel:");
         SpannableString spannableString = new SpannableString(textView.getText());
@@ -57,6 +62,11 @@ public class TextUtil {
                 ClickableSpan[] spans = findSpansByLocation(textView, Math.round(e.getX()), Math.round(e.getY()));
                 if (spans != null && spans.length > 0) {
                     ClickableSpan span = spans[0];
+
+                    if (span instanceof URLSpan) {
+                        Log.e("TextUtil", "onSingleTapUp urlSpan " + ((URLSpan) span).getURL());
+                    }
+
                     span.onClick(textView);
                 }
                 return false;
@@ -70,6 +80,38 @@ public class TextUtil {
                 return false;
             }
         });
+    }
+
+    public static CharSequence processMarkdownLinks(CharSequence text) {
+        if (text == null || text.length() == 0) {
+            return text;
+        }
+
+        Matcher matcher = MARKDOWN_LINK_PATTERN.matcher(text);
+        if (!matcher.find()) {
+            return text;
+        }
+
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        int lastIndex = 0;
+        do {
+            builder.append(text.subSequence(lastIndex, matcher.start()));
+
+            String displayText = matcher.group(1);
+            String url = matcher.group(2);
+            if (url != null && !url.startsWith("http://") && !url.startsWith("https://")) {
+                url = "http://" + url;
+            }
+            int spanStart = builder.length();
+            builder.append(displayText);
+            int spanEnd = builder.length();
+            builder.setSpan(new URLSpan(url), spanStart, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            lastIndex = matcher.end();
+        } while (matcher.find());
+
+        builder.append(text.subSequence(lastIndex, text.length()));
+        return builder;
     }
 
     public static ClickableSpan[] findSpansByLocation(TextView textView, int x, int y) {
@@ -134,7 +176,7 @@ public class TextUtil {
         private final int color;
         private final View.OnClickListener listener;
 
-        public ForegroundColorClickableSpan(int color, View.OnClickListener listener)  {
+        public ForegroundColorClickableSpan(int color, View.OnClickListener listener) {
             super();
             this.color = color;
             this.listener = listener;

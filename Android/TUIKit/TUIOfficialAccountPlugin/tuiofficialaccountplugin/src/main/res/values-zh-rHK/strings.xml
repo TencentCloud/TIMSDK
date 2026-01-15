@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 官方帳號文案 -->
+    <string name="official_account_official_channel">公眾號</string>
+    <string name="official_account_channel_fans_count">頻道 %s 粉絲</string>
+    <string name="official_account_follow">關注</string>
+    <string name="official_account_following">已關注</string>
+    <string name="official_account_message_text">消息</string>
+    <string name="official_account_share">分享</string>
+    <string name="official_account_share_official_account_text">來看看這個公眾號：%1$s（%2$s）</string>
+    <string name="official_account_download">下載</string>
+    <string name="official_account_download_success">已儲存至相簿</string>
+    <string name="official_account__no_storage_permission">儲存權限被拒絕</string>
+
+    <!-- 官方帳號列表文案 -->
+    <string name="official_account_my_creations">我創建的</string>
+    <string name="official_account_my_followings">我關注的</string>
+    <string name="official_account_find_official_channels">探索更多公眾號</string>
+
+    <!-- 官方帳號消息文案 -->
+    <string name="official_account_message">公眾號消息</string>
+
+    <!-- 錯誤提示 -->
+    <string name="official_account_load_official_account_info_failed">加載公眾號資訊失敗</string>
+</resources>

@@ -33,6 +33,7 @@ import com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView;
 import com.tencent.qcloud.tuikit.timcommon.config.minimalistui.TUIConfigMinimalist;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ScreenUtil;
+import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
 
 import java.util.ArrayList;
@@ -70,6 +71,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
     protected ReplyPreviewView replyPreviewView;
 
     private List<TUIMessageBean> mDataSource = new ArrayList<>();
+    private boolean isOfficialAccountConversation = false;
 
     // Whether to display the bottom content. The merged-forwarded message details activity does not display the bottom content.
     protected boolean isNeedShowBottom = true;
@@ -127,6 +129,7 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
         }
 
         super.layoutViews(msg, position);
+        isOfficialAccountConversation = TIMCommonUtil.isOfficialAccountChat(msg);
         setLayoutAlignment(msg);
         setIsShowAvatar(msg, position);
         setMessageGravity();
@@ -174,8 +177,10 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
             replyPreviewView.setVisibility(View.GONE);
         }
 
-        optimizePadding(position, msg);
-        loadAvatar(msg);
+        if (!isOfficialAccountConversation) {
+            optimizePadding(position, msg);
+            loadAvatar(msg);
+        }
         layoutVariableViews(msg, position);
     }
 
@@ -293,7 +298,10 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
     }
 
     public void setIsShowAvatar(TUIMessageBean msg, int position) {
-        isShowAvatar = true;
+        isShowAvatar = !isOfficialAccountConversation;
+        if (isOfficialAccountConversation) {
+            return;
+        }
         if (mAdapter == null) {
             return;
         }
@@ -491,11 +499,16 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
                 }
             }
         } else {
-            leftUserIcon.setVisibility(View.INVISIBLE);
-            if (isShowSelfAvatar) {
-                rightUserIcon.setVisibility(View.INVISIBLE);
-            } else {
+            if (isOfficialAccountConversation) {
+                leftUserIcon.setVisibility(View.GONE);
                 rightUserIcon.setVisibility(View.GONE);
+            } else {
+                leftUserIcon.setVisibility(View.INVISIBLE);
+                if (isShowSelfAvatar) {
+                    rightUserIcon.setVisibility(View.INVISIBLE);
+                } else {
+                    rightUserIcon.setVisibility(View.GONE);
+                }
             }
         }
     }

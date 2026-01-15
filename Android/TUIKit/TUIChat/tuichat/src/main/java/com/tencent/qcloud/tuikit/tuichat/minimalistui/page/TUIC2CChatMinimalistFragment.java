@@ -59,14 +59,19 @@ public class TUIC2CChatMinimalistFragment extends TUIBaseChatMinimalistFragment 
         chatView.setOnAvatarClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (TIMCommonUtil.isChatbot(chatInfo.getId())) {
-                    return;
+                if (!TIMCommonUtil.isChatbot(chatInfo.getId())) {
+                    if (TIMCommonUtil.isOfficialAccount(chatInfo.getId())) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(TUIConstants.TUIChat.CHAT_ID, chatInfo.getId());
+                        TUICore.startActivity("OfficialAccountInfoActivity", bundle);
+                    } else {
+                        Intent intent = new Intent(getContext(), FriendProfileMinimalistActivity.class);
+                        intent.putExtra(TUIConstants.TUIChat.CHAT_ID, chatInfo.getId());
+                        intent.putExtra(TUIChatConstants.CHAT_BACKGROUND_URI, mChatBackgroundThumbnailUrl);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
                 }
-                Intent intent = new Intent(getContext(), FriendProfileMinimalistActivity.class);
-                intent.putExtra(TUIConstants.TUIChat.CHAT_ID, chatInfo.getId());
-                intent.putExtra(TUIChatConstants.CHAT_BACKGROUND_URI, mChatBackgroundThumbnailUrl);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
             }
         });
     }

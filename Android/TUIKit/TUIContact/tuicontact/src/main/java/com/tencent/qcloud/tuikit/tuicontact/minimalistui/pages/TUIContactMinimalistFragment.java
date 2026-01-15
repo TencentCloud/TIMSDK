@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.tencent.qcloud.tuicore.TUIConstants;
+import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuikit.tuicontact.R;
 import com.tencent.qcloud.tuikit.tuicontact.TUIContactService;
 import com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean;
@@ -18,6 +19,9 @@ import com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactLayout;
 import com.tencent.qcloud.tuikit.tuicontact.minimalistui.widget.ContactListView;
 import com.tencent.qcloud.tuikit.tuicontact.presenter.ContactPresenter;
 import com.tencent.qcloud.tuikit.tuicontact.util.TUIContactLog;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class TUIContactMinimalistFragment extends Fragment {
     private static final String TAG = TUIContactMinimalistFragment.class.getSimpleName();
@@ -64,8 +68,16 @@ public class TUIContactMinimalistFragment extends Fragment {
                     Intent intent = new Intent(TUIContactService.getAppContext(), BlackListMinimalistActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     TUIContactService.getAppContext().startActivity(intent);
+                } else if (position == 3) {
+                    TUICore.startActivity("OfficialAccountListActivity", null);
                 } else {
-                    MinimalistUIUtils.showContactDetails(contact.getId());
+                    if (contact.isTop() && contact.getExtensionListener() != null) {
+                        Map<String, Object> param = new HashMap<>();
+                        param.put(TUIConstants.TUIContact.CONTEXT, getActivity());
+                        contact.getExtensionListener().onClicked(param);
+                    } else {
+                        MinimalistUIUtils.showContactDetails(contact.getId());
+                    }
                 }
             }
         });
