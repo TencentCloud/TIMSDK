@@ -166,7 +166,7 @@
             tongue.parentView = self.view.superview;
             [TUIChatSmallTongueManager_Minimalist showTongue:tongue delegate:self];
         }
-    } else if (self.isInVC && self.tableView.contentSize.height - self.tableView.contentOffset.y >= 20) {
+    } else if (self.isInVC && scrollView.isTracking && self.tableView.contentSize.height - self.tableView.contentOffset.y >= 20) {
         /**
          * Remove the "someone @ me" bottom-banner-tips
          */
