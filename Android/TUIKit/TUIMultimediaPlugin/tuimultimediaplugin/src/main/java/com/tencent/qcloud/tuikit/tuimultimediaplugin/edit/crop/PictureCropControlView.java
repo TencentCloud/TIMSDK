@@ -1,10 +1,14 @@
 package com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.crop;
 
+import static com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils.postOnUiThreadDelayed;
+import static com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils.runOnUiThread;
+
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -109,7 +113,7 @@ public class PictureCropControlView extends RelativeLayout implements PictureCro
 
     @Override
     public void onTouch() {
-        mRestoreCropButton.setEnabled(isNeedCropOrRotation());
+        postOnUiThreadDelayed(() -> mRestoreCropButton.setEnabled(isNeedCropOrRotation()), 300);
     }
 
     private void onRestoreCrop() {
@@ -144,6 +148,7 @@ public class PictureCropControlView extends RelativeLayout implements PictureCro
         if (!isNeedCropOrRotation()) {
             LiteavLog.i(TAG,"do not need crop or rotation.");
             onCancelCrop();
+            return;
         }
 
         RectF normalizedCropRect = getNormalizedCropRect();

@@ -17,6 +17,8 @@ android {
         versionName "1.0"
         renderscriptSupportModeEnabled false
         renderscriptTargetApi 30
+
+        consumerProguardFiles "consumer-rules.pro"
     }
     buildFeatures {
         buildConfig = false

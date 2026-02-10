@@ -114,6 +114,7 @@ public class ConversationPresenter {
             @Override
             public void onSyncServerFinish() {
                 TUIConversationLog.i(TAG, "onSyncServerFinish");
+                ConversationPresenter.this.refreshAllUserStatus();
             }
 
             @Override
@@ -327,7 +328,6 @@ public class ConversationPresenter {
     }
 
     private void loadAndSubscribeConversationUserStatus(List<ConversationInfo> conversationInfoList) {
-        TUIConversationLog.i(TAG, "loadAndSubscribeConversationUserStatus");
         provider.loadConversationUserStatus(conversationInfoList, new IUIKitCallback<Map<String, ConversationUserStatusBean>>() {
             @Override
             public void onSuccess(Map<String, ConversationUserStatusBean> data) {
@@ -344,13 +344,12 @@ public class ConversationPresenter {
                         }
                     }
                 }
-                TUIConversationLog.i(TAG, "on load user status success");
                 onConversationChanged(changedConversations);
             }
 
             @Override
             public void onError(String module, int code, String desc) {
-                TUIConversationLog.e(TAG, "loadConversationUserStatus code:" + code + "|desc:" + desc);
+                TUIConversationLog.e(TAG, "loadConversationUserStatus error, code:" + code + "|desc:" + desc);
             }
         });
 
@@ -363,9 +362,7 @@ public class ConversationPresenter {
         }
         provider.subscribeConversationUserStatus(userIdList, new IUIKitCallback<Void>() {
             @Override
-            public void onSuccess(Void data) {
-                TUIConversationLog.d(TAG, "subscribeConversationUserStatus success");
-            }
+            public void onSuccess(Void data) {}
 
             @Override
             public void onError(String module, int code, String desc) {
@@ -374,12 +371,18 @@ public class ConversationPresenter {
         });
     }
 
+    private void refreshAllUserStatus() {
+        if (loadedConversationInfoList.isEmpty()) {
+            return;
+        }
+        loadAndSubscribeConversationUserStatus(new ArrayList<>(loadedConversationInfoList));
+    }
+
     public boolean isLoadFinished() {
         return provider.isLoadFinished();
     }
 
     public void onNewConversation(List<ConversationInfo> conversationInfoList, boolean showFoldItem) {
-        TUIConversationLog.i(TAG, "onNewConversation conversations:" + conversationInfoList);
         getLastMessageBean(conversationInfoList);
         ArrayList<ConversationInfo> infos = new ArrayList<>();
         for (ConversationInfo conversationInfo : conversationInfoList) {
@@ -416,7 +419,8 @@ public class ConversationPresenter {
                 ConversationInfo cacheInfo = uiSourceInfoList.get(i);
 
                 if (cacheInfo.getConversationId().equals(update.getConversationId())) {
-                    if (update.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_UNKNOWN) {
+                    if (update.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_UNKNOWN
+                        && cacheInfo.getStatusType() != V2TIMUserStatus.V2TIM_USER_STATUS_UNKNOWN) {
                         update.setStatusType(cacheInfo.getStatusType());
                     }
                     uiSourceInfoList.set(i, update);
@@ -451,7 +455,6 @@ public class ConversationPresenter {
     }
 
     public void onConversationChanged(List<ConversationInfo> conversationInfoList) {
-        TUIConversationLog.i(TAG, "onConversationChanged conversations:" + conversationInfoList);
         getLastMessageBean(conversationInfoList);
 
         List<ConversationInfo> uiSourceInfoList;
@@ -487,7 +490,8 @@ public class ConversationPresenter {
                 ConversationInfo cacheInfo = uiSourceInfoList.get(i);
 
                 if (cacheInfo.getConversationId().equals(update.getConversationId())) {
-                    if (update.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_UNKNOWN) {
+                    if (update.getStatusType() == V2TIMUserStatus.V2TIM_USER_STATUS_UNKNOWN
+                        && cacheInfo.getStatusType() != V2TIMUserStatus.V2TIM_USER_STATUS_UNKNOWN) {
                         update.setStatusType(cacheInfo.getStatusType());
                     }
                     uiSourceInfoList.set(i, update);

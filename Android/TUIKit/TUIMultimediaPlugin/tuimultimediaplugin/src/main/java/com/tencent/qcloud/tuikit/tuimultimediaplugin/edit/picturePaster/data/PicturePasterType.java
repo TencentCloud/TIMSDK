@@ -62,11 +62,14 @@ public class PicturePasterType {
         return mTypeName;
     }
 
-    public Bitmap getPasterIcon() {
+    public Object getPasterIcon() {
         if (mIcon != null) {
             return mIcon;
         }
 
+        if (TUIMultimediaFileUtil.isHttpPath(mTypeIconPath)) {
+            return mTypeIconPath;
+        }
         mIcon = TUIMultimediaFileUtil.decodeBitmap(mTypeIconPath);
         return mIcon;
     }

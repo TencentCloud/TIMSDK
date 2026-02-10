@@ -1,5 +1,7 @@
 package com.tencent.qcloud.tuikit.tuiconversation.model;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import com.tencent.imsdk.BaseConstants;
 import com.tencent.imsdk.v2.V2TIMCallback;
@@ -39,6 +41,7 @@ public class ConversationProvider {
 
     private List<ConversationInfo> markConversationInfoList = new ArrayList<>();
     private HashMap<String, V2TIMConversation> markUnreadMap = new HashMap<>();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     public void loadConversation(long startSeq, int loadCount, final IUIKitCallback<List<ConversationInfo>> callBack) {
         TUIConversationLog.i(TAG, "loadConversation startSeq " + startSeq + " loadCount " + loadCount);
@@ -359,9 +362,16 @@ public class ConversationProvider {
             });
     }
 
+    private static final int GET_USER_STATUS_MAX_RETRY = 2;
+    private static final long GET_USER_STATUS_RETRY_DELAY_MS = 500;
+
     public void loadConversationUserStatus(List<ConversationInfo> dataSource, IUIKitCallback<Map<String, ConversationUserStatusBean>> callback) {
+        loadConversationUserStatusWithRetry(dataSource, callback, 0);
+    }
+
+    private void loadConversationUserStatusWithRetry(
+            List<ConversationInfo> dataSource, IUIKitCallback<Map<String, ConversationUserStatusBean>> callback, int retryCount) {
         if (dataSource == null || dataSource.size() == 0) {
-            TUIConversationLog.d(TAG, "loadConversationUserStatus datasource is null");
             return;
         }
 
@@ -373,13 +383,11 @@ public class ConversationProvider {
             userList.add(itemBean.getId());
         }
         if (userList.isEmpty()) {
-            TUIConversationLog.d(TAG, "loadConversationUserStatus userList is empty");
             return;
         }
         V2TIMManager.getInstance().getUserStatus(userList, new V2TIMValueCallback<List<V2TIMUserStatus>>() {
             @Override
             public void onSuccess(List<V2TIMUserStatus> v2TIMUserStatuses) {
-                TUIConversationLog.i(TAG, "getUserStatus success");
                 Map<String, ConversationUserStatusBean> userStatusBeanMap = new HashMap<>();
                 for (V2TIMUserStatus item : v2TIMUserStatuses) {
                     ConversationUserStatusBean conversationUserStatusBean = new ConversationUserStatusBean();
@@ -391,7 +399,11 @@ public class ConversationProvider {
 
             @Override
             public void onError(int code, String desc) {
-                TUIConversationLog.e(TAG, "getUserStatus error code = " + code + ",des = " + desc);
+                TUIConversationLog.e(TAG, "getUserStatus onError, code=" + code + ", desc=" + desc);
+                if (code == BaseConstants.ERR_INVALID_PARAMETERS && retryCount < GET_USER_STATUS_MAX_RETRY) {
+                    mainHandler.postDelayed(() -> loadConversationUserStatusWithRetry(dataSource, callback, retryCount + 1), GET_USER_STATUS_RETRY_DELAY_MS);
+                    return;
+                }
                 TUIConversationUtils.callbackOnError(callback, code, desc);
                 if (code == TUIConstants.BuyingFeature.ERR_SDK_INTERFACE_NOT_SUPPORT && TUIConversationConfig.getInstance().isShowUserStatus()
                     && BuildConfig.DEBUG) {

@@ -1,5 +1,10 @@
 package com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.picturePaster;
 
+import static com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils.execute;
+import static com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils.postOnUiThread;
+import static com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils.postOnUiThreadDelayed;
+import static com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils.runOnUiThread;
+
 import android.graphics.Bitmap;
 import android.net.Uri;
 import com.google.gson.Gson;
@@ -16,8 +21,13 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class PicturePasterManager {
+
+    public interface BitmapCallback {
+        void onResult(Bitmap bitmap);
+    }
 
     private static final int USER_PASTER_ICON_MAX_SIZE = 360;
     private final String TAG = PicturePasterManager.class + "_" + hashCode();
@@ -70,11 +80,14 @@ public class PicturePasterManager {
         return mPicturePasterSet.getPasterItem(itemPosition);
     }
 
-    protected Bitmap getPaster(ItemPosition position) {
+    protected void getPaster(ItemPosition position, BitmapCallback callback) {
         LiteavLog.i(TAG, "select paster position TypeIndex = " +
                 position.pasterTypeIndex + " ItemIndex = " + position.pasterItemIndex);
-        PicturePasterItem pasterItem = mPicturePasterSet.getPasterItem(position);
-        return pasterItem != null ? pasterItem.getPasterImage() : null;
+        execute(() -> {
+            PicturePasterItem pasterItem = mPicturePasterSet.getPasterItem(position);
+            Bitmap bitmap = pasterItem != null ? pasterItem.getPasterImage() : null;
+            postOnUiThread(() -> callback.onResult(bitmap));
+        });
     }
 
     public boolean addUserPasterFromUri(Uri uri, ItemPosition itemPosition) {

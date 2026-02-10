@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.R;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaData;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.picturePaster.data.PicturePasterInfo;
@@ -64,9 +65,8 @@ public class PicturePasterItemAdapter extends BaseAdapter {
 
         if (position >= 0) {
             PicturePasterItem pasterItem = mPasterInfo.getPasterItem(new ItemPosition(mPasterTypeIndex, position));
-            Bitmap bitmap = pasterItem != null ? pasterItem.getPasterIcon() : null;
-            if (bitmap != null && !bitmap.isRecycled()) {
-                holder.icon.setImageBitmap(bitmap);
+            if (pasterItem != null) {
+                Glide.with(mContext).load(pasterItem.getPasterIcon()).into(holder.icon);
             }
         }
 

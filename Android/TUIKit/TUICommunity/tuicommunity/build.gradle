@@ -9,6 +9,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 30
 
+        consumerProguardFiles "consumer-rules.pro"
     }
     buildFeatures {
         buildConfig = false

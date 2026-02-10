@@ -185,27 +185,45 @@ public class TUIChatUtils {
     ) {
         int maxSizePx = ScreenUtil.dip2px(maxSizeDp);
         int minSizePx = ScreenUtil.dip2px(minSizeDp);
+
         if (originalWidth <= 0 || originalHeight <= 0) {
-            return new int[] { maxSizePx, maxSizePx };
+            return new int[] {maxSizePx, maxSizePx};
         }
 
-        float widthRatio = maxSizePx / (float) originalWidth;
-        float heightRatio = maxSizePx / (float) originalHeight;
-        float scale = Math.min(Math.min(widthRatio, heightRatio), 1f);
+        float aspectRatio = originalWidth / (float) originalHeight;
 
-        int displayWidth = Math.min(Math.round(originalWidth * scale), maxSizePx);
-        int displayHeight = Math.min(Math.round(originalHeight * scale), maxSizePx);
-
-        float aspect = displayWidth / (float) displayHeight;
-        if (aspect < minAspectRatio) {
-            displayWidth = Math.min(Math.round(displayHeight * minAspectRatio), maxSizePx);
-        } else if (aspect > maxAspectRatio) {
-            displayHeight = Math.min(Math.round(displayWidth / maxAspectRatio), maxSizePx);
+        if (aspectRatio < minAspectRatio) {
+            aspectRatio = minAspectRatio;
+        } else if (aspectRatio > maxAspectRatio) {
+            aspectRatio = maxAspectRatio;
         }
 
-        displayWidth = Math.max(displayWidth, minSizePx);
-        displayHeight = Math.max(displayHeight, minSizePx);
+        int displayWidth;
+        int displayHeight;
 
-        return new int[] { displayWidth, displayHeight };
+        if (aspectRatio >= 1) {
+            displayWidth = Math.min(originalWidth, maxSizePx);
+            displayWidth = Math.max(displayWidth, minSizePx);
+            displayHeight = Math.round(displayWidth / aspectRatio);
+            if (displayHeight < minSizePx) {
+                displayHeight = minSizePx;
+                displayWidth = Math.round(displayHeight * aspectRatio);
+                displayWidth = Math.min(displayWidth, maxSizePx);
+            }
+        } else {
+            displayHeight = Math.min(originalHeight, maxSizePx);
+            displayHeight = Math.max(displayHeight, minSizePx);
+            displayWidth = Math.round(displayHeight * aspectRatio);
+            if (displayWidth < minSizePx) {
+                displayWidth = minSizePx;
+                displayHeight = Math.round(displayWidth / aspectRatio);
+                displayHeight = Math.min(displayHeight, maxSizePx);
+            }
+        }
+
+        displayWidth = Math.min(displayWidth, maxSizePx);
+        displayHeight = Math.min(displayHeight, maxSizePx);
+
+        return new int[] {displayWidth, displayHeight};
     }
 }
