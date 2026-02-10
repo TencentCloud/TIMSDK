@@ -154,6 +154,19 @@ Tencent Cloud branch download address: [Download](https://im.sdk.qcloud.com/down
 
 [API Upgrade Guidelines](https://docs.qq.com/sheet/DS3lMdHpoRmpWSEFW)
 
-## Latest Enhanced Version 8.8.7354 @2025.11.27
+## Latest Enhanced Version 8.9.7511 @2026.02.10
 ### SDK
-- Fixed known stability issues.
+- Added streaming message capability
+- Supports fetching read timestamps for group application lists (C API)
+- Supports batch marking group application lists as read (C API)
+- Fixed issue where synchronized conversation marker information could be lost during login if local conversation did not exist
+- Fixed potential failure to update atAll data in conversation information under multi-device login scenarios
+- Fixed abnormal behavior when fetching merged message lists after locally inserting merged messages
+- Fixed failure to pull nested merged messages in offline scenarios
+- Optimized SDK stability
+### TUIKit & Demo
+- Added official account capability (iOS & Android)
+- Added voice cloning capability (iOS)
+- Added text-to-speech capability (iOS)
+- Fixed issue where "@ mentions" notification would not display when entering chat interface with more than 2 pinned messages (iOS)
+
