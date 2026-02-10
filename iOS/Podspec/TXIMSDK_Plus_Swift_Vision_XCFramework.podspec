@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |spec|
   spec.name         = 'TXIMSDK_Plus_Swift_Vision_XCFramework'
-  spec.version      = '8.8.7357'
+  spec.version      = '8.9.7511'
   spec.ios.deployment_target = '12.0'
   spec.visionos.deployment_target = "1.0"
   spec.license      = { :type => 'Proprietary',
@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   
   spec.requires_arc = true
 
-  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/plus/8.8.7357/ImSDKForVision_Plus_8.8.7357.xcframework.zip?rand=1'}
+  spec.source = { :http => 'https://im.sdk.cloud.tencent.cn/download/plus/8.9.7511/ImSDKForVision_Plus_8.9.7511.xcframework.zip?rand=1'}
   spec.vendored_frameworks = '**/ImSDKForVision_Plus.xcframework'
   spec.resource_bundle = {
     "#{spec.module_name}_Privacy" => '**/ImSDKForVision_Plus.xcframework/xros-arm64/ImSDKForVision_Plus.framework/PrivacyInfo.xcprivacy'
