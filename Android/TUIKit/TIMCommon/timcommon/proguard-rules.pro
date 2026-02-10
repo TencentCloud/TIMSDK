@@ -19,6 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-keep class **.R$* {*;}
 
 -keep class com.tencent.imsdk.** { *; }
 -keep class * implements com.tencent.qcloud.tuicore.interfaces.TUIInitializer { *; }

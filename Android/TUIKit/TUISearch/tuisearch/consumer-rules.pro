@@ -1,2 +1,4 @@
+-keep class **.R$* {*;}
+
 -keep class * implements com.tencent.qcloud.tuicore.interfaces.TUIInitializer { *; }
 -keep class com.tencent.qcloud.tuikit.tuisearch.bean.** { *; }
