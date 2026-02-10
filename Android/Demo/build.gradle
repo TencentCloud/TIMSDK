@@ -58,11 +58,11 @@ subprojects {
 }
 
 ext {
-    compileSdkVersion = 33
+    compileSdkVersion = 34
     minSdkVersion = 23
-    targetSdkVersion = 33
+    targetSdkVersion = 34
     versionCode = 1
-    versionName = "8.8.7373"
+    versionName = "8.9.7511"
     abiFilters = ['armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
     //['armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64']
     arguments = "-DANDROID_STL=c++_static"

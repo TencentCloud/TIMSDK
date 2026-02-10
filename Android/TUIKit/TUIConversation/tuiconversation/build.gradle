@@ -11,6 +11,8 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+
+        consumerProguardFiles "consumer-rules.pro"
     }
     buildFeatures {
         buildConfig = true

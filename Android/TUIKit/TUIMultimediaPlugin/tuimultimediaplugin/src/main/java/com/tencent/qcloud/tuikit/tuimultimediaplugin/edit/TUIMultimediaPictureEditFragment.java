@@ -170,19 +170,21 @@ public class TUIMultimediaPictureEditFragment extends Fragment {
             @Override
             public void onStartCrop() {
                 List<TXPaster> pasterList =  mEditCommonCtrlView.getNormalizedPaster();
+                mBeforeCropBitmap = mCurrentBitmap;
                 if (pasterList == null || pasterList.isEmpty()) {
                     return;
                 }
 
                 mTuiMultimediaPictureEditorCore
                         .setPasterList(mEditCommonCtrlView.getNormalizedPaster());
-                mBeforeCropBitmap = mCurrentBitmap;
+
                 mTuiMultimediaPictureEditorCore.processPicture(bitmap -> {
                     if (bitmap == null) {
                         return;
                     }
                     mCurrentBitmap = bitmap;
                     previewPicture(0);
+                    mTuiMultimediaPictureEditorCore.resetEditor();
                     mTuiMultimediaPictureEditorCore.setSourcePicture(mCurrentBitmap);
                 });
             }

@@ -19,9 +19,5 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
-
--keep class com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaIConfig
--keep class com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaConstants
--keep class com.tencent.qcloud.tuikit.tuimultimediaplugin.record.data.** { *; }
--keep class com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.bgm.data.** { *; }
--keep class com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.picturePaster.data.** { *; }
+-keep class * implements com.tencent.qcloud.tuicore.interfaces.TUIInitializer { *; }
+-keep class com.tencent.qcloud.tuikit.tuicommunity.bean.** { *; }

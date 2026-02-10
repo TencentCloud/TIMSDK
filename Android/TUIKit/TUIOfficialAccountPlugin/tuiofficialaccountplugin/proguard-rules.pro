@@ -20,31 +20,22 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-# 保护代码中的Annotation不被混淆
-# 这在JSON实体映射时非常重要，比如fastJson
 -keepattributes *Annotation*
 
-# 避免混淆泛型
-# 这在JSON实体映射时非常重要，比如fastJson
 -keepattributes Signature
 
-# 抛出异常时保留代码行号
 -keepattributes SourceFile,LineNumberTable
 -ignorewarnings
 
-# 保留方法参数名字
 -keepparameternames
 
-# 避免删除代码逻辑
 -dontshrink
 
-# 避免资源混淆
 -keep class **.R$* {*;}
 
-# 不混淆指定的包名称，防止不同的库混淆后的类名冲突，比如都是 a.a.a.a
 -keeppackagenames com.tencent.qcloud.tuikit.**
 
 -keep class com.tencent.imsdk.** { *; }
--keep class * implements com.tencent.qcloud.tuicore.interfaces.TUIInitializer {}
+-keep class * implements com.tencent.qcloud.tuicore.interfaces.TUIInitializer { *; }
 
 

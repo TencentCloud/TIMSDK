@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="poll_message_item_percent_line_gray">#d9d9d9</color>
-    <color name="poll_title_config_text_color">#666666</color>
-    <color name="poll_publish_disable_text_color">#66ffffff</color>
-    <color name="poll_creator_item_dividing_line">#1A000000</color>
-    <color name="poll_title">#333333</color>
-    <color name="poll_item_text_color">#666666</color>
-    <color name="poll_message_participant_text_color">#999999</color>
-    <color name="poll_message_item_line">#eeeeee</color>
-    <color name="text_tips_color">#A5A5A5</color>
-    <color name="poll_input_more_action_text_color">#696969</color>
-    <color name="poll_item_background_color">#f0f9f9f9</color>
-    <color name="poll_message_head">#f2f7ff</color>
-    
     <!-- Official Account colors -->
     <color name="official_divider_color">#E6E9F0</color>
     <color name="official_subtitle_color">#66000000</color>

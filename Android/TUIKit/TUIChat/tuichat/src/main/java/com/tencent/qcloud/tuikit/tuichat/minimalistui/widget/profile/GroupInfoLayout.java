@@ -418,9 +418,6 @@ public class GroupInfoLayout extends LinearLayout {
         });
 
         mChatBackground.setOnClickListener(v -> {
-            if (!profileBean.canManage()) {
-                return;
-            }
             if (changeChatBackgroundListener != null) {
                 changeChatBackgroundListener.onChangeChatBackground();
             }

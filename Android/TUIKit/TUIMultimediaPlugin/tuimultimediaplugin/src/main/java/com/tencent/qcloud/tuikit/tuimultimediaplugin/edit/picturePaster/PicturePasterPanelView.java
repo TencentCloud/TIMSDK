@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultCaller;
 import androidx.annotation.NonNull;
 import androidx.viewpager2.widget.ViewPager2;
+import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
 import com.google.android.material.tabs.TabLayout.Tab;
@@ -67,11 +68,11 @@ public class PicturePasterPanelView extends RelativeLayout {
             if (pasterItem.isFileSelector()) {
                 selectPicturePasterFromLocalFile(itemPosition);
             } else {
-                if (mPicturePasterSelectListener != null) {
-                    mPicturePasterSelectListener
-                            .PicturePasterSelectCompeted(mPicturePasterManager.getPaster(itemPosition));
-                }
-
+                mPicturePasterManager.getPaster(itemPosition, bitmap -> {
+                    if (mPicturePasterSelectListener != null) {
+                        mPicturePasterSelectListener.onPicturePasterSelectCompeted(bitmap);
+                    }
+                });
             }
         }
     };
@@ -128,7 +129,7 @@ public class PicturePasterPanelView extends RelativeLayout {
         }
 
         PicturePasterType typeInfo = mPicturePasterInfo.getPasterType(position);
-        Bitmap pasterIcon = typeInfo != null ? typeInfo.getPasterIcon() : null;
+        Object pasterIcon = typeInfo != null ? typeInfo.getPasterIcon() : null;
         if (pasterIcon != null) {
             configTabImage(tab, pasterIcon);
             return;
@@ -154,11 +155,11 @@ public class PicturePasterPanelView extends RelativeLayout {
         tab.setCustomView(customTextView);
     }
 
-    private void configTabImage(Tab tab, Bitmap image) {
+    private void configTabImage(Tab tab, Object icon) {
         View tabView = LayoutInflater.from(getContext())
                 .inflate(R.layout.multimedia_plugin_edit_picture_paster_type_image_item, null);
         ImageView imageView = tabView.findViewById(R.id.paster_type_icon);
-        imageView.setImageBitmap(image);
+        Glide.with(mContext).load(icon).into(imageView);
         tab.setCustomView(tabView);
     }
 
@@ -221,6 +222,6 @@ public class PicturePasterPanelView extends RelativeLayout {
 
     public interface PicturePasterSelectListener {
 
-        void PicturePasterSelectCompeted(Bitmap bitmap);
+        void onPicturePasterSelectCompeted(Bitmap bitmap);
     }
 }

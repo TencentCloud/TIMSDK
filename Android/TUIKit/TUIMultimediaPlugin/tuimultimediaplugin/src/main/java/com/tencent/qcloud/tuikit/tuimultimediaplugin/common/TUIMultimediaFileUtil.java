@@ -35,6 +35,8 @@ public class TUIMultimediaFileUtil {
     public static final String ASSET_FILE_PREFIX = "file:///asset/";
     public static final String LOCAL_FILE_PREFIX = "/";
     public static final String CONTENT_FILE_PREFIX = "content:";
+    public static final String HTTP_FILE_SCHEME = "http";
+    public static final String HTTPS_FILE_SCHEME = "https";
 
     public static boolean isFileExists(String path) {
         try {
@@ -43,6 +45,15 @@ public class TUIMultimediaFileUtil {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public static boolean isHttpPath(String path) {
+        if (path == null) {
+            return false;
+        }
+
+        String scheme = Uri.parse(path).getScheme();
+        return HTTP_FILE_SCHEME.equalsIgnoreCase(scheme) || HTTPS_FILE_SCHEME.equalsIgnoreCase(scheme);
     }
 
     @Nullable

@@ -1,80 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="UserIconView">
-        <attr name="default_image" format="reference" />
-        <attr name="image_radius" format="dimension" />
+        <attr name="default_image" />
+        <attr name="image_radius" />
     </declare-styleable>
 
     <declare-styleable name="SynthesizedImageView">
-        <attr name="synthesized_image_bg" format="color" />
-        <attr name="synthesized_default_image" format="reference" />
-        <attr name="synthesized_image_size" format="dimension" />
-        <attr name="synthesized_image_gap" format="dimension" />
+        <attr name="synthesized_image_bg" />
+        <attr name="synthesized_default_image" />
+        <attr name="synthesized_image_size" />
+        <attr name="synthesized_image_gap" />
     </declare-styleable>
 
     <declare-styleable name="LineControllerView">
-        <attr name="name" format="string"/>
-        <attr name="subject" format="string"/>
-        <attr name="isBottom" format="boolean"/>
-        <attr name="isTop" format="boolean"/>
-        <attr name="canNav" format="boolean"/>
-        <attr name="isSwitch" format="boolean"/>
+        <attr name="name" />
+        <attr name="subject" />
+        <attr name="isBottom" />
+        <attr name="isTop" />
+        <attr name="canNav" />
+        <attr name="isSwitch" />
     </declare-styleable>
 
     <declare-styleable name="IndexBar">
-        <attr name="indexBarTextSize" format="dimension"/>
-        <attr name="indexBarPressBackground" format="color" />
+        <attr name="indexBarTextSize" />
+        <attr name="indexBarPressBackground" />
     </declare-styleable>
 
     <declare-styleable name="core_round_rect_image_style">
-        <attr name="round_radius" format="dimension" />
+        <attr name="round_radius" />
     </declare-styleable>
 
     <declare-styleable name="TitleBarLayout">
-        <attr name="title_bar_middle_title" format="string" />
-        <attr name="title_bar_can_return" format="boolean" />
+        <attr name="title_bar_middle_title" />
+        <attr name="title_bar_can_return" />
     </declare-styleable>
 
     <declare-styleable name="RoundFrameLayout">
-        <attr name="corner_radius" format="dimension" />
-        <attr name="left_top_corner_radius" format="dimension" />
-        <attr name="right_top_corner_radius" format="dimension" />
-        <attr name="right_bottom_corner_radius" format="dimension" />
-        <attr name="left_bottom_corner_radius" format="dimension" />
+        <attr name="corner_radius" />
+        <attr name="left_top_corner_radius" />
+        <attr name="right_top_corner_radius" />
+        <attr name="right_bottom_corner_radius" />
+        <attr name="left_bottom_corner_radius" />
     </declare-styleable>
 
     <declare-styleable name="RoundCornerImageView" parent="RoundFrameLayout">
-        <attr name="corner_radius"/>
-        <attr name="left_top_corner_radius"/>
+        <attr name="corner_radius" />
+        <attr name="left_top_corner_radius" />
         <attr name="right_top_corner_radius" />
-        <attr name="right_bottom_corner_radius"  />
-        <attr name="left_bottom_corner_radius"  />
+        <attr name="right_bottom_corner_radius" />
+        <attr name="left_bottom_corner_radius" />
     </declare-styleable>
 
     <declare-styleable name="UnreadCountTextView">
-        <attr name="paint_color" format="color|reference"/>
+        <attr name="paint_color" />
     </declare-styleable>
 
     <declare-styleable name="SwitchCustomWidth">
-        <attr name="custom_width" format="dimension|reference"/>
+        <attr name="custom_width" />
     </declare-styleable>
 
     <declare-styleable name="SwipeLayout">
-        <attr name="drag_edge">
-            <flag name="left" value="1" />
-            <flag name="right" value="2" />
-            <flag name="top" value="4" />
-            <flag name="bottom" value="8" />
-        </attr>
-        <attr name="leftEdgeSwipeOffset" format="dimension" />
-        <attr name="rightEdgeSwipeOffset" format="dimension" />
-        <attr name="topEdgeSwipeOffset" format="dimension" />
-        <attr name="bottomEdgeSwipeOffset" format="dimension" />
-        <attr name="show_mode" format="enum">
-            <enum name="lay_down" value="0" />
-            <enum name="pull_out" value="1" />
-        </attr>
-        <attr name="clickToClose" format="boolean" />
+        <attr name="drag_edge" />
+        <attr name="leftEdgeSwipeOffset" />
+        <attr name="rightEdgeSwipeOffset" />
+        <attr name="topEdgeSwipeOffset" />
+        <attr name="bottomEdgeSwipeOffset" />
+        <attr name="show_mode" />
+        <attr name="clickToClose" />
     </declare-styleable>
 
 
