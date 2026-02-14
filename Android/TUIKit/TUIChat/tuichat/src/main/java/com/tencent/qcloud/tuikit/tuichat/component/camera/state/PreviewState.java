@@ -12,6 +12,7 @@ class PreviewState implements State {
     public static final String TAG = "PreviewState";
 
     private CameraMachine machine;
+    private boolean capturing = false;
 
     PreviewState(CameraMachine machine) {
         this.machine = machine;
@@ -46,6 +47,12 @@ class PreviewState implements State {
     @Override
     public void capture() {
         TUIChatLog.i(TAG, "capture");
+
+        if (capturing) {
+            return;
+        }
+
+        capturing = true;
         CameraInterface.getInstance().takePicture(new CameraInterface.TakePictureCallback() {
             @Override
             public void captureResult(Bitmap bitmap, boolean isVertical) {
@@ -57,6 +64,7 @@ class PreviewState implements State {
                 machine.getCameraView().showPicture(bitmap, isVertical);
                 machine.getBrowserPictureState().setDataPath(path);
                 machine.setState(machine.getBrowserPictureState());
+                capturing = false;
             }
         });
     }
