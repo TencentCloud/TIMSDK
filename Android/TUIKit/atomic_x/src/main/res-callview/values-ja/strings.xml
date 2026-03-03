@@ -1,0 +1,44 @@
+<resources>
+    <string name="callview_toast_enable_mute">マイクオフ</string>
+    <string name="callview_toast_disable_mute">マイクオン</string>
+    <string name="callview_text_speaker">スピーカーオン</string>
+    <string name="callview_text_use_earpiece">スピーカーオフ</string>
+    <string name="callview_toast_callee_hangup">相手が切断、通話終了</string>
+    <string name="callview_toast_callee_reject">相手による通話拒否</string>
+    <string name="callview_toast_callee_no_response">呼び出しタイムアウト</string>
+    <string name="callview_other_party_network_low_quality">相手のネットワーク接続が不安定です</string>
+    <string name="callview_self_network_low_quality">ネットワーク接続が不安定です</string>
+    <string name="callview_toast_switch_camera">カメラの切り替え</string>
+    <string name="callview_toast_enable_camera">カメラオン</string>
+    <string name="callview_toast_disable_camera">カメラオフ</string>
+    <string name="callview_waiting_accept">応答を待っています</string>
+    <string name="callview_invite_audio_call">音声通話に招待されました</string>
+    <string name="callview_invite_video_call">ビデオ通話に招待されました</string>
+    <string name="callview_text_hangup">マイク</string>
+    <string name="callview_text_line_busy">回線ビジー</string>
+    <string name="callview_text_dialing">応答</string>
+    <string name="callview_text_decline">拒否する</string>
+    <string name="callview_btn_cancel">キャンセル</string>
+    <string name="callview_wait_response">応答を待っています...</string>
+    <string name="callview_wait_accept_group">グループ通話に招待します</string>
+    <string name="callview_accept_single">接続済み</string>
+    <string name="callview_invitee_user_list">通話に参加している他の人もいます</string>
+
+    <string name="callview_group_hint_you">(自分)</string>
+    <string name="callview_group_btn_ok">OK</string>
+
+    <string name="callview_blur_background">背景をぼかす</string>
+
+    <string name="callview_audio_route_bluetooth_headset">ブルートゥースイヤホン</string>
+    <string name="callview_audio_route_wired_headset">有線イヤホン</string>
+    <string name="callview_audio_route_unknown_device">未知のデバイス</string>
+
+    <string name="callview_speaker_on">スピーカーがオンになっています</string>
+    <string name="callview_speaker_off">スピーカーがオフになっています</string>
+
+    <string name="callview_permission_camera">カメラ</string>
+    <string name="callview_permission_tips">最初に%sの権限を有効にする必要があります</string>
+    <string name="callview_permission_title">%sは%s権限を取得するよう申請します</string>
+    <string name="callview_permission_camera_reason">カメラへのアクセス許可が必要で、ビデオ通話、グループビデオ通話などの機能に使用できます。美顔機能を使用する場合は、カメラで撮影された映像から顔の特徴点情報をリアルタイムで収集し、より自然な美しさを提供します。</string>
+
+</resources>

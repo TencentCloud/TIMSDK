@@ -18,6 +18,7 @@ import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.common.config.OfflinePushInfoConfig
 import com.tencent.qcloud.tuikit.tuicallkit.common.data.Constants
 import com.tencent.qcloud.tuikit.tuicallkit.common.data.Logger
+import com.tencent.qcloud.tuikit.tuicallkit.common.utils.KeyMetrics
 import com.tencent.qcloud.tuikit.tuicallkit.common.utils.PermissionRequest
 import com.tencent.qcloud.tuikit.tuicallkit.manager.feature.CallingBellFeature
 import com.tencent.qcloud.tuikit.tuicallkit.manager.feature.CallingVibratorFeature
@@ -54,6 +55,7 @@ class CallManager private constructor(context: Context) : ITUINotification {
         callState.reset()
         mediaState.reset()
         viewState.reset()
+        KeyMetrics.reset()
         VideoFactory.instance.clearVideoView()
     }
 
@@ -462,7 +464,8 @@ class CallManager private constructor(context: Context) : ITUINotification {
     fun selectAudioPlaybackDevice(device: TUICommonDefine.AudioPlaybackDevice) {
         TUICallEngine.createInstance(context).selectAudioPlaybackDevice(device)
         mediaState.audioPlayoutDevice.set(device)
-        val currentAudioRoute = if (device == TUICommonDefine.AudioPlaybackDevice.Speakerphone) TRTC_AUDIO_ROUTE_SPEAKER else TRTC_AUDIO_ROUTE_EARPIECE
+        val currentAudioRoute =
+            if (device == TUICommonDefine.AudioPlaybackDevice.Speakerphone) TRTC_AUDIO_ROUTE_SPEAKER else TRTC_AUDIO_ROUTE_EARPIECE
         mediaState.selectedAudioDevice.set(currentAudioRoute)
     }
 
@@ -504,6 +507,10 @@ class CallManager private constructor(context: Context) : ITUINotification {
     fun enableVirtualBackground(enable: Boolean) {
         Logger.i(TAG, "enableVirtualBackground, enable: $enable")
         GlobalState.instance.enableVirtualBackground = enable
+
+        val data = HashMap<String, Any>()
+        data[Constants.KEY_VIRTUAL_BACKGROUND] = enable
+        reportOnlineLog(data)
     }
 
     fun enableIncomingBanner(enable: Boolean) {
@@ -537,6 +544,19 @@ class CallManager private constructor(context: Context) : ITUINotification {
             override fun onError(errCode: Int, errMsg: String?) {
                 viewState.isVirtualBackgroundOpened.set(false)
                 Logger.e(TAG, "setBlurBackground failed, errCode: $errCode, errMsg: $errMsg")
+            }
+        })
+    }
+
+    fun setBeautyLevel(beautyLevel: Float) {
+        Logger.i(TAG, "setBeautyLevel, beautyLevel: $beautyLevel")
+        TUICallEngine.createInstance(context).setBeautyLevel(beautyLevel, object : TUICommonDefine.Callback {
+            override fun onSuccess() {
+                Logger.i(TAG, "setBeautyLevel success.")
+            }
+
+            override fun onError(errCode: Int, errMsg: String?) {
+                Logger.e(TAG, "setBeautyLevel failed, errCode: $errCode, errMsg: $errMsg")
             }
         })
     }
@@ -622,6 +642,7 @@ class CallManager private constructor(context: Context) : ITUINotification {
             } else if (TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS == subKey) {
                 TUICallEngine.createInstance(context).addObserver(callEngineObserver)
                 initCallEngine()
+                KeyMetrics.flushMetrics()
             }
         }
     }
@@ -631,10 +652,6 @@ class CallManager private constructor(context: Context) : ITUINotification {
             TUILogin.getUserSig(), object : TUICommonDefine.Callback {
                 override fun onSuccess() {
                     TUICallEngine.createInstance(context).addObserver(callEngineObserver)
-
-                    if (GlobalState.instance.enableMultiDevice) {
-                        TUICallEngine.createInstance(context).enableMultiDeviceAbility(true, null)
-                    }
 
                     val notificationFeature = NotificationFeature(context)
                     notificationFeature.registerNotificationBannerChannel()
@@ -682,6 +699,29 @@ class CallManager private constructor(context: Context) : ITUINotification {
         map[TUICallDefine.ERROR_REQUEST_REPEATED] = context.getString(R.string.tuicallkit_error_request_repeated)
         map[TUICallDefine.ERROR_SCENE_NOT_SUPPORTED] = context.getString(R.string.tuicallkit_error_scene_not_support)
         return map
+    }
+
+    private fun reportOnlineLog(data: Map<String, Any>) {
+        try {
+            val map: JSONObject = JSONObject(data)
+            map.put("version", TUICallDefine.VERSION)
+            map.put("platform", "android")
+            map.put("framework", "native")
+            map.put("sdk_app_id", TUILogin.getSdkAppId())
+
+            val params = JSONObject()
+            params.put("level", 1)
+            params.put("msg", map.toString())
+            params.put("more_msg", "TUICallKit")
+
+            val jsonObject = JSONObject()
+            jsonObject.put("api", "reportOnlineLog")
+            jsonObject.put("params", params)
+
+            TUICallEngine.createInstance(context).trtcCloudInstance.callExperimentalAPI(jsonObject.toString())
+        } catch (e: Exception) {
+            Logger.e(TAG, "reportOnlineLog fail, error: $e")
+        }
     }
 
     companion object {

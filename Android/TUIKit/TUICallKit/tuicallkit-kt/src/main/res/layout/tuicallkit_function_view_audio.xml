@@ -3,11 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_centerHorizontal="true"
     android:layout_marginTop="20dp"
     android:layout_marginBottom="74dp"
     android:adjustViewBounds="true"
-    android:maxWidth="480dp">
+    android:maxWidth="480dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
 
     <com.tencent.qcloud.tuikit.tuicallkit.view.component.function.ControlButton
         android:id="@+id/cb_mic"

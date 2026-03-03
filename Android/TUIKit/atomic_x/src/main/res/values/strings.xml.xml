@@ -1,0 +1,35 @@
+<resources>
+    <!-- AI Transcriber Settings -->
+    <string name="ai_transcriber_settings_title">AI Subtitle Settings</string>
+    <string name="ai_transcriber_section_recognition">Recognition &amp; Translation</string>
+    <string name="ai_transcriber_source_language">Original audio</string>
+    <string name="ai_transcriber_translation_language">Translate display</string>
+    <string name="ai_transcriber_bilingual_subtitle">Bilingual captions</string>
+    <string name="ai_transcriber_select_source_language">Select Source Language</string>
+    <string name="ai_transcriber_select_translation_language">Select Translation Language</string>
+    <string name="ai_transcriber_user_name">%s%s:</string>
+    <string name="ai_transcriber_me">(Me)</string>
+
+    <!-- Source Language Options -->
+    <string name="ai_source_lang_zh_en">Auto Detect(Chinese - English)</string>
+    <string name="ai_source_lang_zh">Speaking Chinese</string>
+    <string name="ai_source_lang_en">Speaking English</string>
+
+    <!-- Translation Language Options -->
+    <string name="ai_trans_lang_none">No Translation</string>
+    <string name="ai_trans_lang_zh">简体中文(Chinese)</string>
+    <string name="ai_trans_lang_en">English(English)</string>
+    <string name="ai_trans_lang_vi">Tiếng Việt(Vietnamese)</string>
+    <string name="ai_trans_lang_ja">日本語(Japanese)</string>
+    <string name="ai_trans_lang_ko">한국어(Korean)</string>
+    <string name="ai_trans_lang_id">Bahasa Indonesia(Indonesian)</string>
+    <string name="ai_trans_lang_th">ภาษาไทย(Thai)</string>
+    <string name="ai_trans_lang_pt">Português(Portuguese)</string>
+    <string name="ai_trans_lang_ar">\u200Eالعربية(Arabic)\u200E</string>
+    <string name="ai_trans_lang_es">Español(Spanish)</string>
+    <string name="ai_trans_lang_fr">Français(French)</string>
+    <string name="ai_trans_lang_ms">Bahasa Melayu(Malay)</string>
+    <string name="ai_trans_lang_de">Deutsch(German)</string>
+    <string name="ai_trans_lang_it">Italiano(Italian)</string>
+    <string name="ai_trans_lang_ru">Русский(Russian)</string>
+</resources>

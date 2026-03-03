@@ -122,16 +122,24 @@ public class ShareRoomDialog extends BaseBottomDialog implements ConferenceEvent
 
     private String getInviteLinkInfo() {
         String selfName = ConferenceController.sharedInstance().getUserState().selfInfo.get().userName;
+        String linkInfo;
         if (TextUtils.isEmpty(mTextRoomPassword.getText())) {
-            return String.format(Locale.getDefault(), getContext().getString(R.string.tuiroomkit_format_copy_room_info_without_password), selfName, mTextRoomName.getText().toString(), mTextRoomId.getText().toString());
+            linkInfo = String.format(Locale.getDefault(), getContext().getString(R.string.tuiroomkit_format_copy_room_info_without_password),
+                    selfName, mTextRoomName.getText().toString(), mTextRoomId.getText().toString());
+        } else {
+            linkInfo = String.format(Locale.getDefault(), getContext().getString(R.string.tuiroomkit_format_copy_room_info_with_password),
+                    selfName, mTextRoomName.getText().toString(), mTextRoomId.getText().toString(), mTextRoomPassword.getText().toString());
         }
-        return String.format(Locale.getDefault(), getContext().getString(R.string.tuiroomkit_format_copy_room_info_with_password), selfName, mTextRoomName.getText().toString(), mTextRoomId.getText().toString(), mTextRoomPassword.getText().toString());
+        if (needShowRoomLink()) {
+            linkInfo = linkInfo + String.format(Locale.getDefault(), getContext().getString(R.string.tuiroomkit_format_copy_room_link), getRoomURL());
+        }
+        return linkInfo;
     }
 
     public String getRoomURL() {
         String packageName = mContext.getPackageName();
-        if (TextUtils.equals(packageName, "com.tencent.liteav.tuiroom")) {
-            return "https://web.sdk.qcloud.com/trtc/webrtc/test/tuiroom-inner/index.html#/room?roomId=" + mRoomStore.roomInfo.roomId;
+        if (TextUtils.equals(packageName, "com.tencent.rtc.app")) {
+            return "https://trtc.io/demo/homepage/#/detail?scene=roomkit&roomId=" + mRoomStore.roomInfo.roomId;
         } else if (TextUtils.equals(packageName, "com.tencent.trtc")) {
             return "https://web.sdk.qcloud.com/component/tuiroom/index.html#/room?roomId=" + mRoomStore.roomInfo.roomId;
         } else {
@@ -141,7 +149,7 @@ public class ShareRoomDialog extends BaseBottomDialog implements ConferenceEvent
 
     public boolean needShowRoomLink() {
         String packageName = mContext.getPackageName();
-        return TextUtils.equals(packageName, "com.tencent.liteav.tuiroom") || TextUtils.equals(packageName, "com.tencent.trtc");
+        return TextUtils.equals(packageName, "com.tencent.rtc.app") || TextUtils.equals(packageName, "com.tencent.trtc");
     }
 
     @Override

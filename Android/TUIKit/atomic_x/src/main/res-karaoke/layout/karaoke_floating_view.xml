@@ -1,0 +1,69 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_root"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_order_music"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="148dp"
+        android:layout_marginTop="4dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/karaoke_order_music_icon" />
+
+    <FrameLayout
+        android:id="@+id/fl_function"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/iv_song_request_bg"
+            android:layout_width="147dp"
+            android:paddingVertical="2dp"
+            android:layout_height="38dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/karaoke_song_request_button" />
+
+        <ImageView
+            android:id="@+id/iv_pause"
+            android:layout_width="28dp"
+            android:layout_height="40dp"
+            android:layout_gravity="start|center_vertical"
+            android:paddingStart="8dp"
+            android:paddingEnd="4dp"
+            android:src="@drawable/karaoke_music_resume" />
+
+        <ImageView
+            android:id="@+id/iv_next"
+            android:layout_width="24dp"
+            android:layout_height="40dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="28dp"
+            android:paddingHorizontal="4dp"
+            android:src="@drawable/karaoke_music_next" />
+
+        <ImageView
+            android:id="@+id/iv_setting"
+            android:layout_width="24dp"
+            android:layout_height="40dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="52dp"
+            android:paddingHorizontal="4dp"
+            android:src="@drawable/karaoke_setting" />
+
+        <ImageView
+            android:id="@+id/iv_original"
+            android:layout_width="24dp"
+            android:layout_height="40dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="76dp"
+            android:paddingHorizontal="4dp"
+            android:src="@drawable/karaoke_original_off" />
+    </FrameLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Black -->
+    <color name="black_1">#FF000000</color>
+    <color name="black_2">#E6000000</color>
+    <color name="black_3">#B8000000</color>
+    <color name="black_4">#8C000000</color>
+    <color name="black_5">#66000000</color>
+    <color name="black_6">#40000000</color>
+    <color name="black_7">#1F000000</color>
+    <color name="black_8">#0F000000</color>
+
+    <!-- White -->
+    <color name="white_1">#FFFFFFFF</color>
+    <color name="white_2">#EDFFFFFF</color>
+    <color name="white_3">#BFFFFFFF</color>
+    <color name="white_4">#8CFFFFFF</color>
+    <color name="white_5">#6BFFFFFF</color>
+    <color name="white_6">#4DFFFFFF</color>
+    <color name="white_7">#24FFFFFF</color>
+
+    <!-- Gray Light -->
+    <color name="gray_light_1">#FFF9FAFC</color>
+    <color name="gray_light_2">#FFF0F2F7</color>
+    <color name="gray_light_3">#FFE6E9F0</color>
+    <color name="gray_light_4">#FFD1D4DE</color>
+    <color name="gray_light_5">#FFC0C3CC</color>
+    <color name="gray_light_6">#FFB3B6BE</color>
+    <color name="gray_light_7">#FFA5A9B0</color>
+
+    <!-- Gray Dark -->
+    <color name="gray_dark_1">#FF131417</color>
+    <color name="gray_dark_2">#FF1F2024</color>
+    <color name="gray_dark_3">#FF2B2C30</color>
+    <color name="gray_dark_4">#FF3A3C42</color>
+    <color name="gray_dark_5">#FF48494F</color>
+    <color name="gray_dark_6">#FF54565C</color>
+    <color name="gray_dark_7">#FF646A70</color>
+
+    <!-- Theme Light -->
+    <color name="theme_light_1">#FFEBF3FF</color>
+    <color name="theme_light_2">#FFCCE2FF</color>
+    <color name="theme_light_3">#FFADCFFF</color>
+    <color name="theme_light_4">#FF7AAFFF</color>
+    <color name="theme_light_5">#FF4588F5</color>
+    <color name="theme_light_6">#FF1C66E5</color>
+    <color name="theme_light_7">#FF0D49BF</color>
+    <color name="theme_light_8">#FF033099</color>
+    <color name="theme_light_9">#FF001F73</color>
+    <color name="theme_light_10">#FF00124D</color>
+
+    <!-- Theme Dark -->
+    <color name="theme_dark_1">#FF1C2333</color>
+    <color name="theme_dark_2">#FF243047</color>
+    <color name="theme_dark_3">#FF2F4875</color>
+    <color name="theme_dark_4">#FF305BA6</color>
+    <color name="theme_dark_5">#FF2B6AD6</color>
+    <color name="theme_dark_6">#FF4086FF</color>
+    <color name="theme_dark_7">#FF5C9DFF</color>
+    <color name="theme_dark_8">#FF78B0FF</color>
+    <color name="theme_dark_9">#FF9CC7FF</color>
+    <color name="theme_dark_10">#FFC2DEFF</color>
+
+    <!-- Green Light -->
+    <color name="green_light_1">#FFDCFAE9</color>
+    <color name="green_light_2">#FFB6F0D1</color>
+    <color name="green_light_3">#FF84E3B5</color>
+    <color name="green_light_4">#FF5AD69E</color>
+    <color name="green_light_5">#FF3CC98C</color>
+    <color name="green_light_6">#FF0ABF77</color>
+    <color name="green_light_7">#FF09A768</color>
+    <color name="green_light_8">#FF078F59</color>
+    <color name="green_light_9">#FF067049</color>
+    <color name="green_light_10">#FF044D37</color>
+
+    <!-- Green Dark -->
+    <color name="green_dark_1">#FF1A2620</color>
+    <color name="green_dark_2">#FF22352C</color>
+    <color name="green_dark_3">#FF2F4F3F</color>
+    <color name="green_dark_4">#FF377355</color>
+    <color name="green_dark_5">#FF368F65</color>
+    <color name="green_dark_6">#FF38A673</color>
+    <color name="green_dark_7">#FF62B58B</color>
+    <color name="green_dark_8">#FF8BC7A9</color>
+    <color name="green_dark_9">#FFA9D4BD</color>
+    <color name="green_dark_10">#FFC8E5D5</color>
+
+    <!-- Red Light -->
+    <color name="red_light_1">#FFFFE7E6</color>
+    <color name="red_light_2">#FFFCC9C7</color>
+    <color name="red_light_3">#FFFAAEAC</color>
+    <color name="red_light_4">#FFF58989</color>
+    <color name="red_light_5">#FFE86666</color>
+    <color name="red_light_6">#FFE54545</color>
+    <color name="red_light_7">#FFC93439</color>
+    <color name="red_light_8">#FFAD2934</color>
+    <color name="red_light_9">#FF8F222D</color>
+    <color name="red_light_10">#FF6B1A27</color>
+
+    <!-- Red Dark -->
+    <color name="red_dark_1">#FF2B1C1F</color>
+    <color name="red_dark_2">#FF422324</color>
+    <color name="red_dark_3">#FF613234</color>
+    <color name="red_dark_4">#FF8A4242</color>
+    <color name="red_dark_5">#FFC2544E</color>
+    <color name="red_dark_6">#FFE6594C</color>
+    <color name="red_dark_7">#FFE57A6E</color>
+    <color name="red_dark_8">#FFF3A599</color>
+    <color name="red_dark_9">#FFFACBC3</color>
+    <color name="red_dark_10">#FFFAE4DE</color>
+
+    <!-- Orange Light -->
+    <color name="orange_light_1">#FFFFEEDB</color>
+    <color name="orange_light_2">#FFFFD6B2</color>
+    <color name="orange_light_3">#FFFFBE85</color>
+    <color name="orange_light_4">#FFFFA455</color>
+    <color name="orange_light_5">#FFFF8B2B</color>
+    <color name="orange_light_6">#FFFF7200</color>
+    <color name="orange_light_7">#FFE05D00</color>
+    <color name="orange_light_8">#FFBF4900</color>
+    <color name="orange_light_9">#FF8F370B</color>
+    <color name="orange_light_10">#FF662200</color>
+
+    <!-- Orange Dark -->
+    <color name="orange_dark_1">#FF211A19</color>
+    <color name="orange_dark_2">#FF35231A</color>
+    <color name="orange_dark_3">#FF462E1F</color>
+    <color name="orange_dark_4">#FF653C21</color>
+    <color name="orange_dark_5">#FF96562A</color>
+    <color name="orange_dark_6">#FFE37F32</color>
+    <color name="orange_dark_7">#FFE39552</color>
+    <color name="orange_dark_8">#FFEEAD72</color>
+    <color name="orange_dark_9">#FFF7CFA4</color>
+    <color name="orange_dark_10">#FFF9E9D1</color>
+
+    <!-- Transparent -->
+    <color name="transparent">#00FFFFFF</color>
+
+    <!-- Accent Light -->
+    <color name="accent_turquoise_light">#FF00ABD6</color>
+    <color name="accent_purple_light">#FF8157FF</color>
+    <color name="accent_magenta_light">#FFF5457F</color>
+    <color name="accent_orange_light">#FFFF6A4C</color>
+
+    <!-- Accent Dark -->
+    <color name="accent_turquoise_dark">#FF008FB2</color>
+    <color name="accent_purple_dark">#FF693CF0</color>
+    <color name="accent_magenta_dark">#FFC22F56</color>
+    <color name="accent_orange_dark">#FFF25B35</color>
+
+    <!-- ColorTokens - Default Dark Theme -->
+    <!-- Text & Icon Colors -->
+    <color name="text_color_primary">#EDFFFFFF</color>
+    <color name="text_color_secondary">#8CFFFFFF</color>
+    <color name="text_color_tertiary">#4DFFFFFF</color>
+    <color name="text_color_disable">#24FFFFFF</color>
+    <color name="text_color_button">#FFFFFFFF</color>
+    <color name="text_color_button_disabled">#6BFFFFFF</color>
+    <color name="text_color_link">#FF4086FF</color>
+    <color name="text_color_link_hover">#FF2B6AD6</color>
+    <color name="text_color_link_active">#FF5C9DFF</color>
+    <color name="text_color_link_disabled">#FF243047</color>
+    <color name="text_color_anti_primary">#E6000000</color>
+    <color name="text_color_anti_secondary">#8C000000</color>
+    <color name="text_color_warning">#FFE37F32</color>
+    <color name="text_color_success">#FF38A673</color>
+    <color name="text_color_error">#FFE6594C</color>
+
+    <!-- Background Colors -->
+    <color name="bg_color_top_bar">#FF131417</color>
+    <color name="bg_color_operate">#FF1F2024</color>
+    <color name="bg_color_dialog">#FF1F2024</color>
+    <color name="bg_color_dialog_module">#FF2B2C30</color>
+    <color name="bg_color_entry_card">#FF2B2C30</color>
+    <color name="bg_color_function">#FF3A3C42</color>
+    <color name="bg_color_bottom_bar">#FF2B2C30</color>
+    <color name="bg_color_input">#FF2B2C30</color>
+    <color name="bg_color_bubble_reciprocal">#FF2B2C30</color>
+    <color name="bg_color_bubble_own">#FF5C9DFF</color>
+    <color name="bg_color_default">#FF131417</color>
+    <color name="bg_color_tag_mask">#8C000000</color>
+    <color name="bg_color_element_mask">#40000000</color>
+    <color name="bg_color_mask">#8C000000</color>
+    <color name="bg_color_mask_disappeared">#0F000000</color>
+    <color name="bg_color_mask_begin">#E6000000</color>
+    <color name="bg_color_avatar">#FF243047</color>
+
+    <!-- Border Colors -->
+    <color name="stroke_color_primary">#FF3A3C42</color>
+    <color name="stroke_color_secondary">#FF2B2C30</color>
+    <color name="stroke_color_module">#FF48494F</color>
+
+    <!-- Shadow Color -->
+    <color name="shadow_color">#0F000000</color>
+
+    <!-- Status Colors -->
+    <color name="list_color_default">#FF1F2024</color>
+    <color name="list_color_hover">#FF2B2C30</color>
+    <color name="list_color_focused">#FF243047</color>
+
+    <!-- Button Colors -->
+    <color name="button_color_primary_default">#FF4086FF</color>
+    <color name="button_color_primary_hover">#FF2B6AD6</color>
+    <color name="button_color_primary_active">#FF5C9DFF</color>
+    <color name="button_color_primary_disabled">#FF243047</color>
+    <color name="button_color_secondary_default">#FF3A3C42</color>
+    <color name="button_color_secondary_hover">#FF2B2C30</color>
+    <color name="button_color_secondary_active">#FF48494F</color>
+    <color name="button_color_secondary_disabled">#FF2B2C30</color>
+    <color name="button_color_accept">#FF38A673</color>
+    <color name="button_color_hangup_default">#FFE6594C</color>
+    <color name="button_color_hangup_disabled">#FF422324</color>
+    <color name="button_color_hangup_hover">#FFC2544E</color>
+    <color name="button_color_hangup_active">#FFE57A6E</color>
+    <color name="button_color_on">#FFFFFFFF</color>
+    <color name="button_color_off">#66000000</color>
+
+    <!-- Dropdown Colors -->
+    <color name="dropdown_color_default">#FF2B2C30</color>
+    <color name="dropdown_color_hover">#FF3A3C42</color>
+    <color name="dropdown_color_active">#FF1F2024</color>
+
+    <!-- Scrollbar Colors -->
+    <color name="scrollbar_color_default">#24FFFFFF</color>
+    <color name="scrollbar_color_hover">#4DFFFFFF</color>
+
+    <!-- Floating Colors -->
+    <color name="floating_color_default">#FF2B2C30</color>
+    <color name="floating_color_operate">#FF3A3C42</color>
+
+    <!-- Checkbox Color -->
+    <color name="checkbox_color_selected">#FF2B6AD6</color>
+
+    <!-- Toast Colors -->
+    <color name="toast_color_warning">#FF35231A</color>
+    <color name="toast_color_success">#FF22352C</color>
+    <color name="toast_color_error">#FF422324</color>
+    <color name="toast_color_default">#FF243047</color>
+
+    <!-- Tag Colors -->
+    <color name="tag_color_level1">#FF008FB2</color>
+    <color name="tag_color_level2">#FF2B6AD6</color>
+    <color name="tag_color_level3">#FF693CF0</color>
+    <color name="tag_color_level4">#FFC22F56</color>
+
+    <!-- Switch Colors -->
+    <color name="switch_color_off">#FF3A3C42</color>
+    <color name="switch_color_on">#FF2B6AD6</color>
+    <color name="switch_color_button">#FFFFFFFF</color>
+
+    <!-- Slider Colors -->
+    <color name="slider_color_filled">#FF2B6AD6</color>
+    <color name="slider_color_empty">#FF48494F</color>
+    <color name="slider_color_button">#FFFFFFFF</color>
+
+    <!-- Tab Colors -->
+    <color name="tab_color_selected">#FF48494F</color>
+    <color name="tab_color_unselected">#FF3A3C42</color>
+    <color name="tab_color_option">#FF3A3C42</color>
+</resources>

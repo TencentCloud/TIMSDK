@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ai_ll_transcriber_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/ai_tv_user_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white_3"
+        android:textSize="@dimen/text_size_10"/>
+
+    <TextView
+        android:id="@+id/ai_tv_source_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_4"
+        android:textColor="@color/white_1"
+        android:textSize="@dimen/text_size_10"/>
+
+    <TextView
+        android:id="@+id/ai_tv_translation_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_4"
+        android:textColor="@color/white_1"
+        android:textSize="@dimen/text_size_10"/>
+
+</LinearLayout>

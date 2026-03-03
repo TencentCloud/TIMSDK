@@ -9,6 +9,9 @@ object PushManager {
     const val PUSH_REGISTER_SUCCESS = 0
     const val PUSH_REGISTER_FAILED = 1
 
+    private const val METHOD_KEY = "callPushMethod"
+    private const val METHOD_SUB_KEY = "callPushSubMethod"
+
     fun getPushData(): PushData {
         if (TUICore.getService(TUIConstants.TIMPush.SERVICE_NAME) == null) {
             return PushData()
@@ -18,6 +21,13 @@ object PushManager {
         pushData.channelId = TUIConfig.getCustomData("pushChannelId") as? Int ?: -1
         pushData.status = TUIConfig.getCustomData("pushStatus") as? Int ?: PUSH_UNREGISTER
         return pushData
+    }
+
+    fun disableRequestPostNotificationPermission() {
+        val map = HashMap<String, Any>()
+        map[METHOD_SUB_KEY] = "disableRequestPostNotificationPermission"
+        map["disable"] = true
+        TUICore.callService(TUIConstants.TIMPush.SERVICE_NAME, METHOD_KEY, map, null)
     }
 }
 

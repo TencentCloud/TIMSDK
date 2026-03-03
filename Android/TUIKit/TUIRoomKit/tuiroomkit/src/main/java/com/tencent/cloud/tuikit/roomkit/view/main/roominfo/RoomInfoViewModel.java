@@ -76,9 +76,8 @@ public class RoomInfoViewModel implements ConferenceEventCenter.RoomKitUIEventRe
 
     public String getRoomURL() {
         String packageName = mContext.getPackageName();
-        if (TextUtils.equals(packageName, "com.tencent.liteav.tuiroom")) {
-            return "https://web.sdk.qcloud.com/trtc/webrtc/test/tuiroom-inner/index.html#/room?roomId="
-                    + mConferenceState.roomInfo.roomId;
+        if (TextUtils.equals(packageName, "com.tencent.rtc.app")) {
+            return "https://trtc.io/demo/homepage/#/detail?scene=roomkit&roomId=" + mConferenceState.roomInfo.roomId;
         } else if (TextUtils.equals(packageName, "com.tencent.trtc")) {
             return "https://web.sdk.qcloud.com/component/tuiroom/index.html#/room?roomId=" + mConferenceState.roomInfo.roomId;
         } else {
@@ -88,8 +87,7 @@ public class RoomInfoViewModel implements ConferenceEventCenter.RoomKitUIEventRe
 
     public boolean needShowRoomLink() {
         String packageName = mContext.getPackageName();
-        return TextUtils.equals(packageName, "com.tencent.liteav.tuiroom") || TextUtils.equals(packageName,
-                "com.tencent.trtc");
+        return TextUtils.equals(packageName, "com.tencent.rtc.app") || TextUtils.equals(packageName, "com.tencent.trtc");
     }
 
     public void showQRCodeView() {

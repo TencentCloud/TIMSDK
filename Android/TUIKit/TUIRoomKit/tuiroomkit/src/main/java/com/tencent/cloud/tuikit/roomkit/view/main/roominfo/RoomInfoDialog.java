@@ -127,12 +127,18 @@ public class RoomInfoDialog extends BaseBottomDialog {
 
     private String getInviteLinkInfo() {
         String selfName = ConferenceController.sharedInstance().getUserState().selfInfo.get().userName;
-        if (TextUtils.isEmpty(mTextRoomPassword.getText().toString())) {
-            return String.format(Locale.getDefault(), getContext().getString(R.string.tuiroomkit_format_copy_room_info_without_password),
+        String linkInfo;
+        if (TextUtils.isEmpty(mTextRoomPassword.getText())) {
+            linkInfo = String.format(Locale.getDefault(), getContext().getString(R.string.tuiroomkit_format_copy_room_info_without_password),
                     selfName, mTextName.getText().toString(), mTextRoomId.getText().toString());
+        } else {
+            linkInfo = String.format(Locale.getDefault(), getContext().getString(R.string.tuiroomkit_format_copy_room_info_with_password),
+                    selfName, mTextName.getText().toString(), mTextRoomId.getText().toString(), mTextRoomPassword.getText().toString());
         }
-        return String.format(Locale.getDefault(), getContext().getString(R.string.tuiroomkit_format_copy_room_info_with_password),
-                selfName, mTextName.getText().toString(), mTextRoomId.getText().toString(), mTextRoomPassword.getText().toString());
+        if (mViewModel.needShowRoomLink()) {
+            linkInfo = linkInfo + String.format(Locale.getDefault(), getContext().getString(R.string.tuiroomkit_format_copy_room_link), mViewModel.getRoomURL());
+        }
+        return linkInfo;
     }
 
     public void setMasterName(String name) {

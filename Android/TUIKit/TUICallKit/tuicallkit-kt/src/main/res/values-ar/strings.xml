@@ -6,6 +6,7 @@
     <string name="tuicallkit_toast_callee_hangup">أنهى الطرف الآخر المكالمة</string>
     <string name="tuicallkit_toast_callee_reject">الطرف الآخر رفض المكالمة</string>
     <string name="tuicallkit_toast_callee_no_response">لم يستجب الطرف الآخر</string>
+    <string name="tuicallkit_toast_call_busy">المكالمة مشغولة، يرجى المحاولة مرة أخرى لاحقًا.</string>
     <string name="tuicallkit_other_party_network_low_quality">اتصال الطرف الآخر بالشبكة ضعيف</string>
     <string name="tuicallkit_self_network_low_quality">اتصالك بالشبكة ضعيف</string>
     <string name="tuicallkit_toast_switch_camera">تبديل الكاميرا</string>
@@ -80,4 +81,6 @@
     <string name="tuicallkit_speaker_off">مكبر الصوت مغلق</string>
 
     <string name="tuicallkit_enter_pip_mode_fail_hint">فشل في الدخول إلى وضع الصورة داخل الصورة. يرجى التحقق مما إذا كانت الأذونات مفعلة</string>
+    <string name="tuicallkit_go_to_settings">الانتقال للتفعيل</string>
+    <string name="tuicallkit_notification_reminder">لضمان استلام تنبيهات المكالمات الواردة في الوقت المناسب، يُرجى التأكد من تفعيل إشعارات الرسائل، وكذلك إشعارات البانر (اللافتة) و إشعارات شاشة القفل.</string>
 </resources>

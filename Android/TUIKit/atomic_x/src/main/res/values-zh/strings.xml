@@ -1,0 +1,35 @@
+<resources>
+    <!-- AI 字幕设置 -->
+    <string name="ai_transcriber_settings_title">AI 字幕设置</string>
+    <string name="ai_transcriber_section_recognition">识别与翻译设置</string>
+    <string name="ai_transcriber_source_language">识别语言</string>
+    <string name="ai_transcriber_translation_language">翻译语言</string>
+    <string name="ai_transcriber_bilingual_subtitle">字幕显示双语</string>
+    <string name="ai_transcriber_select_source_language">选择识别语言</string>
+    <string name="ai_transcriber_select_translation_language">选择翻译语言</string>
+    <string name="ai_transcriber_user_name">%s%s：</string>
+    <string name="ai_transcriber_me">(我)</string>
+
+    <!-- 识别语言选项 -->
+    <string name="ai_source_lang_zh_en">自动识别(中英)</string>
+    <string name="ai_source_lang_zh">说中文</string>
+    <string name="ai_source_lang_en">说英语</string>
+
+    <!-- 翻译语言选项 -->
+    <string name="ai_trans_lang_none">不翻译</string>
+    <string name="ai_trans_lang_zh">简体中文(简体中文)</string>
+    <string name="ai_trans_lang_en">English(英语)</string>
+    <string name="ai_trans_lang_vi">Tiếng Việt(越南语)</string>
+    <string name="ai_trans_lang_ja">日本語(日语)</string>
+    <string name="ai_trans_lang_ko">한국어(韩语)</string>
+    <string name="ai_trans_lang_id">Bahasa Indonesia(印尼语)</string>
+    <string name="ai_trans_lang_th">ภาษาไทย(泰语)</string>
+    <string name="ai_trans_lang_pt">Português(葡萄牙语)</string>
+    <string name="ai_trans_lang_ar">\u200Eالعربية(阿拉伯语)\u200E</string>
+    <string name="ai_trans_lang_es">Español(西班牙语)</string>
+    <string name="ai_trans_lang_fr">Français(法语)</string>
+    <string name="ai_trans_lang_ms">Bahasa Melayu(马来语)</string>
+    <string name="ai_trans_lang_de">Deutsch(德语)</string>
+    <string name="ai_trans_lang_it">Italiano(意大利语)</string>
+    <string name="ai_trans_lang_ru">Русский(俄语)</string>
+</resources>

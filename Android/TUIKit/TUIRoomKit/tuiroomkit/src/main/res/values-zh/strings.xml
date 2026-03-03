@@ -329,6 +329,7 @@
     <string name="tuiroomkit_copy_success">复制成功</string>
     <string name="tuiroomkit_room_time">房间时间</string>
     <string name="tuiroomkit_copy_invitation_link">复制邀请链接</string>
+    <string name="tuiroomkit_format_copy_room_link">\n房间链接：%s</string>
     <string name="tuiroomkit_format_copy_room_info_without_password">%s邀请您加入会议\n房间主题：%s\n房间号：%s</string>
     <string name="tuiroomkit_format_copy_room_info_with_password">%s邀请您加入会议\n房间主题：%s\n房间号：%s\n房间密码：%s</string>
     <string name="tuiroomkit_format_copy_room_info_out_room">%s邀请您加入会议\n房间主题：%s\n房间时间：%s\n房间号：%s</string>

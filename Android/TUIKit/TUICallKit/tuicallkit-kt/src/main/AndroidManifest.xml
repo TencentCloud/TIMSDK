@@ -27,12 +27,21 @@
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTask"
             android:supportsPictureInPicture="true"
+            android:taskAffinity="${applicationId}.call"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".view.component.inviteuser.SelectGroupMemberActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTask"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+
+        <activity
+            android:name=".manager.feature.notification.NotificationRequestActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:theme="@style/CoreActivityTranslucent"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
 
         <provider
             android:name="com.tencent.qcloud.tuikit.tuicallkit.manager.bridge.Initializer"

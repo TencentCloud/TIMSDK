@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/constraint_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_marginBottom="40dp"
+    android:adjustViewBounds="true"
+    android:maxWidth="480dp"
+    app:layout_constraintHorizontal_chainStyle="spread">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <io.trtc.tuikit.atomicx.callview.core.common.widget.ControlButton
+        android:id="@+id/cb_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        app:cbIcon="@drawable/callview_bg_hangup"
+        app:cbText="@string/callview_btn_cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+    <io.trtc.tuikit.atomicx.callview.core.common.widget.ControlButton
+        android:id="@+id/cb_switch_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cbIcon="@drawable/callview_ic_switch_camera_group"
+        app:cbText="@string/callview_toast_switch_camera"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toStartOf="@+id/cb_blur"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <io.trtc.tuikit.atomicx.callview.core.common.widget.ControlButton
+        android:id="@+id/cb_blur"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cbIcon="@drawable/callview_bg_blur_background"
+        app:cbText="@string/callview_blur_background"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toStartOf="@+id/cb_camera"
+        app:layout_constraintStart_toEndOf="@+id/cb_switch_camera"
+        app:layout_constraintTop_toTopOf="@+id/cb_switch_camera" />
+
+    <io.trtc.tuikit.atomicx.callview.core.common.widget.ControlButton
+        android:id="@+id/cb_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cbIcon="@drawable/callview_bg_camera"
+        app:cbText="@string/callview_toast_enable_camera"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cb_blur"
+        app:layout_constraintTop_toTopOf="@+id/cb_switch_camera" />
+</androidx.constraintlayout.widget.ConstraintLayout>

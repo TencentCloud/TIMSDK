@@ -6,6 +6,7 @@
     <string name="tuicallkit_toast_callee_hangup">Other party hung up, call ended</string>
     <string name="tuicallkit_toast_callee_reject">Call rejected by other party</string>
     <string name="tuicallkit_toast_callee_no_response">The other party did not respond</string>
+    <string name="tuicallkit_toast_call_busy">You are currently on a call, please try again later.</string>
     <string name="tuicallkit_other_party_network_low_quality">The other party\'s network connection is poor</string>
     <string name="tuicallkit_self_network_low_quality">Your network connection is poor</string>
     <string name="tuicallkit_toast_switch_camera">Switch Camera</string>
@@ -79,5 +80,7 @@
     <string name="tuicallkit_speaker_on">Speaker On</string>
     <string name="tuicallkit_speaker_off">Speaker Off</string>
     <string name="tuicallkit_enter_pip_mode_fail_hint">Failed to enter Picture-in-Picture mode, Please check if the permission is enabled.</string>
+    <string name="tuicallkit_go_to_settings">Go to Settins</string>
+    <string name="tuicallkit_notification_reminder">To ensure you receive incoming calls promptly, please enable Notifications, as well as <b>Pop on screen</b> and <b>Lock Screen</b>.</string>
 
 </resources>

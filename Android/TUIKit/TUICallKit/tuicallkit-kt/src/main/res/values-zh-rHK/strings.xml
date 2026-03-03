@@ -7,6 +7,7 @@
     <string name="tuicallkit_toast_callee_hangup">對方已掛斷，通話結束</string>
     <string name="tuicallkit_toast_callee_reject">對方拒絕了通話請求</string>
     <string name="tuicallkit_toast_callee_no_response">對方未響應</string>
+    <string name="tuicallkit_toast_call_busy">正在通話，請稍後再試</string>
     <string name="tuicallkit_other_party_network_low_quality">當前通話對方網絡不佳</string>
     <string name="tuicallkit_self_network_low_quality">當前通話你的網絡不佳</string>
     <string name="tuicallkit_toast_switch_camera">翻轉</string>
@@ -80,4 +81,6 @@
     <string name="tuicallkit_speaker_off">揚聲器已關</string>
 
     <string name="tuicallkit_enter_pip_mode_fail_hint">進入畫中畫失敗，請檢查是否開啟權限</string>
+    <string name="tuicallkit_go_to_settings">去設定</string>
+    <string name="tuicallkit_notification_reminder">為了讓您可及時收到來電提示，請必須開啟訊息通知，並同時啟用 橫額通知 和 鎖屏通知。</string>
 </resources>

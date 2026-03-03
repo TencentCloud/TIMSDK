@@ -9,4 +9,5 @@
     <color name="tuicallkit_button_bg_red">#E6594C</color>
     <color name="tuicallkit_record_text_green">#12B969</color>
     <color name="tuicallkit_color_bg_float_view">#FFBBBBBB</color>
+    <color name="tuicallkit_color_blue">#066fff</color>
 </resources>

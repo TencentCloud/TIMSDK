@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<resources>
+    <string name="common_client_error_freq_limit">تم تحديد معدل الطلبات، يرجى المحاولة لاحقاً</string>
+    <string name="karaoke_audience_waiting_tips">في انتظار اختيار الأغنية...</string>
+    <string name="karaoke_change_reverb">صدى</string>
+    <string name="karaoke_exit_order">الخروج من الطلب</string>
+    <string name="karaoke_no_song">لا توجد أغاني</string>
+    <string name="karaoke_order_song">أغنية</string>
+    <string name="karaoke_ordered">تم الطلب</string>
+    <string name="karaoke_ordered_count">تم الطلب (%1$d)</string>
+    <string name="karaoke_original">أصلي</string>
+    <string name="karaoke_reverb_ktv">KTV</string>
+    <string name="karaoke_reverb_loud">عالي</string>
+    <string name="karaoke_reverb_low">منخفض</string>
+    <string name="karaoke_reverb_metallic">صوت معدني</string>
+    <string name="karaoke_reverb_none">بدون تأثير</string>
+    <string name="karaoke_score">نقاط الغناء</string>
+    <string name="karaoke_setting_audio">إعدادات الصوت</string>
+    <string name="karaoke_setting_capture_volume">مستوى صوت الالتقاط</string>
+    <string name="karaoke_setting_done">تم</string>
+    <string name="karaoke_setting_ear_return">سماعة الأذن</string>
+    <string name="karaoke_setting_music_pitch">نغمة الموسيقى</string>
+    <string name="karaoke_setting_pitch_shift">تغيير النغمة</string>
+    <string name="karaoke_setting_playback_volume">مستوى صوت التشغيل</string>
+    <string name="karaoke_setting_tune">ضبط</string>
+    <string name="karaoke_singing_score">نقاط الغناء</string>
+    <string name="karaoke_point">نقاط</string>
+    <string name="karaoke_cant_switch_tracks">الموسيقى الحالية لا تدعم تبديل المسارات الصوتية</string>
+    <string name="karaoke_song_pause">الأغنية متوقفة مؤقتاً...</string>
+    <string name="karaoke_voice_child">طفل مشاغب</string>
+    <string name="karaoke_voice_ethereal">أثيري</string>
+    <string name="karaoke_voice_girl">لولي</string>
+    <string name="karaoke_voice_none">أصلي</string>
+    <string name="karaoke_voice_uncle">عم</string>
+    <string name="karaoke_song_list">قائمة الأغاني</string>
+    <string name="karaoke_music_loading_error">فشل تحميل الموسيقى</string>
+</resources>

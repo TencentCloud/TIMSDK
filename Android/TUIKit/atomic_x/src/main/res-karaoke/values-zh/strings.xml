@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<resources>
+    <string name="common_client_error_freq_limit">请求被限频，请稍后重试</string>
+    <string name="karaoke_audience_waiting_tips">等待点歌中…</string>
+    <string name="karaoke_change_reverb">混响</string>
+    <string name="karaoke_exit_order">退出点歌</string>
+    <string name="karaoke_no_song">暂无歌曲</string>
+    <string name="karaoke_order_song">点歌</string>
+    <string name="karaoke_ordered">已点</string>
+    <string name="karaoke_ordered_count">已点(%1$d)</string>
+    <string name="karaoke_original">原唱</string>
+    <string name="karaoke_reverb_ktv">KTV</string>
+    <string name="karaoke_reverb_loud">洪亮</string>
+    <string name="karaoke_reverb_low">低沉</string>
+    <string name="karaoke_reverb_metallic">金属声</string>
+    <string name="karaoke_reverb_none">无效果</string>
+    <string name="karaoke_score">评分</string>
+    <string name="karaoke_setting_audio">音频设置</string>
+    <string name="karaoke_setting_capture_volume">采集音量</string>
+    <string name="karaoke_setting_done">完成</string>
+    <string name="karaoke_setting_ear_return">耳返</string>
+    <string name="karaoke_setting_music_pitch">音乐升降调</string>
+    <string name="karaoke_setting_pitch_shift">升降调</string>
+    <string name="karaoke_setting_playback_volume">播放音量</string>
+    <string name="karaoke_setting_tune">调音</string>
+    <string name="karaoke_singing_score">演唱得分</string>
+    <string name="karaoke_point">分</string>
+    <string name="karaoke_cant_switch_tracks">当前音乐不支持切换音轨</string>
+    <string name="karaoke_song_pause">歌曲暂停中</string>
+    <string name="karaoke_voice_child">熊孩子</string>
+    <string name="karaoke_voice_ethereal">空灵</string>
+    <string name="karaoke_voice_girl">萝莉</string>
+    <string name="karaoke_voice_none">原声</string>
+    <string name="karaoke_voice_uncle">大叔</string>
+    <string name="karaoke_song_list">歌单</string>
+    <string name="karaoke_music_loading_error">音乐加载失败</string>
+</resources>

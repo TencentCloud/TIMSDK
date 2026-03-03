@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="callview_color_white">#FFFFFFFF</color>
+    <color name="callview_color_black">#FF000000</color>
+    <color name="callview_color_gray">#696969</color>
+    <color name="callview_color_transparent">#00000000</color>
+    <color name="callview_color_blur_mask">#8022262E</color>
+    <color name="callview_record_text_red">#FF584C</color>
+    <color name="callview_button_bg_red">#E6594C</color>
+    <color name="callview_record_text_green">#12B969</color>
+    <color name="callview_color_bg_float_view">#FFBBBBBB</color>
+</resources>

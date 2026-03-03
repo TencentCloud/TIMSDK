@@ -8,11 +8,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCaller
+import androidx.work.CoroutineWorker
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
+import androidx.work.WorkerParameters
+import com.google.gson.Gson
 import com.tencent.cloud.tuikit.engine.call.TUICallDefine
 import com.tencent.cloud.tuikit.engine.call.TUICallEngine
 import com.tencent.qcloud.tuicore.TUIConstants
 import com.tencent.qcloud.tuicore.TUIConstants.TUICalling.ObjectFactory.RecentCalls
 import com.tencent.qcloud.tuicore.TUICore
+import com.tencent.qcloud.tuicore.TUILogin
 import com.tencent.qcloud.tuicore.interfaces.ITUIExtension
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification
 import com.tencent.qcloud.tuicore.interfaces.ITUIObjectFactory
@@ -24,23 +31,41 @@ import com.tencent.qcloud.tuikit.tuicallkit.TUICallKit
 import com.tencent.qcloud.tuikit.tuicallkit.common.config.OfflinePushInfoConfig
 import com.tencent.qcloud.tuikit.tuicallkit.common.data.Constants
 import com.tencent.qcloud.tuikit.tuicallkit.common.data.Logger
+import com.tencent.qcloud.tuikit.tuicallkit.common.utils.KeyMetrics
 import com.tencent.qcloud.tuikit.tuicallkit.manager.CallManager
+import com.tencent.qcloud.tuikit.tuicallkit.manager.PushManager
 import com.tencent.qcloud.tuikit.tuicallkit.state.GlobalState
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.joiningroupcall.JoinCallView
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.joiningroupcall.JoinCallViewManager
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.recents.RecentCallsFragment
+import com.trtc.tuikit.common.livedata.Observer
+import kotlinx.coroutines.delay
 import org.json.JSONException
 import org.json.JSONObject
+import java.util.concurrent.CopyOnWriteArrayList
+
+private const val TAG = "CallKitService"
 
 class CallKitService private constructor(context: Context) : ITUINotification, ITUIService, ITUIExtension,
     ITUIObjectFactory {
     private var appContext: Context = context.applicationContext
     private var joinCallViewManager: JoinCallViewManager? = null
+    private val pushDataList = CopyOnWriteArrayList<Map<String, Any>?>()
+
+    var callWorkRequest: OneTimeWorkRequest? = null
+    private val callStatusObserver = Observer<TUICallDefine.Status> {
+        if (it == TUICallDefine.Status.None) {
+            stopBackgroundWork()
+        }
+    }
 
     init {
         TUICore.registerEvent(
             TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED,
             TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT, this
+        )
+        TUICore.registerEvent(TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED,
+            TUIConstants.TUILogin.EVENT_SUB_KEY_INIT_SUCCESS, this
         )
         TUICore.registerEvent(
             TUIConstants.TIMPush.EVENT_IM_LOGIN_AFTER_APP_WAKEUP_KEY,
@@ -69,29 +94,76 @@ class CallKitService private constructor(context: Context) : ITUINotification, I
         if (TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED == key
             && TUIConstants.TUILogin.EVENT_SUB_KEY_START_INIT == subKey
         ) {
+            PushManager.disableRequestPostNotificationPermission()
+
             Logger.i(TAG, "onNotifyEvent, start, framework: " + Constants.framework)
             if (Constants.framework == Constants.CALL_FRAMEWORK_NATIVE) {
                 TUICallKit.createInstance(appContext)
                 adaptiveComponentReport()
             }
             setExcludeFromHistoryMessage()
+            return
         }
+        if (TUIConstants.TUILogin.EVENT_IMSDK_INIT_STATE_CHANGED == key
+            && TUIConstants.TUILogin.EVENT_SUB_KEY_INIT_SUCCESS == subKey
+        ) {
+            pushDataList.forEach {
+                trackPushData(it)
+                pushDataList.remove(it)
+            }
+            return
+        }
+
         if (TUIConstants.TIMPush.EVENT_IM_LOGIN_AFTER_APP_WAKEUP_KEY == key
             && TUIConstants.TIMPush.EVENT_IM_LOGIN_AFTER_APP_WAKEUP_SUB_KEY == subKey
         ) {
+            Log.i(TAG, "onNotifyEvent: loginUser : ${TUILogin.getLoginUser()}, callOfflineData: $param")
+            if (!TUILogin.getLoginUser().isNullOrEmpty()) {
+                trackPushData(param)
+            } else {
+                pushDataList.add(param)
+            }
+            CallManager.instance.userState.selfUser.get().callStatus.observe(callStatusObserver)
+            startBackgroundWork()
+        }
+    }
+
+    private fun trackPushData(param: Map<String, Any>?) {
+        try {
             val data =
                 param?.get(TUIConstants.TIMPush.EVENT_IM_LOGIN_AFTER_APP_WAKEUP_PUSH_MESSAGE_KEY) as Map<String, String>
-            Log.i(TAG, "onNotifyEvent: callOfflineData : $data")
+            val ext = data["ext"]
+            val extraInfo = Gson().fromJson(ext, Map::class.java) as Map<String, String>
+            val callId = extraInfo["call_id"] ?: ""
+
+            Log.i(TAG, "onNotifyEvent: loginUser : ${TUILogin.getLoginUser()}, callId: $callId, callOfflineData: $param")
+            KeyMetrics.countUV(KeyMetrics.EventId.WAKEUP_BY_PUSH, callId)
 
             val map = HashMap<String, Any?>()
-            map[TUIConstants.TIMPush.NOTIFICATION.PUSH_ID] = data[TUIConstants.TIMPush.NOTIFICATION.PUSH_ID]
+            map[TUIConstants.TIMPush.NOTIFICATION.PUSH_ID] = data[TUIConstants.TIMPush.NOTIFICATION.PUSH_ID] ?: ""
             map[TUIConstants.TIMPush.NOTIFICATION.PUSH_EVENT_TIME_KEY] = System.currentTimeMillis() / 1000
             map[TUIConstants.TIMPush.NOTIFICATION.PUSH_EVENT_TYPE_KEY] = 0
-
             TUICore.callService(
                 TUIConstants.TIMPush.SERVICE_NAME, TUIConstants.TIMPush.METHOD_REPORT_NOTIFICATION_CLICKED, map
             )
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
+    }
+
+    private fun startBackgroundWork() {
+        Logger.i(TAG, "startBackgroundWork")
+        val inputData: Data = Data.Builder()
+            .putLong("time", System.currentTimeMillis() / 1000)
+            .build()
+
+        callWorkRequest = OneTimeWorkRequest.Builder(BackgroundWorkManager::class.java).setInputData(inputData).build()
+        callWorkRequest?.let { WorkManager.getInstance(appContext).beginWith(it).enqueue() }
+    }
+
+    private fun stopBackgroundWork() {
+        Logger.i(TAG, "stopBackgroundWork")
+        callWorkRequest?.id?.let { WorkManager.getInstance(appContext).cancelWorkById(it) }
     }
 
     private fun adaptiveComponentReport() {
@@ -132,7 +204,6 @@ class CallKitService private constructor(context: Context) : ITUINotification, I
     }
 
     companion object {
-        private const val TAG = "CallKitService"
         private const val CALL_MEMBER_LIMIT = 9
 
         fun sharedInstance(context: Context): CallKitService {
@@ -422,7 +493,7 @@ class CallKitService private constructor(context: Context) : ITUINotification, I
         if (null != param && TextUtils.equals(TUIConstants.TUICalling.METHOD_NAME_ENABLE_MULTI_DEVICE, method)) {
             val enable = param[TUIConstants.TUICalling.PARAM_NAME_ENABLE_MULTI_DEVICE] as Boolean
             Log.i(TAG, "onCall, enableMultiDevice: $enable")
-            GlobalState.instance.enableMultiDevice = enable
+            CallManager.instance.enableMultiDeviceAbility(enable, null)
             return null
         }
         if (param != null && TextUtils.equals(TUIConstants.TUICalling.METHOD_NAME_ENABLE_INCOMING_BANNER, method)) {
@@ -481,11 +552,28 @@ class CallKitService private constructor(context: Context) : ITUINotification, I
         if (TextUtils.equals(objectName, RecentCalls.OBJECT_NAME)) {
             var style = RecentCalls.UI_STYLE_MINIMALIST
             if (param != null && param[RecentCalls.UI_STYLE] != null
-                && RecentCalls.UI_STYLE_CLASSIC == param[RecentCalls.UI_STYLE]!!) {
+                && RecentCalls.UI_STYLE_CLASSIC == param[RecentCalls.UI_STYLE]!!
+            ) {
                 style = RecentCalls.UI_STYLE_CLASSIC
             }
             return RecentCallsFragment(style)
         }
         return null
+    }
+}
+
+class BackgroundWorkManager(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
+    override suspend fun doWork(): Result {
+        try {
+            // keep 30s
+            delay(30000)
+            Logger.i(TAG, "BackgroundWorkManager doWork, result: ${Result.success()}")
+            return Result.success()
+
+        } catch (e: Exception) {
+            Logger.i(TAG, "BackgroundWorkManager doWork, result: ${Result.failure()}")
+            return Result.failure()
+        }
+        return Result.success()
     }
 }

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AtomicAvatar Styleable -->
+    <declare-styleable name="AtomicAvatar">
+        <!-- Size attribute -->
+        <attr name="avatarSize" format="enum">
+            <enum name="xxs" value="0" />
+            <enum name="xs" value="1" />
+            <enum name="s" value="2" />
+            <enum name="m" value="3" />
+            <enum name="l" value="4" />
+            <enum name="xl" value="5" />
+            <enum name="xxl" value="6" />
+        </attr>
+
+        <!-- Shape attribute -->
+        <attr name="avatarShape" format="enum">
+            <enum name="round" value="0" />
+            <enum name="roundRectangle" value="1" />
+            <enum name="rectangle" value="2" />
+        </attr>
+    </declare-styleable>
+
+    <!-- AtomicLabel Styleable -->
+    <declare-styleable name="AtomicLabel">
+        <attr name="labelBackgroundColor" format="reference|color" />
+        <attr name="labelCornerRadius" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="AtomicButton">
+        <attr name="android:text" />
+
+        <attr name="buttonVariant" format="enum">
+            <enum name="filled" value="0" />
+            <enum name="outlined" value="1" />
+            <enum name="text" value="2" />
+        </attr>
+
+        <attr name="buttonColorType" format="enum">
+            <enum name="primary" value="0" />
+            <enum name="secondary" value="1" />
+            <enum name="danger" value="2" />
+        </attr>
+
+        <attr name="customButtonSize" format="enum">
+            <enum name="xs" value="0" />
+            <enum name="s" value="1" />
+            <enum name="m" value="2" />
+            <enum name="l" value="3" />
+        </attr>
+
+        <attr name="buttonIconPosition" format="enum">
+            <enum name="start" value="0" />
+            <enum name="end" value="1" />
+            <enum name="none" value="2" />
+        </attr>
+
+        <attr name="buttonIcon" format="reference" />
+        <attr name="textStyle" format="boolean" />
+        <attr name="buttonTextSize" format="dimension" />
+    </declare-styleable>
+</resources>

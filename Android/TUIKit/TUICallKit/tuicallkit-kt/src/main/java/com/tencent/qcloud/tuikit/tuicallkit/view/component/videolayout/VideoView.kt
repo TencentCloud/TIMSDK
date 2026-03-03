@@ -95,9 +95,11 @@ class VideoView(context: Context, userInfo: UserState.User) : RelativeLayout(con
     }
 
     private val isInPipObserver = Observer<Boolean> {
-        buttonSwitchCamera.visibility = if (it) View.GONE else View.VISIBLE
-        buttonBlur.visibility = if (it) View.GONE else View.VISIBLE
-        textUserName.visibility = if (it) View.GONE else View.VISIBLE
+        if (GlobalState.instance.enablePipMode) {
+            buttonSwitchCamera.visibility = if (it) View.GONE else View.VISIBLE
+            buttonBlur.visibility = if (it) View.GONE else View.VISIBLE
+            textUserName.visibility = if (it) View.GONE else View.VISIBLE
+        }
     }
 
     init {

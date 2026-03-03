@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="advance_setting">音视频测试</string>
+    <string name="hevc_encode">HEVC 编码</string>
+    <string name="supreme_quality">至臻画质</string>
+    <string name="b_frame">B 帧</string>
+    <string name="qos_control">QOS 调控分辨率</string>
+    <string name="switch_environment">测试环境</string>
+    <string name="dual_encode">双路编码</string>
+    <string name="custom_video_capture">自定义视频采集</string>
+    <string name="custom_audio_capture">自定义音频采集</string>
+    <string name="advance_setting_button_text">Debug</string>
+</resources>

@@ -15,6 +15,7 @@ import com.tencent.cloud.tuikit.engine.common.TUICommonDefine.RoomId
 import com.tencent.qcloud.tuicore.TUIConstants
 import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuicore.TUILogin
+import com.tencent.qcloud.tuicore.interfaces.ITUINotification
 import com.tencent.qcloud.tuicore.permission.PermissionCallback
 import com.tencent.qcloud.tuicore.permission.PermissionRequester
 import com.tencent.qcloud.tuicore.util.TUIBuild
@@ -45,7 +46,7 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
     private val context = context.applicationContext
 
     private val callStatusObserver = Observer<TUICallDefine.Status> {
-        showAntiFraudReminder()
+        notifyInternalEvent()
 
         if (it != TUICallDefine.Status.Waiting
             || CallManager.instance.userState.selfUser.get().callRole == TUICallDefine.Role.Caller
@@ -98,6 +99,10 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
     override fun calls(
         userIdList: List<String?>?, mediaType: TUICallDefine.MediaType, params: CallParams?, callback: Callback?
     ) {
+        if (CallManager.instance.userState.selfUser.get().callStatus.get() != TUICallDefine.Status.None) {
+            ToastUtil.toastShortMessage(context.getString(R.string.tuicallkit_toast_call_busy))
+            return
+        }
         val list = userIdList?.toHashSet()?.toMutableList()
         list?.remove(TUILogin.getLoginUser())
         list?.removeAll(Collections.singleton(null))
@@ -108,16 +113,6 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
         }
         PermissionRequest.requestPermissions(context, mediaType, object : PermissionCallback() {
             override fun onGranted() {
-                CallManager.instance.calls(userIdList, mediaType, createDefaultCallParams(params), object : Callback {
-                    override fun onSuccess() {
-                        callback?.onSuccess()
-                    }
-
-                    override fun onError(errCode: Int, errMsg: String?) {
-                        callback?.onError(errCode, errMsg)
-                        CallManager.instance.reset()
-                    }
-                })
                 val selfUser = CallManager.instance.userState.selfUser.get()
                 selfUser.id = TUILogin.getLoginUser() ?: ""
                 selfUser.avatar.set(TUILogin.getFaceUrl())
@@ -146,7 +141,19 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
                 }
                 CallManager.instance.callState.scene.set(scene)
                 initCameraAndAudioDeviceState()
-                startCallActivity()
+                CallManager.instance.calls(list, mediaType, createDefaultCallParams(params), object : Callback {
+                    override fun onSuccess() {
+                        callback?.onSuccess()
+                    }
+
+                    override fun onError(errCode: Int, errMsg: String?) {
+                        callback?.onError(errCode, errMsg)
+                        CallManager.instance.reset()
+                    }
+                })
+                if (CallManager.instance.userState.selfUser.get().callStatus.get() != TUICallDefine.Status.None) {
+                    startCallActivity()
+                }
             }
 
             override fun onDenied() {
@@ -465,6 +472,20 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
         TUICore.registerEvent(Constants.KEY_TUI_CALLKIT, Constants.SUB_KEY_SHOW_FLOAT_WINDOW) { key, subKey, _ ->
             startFloatWindow()
         }
+        TUICore.registerEvent(
+            TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED, TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS,
+            ITUINotification { key, subKey, params ->
+                if (key == TUIConstants.TUILogin.EVENT_LOGIN_STATE_CHANGED
+                    && subKey == TUIConstants.TUILogin.EVENT_SUB_KEY_USER_LOGIN_SUCCESS
+                ) {
+                    if (PermissionRequest.isNotificationEnabled()) {
+                        //TODO: UserGuidance.showUserGuidance()
+                        return@ITUINotification
+                    }
+                    PermissionRequest.requestNotificationPermission(context)
+                }
+            }
+        )
     }
 
     private fun startFloatWindow() {
@@ -501,36 +522,28 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
         context.startActivity(intent)
     }
 
-    private fun showAntiFraudReminder() {
-        notifyCallEndEvent()
-        if (TUICallDefine.Status.Accept != CallManager.instance.userState.selfUser.get().callStatus.get()) {
-            return
-        }
-
-        if (TUICore.getService(TUIConstants.Service.TUI_PRIVACY) == null) {
-            return
-        }
-        val map = HashMap<String, Any?>()
-        map[TUIConstants.Privacy.PARAM_DIALOG_CONTEXT] = context
-        TUICore.callService(
-            TUIConstants.Service.TUI_PRIVACY, TUIConstants.Privacy.METHOD_ANTO_FRAUD_REMINDER, map, null
-        )
-    }
-
-    private fun notifyCallEndEvent() {
+    private fun notifyInternalEvent() {
         val selfUser = CallManager.instance.userState.selfUser.get()
         if (selfUser.callStatus.get() == TUICallDefine.Status.None) {
             TUICore.notifyEvent(
                 TUIConstants.Privacy.EVENT_ROOM_STATE_CHANGED, TUIConstants.Privacy.EVENT_SUB_KEY_ROOM_STATE_STOP, null
             )
             if (selfUser.callRole == Role.Caller) {
-
                 TUICore.notifyEvent(EVENT_KEY_TIME_LIMIT, EVENT_SUB_KEY_COUNTDOWN_END, null)
             }
             return
         }
-        if (selfUser.callStatus.get() == TUICallDefine.Status.Accept && selfUser.callRole == Role.Caller) {
-            TUICore.notifyEvent(EVENT_KEY_TIME_LIMIT, EVENT_SUB_KEY_COUNTDOWN_START, null)
+        if (selfUser.callStatus.get() == TUICallDefine.Status.Accept) {
+            if (selfUser.callRole == Role.Caller) {
+                TUICore.notifyEvent(EVENT_KEY_TIME_LIMIT, EVENT_SUB_KEY_COUNTDOWN_START, null)
+            }
+            if (TUICore.getService(TUIConstants.Service.TUI_PRIVACY) != null) {
+                val map = HashMap<String, Any?>()
+                map[TUIConstants.Privacy.PARAM_DIALOG_CONTEXT] = context
+                TUICore.callService(
+                    TUIConstants.Service.TUI_PRIVACY, TUIConstants.Privacy.METHOD_ANTO_FRAUD_REMINDER, map, null
+                )
+            }
         }
     }
 
