@@ -62,9 +62,11 @@
 
     <com.tencent.qcloud.tuikit.tuicallkit.view.component.aisubtitle.AISubtitle
         android:id="@+id/ai_subtitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="300dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="150dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/tuicallkit_bg_aisubtitle"
         android:padding="20dp"
         android:textSize="16sp"
@@ -72,5 +74,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_user_name"
-        app:layout_constraintWidth_percent="0.8" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintVertical_bias="1.0"/>
 </merge>

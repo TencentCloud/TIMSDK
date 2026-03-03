@@ -8,7 +8,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.os.Build
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.bumptech.glide.Glide
@@ -19,10 +18,10 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.tencent.cloud.tuikit.engine.call.TUICallDefine
 import com.tencent.cloud.tuikit.engine.call.TUICallDefine.MediaType
-import com.tencent.qcloud.tuicore.util.TUIBuild
 import com.tencent.qcloud.tuikit.tuicallkit.R
 import com.tencent.qcloud.tuikit.tuicallkit.common.data.Constants
 import com.tencent.qcloud.tuikit.tuicallkit.common.data.Logger
+import com.tencent.qcloud.tuikit.tuicallkit.common.utils.KeyMetrics
 import com.tencent.qcloud.tuikit.tuicallkit.manager.CallManager
 import com.tencent.qcloud.tuikit.tuicallkit.manager.feature.NotificationFeature
 import com.tencent.qcloud.tuikit.tuicallkit.state.UserState
@@ -54,6 +53,7 @@ class IncomingNotificationBanner(context: Context) {
 
     fun showNotification(user: UserState.User) {
         Logger.i(TAG, "showNotification, user: $user")
+        KeyMetrics.countUV(KeyMetrics.EventId.WAKEUP, CallManager.instance.callState.callId)
         registerObserver()
         notification = createNotification()
 
@@ -105,21 +105,18 @@ class IncomingNotificationBanner(context: Context) {
 
     private fun createNotification(): Notification {
         val channelId = NotificationFeature.CHANNEL_ID
-        val builder = NotificationCompat.Builder(context)
+        val builder = NotificationCompat.Builder(context, channelId)
             .setOngoing(true)
             .setAutoCancel(true)
             .setWhen(System.currentTimeMillis())
+            .setPriority(NotificationCompat.PRIORITY_MAX) // Android O+ ignored
+            .setDefaults(Notification.DEFAULT_ALL)        // default settings, Android O+ ignored.
+            .setCategory(NotificationCompat.CATEGORY_CALL)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setTimeoutAfter(Constants.CALL_WAITING_MAX_TIME * 1000L)
 
-        if (TUIBuild.getVersionInt() >= Build.VERSION_CODES.LOLLIPOP) {
-            builder.setCategory(NotificationCompat.CATEGORY_CALL)
-            builder.priority = NotificationCompat.PRIORITY_MAX
-        }
-
         builder.setChannelId(channelId)
         builder.setSmallIcon(R.drawable.tuicallkit_ic_avatar)
-        builder.setSound(null)
 
         builder.setContentIntent(getPendingIntent())
         builder.setFullScreenIntent(getPendingIntent(), true)

@@ -33,6 +33,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Lifecycle;
 
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine;
 import com.tencent.cloud.tuikit.engine.room.TUIRoomDefine;
@@ -252,7 +253,11 @@ public class ConferenceMainFragment extends Fragment implements ConferenceEventC
         mPictureInPictureParamsBuilder.setActions(new ArrayList<>());
         mPictureInPictureParamsBuilder.setAspectRatio(aspectRatio).build();
 
-        mActivity.enterPictureInPictureMode(mPictureInPictureParamsBuilder.build());
+        if (mActivity.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+            mActivity.enterPictureInPictureMode(mPictureInPictureParamsBuilder.build());
+        }else {
+            Log.i(TAG, "enterPipMode, activity currentState:"+mActivity.getLifecycle().getCurrentState());
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

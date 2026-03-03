@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="karaoke_panel_bg">#1F2024</color>
+    <color name="karaoke_color_blue">#4086FF</color>
+    <color name="karaoke_color_green">#38A673</color>
+    <color name="karaoke_color_white">#E5FFFFFF</color>
+    <color name="karaoke_text_grey">#6BFFFFFF</color>
+    <color name="karaoke_color_grey_8c">#8CFFFFFF</color>
+    <color name="karaoke_text_color_grey_4d">#4DFFFFFF</color>
+    <color name="karaoke_text_color_red">#E6594C</color>
+    <color name="karaoke_button_edge_color">#3A3C42</color>
+    <color name="karaoke_audio_effect_bg">#2B2C30</color>
+    <color name="karaoke_stroke_color">#3A3C42</color>
+    <color name="karaoke_lyric_blue">#00ABD6</color>
+    <color name="karaoke_lyric_grey">#BFFFFFFF</color>
+    <color name="karaoke_white">#FFFFFF</color>
+    <color name="karaoke_pitch_line">#979797</color>
+    <color name="karaoke_pitch_dot">#FFFFFFFF</color>
+    <color name="karaoke_pitch_score_bg">#FFD6C8</color>
+    <color name="karaoke_pitch_score_text">#FF6A4C</color>
+    <color name="karaoke_function_bg">#66000000</color>
+    <color name="karaoke_design_standard_b1">#1C66E5</color>
+    <color name="karaoke_design_standard_g2">#22262E</color>
+    <color name="karaoke_design_standard_g5">#8F9AB2</color>
+    <color name="karaoke_not_standard_blue_30_transparency">#4D4F586B</color>
+
+</resources>

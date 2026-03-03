@@ -329,6 +329,7 @@
     <string name="tuiroomkit_copy_success">تم النسخ بنجاح</string>
     <string name="tuiroomkit_room_time">وقت الغرفة</string>
     <string name="tuiroomkit_copy_invitation_link">نسخ رابط الدعوة</string>
+    <string name="tuiroomkit_format_copy_room_link">\nالرابط: %s</string>
     <string name="tuiroomkit_format_copy_room_info_without_password">%sندعوك للانضمام إلى الاجتماع\nموضوع الغرفة：%s\nمعرف الغرفة：%s</string>
     <string name="tuiroomkit_format_copy_room_info_with_password">%sندعوك للانضمام إلى الاجتماع\nموضوع الغرفة：%s\nمعرف الغرفة：%s\nكلمة سر الغرفة：%s</string>
     <string name="tuiroomkit_format_copy_room_info_out_room">%sندعوك للانضمام إلى الاجتماع\nموضوع الغرفة：%s\nوقت الغرفة：%s\nمعرف الغرفة：%s</string>

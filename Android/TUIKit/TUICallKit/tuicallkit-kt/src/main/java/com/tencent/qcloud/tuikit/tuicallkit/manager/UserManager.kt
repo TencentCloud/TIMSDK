@@ -99,6 +99,21 @@ class UserManager {
             })
     }
 
+    fun getUserDisplayName(userId: String): String {
+        var displayName = userId
+        getUserDisplayName(userId, object : TUICommonDefine.ValueCallback<String> {
+            override fun onSuccess(name: String?) {
+                if (!name.isNullOrEmpty()) {
+                    displayName = name
+                }
+            }
+
+            override fun onError(errCode: Int, errMsg: String?) {
+            }
+        })
+        return displayName
+    }
+
     fun getUserDisplayName(userId: String, callback: TUICommonDefine.ValueCallback<String>) {
         var displayUser: UserState.User? = UserState.User()
         if (userId == CallManager.instance.userState.selfUser.get().id) {

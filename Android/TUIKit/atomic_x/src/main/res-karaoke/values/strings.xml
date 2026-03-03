@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<resources>
+    <string name="common_client_error_freq_limit">Request Rate Limited, Please Try Again Later</string>
+    <string name="karaoke_audience_waiting_tips">Waiting for song selection…</string>
+    <string name="karaoke_change_reverb">Reverb</string>
+    <string name="karaoke_exit_order">Exit Order</string>
+    <string name="karaoke_no_song">No songs</string>
+    <string name="karaoke_order_song">Song</string>
+    <string name="karaoke_ordered">Ordered</string>
+    <string name="karaoke_ordered_count">Ordered(%1$d)</string>
+    <string name="karaoke_original">Original</string>
+    <string name="karaoke_reverb_ktv">KTV</string>
+    <string name="karaoke_reverb_loud">Loud</string>
+    <string name="karaoke_reverb_low">Low</string>
+    <string name="karaoke_reverb_metallic">Metallic sound</string>
+    <string name="karaoke_reverb_none">No effect</string>
+    <string name="karaoke_score">Score</string>
+    <string name="karaoke_setting_audio">Audio settings</string>
+    <string name="karaoke_setting_capture_volume">Capture Volume</string>
+    <string name="karaoke_setting_done">Done</string>
+    <string name="karaoke_setting_ear_return">Ear Monitor</string>
+    <string name="karaoke_setting_music_pitch">Music Pitch</string>
+    <string name="karaoke_setting_pitch_shift">Pitch Shift</string>
+    <string name="karaoke_setting_playback_volume">Playout Volume</string>
+    <string name="karaoke_setting_tune">Tune</string>
+    <string name="karaoke_singing_score">Singing Score</string>
+    <string name="karaoke_point">Points</string>
+    <string name="karaoke_cant_switch_tracks">The current music does not support switching audio tracks</string>
+    <string name="karaoke_song_pause">Song paused...</string>
+    <string name="karaoke_voice_child">Naughty child</string>
+    <string name="karaoke_voice_ethereal">Ethereal</string>
+    <string name="karaoke_voice_girl">Loli</string>
+    <string name="karaoke_voice_none">Original</string>
+    <string name="karaoke_voice_uncle">Uncle</string>
+    <string name="karaoke_song_list">Song List</string>
+    <string name="karaoke_music_loading_error">Music loading failed</string>
+</resources>

@@ -217,6 +217,12 @@ class CallBridge private constructor(context: Context) {
         }
     }
 
+    fun setBeautyLevel(beautyLevel: Float) {
+        runOnUiThread {
+            CallManager.instance.setBeautyLevel(beautyLevel)
+        }
+    }
+
     fun addFloatWindowObserver(observer: FloatWindowObserver) {
         runOnUiThread {
             Logger.i(TAG, "addFloatWindowObserver, observer: $observer")

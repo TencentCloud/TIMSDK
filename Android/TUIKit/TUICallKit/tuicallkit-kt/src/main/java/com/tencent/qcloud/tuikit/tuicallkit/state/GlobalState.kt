@@ -17,7 +17,7 @@ class GlobalState private constructor() {
     var enableForceUseV2API = false
     var disableControlButtonSet: MutableSet<Constants.ControlButton> = CopyOnWriteArraySet()
     var callAdapter: CallAdapter? = object : CallAdapter() {}
-    var enablePipMode: Boolean = false
+    var enablePipMode: Boolean = true
 
     companion object {
         val instance: GlobalState by lazy { GlobalState() }

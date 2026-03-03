@@ -1,0 +1,43 @@
+<resources>
+    <string name="callview_toast_enable_mute">麦克风已关</string>
+    <string name="callview_toast_disable_mute">麦克风已开</string>
+    <string name="callview_text_speaker">扬声器</string>
+    <string name="callview_text_use_earpiece">听筒</string>
+    <string name="callview_toast_callee_hangup">对方已挂断，通话结束</string>
+    <string name="callview_toast_callee_reject">对方拒绝了通话请求</string>
+    <string name="callview_toast_callee_no_response">对方未响应</string>
+    <string name="callview_other_party_network_low_quality">当前通话对方网络不佳</string>
+    <string name="callview_self_network_low_quality">当前通话你的网络不佳</string>
+    <string name="callview_toast_switch_camera">翻转</string>
+    <string name="callview_toast_enable_camera">摄像头已开</string>
+    <string name="callview_toast_disable_camera">摄像头已关</string>
+    <string name="callview_waiting_accept">等待对方接受邀请</string>
+    <string name="callview_invite_audio_call">邀请你语音通话</string>
+    <string name="callview_invite_video_call">邀请你视频通话</string>
+    <string name="callview_text_hangup">挂断</string>
+    <string name="callview_text_line_busy">对方忙</string>
+    <string name="callview_text_decline">拒接</string>
+    <string name="callview_text_dialing">接听</string>
+    <string name="callview_btn_cancel">取消</string>
+    <string name="callview_wait_response">等待接听</string>
+    <string name="callview_wait_accept_group">邀请你加入多人通话</string>
+    <string name="callview_accept_single">已接通</string>
+    <string name="callview_invitee_user_list">参与通话的还有:</string>
+
+    <string name="callview_group_hint_you">(你)</string>
+    <string name="callview_group_btn_ok">确定</string>
+
+    <string name="callview_blur_background">模糊背景</string>
+
+    <string name="callview_audio_route_bluetooth_headset">蓝牙耳机</string>
+    <string name="callview_audio_route_wired_headset">有线耳机</string>
+    <string name="callview_audio_route_unknown_device">未知设备</string>
+
+    <string name="callview_speaker_on">扬声器已开</string>
+    <string name="callview_speaker_off">扬声器已关</string>
+
+    <string name="callview_permission_camera">摄像头</string>
+    <string name="callview_permission_tips">请先打开%s权限</string>
+    <string name="callview_permission_title">%s申请获取%s权限</string>
+    <string name="callview_permission_camera_reason">需要访问您的相机权限，开启后用于视频通话、多人视频通话等功能，在您使用美颜功能时，我们会对您实时拍摄的面部的像素信息进行实时智能识别，在识别过程中会实时收集您面部的像素信息，以为您提供更好的美颜效果。</string>
+</resources>

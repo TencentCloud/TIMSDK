@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <stroke
+        android:width="2dp"
+        android:color="@color/karaoke_design_standard_b1" />
+    <solid android:color="@color/karaoke_not_standard_blue_30_transparency" />
+    <corners android:radius="10dp" />
+</shape>

@@ -1,0 +1,44 @@
+<resources>
+    <string name="callview_toast_enable_mute">كتم الصوت</string>
+    <string name="callview_toast_disable_mute">إلغاء الكتم</string>
+    <string name="callview_text_speaker">مكبر الصوت</string>
+    <string name="callview_text_use_earpiece">سماعة الأذن</string>
+    <string name="callview_toast_callee_hangup">أنهى الطرف الآخر المكالمة</string>
+    <string name="callview_toast_callee_reject">الطرف الآخر رفض المكالمة</string>
+    <string name="callview_toast_callee_no_response">لم يستجب الطرف الآخر</string>
+    <string name="callview_other_party_network_low_quality">اتصال الطرف الآخر بالشبكة ضعيف</string>
+    <string name="callview_self_network_low_quality">اتصالك بالشبكة ضعيف</string>
+    <string name="callview_toast_switch_camera">تبديل الكاميرا</string>
+    <string name="callview_toast_enable_camera">تشغيل الكاميرا</string>
+    <string name="callview_toast_disable_camera">إيقاف الكاميرا</string>
+    <string name="callview_waiting_accept">في انتظار قبول المستخدم...</string>
+    <string name="callview_invite_audio_call">دعوتك لمكالمة صوتية...</string>
+    <string name="callview_invite_video_call">دعوتك لمكالمة فيديو...</string>
+    <string name="callview_text_hangup">إنهاء المكالمة</string>
+    <string name="callview_text_line_busy">الخط مشغول</string>
+    <string name="callview_text_decline">رفض</string>
+    <string name="callview_text_dialing">الرد</string>
+    <string name="callview_btn_cancel">إلغاء</string>
+    <string name="callview_wait_response">انتظار</string>
+    <string name="callview_wait_accept_group">أدعوك للانضمام إلى مكالمة جماعية</string>
+    <string name="callview_accept_single">" تم توصيل الهاتف"</string>
+    <string name="callview_invitee_user_list">هناك آخرون يشاركون في المكالمة</string>
+
+    <string name="callview_group_hint_you">(أنت)</string>
+    <string name="callview_group_btn_ok">تأكيد</string>
+
+    <string name="callview_blur_background">الخلفية الغائمة</string>
+
+    <string name="callview_audio_route_bluetooth_headset">رأس بلوتوث</string>
+    <string name="callview_audio_route_wired_headset">الرأس السلكي</string>
+    <string name="callview_audio_route_unknown_device">جهاز غير معروف</string>
+
+    <string name="callview_speaker_on">مكبر الصوت مفتوح</string>
+    <string name="callview_speaker_off">مكبر الصوت مغلق</string>
+
+    <string name="callview_permission_camera">الكاميرا</string>
+    <string name="callview_permission_tips">يرجى تشغيل إذن %s أولاً</string>
+    <string name="callview_permission_title">%s يتقدم بطلب الوصول إلى %s</string>
+    <string name="callview_permission_camera_reason">يحتاج إلى الوصول إلى كاميراك ، ويمكن استخدامه لوظائف مثل المكالمة الفيديو ، المكالمة الفيديو الجماعية وما إلى ذلك. لتعمل مرشحات الجمال ، سنجمع معلومات الوجه التي يتم التقاطها بكاميراك في الوقت الحقيقي لكشف ملامح وجهك.</string>
+
+</resources>

@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<resources>
+    <string name="common_client_error_freq_limit">リクエストは制限されています。後でもう一度やり直してください</string>
+    <string name="karaoke_audience_waiting_tips">歌を待っています...</string>
+    <string name="karaoke_change_reverb">残響</string>
+    <string name="karaoke_exit_order">歌の注文を終了します</string>
+    <string name="karaoke_no_song">まだ曲はありません</string>
+    <string name="karaoke_order_song">歌の注文</string>
+    <string name="karaoke_ordered">すでにクリックしています</string>
+    <string name="karaoke_ordered_count">クリック（%1$s）</string>
+    <string name="karaoke_original">オリジナルの歌</string>
+    <string name="karaoke_reverb_ktv">KTV</string>
+    <string name="karaoke_reverb_loud">ホン・リアン</string>
+    <string name="karaoke_reverb_low">低い</string>
+    <string name="karaoke_reverb_metallic">メタルサウンド</string>
+    <string name="karaoke_reverb_none">効果はありません</string>
+    <string name="karaoke_score">スコア</string>
+    <string name="karaoke_setting_audio">オーディオ設定</string>
+    <string name="karaoke_setting_capture_volume">ボリュームを収集します</string>
+    <string name="karaoke_setting_done">仕上げる</string>
+    <string name="karaoke_setting_ear_return">耳の復帰</string>
+    <string name="karaoke_setting_music_pitch">上下にミュージカル</string>
+    <string name="karaoke_setting_pitch_shift">持ち上げと下降</string>
+    <string name="karaoke_setting_playback_volume">ボリュームを再生します</string>
+    <string name="karaoke_setting_tune">チューニング</string>
+    <string name="karaoke_singing_score">歌のスコア</string>
+    <string name="karaoke_point">ポイント</string>
+    <string name="karaoke_cant_switch_tracks">在の音楽はオーディオトラックの切り替えをサポートしていません。</string>
+    <string name="karaoke_song_pause">歌を一時停止しています...</string>
+    <string name="karaoke_voice_child">クマの子供</string>
+    <string name="karaoke_voice_ethereal">空の精神</string>
+    <string name="karaoke_voice_girl">ロリ</string>
+    <string name="karaoke_voice_none">オリジナルのサウンドトラック</string>
+    <string name="karaoke_voice_uncle">叔父</string>
+    <string name="karaoke_song_list">歌リスト</string>
+    <string name="karaoke_music_loading_error">音楽の読み込みに失敗しました</string>
+</resources>

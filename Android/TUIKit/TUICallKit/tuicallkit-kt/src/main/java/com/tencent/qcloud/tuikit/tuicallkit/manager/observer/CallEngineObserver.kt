@@ -9,6 +9,7 @@ import com.tencent.qcloud.tuicore.TUIConfig
 import com.tencent.qcloud.tuicore.TUILogin
 import com.tencent.qcloud.tuikit.tuicallkit.common.data.Constants
 import com.tencent.qcloud.tuikit.tuicallkit.common.data.Logger
+import com.tencent.qcloud.tuikit.tuicallkit.common.utils.KeyMetrics
 import com.tencent.qcloud.tuikit.tuicallkit.manager.CallManager
 import com.tencent.qcloud.tuikit.tuicallkit.manager.UserManager
 import com.tencent.qcloud.tuikit.tuicallkit.state.UserState
@@ -55,8 +56,11 @@ class CallEngineObserver : TUICallObserver() {
         CallManager.instance.callState.scene.set(scene)
 
         CallManager.instance.callState.callId = callId ?: ""
+        CallManager.instance.callState.roomId = info?.roomId
         CallManager.instance.callState.chatGroupId = groupId
         CallManager.instance.callState.mediaType.set(mediaType)
+
+        KeyMetrics.countUV(KeyMetrics.EventId.RECEIVED, CallManager.instance.callState.callId)
 
         if (!callerId.isNullOrEmpty()) {
             val user = UserState.User()
@@ -371,7 +375,8 @@ class CallEngineObserver : TUICallObserver() {
     private fun startForegroundService() {
         val scene = CallManager.instance.callState.scene.get()
         if (scene == TUICallDefine.Scene.GROUP_CALL || scene == TUICallDefine.Scene.MULTI_CALL
-            || CallManager.instance.callState.mediaType.get() == TUICallDefine.MediaType.Video) {
+            || CallManager.instance.callState.mediaType.get() == TUICallDefine.MediaType.Video
+        ) {
             VideoForegroundService.start(TUIConfig.getAppContext(), "", "", 0)
         } else if (CallManager.instance.callState.mediaType.get() == TUICallDefine.MediaType.Audio) {
             AudioForegroundService.start(TUIConfig.getAppContext(), "", "", 0)

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tab_text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textSize="16sp"
+    android:textColor="@color/karaoke_text_color_grey_4d"
+    android:textStyle="bold"
+    android:paddingStart="0dp"
+    android:paddingEnd="10dp"
+    android:gravity="center_vertical"/>

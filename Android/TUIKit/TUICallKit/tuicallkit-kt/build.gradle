@@ -23,15 +23,20 @@ android {
         }
     }
 
-    def callSourceJavaVersion = JavaVersion.VERSION_1_8
+    def projectJavaVersion = JavaVersion.VERSION_1_8
+    def projectKotlinVersion = "1.8"
     VersionNumber currentGradleVersion = VersionNumber.parse(gradle.gradleVersion)
     if (currentGradleVersion.major >= 8) {
-        callSourceJavaVersion = JavaVersion.VERSION_17
+        projectJavaVersion = JavaVersion.VERSION_17
+        projectKotlinVersion = "17"
     }
 
     compileOptions {
-        sourceCompatibility callSourceJavaVersion
-        targetCompatibility callSourceJavaVersion
+        sourceCompatibility projectJavaVersion
+        targetCompatibility projectJavaVersion
+    }
+    kotlinOptions {
+        jvmTarget = projectKotlinVersion
     }
 }
 
@@ -48,18 +53,22 @@ dependencies {
     if (projects.contains("tuicore")) {
         api project(':tuicore')
     } else {
-        api "com.tencent.imsdk:imsdk-plus:8.6.7019"
-        api "com.tencent.liteav.tuikit:tuicore:8.6.7020"
+        api "com.tencent.imsdk:imsdk-plus:8.7.7207"
+        api "com.tencent.liteav.tuikit:tuicore:8.7.7202"
     }
+
     if (projects.contains("engine_source")) {
         api project(':engine_source')
     } else {
-        api rootProject.getProperties().containsKey("liteavSdk") ? rootProject.ext.liteavSdk : "com.tencent.liteav:LiteAVSDK_Professional:12.7+"
-        api rootProject.getProperties().containsKey("roomEngineSdk") ? rootProject.ext.roomEngineSdk : "io.trtc.uikit:rtc_room_engine:3.2.+"
+        api rootProject.getProperties().containsKey("liteavSdk") ? rootProject.ext.liteavSdk : "com.tencent.liteav:LiteAVSDK_Professional:12.8+"
+        api rootProject.getProperties().containsKey("roomEngineSdk") ? rootProject.ext.roomEngineSdk : "io.trtc.uikit:rtc_room_engine:3.5.+"
     }
     if (projects.contains("common")) {
         api project(':common')
     } else {
         api 'io.trtc.uikit:common:3.2.+'
     }
+
+    //For FCM data message
+    implementation "androidx.work:work-runtime-ktx:2.8.1"
 }

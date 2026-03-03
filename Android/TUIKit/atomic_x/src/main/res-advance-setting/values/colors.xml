@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="advance_setting_panel_bg">#660F1014</color>
+    <color name="advance_setting_button_bg">#2B6AD6</color>
+    <color name="advance_setting_text_color">#D5E0F2</color>
+    <color name="advance_setting_switch_track_unchecked">#A5A9B0</color>
+    <color name="advance_setting_switch_track_checked">#2B6AD6</color>
+</resources>

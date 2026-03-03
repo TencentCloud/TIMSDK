@@ -12,7 +12,9 @@ android {
         multiDexEnabled = true
         targetSdkVersion 35
     }
-
+    lintOptions {
+        disable 'StringFormatInvalid'
+    }
     buildFeatures {
         buildConfig = true
     }

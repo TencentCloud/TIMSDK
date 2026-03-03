@@ -328,6 +328,7 @@
     <string name="tuiroomkit_copy_success">Copy successful</string>
     <string name="tuiroomkit_room_time">Room time</string>
     <string name="tuiroomkit_copy_invitation_link">Copy invitation link</string>
+    <string name="tuiroomkit_format_copy_room_link">\nLink：%s</string>
     <string name="tuiroomkit_format_copy_room_info_without_password">%s Inviting you to join the conference\nRoom Theme：%s\nRoom ID：%s</string>
     <string name="tuiroomkit_format_copy_room_info_with_password">%s Inviting you to join the conference\nRoom Theme:%s\nRoom ID:%s\nRoom password:%s</string>
     <string name="tuiroomkit_format_copy_room_info_out_room">%sInviting you to join the conference\nRoom Theme:%s\nRoom time:%s\nRoom ID:%s</string>

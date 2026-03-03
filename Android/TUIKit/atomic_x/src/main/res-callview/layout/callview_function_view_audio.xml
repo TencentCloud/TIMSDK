@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="74dp"
+    android:adjustViewBounds="true"
+    android:maxWidth="480dp">
+
+    <io.trtc.tuikit.atomicx.callview.core.common.widget.ControlButton
+        android:id="@+id/cb_mic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cbIcon="@drawable/callview_bg_mute_mic"
+        app:cbText="@string/callview_toast_disable_mute"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/cb_hangup"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <io.trtc.tuikit.atomicx.callview.core.common.widget.ControlButton
+        android:id="@+id/cb_hangup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cbIcon="@drawable/callview_bg_hangup"
+        app:cbText="@string/callview_text_hangup"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/cb_audio_device"
+        app:layout_constraintStart_toEndOf="@+id/cb_mic"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <io.trtc.tuikit.atomicx.callview.core.common.widget.ControlButton
+        android:id="@+id/cb_audio_device"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cbIcon="@drawable/callview_bg_audio_device"
+        app:cbText="@string/callview_text_use_earpiece"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cb_hangup"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

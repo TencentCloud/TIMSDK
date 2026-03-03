@@ -6,6 +6,7 @@
     <string name="tuicallkit_toast_callee_hangup">相手が切断、通話終了</string>
     <string name="tuicallkit_toast_callee_reject">相手による通話拒否</string>
     <string name="tuicallkit_toast_callee_no_response">呼び出しタイムアウト</string>
+    <string name="tuicallkit_toast_call_busy">電話が話し中ですので、後ほどもう一度お試しください</string>
     <string name="tuicallkit_other_party_network_low_quality">相手のネットワーク接続が不安定です</string>
     <string name="tuicallkit_self_network_low_quality">ネットワーク接続が不安定です</string>
     <string name="tuicallkit_toast_switch_camera">カメラの切り替え</string>
@@ -80,5 +81,7 @@
     <string name="tuicallkit_speaker_off">スピーカーがオフになっています</string>
 
     <string name="tuicallkit_enter_pip_mode_fail_hint">ピクチャーインピクチャーモードへの移行に失敗しました。権限が有効になっているか確認してください。</string>
+    <string name="tuicallkit_go_to_settings">有効にする</string>
+    <string name="tuicallkit_notification_reminder">着信通知を時間通りに確実に受信するために、メッセージ通知をオンにし、バナー通知 と ロック画面通知 も同時に有効にしてください</string>
 
 </resources>

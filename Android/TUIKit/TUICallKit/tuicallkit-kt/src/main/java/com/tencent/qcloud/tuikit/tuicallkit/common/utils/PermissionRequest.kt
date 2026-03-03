@@ -13,6 +13,7 @@ import com.tencent.qcloud.tuicore.permission.PermissionCallback
 import com.tencent.qcloud.tuicore.permission.PermissionRequester
 import com.tencent.qcloud.tuicore.util.TUIBuild
 import com.tencent.qcloud.tuikit.tuicallkit.R
+import com.tencent.qcloud.tuikit.tuicallkit.manager.feature.notification.NotificationRequestActivity
 
 object PermissionRequest {
     fun requestPermissions(context: Context, type: TUICallDefine.MediaType, callback: PermissionCallback?) {
@@ -173,5 +174,9 @@ object PermissionRequest {
             }
         }
         return false
+    }
+
+    fun requestNotificationPermission(context: Context) {
+        NotificationRequestActivity.request(context)
     }
 }
