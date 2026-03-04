@@ -12,7 +12,9 @@ English | [简体中文](./README_ZH.md)
 
 [Latest TUISearch download](https://im.sdk.qcloud.com/download/tuikit/8.9.7511/android/TUISearch.zip)
 
-[Latest TUICallKit download](https://im.sdk.qcloud.com/download/tuikit/8.7.7201/android/TUICallKit.zip)
+[Latest atomic_x download](https://im.sdk.qcloud.com/download/tuikit/8.9.7511/android/atomic_x.zip)
+
+[Latest TUICallKit download](https://im.sdk.qcloud.com/download/tuikit/8.9.7511/android/TUICallKit.zip)
 
 [Latest TUICommunity download](https://im.sdk.qcloud.com/download/tuikit/8.9.7511/android/TUICommunity.zip)
 
@@ -26,7 +28,7 @@ English | [简体中文](./README_ZH.md)
 
 [Latest TIMCommon download](https://im.sdk.qcloud.com/download/tuikit/8.9.7511/android/TIMCommon.zip)
 
-[Latest TUIRoomKit download](https://im.sdk.qcloud.com/download/tuikit/8.7.7201/android/TUIRoomKit.zip)
+[Latest TUIRoomKit download](https://im.sdk.qcloud.com/download/tuikit/8.9.7511/android/TUIRoomKit.zip)
 
 [Latest TUIEmojiPlugin download](https://im.sdk.qcloud.com/download/tuikit/8.9.7511/android/TUIEmojiPlugin.zip)
 
