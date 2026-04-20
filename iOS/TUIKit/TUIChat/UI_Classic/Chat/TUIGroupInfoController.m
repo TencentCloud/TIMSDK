@@ -223,6 +223,7 @@
 
 - (void)didSelectGroupNick:(TUICommonTextCell *)cell {
     TUIModifyViewData *data = [[TUIModifyViewData alloc] init];
+    //data.inputLength = 8;
     data.title = TIMCommonLocalizableString(TUIKitGroupProfileEditAlias);
     data.content = self.dataProvider.selfInfo.nameCard;
     data.desc = TIMCommonLocalizableString(TUIKitGroupProfileEditAliasDesc);
@@ -243,6 +244,7 @@
                                                       handler:^(UIAlertAction *_Nonnull action) {
                                                         TUIModifyViewData *data = [[TUIModifyViewData alloc] init];
                                                         data.title = TIMCommonLocalizableString(TUIKitGroupProfileEditGroupName);
+                                                        //data.inputLength = 12;
                                                         data.content = weakSelf.dataProvider.groupInfo.groupName;
                                                         data.desc = TIMCommonLocalizableString(TUIKitGroupProfileEditGroupName);
                                                         TUIModifyView *modify = [[TUIModifyView alloc] init];
