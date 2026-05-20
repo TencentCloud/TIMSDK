@@ -532,6 +532,18 @@ public class FileUtil {
         }
     }
 
+    public static boolean isFileSizeExceedsLimit(String path, int maxSize) {
+        if (path == null || path.isEmpty() || maxSize <= 0) {
+            return false;
+        }
+        File file = new File(path);
+        if (!file.exists()) {
+            return false;
+        }
+        long fileSizeInBytes = file.length();
+        return fileSizeInBytes > maxSize;
+    }
+
     public static boolean isFileSizeExceedsLimit(Uri data, int maxSize) {
         try {
             Cursor returnCursor = ServiceInitializer.getAppContext().getContentResolver().query(data, null, null, null, null);

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import io.trtc.tuikit.atomicx.albumpicker.AlbumMedia;
+import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -63,12 +65,12 @@ import com.tencent.qcloud.tuikit.tuichat.component.face.FaceFragment;
 import com.tencent.qcloud.tuikit.tuichat.component.inputedittext.TIMMentionEditText;
 import com.tencent.qcloud.tuikit.tuichat.config.GeneralConfig;
 import com.tencent.qcloud.tuikit.tuichat.config.classicui.TUIChatConfigClassic;
-import com.tencent.qcloud.tuikit.tuichat.interfaces.AlbumPickerListener;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageParser;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
+import io.trtc.tuikit.atomicx.albumpicker.AlbumPickerListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -568,26 +570,39 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     protected void startSendPhoto() {
         TUIChatLog.i(TAG, "startSendPhoto");
-        AlbumPicker.pickMedia(mInputMoreFragment.getActivity(), new AlbumPickerListener() {
+        AlbumPicker.getInstance().pickMedia(mInputMoreFragment.getActivity(), new AlbumPickerListener() {
             @Override
-            public void onFinished(Uri originalUri, Uri transcodeUri) {
-                sendPhotoVideoMessage(originalUri, transcodeUri);
+            public void onPickConfirm(List<AlbumMedia> pickedAlbumMedias, String textMessage) {
+                for (AlbumMedia media : pickedAlbumMedias) {
+                    if (media.getUri() != null) {
+                        presenter.addPlaceholderMessage(media.getUri());
+                    }
+                }
             }
 
             @Override
-            public void onProgress(Uri originalUri, int progress)  {
-                presenter.updateMessageProgress(originalUri, progress);
+            public void onMediaProcessing(AlbumMedia albumMedia, float progress, boolean error) {
+                if (albumMedia.getUri() == null) {
+                    return;
+                }
+
+                presenter.updateMessageProgress(albumMedia.getUri(), (int) (progress * 100));
+
+                if (error) {
+                    sendPhotoVideoMessage(albumMedia.getUri(), null);
+                }
+
+                if (progress >= 1.0 && !error && albumMedia.getMediaPath() != null) {
+                    sendPhotoVideoMessage(albumMedia.getUri(), albumMedia.getMediaPath());
+                }
             }
 
             @Override
-            public void onOriginalMediaPicked(Uri originalUri) {
-                presenter.addPlaceholderMessage(originalUri);
-                hideSoftInput();
+            public void onMediaProcessed() {
             }
 
             @Override
             public void onCancel() {
-
             }
         });
     }
@@ -597,8 +612,8 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         hideSoftInput();
     }
 
-    private void sendPhotoVideoMessage(Uri original, Uri transcodeUri) {
-        presenter.sendPhotoVideoMessages(original, transcodeUri);
+    private void sendPhotoVideoMessage(Uri original, String transcodePath) {
+        presenter.sendPhotoVideoMessages(original, transcodePath);
         ThreadUtils.runOnUiThread(this::hideSoftInput);
     }
 

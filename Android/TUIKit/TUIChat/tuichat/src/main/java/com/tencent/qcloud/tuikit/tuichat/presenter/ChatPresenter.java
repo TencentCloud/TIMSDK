@@ -100,7 +100,7 @@ public abstract class ChatPresenter {
 
     private static final int SHOW_SENDING_PROGRESS_DELAY = 1000;
 
-    private static final int START_PROGRESS = 30;
+    private static final int START_PROGRESS = 60;
 
     protected final ChatProvider provider;
     protected List<TUIMessageBean> loadedMessageInfoList = new ArrayList<>();
@@ -904,18 +904,19 @@ public abstract class ChatPresenter {
         }
     }
 
-    public void sendPhotoVideoMessages(Uri originalUri, Uri transcodeUri) {
-        TUIMessageBean messageBean;
-        if (transcodeUri == null) {
-            messageBean = buildImageVideoMessage(originalUri);
-        } else {
-            messageBean = buildImageVideoMessage(transcodeUri);
-            if (messageBean == null) {
-                messageBean = buildImageVideoMessage(originalUri);
-            }
+    public void sendPhotoVideoMessages(Uri originalUri, String transcodePath) {
+        TUIMessageBean messageBean = null;
+        if (transcodePath != null) {
+            messageBean = buildImageVideoMessage(transcodePath);
         }
+
         if (messageBean == null) {
-            TUIChatLog.e(TAG, "sendPhotoVideoMessages failed, originalUri " + originalUri + " transcodeUri " + transcodeUri);
+            String originalPath = FileUtil.getPathFromUri(originalUri);
+            messageBean = buildImageVideoMessage(originalPath);
+        }
+
+        if (messageBean == null) {
+            TUIChatLog.e(TAG, "sendPhotoVideoMessages failed, originalUri " + originalUri + " path " + transcodePath);
             String uriID = TUIUtil.identityHashCode(originalUri);
             processingMessages.remove(uriID);
             return;
@@ -940,6 +941,7 @@ public abstract class ChatPresenter {
                 replaceUIMessage(placeholderMessageBean, finalMessageBean);
                 isReplace = true;
             }
+
 
             String finalMsgID = sendMessage(finalMessageBean, false, false, new IUIKitCallback<TUIMessageBean>() {
                 @Override
@@ -1001,9 +1003,9 @@ public abstract class ChatPresenter {
         return null;
     }
 
-    private TUIMessageBean buildImageVideoMessage(Uri uri) {
+    private TUIMessageBean buildImageVideoMessage(String filePath) {
         Context context = TUIChatService.getAppContext();
-        String fileName = FileUtil.getFileName(context, uri);
+        String fileName = FileUtil.getName(filePath);
         String fileExtension = FileUtil.getFileExtensionFromUrl(fileName);
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
         if (TextUtils.isEmpty(mimeType)) {
@@ -1012,25 +1014,24 @@ public abstract class ChatPresenter {
         }
         boolean isVideo = false;
         if (mimeType.contains("video")) {
-            if (FileUtil.isFileSizeExceedsLimit(uri, GeneralConfig.VIDEO_MAX_SIZE)) {
+            if (FileUtil.isFileSizeExceedsLimit(filePath, GeneralConfig.VIDEO_MAX_SIZE)) {
                 ToastUtil.toastShortMessage(context.getResources().getString(com.tencent.qcloud.tuicore.R.string.TUIKitErrorFileTooLarge));
                 return null;
             }
             isVideo = true;
         } else if (mimeType.contains("image")) {
             if (TextUtils.equals(mimeType, "image/gif")) {
-                if (FileUtil.isFileSizeExceedsLimit(uri, GeneralConfig.GIF_IMAGE_MAX_SIZE)) {
+                if (FileUtil.isFileSizeExceedsLimit(filePath, GeneralConfig.GIF_IMAGE_MAX_SIZE)) {
                     ToastUtil.toastShortMessage(context.getResources().getString(com.tencent.qcloud.tuicore.R.string.TUIKitErrorFileTooLarge));
                     return null;
                 }
             } else {
-                if (FileUtil.isFileSizeExceedsLimit(uri, GeneralConfig.IMAGE_MAX_SIZE)) {
+                if (FileUtil.isFileSizeExceedsLimit(filePath, GeneralConfig.IMAGE_MAX_SIZE)) {
                     ToastUtil.toastShortMessage(context.getResources().getString(com.tencent.qcloud.tuicore.R.string.TUIKitErrorFileTooLarge));
                     return null;
                 }
             }
         }
-        String filePath = FileUtil.getPathFromUri(uri);
         TUIMessageBean messageBean;
         if (isVideo) {
             messageBean = ChatMessageBuilder.buildVideoMessage(filePath);
@@ -1082,7 +1083,7 @@ public abstract class ChatPresenter {
         if (messageBean == null) {
             return;
         }
-        int modifiedProgress = Math.round(progress * 0.3f);
+        int modifiedProgress = Math.round(progress * 0.6f);
         ProgressPresenter.updateProgress(messageBean.getId(), modifiedProgress);
     }
 
@@ -1174,7 +1175,7 @@ public abstract class ChatPresenter {
 
             @Override
             public void onProgress(Object data) {
-                ProgressPresenter.updateProgress(message.getId(), (int) (START_PROGRESS + ((Integer) data * 0.7)));
+                ProgressPresenter.updateProgress(message.getId(), (int) (START_PROGRESS + ((Integer) data * 0.4)));
                 TUIChatUtils.callbackOnProgress(callBack, data);
             }
         });
@@ -1822,7 +1823,7 @@ public abstract class ChatPresenter {
 
             @Override
             public void onProgress(Object data) {
-                ProgressPresenter.updateProgress(message.getId(), (int) (START_PROGRESS + (Integer) data * 0.7));
+                ProgressPresenter.updateProgress(message.getId(), (int) (START_PROGRESS + (Integer) data * 0.4));
             }
         });
 

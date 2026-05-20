@@ -5,28 +5,35 @@
         <!-- **************** Classic UI Activity Start **************** -->
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.classicui.pages.AddMoreActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name=".classicui.pages.AddMoreDetailActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.classicui.pages.NewFriendActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.classicui.pages.BlackListActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.classicui.pages.GroupListActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
 
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.classicui.pages.StartC2CChatActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.classicui.pages.StartGroupChatActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/CommonAppCompatTheme"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <activity
@@ -40,31 +47,39 @@
 
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.classicui.pages.CreateGroupActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
 
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.classicui.pages.GroupTypeSelectActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
 
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.classicui.pages.SetGroupManagerActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.classicui.pages.GroupMemberActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.classicui.pages.ManageGroupActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.classicui.pages.GroupApplyManagerActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.classicui.pages.GroupApplyDetailActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.classicui.pages.NewFriendApplicationDetailActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
@@ -74,15 +89,19 @@
         <!-- **************** Minimalist UI Activity Start **************** -->
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages.NewFriendApplicationMinimalistActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages.NewFriendApplicationDetailMinimalistActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages.BlackListMinimalistActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages.GroupListMinimalistActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
 
         <activity
@@ -112,16 +131,20 @@
 
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages.GroupMemberMinimalistActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages.ManageGroupMinimalistActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages.GroupApplyManagerMinimalistActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity
             android:name="com.tencent.qcloud.tuikit.tuicontact.minimalistui.pages.GroupApplyDetailMinimalistActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <!-- **************** Minimalist UI Activity End **************** -->

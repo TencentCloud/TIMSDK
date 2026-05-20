@@ -7,8 +7,7 @@ plugins {
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    compileSdkVersion 31
     namespace "com.tencent.qcloud.tuikit.tuichat"
     defaultConfig {
         minSdkVersion 19
@@ -66,4 +65,7 @@ dependencies {
     annotationProcessor 'com.google.auto.service:auto-service:1.1.1'
 
     api project(':timcommon')
+    implementation('io.trtc.uikit:albumpicker:1.0.0.+') {
+        exclude group: 'com.google.android.material', module: 'material'
+    }
 }

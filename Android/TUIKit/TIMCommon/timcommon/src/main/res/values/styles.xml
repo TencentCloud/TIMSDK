@@ -42,4 +42,6 @@
         <item name="android:windowEnterAnimation">@anim/common_bottom_select_sheet_enter</item>
     </style>
 
+    <style name="CommonAppCompatTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    </style>
 </resources>

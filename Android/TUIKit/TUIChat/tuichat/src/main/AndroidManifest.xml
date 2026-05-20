@@ -11,23 +11,28 @@
     <application>
         <activity
             android:name="com.tencent.qcloud.tuikit.tuichat.component.imagevideobrowse.ImageVideoBrowseActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:launchMode="singleTask"
             android:configChanges="screenSize|keyboardHidden|orientation" />
 
         <activity
             android:name="com.tencent.qcloud.tuikit.tuichat.classicui.page.FriendProfileActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
         <!-- **************** Classic UI Start **************** -->
         <activity
             android:name="com.tencent.qcloud.tuikit.tuichat.classicui.page.MessageReplyDetailActivity"
             android:windowSoftInputMode="adjustResize|stateHidden"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tencent.qcloud.tuikit.tuichat.classicui.page.TUIForwardChatActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tencent.qcloud.tuikit.tuichat.classicui.page.TUIC2CChatActivity"
             android:launchMode="singleTask"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing|stateHidden" />
 
@@ -36,18 +41,22 @@
             android:name="com.tencent.qcloud.tuikit.tuichat.classicui.page.TUIGroupChatActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
+            android:theme="@style/CommonAppCompatTheme"
             android:windowSoftInputMode="adjustNothing|stateHidden"/>
 
         <activity
             android:name="com.tencent.qcloud.tuikit.tuichat.classicui.page.MessageReceiptDetailActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tencent.qcloud.tuikit.tuichat.component.camera.CameraActivity"
             android:screenOrientation="portrait" />
 
         <activity android:name="com.tencent.qcloud.tuikit.tuichat.classicui.page.GroupInfoActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
         <activity android:name="com.tencent.qcloud.tuikit.tuichat.classicui.page.GroupNoticeActivity"
+            android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
         <!-- **************** Classic UI End **************** -->
 

@@ -520,7 +520,7 @@ public class CallModel implements Cloneable, Serializable {
         } else if (participantType == CALL_PARTICIPANT_TYPE_GROUP) {
             // Group shown: invite、cancel、hangup、timeout、line_busy
             if (protocolType == CALL_PROTOCOL_TYPE_SEND) {
-                display = ("\"" + showName + "\"" + context.getString(R.string.chat_group_call_send));
+                display = (showName + context.getString(R.string.chat_group_call_send));
             } else if (protocolType == CALL_PROTOCOL_TYPE_CANCEL) {
                 display = context.getString(R.string.chat_group_call_end);
             } else if (protocolType == CALL_PROTOCOL_TYPE_HANGUP) {
