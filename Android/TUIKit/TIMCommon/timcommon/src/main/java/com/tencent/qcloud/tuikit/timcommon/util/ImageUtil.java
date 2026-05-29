@@ -1,8 +1,10 @@
 package com.tencent.qcloud.tuikit.timcommon.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -10,6 +12,9 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.ExifInterface;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
+import android.os.Build;
 import android.text.TextUtils;
 
 import com.tencent.imsdk.v2.V2TIMImageElem;
@@ -296,5 +301,67 @@ public class ImageUtil {
     public static void setGroupConversationAvatar(String conversationId, String url) {
         SPUtils spUtils = SPUtils.getInstance(TUILogin.getSdkAppId() + SP_IMAGE);
         spUtils.put(conversationId, url);
+    }
+
+    public static Bitmap extractVideoFrame(Context context, Uri uri) {
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(context, uri);
+            return extractNonBlackFrame(retriever);
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                retriever.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static Bitmap extractNonBlackFrame(MediaMetadataRetriever retriever) {
+        Bitmap bitmap = retriever.getFrameAtTime();
+        if (bitmap != null && !isBitmapBlack(bitmap)) {
+            return bitmap;
+        }
+
+        String durationStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        long durationMs = durationStr != null ? Long.parseLong(durationStr) : 0;
+        long durationUs = durationMs * 1000;
+
+        long seekTimeUs = 200_000L;
+        while (seekTimeUs <= durationUs && seekTimeUs <= 5_000_000L) {
+            Bitmap frame = retriever.getFrameAtTime(seekTimeUs, MediaMetadataRetriever.OPTION_CLOSEST);
+            if (frame != null && !isBitmapBlack(frame)) {
+                return frame;
+            }
+            seekTimeUs *= 2;
+        }
+        return bitmap;
+    }
+
+    private static boolean isBitmapBlack(Bitmap bitmap) {
+        Bitmap target = bitmap;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && bitmap.getConfig() == Bitmap.Config.HARDWARE) {
+            target = bitmap.copy(Bitmap.Config.ARGB_8888, false);
+        }
+        int width = target.getWidth();
+        int height = target.getHeight();
+        int sampleCount = 0;
+        int blackCount = 0;
+        int step = Math.max(1, Math.min(width, height) / 10);
+        for (int x = step / 2; x < width; x += step) {
+            for (int y = step / 2; y < height; y += step) {
+                int pixel = target.getPixel(x, y);
+                if (Color.red(pixel) < 25 && Color.green(pixel) < 25 && Color.blue(pixel) < 25) {
+                    blackCount++;
+                }
+                sampleCount++;
+            }
+        }
+        if (target != bitmap) {
+            target.recycle();
+        }
+        return sampleCount > 0 && (float) blackCount / sampleCount > 0.9f;
     }
 }

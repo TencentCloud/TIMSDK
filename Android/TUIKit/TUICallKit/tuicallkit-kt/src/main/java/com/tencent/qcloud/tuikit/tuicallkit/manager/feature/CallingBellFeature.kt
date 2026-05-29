@@ -224,6 +224,7 @@ class CallingBellFeature(context: Context) {
                 return path
             }
         }
+
         val internalDir = context.filesDir.absolutePath
         tryCopyResourceToPath(context, resId, name, internalDir)?.let { path ->
             return path

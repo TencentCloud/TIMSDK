@@ -8,21 +8,32 @@
         android:id="@+id/call_btn_ai_transcriber"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:visibility="gone"
         android:layout_marginStart="48dp"
         android:layout_marginTop="32dp"
         android:background="@drawable/callview_ic_ai_transcriber_on"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <io.trtc.tuikit.atomicx.ai.TranscriberView
+    <io.trtc.tuikit.atomicx.AITranscriber.TranscriberView
         android:id="@+id/call_view_ai_transcriber"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:visibility="gone"
         android:layout_marginStart="@dimen/spacing_8"
         android:layout_marginEnd="@dimen/spacing_8"
         android:layout_marginBottom="@dimen/spacing_8"
         app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/call_tv_ai_transcriber_empty_hint"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="@string/callview_ai_transcriber_empty_hint"
+        android:textColor="@color/callview_color_text_hint"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/call_view_ai_transcriber"
+        app:layout_constraintEnd_toEndOf="@+id/call_view_ai_transcriber"
+        app:layout_constraintTop_toTopOf="@+id/call_view_ai_transcriber"
+        app:layout_constraintBottom_toBottomOf="@+id/call_view_ai_transcriber"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -34,17 +35,23 @@ import com.tencent.imsdk.v2.V2TIMFriendshipListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 import com.tencent.qcloud.tim.demo.R;
+import com.tencent.qcloud.tim.demo.TIMAppService;
+import com.tencent.qcloud.tim.demo.bean.UserInfo;
+import com.tencent.qcloud.tim.demo.config.AppConfig;
 import com.tencent.qcloud.tim.demo.login.LoginWrapper;
 import com.tencent.qcloud.tim.demo.profile.ProfileMinimalistFragment;
 import com.tencent.qcloud.tim.demo.push.HandleOfflinePushCallBack;
 import com.tencent.qcloud.tim.demo.push.OfflinePushConfigs;
 import com.tencent.qcloud.tim.demo.utils.Constants;
 import com.tencent.qcloud.tim.demo.utils.DemoLog;
+import com.tencent.qcloud.tim.demo.utils.ProfileUtil;
 import com.tencent.qcloud.tim.demo.utils.SystemUtil;
 import com.tencent.qcloud.tim.demo.utils.TUIUtils;
 import com.tencent.qcloud.tuicore.TUIConfig;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
+import com.tencent.qcloud.tuicore.TUILogin;
+import com.tencent.qcloud.tuicore.interfaces.TUICallback;
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView;
@@ -101,13 +108,57 @@ public class MainMinimalistActivity extends BaseMinimalistLightActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         DemoLog.i(TAG, "onCreate");
-        super.onCreate(savedInstanceState);
+        if (!TUILogin.isUserLogined()) {
+            super.onCreate(null);
+        } else {
+            super.onCreate(savedInstanceState);
+        }
         instance = new WeakReference<>(this);
+        checkLoginAndInit();
+    }
 
+    private void checkLoginAndInit() {
+        if (TUILogin.isUserLogined()) {
+            DemoLog.i(TAG, "checkLoginAndInit: already logged in, init directly");
+            initMainActivity();
+            return;
+        }
+
+        UserInfo userInfo = UserInfo.getInstance();
+        boolean isAutoLogin = userInfo != null && !TextUtils.isEmpty(userInfo.getUserId()) && userInfo.isAutoLogin();
+        if (isAutoLogin) {
+            DemoLog.i(TAG, "checkLoginAndInit: not logged in, try auto login");
+            TIMAppService.getInstance().initBeforeLogin(userInfo.getSdkAppId());
+            LoginWrapper.getInstance().loginIMSDK(
+                this, AppConfig.DEMO_SDK_APPID, userInfo.getUserId(), userInfo.getUserSig(), TUIUtils.getLoginConfig(), new TUICallback() {
+                    @Override
+                    public void onSuccess() {
+                        DemoLog.i(TAG, "checkLoginAndInit: auto login success");
+                        TIMAppService.getInstance().registerPushManually();
+                        initMainActivity();
+                    }
+
+                    @Override
+                    public void onError(int errorCode, String errorMessage) {
+                        DemoLog.e(TAG, "checkLoginAndInit: auto login failed, code=" + errorCode + ", msg=" + errorMessage);
+                        redirectToLoginActivity();
+                    }
+                });
+        } else {
+            DemoLog.i(TAG, "checkLoginAndInit: not logged in and auto login disabled, redirect to login");
+            redirectToLoginActivity();
+        }
+    }
+
+    private void initMainActivity() {
         initView();
         initUnreadCountReceiver();
         initRecentCallsReceiver();
         initAppLoginListener();
+    }
+
+    private void redirectToLoginActivity() {
+        ProfileUtil.onLogoutSuccess(this);
     }
 
     private void initAppLoginListener() {

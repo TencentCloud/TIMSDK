@@ -8,6 +8,19 @@
 
     <string name="release_end">松开结束</string>
     <string name="hold_say">按住说话</string>
+    <string name="voice_input_edit_text_hint">发消息或按住说话...</string>
+    <string name="voice_input_release_send_hint">松开发送</string>
+    <string name="voice_input_release_transcribe_hint">松开转文字</string>
+    <string name="voice_input_release_cancel_hint">松开取消</string>
+    <string name="voice_input_cancel">取消</string>
+    <string name="voice_input_transcribe_to_text">转文字</string>
+    <string name="voice_input_send_original_voice">发送原语音</string>
+    <string name="voice_input_transcription_empty">未识别到文字内容</string>
+    <string name="voice_input_transcribing">正在转换语音文字...</string>
+    <string name="voice_input_convert_failed">语音转文字失败</string>
+    <string name="voice_input_auto_stop_countdown">%1$d秒之后将停止录音</string>
+    <string name="voice_input_audio_too_short">语音录制时长太短</string>
+    <string name="voice_input_audio_time_limit_reached">语音录制时长达到上限</string>
 
     <string name="copy_action">复制</string>
     <string name="translate_action">翻译</string>
@@ -259,7 +272,8 @@
     <string name="chat_message_is_pinned">这条消息已经被置顶了</string>
     <string name="chat_message_is_unpinned">这条消息已经被取消置顶了</string>
 
-    <string name="chat_quote_origin_message_revoked">引用内容已撤回</string>
+    <string name="chat_quote_origin_message_revoked">原消息已被撤回</string>
+    <string name="chat_quote_origin_message_deleted">原消息已被删除</string>
     <string name="chat_reply_origin_message_revoked">回复内容已撤回</string>
 
     <string name="group_choose_avatar">选择头像</string>

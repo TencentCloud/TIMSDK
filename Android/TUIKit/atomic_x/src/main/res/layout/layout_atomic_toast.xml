@@ -28,7 +28,7 @@
         android:ellipsize="end"
         android:includeFontPadding="false"
         android:maxWidth="340dp"
-        android:maxLines="2"
+        android:maxLines="3"
         android:textColor="@android:color/white"
         android:textSize="@dimen/text_size_14" />
 

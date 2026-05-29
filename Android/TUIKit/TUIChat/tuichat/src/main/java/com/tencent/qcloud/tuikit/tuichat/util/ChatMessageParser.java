@@ -10,13 +10,13 @@ import com.tencent.imsdk.message.Message;
 import com.tencent.imsdk.v2.V2TIMCustomElem;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMMessageQuoteInfo;
 import com.tencent.imsdk.v2.V2TIMSignalingInfo;
 import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
-import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonConstants;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.CallModel;
@@ -35,7 +35,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.LocationMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
@@ -226,34 +225,15 @@ public class ChatMessageParser {
     }
 
     private static TUIMessageBean parseReplyMessage(V2TIMMessage v2TIMMessage) {
-        String cloudCustomData = v2TIMMessage.getCloudCustomData();
-        if (TextUtils.isEmpty(cloudCustomData)) {
+        V2TIMMessageQuoteInfo quoteInfo = v2TIMMessage.getMessageQuoteInfo();
+        if (quoteInfo == null || TextUtils.isEmpty(quoteInfo.getMsgID())) {
             return null;
         }
-        try {
-            Gson gson = new Gson();
-            HashMap replyHashMap = gson.fromJson(cloudCustomData, HashMap.class);
-            if (replyHashMap != null) {
-                Object replyContentObj = replyHashMap.get(TIMCommonConstants.MESSAGE_REPLY_KEY);
-                ReplyPreviewBean replyPreviewBean = null;
-                if (replyContentObj instanceof Map) {
-                    replyPreviewBean = gson.fromJson(gson.toJson(replyContentObj), ReplyPreviewBean.class);
-                }
-                if (replyPreviewBean != null) {
-                    if (replyPreviewBean.getVersion() > ReplyPreviewBean.VERSION) {
-                        return null;
-                    }
-                    if (TextUtils.isEmpty(replyPreviewBean.getMessageRootID())) {
-                        return new QuoteMessageBean(replyPreviewBean);
-                    } else {
-                        return new ReplyMessageBean(replyPreviewBean);
-                    }
-                }
-            }
-        } catch (JsonSyntaxException e) {
-            TUIChatLog.e(TAG, " getCustomJsonMap error ");
-        }
-        return null;
+        ReplyPreviewBean replyPreviewBean = new ReplyPreviewBean();
+        replyPreviewBean.setMessageID(quoteInfo.getMsgID());
+        replyPreviewBean.setMessageTime(quoteInfo.getMessageTime());
+        replyPreviewBean.setMessageSequence(quoteInfo.getMessageSequence());
+        return new QuoteMessageBean(replyPreviewBean);
     }
 
     public static boolean isTyping(byte[] data) {

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
     android:background="@color/white">
 
     <include
@@ -133,25 +134,6 @@
         android:layout_above="@id/forward_area"
         android:layout_marginBottom="20dp"
         android:layout_alignParentBottom="true" />
-
-    <RelativeLayout
-        android:id="@+id/voice_recording_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/chat_input_layout"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/recording_tips"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:textSize="14sp"
-            android:textColor="@color/black"
-            android:layout_marginTop="10dp" />
-
-    </RelativeLayout>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/forward_area"

@@ -22,8 +22,11 @@ import com.tencent.qcloud.tuikit.tuicallkit.view.component.recents.interfaces.IC
 import com.trtc.tuikit.common.livedata.LiveListObserver
 import com.trtc.tuikit.common.ui.PopupDialog
 import com.trtc.tuikit.common.util.ToastUtil
+import io.trtc.tuikit.atomicx.widget.basicwidget.toast.AtomicToast
 import io.trtc.tuikit.atomicxcore.api.call.CallDirection
+import io.trtc.tuikit.atomicxcore.api.call.CallEndReason
 import io.trtc.tuikit.atomicxcore.api.call.CallInfo
+import io.trtc.tuikit.atomicxcore.api.call.CallListener
 import io.trtc.tuikit.atomicxcore.api.call.CallMediaType
 import io.trtc.tuikit.atomicxcore.api.call.CallStore
 
@@ -58,6 +61,12 @@ class RecentCallsFragment(style: String) : Fragment() {
         }
     }
 
+    private val callObserver: CallListener = object : CallListener() {
+        override fun onCallEnded(callId: String, mediaType: CallMediaType, reason: CallEndReason, userId: String) {
+            refreshData()
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val rootView = inflater.inflate(R.layout.tuicallkit_record_fragment_main, container, false)
         initView(rootView)
@@ -79,11 +88,13 @@ class RecentCallsFragment(style: String) : Fragment() {
     private fun registerObserver() {
         recentCallsManager.callMissedList.observe(callMissObserver)
         recentCallsManager.callHistoryList.observe(callHistoryObserver)
+        CallStore.shared.addListener(callObserver)
     }
 
     private fun unregisterObserver() {
         recentCallsManager.callMissedList.removeObserver(callMissObserver)
         recentCallsManager.callHistoryList.removeObserver(callHistoryObserver)
+        CallStore.shared.removeListener(callObserver)
     }
 
     private fun initView(rootView: View) {
@@ -171,9 +182,10 @@ class RecentCallsFragment(style: String) : Fragment() {
                 if (listAdapter.isMultiSelectMode) {
                     return
                 }
-                if (callInfo.chatGroupId.isNotEmpty()) {
-                    startGroupInfoActivity(callInfo)
-                    ToastUtil.toastLongMessage(getString(R.string.callkit_group_recall_unsupport))
+                if (callInfo.chatGroupId.isNotEmpty() || callInfo.inviteeIds.size > 1) {
+                    context?.let {
+                        AtomicToast.show(it, it.getString(R.string.callkit_group_recall_unsupport) , AtomicToast.Style.ERROR)
+                    }
                     return
                 }
                 var mediaType = CallMediaType.Audio

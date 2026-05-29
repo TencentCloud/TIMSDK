@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="image_uploader_cancel">Cancel</string>
+    <string name="image_uploader_camera">Camera</string>
+    <string name="image_uploader_album">Album</string>
+    <string name="image_uploader_done">Done</string>
+</resources>

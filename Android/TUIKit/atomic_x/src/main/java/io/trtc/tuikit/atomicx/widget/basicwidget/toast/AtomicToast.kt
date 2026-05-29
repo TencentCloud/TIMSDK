@@ -17,7 +17,6 @@ import io.trtc.tuikit.atomicx.R
 import io.trtc.tuikit.atomicx.theme.ThemeStore
 import io.trtc.tuikit.atomicx.theme.tokens.DesignTokenSet
 import org.json.JSONObject
-import java.lang.ref.WeakReference
 
 private const val ATOMIC_EVENT_ID = 100011
 private const val FRAMEWORK_NAME = "AtomicXCore"
@@ -44,9 +43,6 @@ object AtomicToast {
         SHORT(Toast.LENGTH_SHORT),
         LONG(Toast.LENGTH_LONG)
     }
-
-    private var toastRef: WeakReference<Toast>? = null
-    private var layoutRef: WeakReference<View>? = null
 
     private val mainHandler = Handler(Looper.getMainLooper())
     private var pendingTask: Runnable? = null
@@ -82,7 +78,11 @@ object AtomicToast {
             }
         }
         pendingTask = task
-        mainHandler.postDelayed(task, 50)
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            task.run()
+        } else {
+            mainHandler.post(task)
+        }
     }
 
     private fun executeRealShow(
@@ -96,21 +96,13 @@ object AtomicToast {
         val themeStore = ThemeStore.shared(appContext)
         val tokens = themeStore.themeState.value.currentTheme.tokens
 
-        var toast = toastRef?.get()
-        var layout = layoutRef?.get()
+        val layout = LayoutInflater.from(appContext).inflate(R.layout.layout_atomic_toast, null)
+        val toast = Toast(appContext)
 
-        if (toast == null || layout == null) {
-            layout = LayoutInflater.from(appContext).inflate(R.layout.layout_atomic_toast, null)
-            toast = Toast(appContext)
+        @Suppress("DEPRECATION")
+        toast.view = layout
 
-            @Suppress("DEPRECATION")
-            toast.view = layout
-
-            layoutRef = WeakReference(layout)
-            toastRef = WeakReference(toast)
-        }
-
-        applyDesignTokens(appContext, layout!!, text, style, customIcon, tokens)
+        applyDesignTokens(appContext, layout, text, style, customIcon, tokens)
 
         toast.apply {
             this.duration = duration.value

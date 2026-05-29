@@ -2,6 +2,7 @@
     <string name="callkit_enter_pip_mode_fail_hint">Failed to enter Picture-in-Picture mode, Please check if the permission is enabled.</string>
     <string name="callkit_invite_audio_call">Invited you to a voice call</string>
     <string name="callkit_invite_video_call">Invites you to a video call</string>
+    <string name="callkit_invite_multi_call">Invitation to join a group call</string>
     <string name="callkit_group_id_is_empty">groupId is empty</string>
     <string name="callkit_group_title_add_user">Add User</string>
     <string name="callkit_group_hint_you">(you)</string>
@@ -23,20 +24,20 @@
     <string name="callkit_permission_microphone">Microphone</string>
     <string name="callkit_permission_bluetooth">Bluetooth</string>
     <string name="callkit_permission_separator">,</string>
-    <string name="callkit_permission_tips">Please turn on the %s permission first</string>
+    <string name="callkit_permission_tips">%s permission is not enabled. Unable to start audio/video calls.</string>
     <string name="callkit_permission_title">%s applies for access to the %s</string>
-    <string name="callkit_permission_mic_reason">Needs access to your microphone, and it can be used for functions such as Audio/Video Call, Group Audio/Video Call etc.</string>
-    <string name="callkit_permission_camera_reason">Needs access to your camera, and it can be used for functions such as Video Call, Group Video Call etc. For beauty filters to work, we will collect the facial information captured by your camera in real time to detect your facial features.</string>
+    <string name="callkit_permission_mic_reason">Please go to "Settings > %s" to enable microphone permissions.</string>
+    <string name="callkit_permission_camera_reason">Please go to "Settings > %s" to enable camera permissions.</string>
     <string name="callkit_permission_bluetooth_reason">To ensure that you can connect to Bluetooth function for communication during Audio/Video Call, we need to request permission of nearby devices.</string>
 
-    <string name="callkit_package_not_purchased">You do not have TUICallKit package, please open the free experience in the console or purchase the official package</string>
-    <string name="callkit_package_not_support">The package you purchased does not support this ability</string>
+    <string name="callkit_package_not_purchased">This feature requires audio-video call capability package support. To avoid affecting your usage, it is recommended to go to Tencent Cloud · Real-Time Communication Console to activate free trial or purchase official package</string>
+    <string name="callkit_package_not_support">Your current package type does not support this feature. To unlock more capabilities, it is recommended to go to Tencent Cloud · Real-Time Communication Console to upgrade your package</string>
     <string name="callkit_have_a_new_call">You have a new call</string>
 
     <string name="callkit_error_in_peer_blacklist">The identifier is in blacklist. Failed to send this message!</string>
-    <string name="callkit_error_invalid_login">Invalid login, please login again</string>
+    <string name="callkit_error_invalid_login">Failed to initiate the call. Please check your login status and try again</string>
     <string name="callkit_error_parameter_invalid">Parameter error</string>
-    <string name="callkit_error_request_refused">The current status can not use this function</string>
+    <string name="callkit_error_currently_in_a_call">You are currently in a call. Please end it before making a new one</string>
     <string name="callkit_error_request_repeated">The current status is waiting/accept, please do not call it repeatedly</string>
     <string name="callkit_error_scene_not_support">The current scene does not support this function</string>
     <string name="callkit_join_group_call">Join</string>
@@ -46,11 +47,17 @@
 
     <string name="callkit_video_call">Video Call</string>
     <string name="callkit_audio_call">Voice Call</string>
-    <string name="callkit_user_exceed_limit">TUICallKit currently supports call with up to 9 people.For larger conference calls,try using TUIRoomKit</string>
-    <string name="callkit_toast_other_party_hung_up">The other party has hung up</string>
-    <string name="callkit_toast_other_party_declined">The other party has declined the call request</string>
-    <string name="callkit_toast_other_party_no_response">The other party did not respond</string>
-    <string name="callkit_toast_other_party_busy">The other party is busy</string>
+    <string name="callkit_user_exceed_limit">This call supports a maximum of 9 participants</string>
+    <string name="callkit_toast_other_party_hung_up">The other party has hung up. Call ended</string>
+    <string name="callkit_toast_other_party_declined">The other party declined your call request</string>
+    <string name="callkit_toast_other_party_no_response">The other party did not answer. Please try again later</string>
+    <string name="callkit_toast_other_party_busy">The other party is currently in another call. Please try again later</string>
     <string name="callkit_toast_other_party_cancelled">The other party has cancelled the call</string>
-    <string name="callkit_toast_you_have_missed_calls">You have missed calls</string>
+    <string name="callkit_toast_error_call_user_not_exist">User does not exist. Please verify if the user is registered or if invalid characters were entered</string>
+    <string name="callkit_toast_error_camera_occupied">The camera is currently occupied by a system call</string>
+    <string name="callkit_toast_error_microphone_occupied">The microphone is currently occupied by a system call</string>
+    <string name="callkit_toast_error_call_failed">Failed to join the call</string>
+    <string name="callkit_toast_error_call_self">You cannot call yourself</string>
+    <string name="callkit_toast_error_already_in_call">You are already in a call and cannot start another</string>
+    <string name="callkit_toast_error_group_call_has_active_call">This group already has an active call</string>
 </resources>

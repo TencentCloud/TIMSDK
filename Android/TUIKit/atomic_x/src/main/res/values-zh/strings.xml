@@ -1,4 +1,13 @@
 <resources>
+    <!-- Foreground Service -->
+    <string name="common_rtc_channel_name">音视频通信服务</string>
+    <string name="common_rtc_channel_description">运行中</string>
+    <string name="common_sure">确定</string>
+    <string name="common_cancel">取消</string>
+    <string name="common_permission_dialog_title">权限申请</string>
+    <string name="common_permission_dialog_positive_setting_text">去设置</string>
+    <string name="common_float_permission_hint">请同时打开\"后台弹出界面\"和\"显示悬浮窗\"权限</string>
+
     <!-- AI 字幕设置 -->
     <string name="ai_transcriber_settings_title">AI 字幕设置</string>
     <string name="ai_transcriber_section_recognition">识别与翻译设置</string>
@@ -32,4 +41,15 @@
     <string name="ai_trans_lang_de">Deutsch(德语)</string>
     <string name="ai_trans_lang_it">Italiano(意大利语)</string>
     <string name="ai_trans_lang_ru">Русский(俄语)</string>
+
+    <!-- 多通路 -->
+    <string name="smart_cellular_title">改善通话质量?</string>
+    <string name="smart_cellular_wifi_poor">WiFi 网络较差</string>
+    <string name="smart_cellular_cellular_good">蜂窝网络良好</string>
+    <string name="smart_cellular_description">当前 WiFi 网络不稳定，切换至蜂窝数据改善通话质量。\n(可能产生流量费用，具体取决于您的套餐)</string>
+    <string name="smart_cellular_improve">改善通话质量</string>
+    <string name="smart_cellular_keep_wifi">继续使用 WiFi</string>
+    <string name="smart_cellular_switched_to_wifi">网络已切换至 WiFi</string>
+    <string name="smart_cellular_switched_to_cellular">网络已切换至蜂窝数据</string>
+    <string name="smart_cellular_network_switched">网络已自动切换</string>
 </resources>

@@ -87,7 +87,7 @@ class RecentCallsItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
                 val newUserList: MutableList<String> = ArrayList()
                 val nameList: MutableList<String> = ArrayList()
                 for (i in userFullInfoList.indices) {
-                    avatarList.add(userFullInfoList[i].avatarUrl)
+                    avatarList.add(userFullInfoList[i].avatarURL)
                     newUserList.add(userFullInfoList[i].id)
                     nameList.add(userFullInfoList[i].name)
                 }

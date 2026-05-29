@@ -16,16 +16,12 @@ class RecentCallsManager {
         CallStore.shared.queryRecentCalls("", 0, object : CompletionHandler {
             override fun onSuccess() {
                 val recentCalls = CallStore.shared.observerState.recentCalls.value
+                val sortedRecentCalls = recentCalls.sortedByDescending { it.startTime }
                 if (filter != null && CallDirection.Missed == filter.result) {
-                    val missList: ArrayList<CallInfo> = ArrayList(callMissedList.list)
-                    missList.removeAll(recentCalls)
-                    missList.addAll(recentCalls)
+                    val missList = sortedRecentCalls.filter { it.result == CallDirection.Missed }
                     callMissedList.replaceAll(missList)
                 } else {
-                    val historyList: ArrayList<CallInfo> = ArrayList(callHistoryList.list)
-                    historyList.removeAll(recentCalls)
-                    historyList.addAll(recentCalls)
-                    callHistoryList.replaceAll(historyList.toList())
+                    callHistoryList.replaceAll(sortedRecentCalls)
                 }
             }
 

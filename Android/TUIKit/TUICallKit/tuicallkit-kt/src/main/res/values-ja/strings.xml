@@ -2,8 +2,11 @@
     <string name="callkit_enter_pip_mode_fail_hint">ピクチャーインピクチャーモードへの移行に失敗しました。権限が有効になっているか確認してください。</string>
     <string name="callkit_invite_audio_call">音声通話に招待されました</string>
     <string name="callkit_invite_video_call">ビデオ通話に招待されました</string>
+    <string name="callkit_invite_multi_call">グループ通話への招待</string>
     <string name="callkit_group_id_is_empty">グループIDが空です</string>
     <string name="callkit_group_title_add_user">メンバーを招待</string>
+    <string name="callkit_group_hint_you">(あなた)</string>
+    <string name="callkit_group_btn_ok">確定</string>
     <string name="callkit_record_call_title">通話履歴</string>
     <string name="callkit_record_call_delete">削除</string>
     <string name="callkit_record_dialog_message">すべての履歴を消去</string>
@@ -21,18 +24,18 @@
     <string name="callkit_permission_microphone">マイク</string>
     <string name="callkit_permission_bluetooth">Bluetooth</string>
     <string name="callkit_permission_separator">、</string>
-    <string name="callkit_permission_tips">最初に%sの権限を有効にする必要があります</string>
+    <string name="callkit_permission_tips">%s の権限が許可されていないため、音声・ビデオ通話を開始できません。</string>
     <string name="callkit_permission_title">%sは%s権限を取得するよう申請します</string>
-    <string name="callkit_permission_camera_reason">カメラへのアクセス許可が必要で、ビデオ通話、グループビデオ通話などの機能に使用できます。美顔機能を使用する場合は、カメラで撮影された映像から顔の特徴点情報をリアルタイムで収集し、より自然な美しさを提供します。</string>
-    <string name="callkit_permission_mic_reason">マイクへのアクセス許可が必要で、音声/ビデオ通話、グループ音声/ビデオ通話などの機能に使用できます。マイクをオンにした場合のみ、録画した動画に音声が保存されます。</string>
+    <string name="callkit_permission_camera_reason">「設定 > %s」からカメラのアクセス権限を許可してください。</string>
+    <string name="callkit_permission_mic_reason">「設定 > %s」からマイクのアクセス権限を許可してください。</string>
     <string name="callkit_permission_bluetooth_reason">音声/ビデオ通話中にBluetooth接続が正常に行われるには、付近のBluetoothデバイスの検出や接続を許可する必要があります。</string>
-    <string name="callkit_package_not_purchased">TUICallKit パッケージを購入していません。コンソールで無料トライアル版をアクティブ化するか、正式版を購入してください。</string>
-    <string name="callkit_package_not_support">購入したTUICallKitパッケージはこの機能をサポートしていません。パッケージタイプをアップグレードすることをお勧めします。</string>
+    <string name="callkit_package_not_purchased">この機能には音声・ビデオ通話機能パッケージのサポートが必要です。ご利用に影響を与えないよう、Tencent Cloud・リアルタイムコミュニケーションコンソールにアクセスして、無料体験を有効にするか、正式パッケージを購入することをお勧めします</string>
+    <string name="callkit_package_not_support">現在のパッケージタイプはこの機能をサポートしていません。より多くの機能をアンロックするには、Tencent Cloud・リアルタイムコミュニケーションコンソールにアクセスしてパッケージをアップグレードすることをお勧めします</string>
     <string name="callkit_have_a_new_call">新しい通話があります</string>
     <string name="callkit_error_in_peer_blacklist">ユーザーはブラックリストに登録され、通話が開始できませんでした。</string>
-    <string name="callkit_error_invalid_login">ログイン失敗しました。もう一度ログインしてください</string>
+    <string name="callkit_error_invalid_login">通話の開始に失敗しました。ログイン状態を確認して再試行してください</string>
     <string name="callkit_error_parameter_invalid">パラメータエラー</string>
-    <string name="callkit_error_request_refused">現在の状態では、この機能の呼び出しはサポートされていません</string>
+    <string name="callkit_error_currently_in_a_call">現在の状態では、この機能の呼び出しはサポートされていません</string>
     <string name="callkit_error_request_repeated">現在実行中のメソッドを呼び出すことはできません</string>
     <string name="callkit_error_scene_not_support">現在の通話シーンでは、この機能はサポートしていません</string>
     <string name="callkit_join_group_call">参加</string>
@@ -42,11 +45,18 @@
 
     <string name="callkit_video_call">ビデオ通話</string>
     <string name="callkit_audio_call">音声通話</string>
-    <string name="callkit_user_exceed_limit">暫して、最大9人までの通话をサポートしています。複数人の会議を希望する場合、TUIRoomKitを使用してください。</string>
-    <string name="callkit_toast_other_party_hung_up">相手が電話を切りました</string>
-    <string name="callkit_toast_other_party_declined">相手が通話リクエストを拒否しました</string>
-    <string name="callkit_toast_other_party_no_response">相手が応答しませんでした</string>
-    <string name="callkit_toast_other_party_busy">相手は通話中です</string>
+    <string name="callkit_user_exceed_limit">現在の通話は最大 9 名まで同時に参加できます</string>
+    <string name="callkit_toast_other_party_hung_up">相手が電話を切りました。通話終了</string>
+    <string name="callkit_toast_other_party_declined">相手が通話のリクエストを拒否しました</string>
+    <string name="callkit_toast_other_party_no_response">相手が応答しません。しばらくしてからもう一度お試しください</string>
+    <string name="callkit_toast_other_party_busy">相手は現在他の通話中です。しばらくしてからもう一度お試しください</string>
     <string name="callkit_toast_other_party_cancelled">相手が通話をキャンセルしました</string>
-    <string name="callkit_toast_you_have_missed_calls">不在着信があります</string>
+    <string name="callkit_toast_error_call_user_not_exist">ユーザーが存在しません。登録済みか、または不正な文字が入力されていないかご確認ください</string>
+    <string name="callkit_toast_error_camera_occupied">現在、カメラはシステム通話で使用されています</string>
+    <string name="callkit_toast_error_microphone_occupied">現在、マイクはシステム通話で使用されています</string>
+    <string name="callkit_toast_error_call_failed">通話への参加に失敗しました</string>
+    <string name="callkit_toast_error_call_self">自分自身に発信することはできません</string>
+    <string name="callkit_toast_error_already_in_call">現在通話中のため、別の通話を開始できません</string>
+    <string name="callkit_toast_error_group_call_has_active_call">このグループではすでに通話が進行中です</string>
+
 </resources>

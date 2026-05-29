@@ -3,32 +3,40 @@ package io.trtc.tuikit.atomicx.callview
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import androidx.constraintlayout.widget.ConstraintLayout
-import io.trtc.tuikit.atomicx.callview.core.CallViewFunction
-import io.trtc.tuikit.atomicxcore.api.call.CallParticipantInfo
-import io.trtc.tuikit.atomicxcore.api.call.CallStore
-import io.trtc.tuikit.atomicxcore.api.view.CallCoreView
-import io.trtc.tuikit.atomicxcore.api.view.CallLayoutTemplate
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import com.trtc.tuikit.common.util.ScreenUtil.dip2px
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import io.trtc.tuikit.atomicx.R
+import io.trtc.tuikit.atomicx.callview.core.CallViewFunction
 import io.trtc.tuikit.atomicx.callview.core.common.utils.CallUtils
 import io.trtc.tuikit.atomicx.callview.core.common.utils.ImageResourceCache
-import io.trtc.tuikit.atomicx.callview.public.multi.MultiCallWaitingView
+import io.trtc.tuikit.atomicx.callview.core.common.utils.Logger
 import io.trtc.tuikit.atomicx.callview.public.controls.MultiCallControlsView
 import io.trtc.tuikit.atomicx.callview.public.controls.SingleCallControlsView
 import io.trtc.tuikit.atomicx.callview.public.hint.HintView
 import io.trtc.tuikit.atomicx.callview.public.hint.TimerView
+import io.trtc.tuikit.atomicx.callview.public.multi.MultiCallWaitingView
 import io.trtc.tuikit.atomicx.callview.public.transcriber.CallTranscriberView
+import io.trtc.tuikit.atomicx.common.util.ScreenUtil.dip2px
+import io.trtc.tuikit.atomicx.callview.public.smartcellularswitchrecommendation.SmartCellularRecommendationDialog
+import io.trtc.tuikit.atomicx.widget.basicwidget.toast.AtomicToast
+import io.trtc.tuikit.atomicxcore.api.call.CallListener
+import io.trtc.tuikit.atomicxcore.api.call.CallParticipantInfo
 import io.trtc.tuikit.atomicxcore.api.call.CallParticipantStatus
+import io.trtc.tuikit.atomicxcore.api.call.CallStore
+import io.trtc.tuikit.atomicxcore.api.device.DeviceStore
 import io.trtc.tuikit.atomicxcore.api.device.NetworkQuality
+import io.trtc.tuikit.atomicxcore.api.device.NetworkType
+import io.trtc.tuikit.atomicxcore.api.view.CallCoreView
+import io.trtc.tuikit.atomicxcore.api.view.CallLayoutTemplate
 import io.trtc.tuikit.atomicxcore.api.view.VolumeLevel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import org.json.JSONObject
 import java.io.File
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -45,8 +53,8 @@ class CallView @JvmOverloads constructor(
         var originalUrl: String,
         var cachedPath: String?
     )
-    
     private var callMainView: CallCoreView? = null
+    private var transcriberContainer: FrameLayout? = null
     private var subscribeStateJob: Job? = null
     private val participantAvatarInfoMap: MutableMap<String, ParticipantAvatarInfo> = mutableMapOf()
     private val imageResourceCache = ImageResourceCache(context)
@@ -55,8 +63,14 @@ class CallView @JvmOverloads constructor(
     private var layoutTimer: FrameLayout? = null
     private var layoutCallHint: FrameLayout? = null
     private var multiCallWaitingViewContainer: LinearLayout? = null
-
     private var disableFeatures: List<Feature>? = null
+
+    private var callListener: CallListener = object : CallListener() {
+        override fun onSuggestSwitchToCellular() {
+            super.onSuggestSwitchToCellular()
+            this@CallView.onSuggestSwitchToCellular()
+        }
+    }
 
     init {
         initView()
@@ -72,10 +86,12 @@ class CallView @JvmOverloads constructor(
         addFunctionLayout()
         addTranscriberLayout()
         updateWaitingView()
+        CallStore.shared.addListener(callListener)
         subscribeStateJob = CoroutineScope(Dispatchers.Main).launch {
             supervisorScope {
                 launch { observeSelfInfo() }
                 launch { observeParticipantInfo() }
+                launch { observeNetworkType() }
             }
         }
     }
@@ -83,12 +99,14 @@ class CallView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         callMainView?.removeAllViews()
+        callListener.let { CallStore.shared.removeListener(it) }
         subscribeStateJob?.cancel()
     }
 
     private suspend fun observeSelfInfo() {
         CallStore.shared.observerState.selfInfo.collect { selfInfo ->
-            if (selfInfo.status == CallParticipantStatus.Accept && callMainView?.visibility == GONE) {
+            val isAccepted = selfInfo.status == CallParticipantStatus.Accept
+            if (isAccepted && callMainView?.visibility == GONE) {
                 updateWaitingView()
             }
         }
@@ -97,6 +115,12 @@ class CallView @JvmOverloads constructor(
     private suspend fun observeParticipantInfo() {
         CallStore.shared.observerState.allParticipants.collect { allParticipants ->
             updateParticipantsAvatars(allParticipants)
+        }
+    }
+
+    private suspend fun observeNetworkType() {
+        DeviceStore.shared().deviceState.networkType.collect { networkType ->
+            handleNetworkTypeChanged(networkType)
         }
     }
 
@@ -149,8 +173,8 @@ class CallView @JvmOverloads constructor(
         if (disableFeatures?.contains(Feature.AI_TRANSCRIBER) == true) {
             return
         }
-        val transcriberContainer = findViewById<FrameLayout>(R.id.call_layout_transcriber_container)
-        transcriberContainer.addView(CallTranscriberView(context))
+        transcriberContainer = findViewById<FrameLayout>(R.id.call_layout_transcriber_container)
+        transcriberContainer?.addView(CallTranscriberView(context))
     }
 
     private fun addFunctionLayout() {
@@ -183,7 +207,7 @@ class CallView @JvmOverloads constructor(
         }
         for (participant in participants) {
             val participantId = participant.id
-            val currentAvatarUrl = participant.avatarUrl ?: ""
+            val currentAvatarUrl = participant.avatarURL ?: ""
             val existingInfo = participantAvatarInfoMap[participantId]
             if (existingInfo?.originalUrl != currentAvatarUrl) {
                 participantsToUpdate.add(participantId to currentAvatarUrl)
@@ -235,6 +259,30 @@ class CallView @JvmOverloads constructor(
             .mapValues { it.value.cachedPath!! }
     }
 
+    private fun onSuggestSwitchToCellular() {
+        this.post {
+            try {
+                val dialog = SmartCellularRecommendationDialog(context)
+                dialog.onEnableSmartCellular = {
+                    enableCellularFallback()
+                }
+                dialog.show()
+            } catch (e: Exception) {
+                Logger.e("showSmartCellularRecommendation failed: ${e.message}")
+            }
+        }
+    }
+
+    private fun handleNetworkTypeChanged(type: NetworkType) {
+        val toastString = when (type) {
+            NetworkType.CELLULAR -> context.getString(R.string.smart_cellular_switched_to_cellular)
+            NetworkType.WIFI -> context.getString(R.string.smart_cellular_switched_to_wifi)
+            else -> return
+        }
+        AtomicToast.show(context, toastString)
+    }
+
+
     override fun setLayoutTemplate(template: CallLayoutTemplate) {
         val isPipView = template == CallLayoutTemplate.Pip
         layoutFunction?.visibility = if (isPipView) GONE else VISIBLE
@@ -244,6 +292,7 @@ class CallView @JvmOverloads constructor(
         callMainView?.visibility = VISIBLE
         updateCallCoreViewTopMargin(template)
         callMainView?.setLayoutTemplate(template)
+        transcriberContainer?.isVisible = !isPipView
     }
 
     private fun updateCallCoreViewTopMargin(template: CallLayoutTemplate) {
@@ -272,6 +321,13 @@ class CallView @JvmOverloads constructor(
         val inviteeIdListSize = CallStore.shared.observerState.activeCall.value.inviteeIds.size
         val chatGroupId = CallStore.shared.observerState.activeCall.value.chatGroupId
         return chatGroupId.isNotEmpty() || inviteeIdListSize > 1
+    }
+
+    private fun enableCellularFallback() {
+        val json = JSONObject()
+        json.put("api", "enableCellularFallback")
+        json.put("params", JSONObject().put("enable", true))
+        CallStore.shared.callExperimentalAPI(json.toString())
     }
 
     companion object {

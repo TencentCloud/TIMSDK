@@ -64,7 +64,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.MessageTyping;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.UserStatusBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.component.audio.AudioPlayer;
 import com.tencent.qcloud.tuikit.tuichat.component.audio.AudioRecorder;
 import com.tencent.qcloud.tuikit.tuichat.component.pinned.GroupPinnedView;
@@ -111,8 +110,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
 
     protected FrameLayout mCustomView;
     protected NoticeLayout mGroupApplyLayout;
-    protected View mRecordingGroup;
-    protected TextView mRecordingTips;
     private MessageRecyclerView mMessageRecyclerView;
     private ImageView chatBackgroundView;
     private InputView mInputView;
@@ -206,8 +203,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
         mInputView.setChatLayout(this);
         boolean enableMainPageInputBar = TUIChatConfigMinimalist.isShowInputBar();
         mInputView.setVisibility(enableMainPageInputBar ? VISIBLE : GONE);
-        mRecordingGroup = findViewById(R.id.voice_recording_view);
-        mRecordingTips = findViewById(R.id.recording_tips);
         mGroupApplyLayout = findViewById(R.id.chat_group_apply_layout);
         mNoticeLayout = findViewById(R.id.chat_notice_layout);
         mCustomView = findViewById(R.id.custom_layout);
@@ -969,9 +964,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
             }
 
             @Override
-            public void onReplyMessageClick(TUIMessageBean msg) {
-                replyMessage(msg);
-            }
+            public void onReplyMessageClick(TUIMessageBean msg) {}
 
             @Override
             public void onQuoteMessageClick(TUIMessageBean msg) {
@@ -1047,27 +1040,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
 
             @Override
             public void onRecordStatusChanged(int status) {
-                switch (status) {
-                    case RECORD_START:
-                        startRecording();
-                        break;
-                    case RECORD_CONTINUE:
-                        showContinueRecord();
-                        break;
-                    case RECORD_STOP:
-                    case RECORD_CANCEL:
-                        stopRecording();
-                        break;
-                    case RECORD_READY_TO_CANCEL:
-                        readyToCancelRecord();
-                        break;
-                    case RECORD_TOO_SHORT:
-                    case RECORD_FAILED:
-                        stopAbnormally(status);
-                        break;
-                    default:
-                        break;
-                }
             }
 
             @Override
@@ -1100,36 +1072,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
                 sendTypingStatusMessage(true);
             }
 
-            private void startRecording() {
-                post(() -> {
-                    AudioPlayer.getInstance().stopPlay();
-                    mRecordingGroup.setVisibility(View.VISIBLE);
-                    mRecordingTips.setText(TUIChatService.getAppContext().getString(R.string.left_cancle_send));
-                });
-            }
-
-            private void showContinueRecord() {
-                post(() -> mRecordingTips.setText(TUIChatService.getAppContext().getString(R.string.left_cancle_send)));
-            }
-
-            private void stopRecording() {
-                post(() -> mRecordingGroup.setVisibility(View.GONE));
-            }
-
-            private void stopAbnormally(final int status) {
-                post(() -> {
-                    if (status == RECORD_TOO_SHORT) {
-                        mRecordingTips.setText(TUIChatService.getAppContext().getString(R.string.say_time_short));
-                    } else {
-                        mRecordingTips.setText(TUIChatService.getAppContext().getString(R.string.record_fail));
-                    }
-                });
-                postDelayed(() -> mRecordingGroup.setVisibility(View.GONE), 500);
-            }
-
-            private void readyToCancelRecord() {
-                post(() -> mRecordingTips.setText(TUIChatService.getAppContext().getString(R.string.up_cancle_send)));
-            }
         });
 
         forwardCancelButton.setOnClickListener(new OnClickListener() {
@@ -1180,11 +1122,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
         getInputLayout().setMessageHandler(new InputView.MessageHandler() {
             @Override
             public void sendMessage(TUIMessageBean msg) {
-                if (msg instanceof ReplyMessageBean) {
-                    ChatView.this.sendReplyMessage(msg, false);
-                } else {
-                    ChatView.this.sendMessage(msg, false);
-                }
+                ChatView.this.sendMessage(msg, false);
             }
 
             @Override
@@ -1275,16 +1213,8 @@ public class ChatView extends LinearLayout implements IChatLayout {
         showForwardTextDialog(text);
     }
 
-    // Reply Message need MessageRootId
-    protected void replyMessage(TUIMessageBean messageBean) {
-        ReplyPreviewBean replyPreviewBean = ChatMessageBuilder.buildReplyPreviewBean(messageBean);
-        mInputView.showReplyPreview(replyPreviewBean);
-    }
-
-    // Quote Message not need MessageRootId
     protected void quoteMessage(TUIMessageBean messageBean) {
         ReplyPreviewBean replyPreviewBean = ChatMessageBuilder.buildReplyPreviewBean(messageBean);
-        replyPreviewBean.setMessageRootID(null);
         mInputView.showReplyPreview(replyPreviewBean);
     }
 
@@ -1477,39 +1407,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
     @Override
     public void sendMessage(TUIMessageBean msg, boolean retry) {
         sendMessage(msg, retry, null);
-    }
-
-    public void sendReplyMessage(TUIMessageBean msg, boolean retry) {
-        presenter.sendMessage(msg, retry, false, new IUIKitCallback<TUIMessageBean>() {
-            @Override
-            public void onSuccess(TUIMessageBean data) {
-                ThreadUtils.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        scrollToEnd();
-                    }
-                });
-                presenter.modifyRootMessageToAddReplyInfo((ReplyMessageBean) data, new IUIKitCallback<Void>() {
-                    @Override
-                    public void onError(String module, int errCode, String errMsg) {
-                        ToastUtil.toastShortMessage("modify message failed code = " + errCode + " message = " + errMsg);
-                    }
-                });
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                String toastMsg = errCode + ", " + errMsg;
-                if (errCode == TUIConstants.BuyingFeature.ERR_SDK_INTERFACE_NOT_SUPPORT) {
-                    showNotSupportDialog();
-                    if (msg.isNeedReadReceipt()) {
-                        toastMsg = getResources().getString(R.string.chat_message_read_receipt)
-                            + getResources().getString(com.tencent.qcloud.tuicore.R.string.TUIKitErrorUnsupporInterfaceSuffix);
-                    }
-                }
-                ToastUtil.toastLongMessage(toastMsg);
-            }
-        });
     }
 
     public void setChatBackground(Drawable drawable) {

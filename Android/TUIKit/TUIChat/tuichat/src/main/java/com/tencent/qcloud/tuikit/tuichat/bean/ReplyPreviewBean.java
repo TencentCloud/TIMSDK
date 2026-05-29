@@ -1,7 +1,5 @@
 package com.tencent.qcloud.tuikit.tuichat.bean;
 
-import android.text.TextUtils;
-
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 
 import java.io.Serializable;
@@ -10,7 +8,6 @@ public class ReplyPreviewBean implements Serializable {
     public static final int VERSION = 1;
 
     private String messageID;
-    private String messageRootID;
     private String messageAbstract;
     private String messageSender;
     private transient String messageSenderName;
@@ -92,20 +89,5 @@ public class ReplyPreviewBean implements Serializable {
 
     public void setMessageTime(long messageTime) {
         this.messageTime = messageTime;
-    }
-
-    public String getMessageRootID() {
-        return messageRootID;
-    }
-
-    public void setMessageRootID(String messageRootID) {
-        this.messageRootID = messageRootID;
-    }
-
-    /**
-     * @return true if it's replayMessage, or false it's quoteMessage
-     */
-    public boolean isReplyMessage() {
-        return !TextUtils.isEmpty(messageRootID);
     }
 }

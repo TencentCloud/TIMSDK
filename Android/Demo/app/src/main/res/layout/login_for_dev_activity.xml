@@ -9,7 +9,6 @@
         android:id="@+id/modify_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
         android:layout_marginEnd="10dp"
         android:layout_toStartOf="@id/modify_theme"
         android:orientation="horizontal"
@@ -46,7 +45,6 @@
         android:id="@+id/modify_theme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
         android:layout_marginEnd="10dp"
         android:layout_toStartOf="@id/language_area"
         android:orientation="horizontal"
@@ -83,7 +81,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="50dp"
         android:layout_marginEnd="10dp"
         android:orientation="horizontal"
         tools:visibility="visible">

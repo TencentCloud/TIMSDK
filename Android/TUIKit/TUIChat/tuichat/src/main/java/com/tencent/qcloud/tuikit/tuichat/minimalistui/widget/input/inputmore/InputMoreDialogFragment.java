@@ -30,6 +30,7 @@ public class InputMoreDialogFragment extends DialogFragment {
     private List<InputMoreItem> mInputMoreList = new ArrayList<>();
     private RecyclerView mInputActionView;
     private SelectAdapter mAdapter;
+    private Runnable onDismissCallback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,6 +78,18 @@ public class InputMoreDialogFragment extends DialogFragment {
 
     public void setActions(List<InputMoreItem> actions) {
         this.mInputMoreList = actions;
+    }
+
+    public void setOnDismissCallback(Runnable callback) {
+        this.onDismissCallback = callback;
+    }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (onDismissCallback != null) {
+            onDismissCallback.run();
+        }
     }
 
     class SelectAdapter extends RecyclerView.Adapter<SelectAdapter.SelectViewHolder> {

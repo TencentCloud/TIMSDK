@@ -92,8 +92,6 @@ public class LoginForDevActivity extends BaseLightActivity {
         modifyTheme = findViewById(R.id.modify_theme);
         logo = findViewById(R.id.logo);
         if (Build.VERSION.SDK_INT >= 21) {
-            View decorView = getWindow().getDecorView();
-            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
             getWindow().setNavigationBarColor(Color.TRANSPARENT);
         }

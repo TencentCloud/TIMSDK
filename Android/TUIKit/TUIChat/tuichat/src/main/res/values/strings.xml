@@ -8,6 +8,19 @@
 
     <string name="release_end">Release to Send</string>
     <string name="hold_say">Hold to Talk</string>
+    <string name="voice_input_edit_text_hint">Send a message or hold to talk...</string>
+    <string name="voice_input_release_send_hint">Release to send</string>
+    <string name="voice_input_release_transcribe_hint">Release to transcribe</string>
+    <string name="voice_input_release_cancel_hint">Release to cancel</string>
+    <string name="voice_input_cancel">Cancel</string>
+    <string name="voice_input_transcribe_to_text">To text</string>
+    <string name="voice_input_send_original_voice">Send voice</string>
+    <string name="voice_input_transcription_empty">No text recognized</string>
+    <string name="voice_input_transcribing">Converting voice to text...</string>
+    <string name="voice_input_convert_failed">Voice to text failed</string>
+    <string name="voice_input_auto_stop_countdown">%1$ds until recording stops</string>
+    <string name="voice_input_audio_too_short">The voice recording is too short</string>
+    <string name="voice_input_audio_time_limit_reached">The voice recording time limit has been reached</string>
 
     <string name="copy_action">Copy</string>
     <string name="translate_action">Translate</string>
@@ -262,7 +275,8 @@
     <string name="chat_message_is_pinned">The message is already pinned.</string>
     <string name="chat_message_is_unpinned">This message has already been unpinned.</string>
 
-    <string name="chat_quote_origin_message_revoked">Quoted content has been revoked</string>
+    <string name="chat_quote_origin_message_revoked">Original message recalled</string>
+    <string name="chat_quote_origin_message_deleted">Original message deleted</string>
     <string name="chat_reply_origin_message_revoked">Reply content has been revoked</string>
 
     <string name="group_id">Group ID</string>

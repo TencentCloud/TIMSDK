@@ -40,4 +40,6 @@
     <string name="callview_permission_tips">Please turn on the %s permission first</string>
     <string name="callview_permission_title">%s applies for access to the %s</string>
     <string name="callview_permission_camera_reason">Needs access to your camera, and it can be used for functions such as Video Call, Group Video Call etc. For beauty filters to work, we will collect the facial information captured by your camera in real time to detect your facial features.</string>
+
+    <string name="callview_ai_transcriber_empty_hint">AI Real-time Subtitles</string>
 </resources>

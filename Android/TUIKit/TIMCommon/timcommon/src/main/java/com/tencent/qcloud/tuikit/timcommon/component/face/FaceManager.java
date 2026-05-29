@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
@@ -28,9 +29,12 @@ import com.tencent.qcloud.tuikit.timcommon.bean.FaceGroup;
 import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonLog;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
@@ -38,6 +42,7 @@ import java.util.regex.Pattern;
 
 public class FaceManager {
     private static final String TAG = "FaceManager";
+    private static final Pattern EMOJI_PATTERN = Pattern.compile("\\[(\\S+?)\\]");
 
     private static final class FaceManagerHolder {
         @SuppressLint("StaticFieldLeak") private static final FaceManager instance = new FaceManager();
@@ -254,6 +259,26 @@ public class FaceManager {
         return getEmojiMap().get(faceChar) != null;
     }
 
+    public static void insertEmoji(EditText editText, String emojiKey, int index) {
+        Emoji emoji = getEmojiMap().get(emojiKey);
+        if (emoji == null) {
+            editText.getText().insert(index, emojiKey);
+            return;
+        }
+        Bitmap bitmap = emoji.getIcon();
+        if (bitmap == null) {
+            editText.getText().insert(index, emojiKey);
+            return;
+        }
+        SpannableString spannableEmoji = new SpannableString(emojiKey);
+        BitmapDrawable bitmapDrawable = new BitmapDrawable(getInstance().context.getResources(), bitmap);
+        int size = getInstance().context.getResources().getDimensionPixelSize(R.dimen.common_default_emoji_size);
+        bitmapDrawable.setBounds(0, 0, size, size);
+        ImageSpan imageSpan = new CenterImageSpan(bitmapDrawable);
+        spannableEmoji.setSpan(imageSpan, 0, emojiKey.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        editText.getText().insert(index, spannableEmoji);
+    }
+
     public static boolean handlerEmojiText(TextView comment, CharSequence content, boolean typing) {
         if (comment == null) {
             return false;
@@ -263,38 +288,65 @@ public class FaceManager {
             return false;
         }
 
+        boolean isEditing = comment instanceof EditText && content instanceof Editable;
         Spannable spannable;
-        if (comment instanceof EditText && content instanceof Editable) {
+        if (isEditing) {
             spannable = (Editable) content;
-            ImageSpan[] imageSpans = ((Editable) content).getSpans(0, content.length(), ImageSpan.class);
-            for (ImageSpan span : imageSpans) {
-                ((Editable) content).removeSpan(span);
-            }
         } else {
             spannable = new SpannableStringBuilder(content);
         }
-        String regex = "\\[(\\S+?)\\]";
-        Pattern p = Pattern.compile(regex);
-        Matcher m = p.matcher(content);
-        boolean imageFound = false;
-        while (m.find()) {
-            String emojiName = m.group();
-            Emoji emoji = getEmojiMap().get(emojiName);
-            if (emoji != null) {
-                Bitmap bitmap = emoji.getIcon();
-                if (bitmap != null) {
-                    imageFound = true;
 
-                    BitmapDrawable bitmapDrawable = new BitmapDrawable(getInstance().context.getResources(), bitmap);
-                    int size = getInstance().context.getResources().getDimensionPixelSize(R.dimen.common_default_emoji_size);
-                    bitmapDrawable.setBounds(0, 0, size, size);
-                    ImageSpan imageSpan = new CenterImageSpan(bitmapDrawable);
-                    spannable.setSpan(imageSpan, m.start(), m.end(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        Matcher m = EMOJI_PATTERN.matcher(content);
+        boolean imageFound = false;
+
+        if (isEditing) {
+            ImageSpan[] existingSpans = spannable.getSpans(0, content.length(), ImageSpan.class);
+            Map<Integer, ImageSpan> spanByStart = new HashMap<>(existingSpans.length);
+            for (ImageSpan span : existingSpans) {
+                spanByStart.put(spannable.getSpanStart(span), span);
+            }
+
+            Set<Integer> validPositions = new HashSet<>();
+            while (m.find()) {
+                String emojiName = m.group();
+                Emoji emoji = getEmojiMap().get(emojiName);
+                if (emoji != null && emoji.getIcon() != null) {
+                    imageFound = true;
+                    int start = m.start();
+                    validPositions.add(start);
+                    if (!spanByStart.containsKey(start)) {
+                        BitmapDrawable bitmapDrawable = new BitmapDrawable(getInstance().context.getResources(), emoji.getIcon());
+                        int size = getInstance().context.getResources().getDimensionPixelSize(R.dimen.common_default_emoji_size);
+                        bitmapDrawable.setBounds(0, 0, size, size);
+                        ImageSpan imageSpan = new CenterImageSpan(bitmapDrawable);
+                        spannable.setSpan(imageSpan, start, m.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                }
+            }
+
+            for (ImageSpan span : existingSpans) {
+                if (!validPositions.contains(spannable.getSpanStart(span))) {
+                    spannable.removeSpan(span);
+                }
+            }
+        } else {
+            while (m.find()) {
+                String emojiName = m.group();
+                Emoji emoji = getEmojiMap().get(emojiName);
+                if (emoji != null) {
+                    Bitmap bitmap = emoji.getIcon();
+                    if (bitmap != null) {
+                        imageFound = true;
+                        BitmapDrawable bitmapDrawable = new BitmapDrawable(getInstance().context.getResources(), bitmap);
+                        int size = getInstance().context.getResources().getDimensionPixelSize(R.dimen.common_default_emoji_size);
+                        bitmapDrawable.setBounds(0, 0, size, size);
+                        ImageSpan imageSpan = new CenterImageSpan(bitmapDrawable);
+                        spannable.setSpan(imageSpan, m.start(), m.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
                 }
             }
         }
-        
-        // If no emoticon picture is found, and it is currently in the input state, the input box will not be reset.
+
         if (!imageFound && typing) {
             return false;
         }
@@ -327,9 +379,7 @@ public class FaceManager {
         }
 
         SpannableStringBuilder sb = new SpannableStringBuilder(text);
-        String regex = "\\[(\\S+?)\\]";
-        Pattern p = Pattern.compile(regex);
-        Matcher m = p.matcher(text);
+        Matcher m = EMOJI_PATTERN.matcher(text);
         ArrayList<EmojiData> emojiDataArrayList = new ArrayList<>();
         
         // Traverse to find matching characters and store
@@ -368,9 +418,7 @@ public class FaceManager {
     }
 
     public static List<String> splitEmojiText(String text) {
-        String regex = "\\[(\\S+?)\\]";
-        Pattern p = Pattern.compile(regex);
-        Matcher m = p.matcher(text);
+        Matcher m = EMOJI_PATTERN.matcher(text);
         ArrayList<EmojiData> emojiDataList = new ArrayList<>();
         int lastMentionIndex = -1;
         while (m.find()) {
@@ -418,10 +466,7 @@ public class FaceManager {
             return null;
         }
         List<String> emojiKeyList = new ArrayList<>();
-        // TUIKit custom emoji.
-        String regexOfCustomEmoji = "\\[(\\S+?)\\]";
-        Pattern patternOfCustomEmoji = Pattern.compile(regexOfCustomEmoji);
-        Matcher matcherOfCustomEmoji = patternOfCustomEmoji.matcher(text);
+        Matcher matcherOfCustomEmoji = EMOJI_PATTERN.matcher(text);
         while (matcherOfCustomEmoji.find()) {
             String emojiName = matcherOfCustomEmoji.group();
             Emoji emoji = getEmojiMap().get(emojiName);

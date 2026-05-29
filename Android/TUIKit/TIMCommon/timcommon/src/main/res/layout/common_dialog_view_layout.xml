@@ -41,13 +41,11 @@
 
         <Button
             android:id="@+id/btn_neg"
+            style="@style/TUIKitDialogButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:background="@drawable/common_trans_bg"
             android:gravity="center"
-            android:textAllCaps="false"
-            android:textColor="?attr/core_primary_color"
             android:textSize="16sp" />
 
         <ImageView
@@ -58,13 +56,11 @@
 
         <Button
             android:id="@+id/btn_pos"
+            style="@style/TUIKitDialogButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:background="@drawable/common_trans_bg"
             android:gravity="center"
-            android:textAllCaps="false"
-            android:textColor="?attr/core_primary_color"
             android:textSize="16sp" />
     </LinearLayout>
 

@@ -2,8 +2,11 @@
     <string name="callkit_enter_pip_mode_fail_hint">فشل في الدخول إلى وضع الصورة داخل الصورة. يرجى التحقق مما إذا كانت الأذونات مفعلة</string>
     <string name="callkit_invite_audio_call">دعوتك لمكالمة صوتية...</string>
     <string name="callkit_invite_video_call">دعوتك لمكالمة فيديو...</string>
+    <string name="callkit_invite_multi_call">دعوة للانضمام إلى مكالمة جماعية</string>
     <string name="callkit_group_id_is_empty">معرف المجموعة فارغ</string>
     <string name="callkit_group_title_add_user">إضافة مستخدم</string>
+    <string name="callkit_group_hint_you">(أنت)</string>
+    <string name="callkit_group_btn_ok">تأكيد</string>
     <string name="callkit_record_call_title">المكالمات الأخيرة</string>
     <string name="callkit_record_call_delete">حذف</string>
     <string name="callkit_record_dialog_message">مسح كل سجل المكالمات</string>
@@ -21,20 +24,20 @@
     <string name="callkit_permission_microphone">الميكروفون</string>
     <string name="callkit_permission_bluetooth">البلوتوث</string>
     <string name="callkit_permission_separator">،</string>
-    <string name="callkit_permission_tips">يرجى تشغيل إذن %s أولاً</string>
+    <string name="callkit_permission_tips">إذن %s غير مفعل، تعذر بدء مكالمة الصوت والفيديو.ً</string>
     <string name="callkit_permission_title">%s يتقدم بطلب الوصول إلى %s</string>
-    <string name="callkit_permission_mic_reason">يحتاج إلى الوصول إلى ميكروفونك ، ويمكن استخدامه لوظائف مثل المكالمة الصوتية / الفيديو ، المكالمة الصوتية / الفيديو الجماعية وما إلى ذلك.</string>
-    <string name="callkit_permission_camera_reason">يحتاج إلى الوصول إلى كاميراك ، ويمكن استخدامه لوظائف مثل المكالمة الفيديو ، المكالمة الفيديو الجماعية وما إلى ذلك. لتعمل مرشحات الجمال ، سنجمع معلومات الوجه التي يتم التقاطها بكاميراك في الوقت الحقيقي لكشف ملامح وجهك.</string>
+    <string name="callkit_permission_mic_reason"> يرجى الانتقال إلى "الإعدادات > %s" لتفعيل إذن الميكروفون.</string>
+    <string name="callkit_permission_camera_reason"> يرجى الانتقال إلى "الإعدادات > %s" لتفعيل إذن الكاميرا.</string>
     <string name="callkit_permission_bluetooth_reason">يحتاج إلى الوصول إلى بلوتوثك ، ويمكن استخدامه لسماعة البلوتوث.</string>
 
-    <string name="callkit_package_not_purchased">ليس لديك حزمة TUICallKit ، يرجى فتح التجربة المجانية في لوحة التحكم أو شراء الحزمة الرسمية</string>
-    <string name="callkit_package_not_support">الحزمة التي اشتريتها لا تدعم هذه القدرة</string>
+    <string name="callkit_package_not_purchased">تتطلب هذه الميزة دعم حزمة قدرات المكالمات الصوتية والمرئية. لتجنب التأثير على استخدامك ، يوصى بالانتقال إلى Tencent Cloud · وحدة تحكم الاتصالات في الوقت الفعلي لتفعيل التجربة المجانية أو شراء الحزمة الرسمية</string>
+    <string name="callkit_package_not_support">نوع الحزمة الحالي الخاص بك لا يدعم هذه الميزة. لفتح المزيد من القدرات ، يوصى بالانتقال إلى Tencent Cloud · وحدة تحكم الاتصالات في الوقت الفعلي لترقية حزمتك</string>
     <string name="callkit_have_a_new_call">لديك مكالمة جديدة</string>
 
     <string name="callkit_error_in_peer_blacklist">فشلت المكالمة ، المستخدم في القائمة السوداء ، ممنوع الإطلاق.</string>
-    <string name="callkit_error_invalid_login">الرجاء تسجيل الدخول مرة أخرى، تسجيل الدخول غير صحيح</string>
+    <string name="callkit_error_invalid_login">فشل إجراء المكالمة. يرجى التحقق من حالة تسجيل الدخول والمحاولة مرة أخرى</string>
     <string name="callkit_error_parameter_invalid">خطأ المعلمة</string>
-    <string name="callkit_error_request_refused">الحالة الحالية لا تدعم نداء الدالة</string>
+    <string name="callkit_error_currently_in_a_call">أنت في مكالمة حالياً. يرجى إنهاؤها قبل إجراء مكالمة جديدة</string>
     <string name="callkit_error_request_repeated">الطريقة الحالية تتم تنفيذها، يرجى عدم استدعاءها مرة أخرى</string>
     <string name="callkit_error_scene_not_support">مشهد المكالمة الحالي لا يدعم هذه الوظيفة</string>
     <string name="callkit_join_group_call">انضمام</string>
@@ -44,11 +47,18 @@
 
     <string name="callkit_video_call">مكالمة فيديو</string>
     <string name="callkit_audio_call">مكالمة صوتية</string>
-    <string name="callkit_user_exceed_limit">يدعم TUICallKit حاليًا المكالمة مع ما يصل إلى 9 أشخاص. لمؤتمرات الاتصال الأكبر ، جرب استخدام TUIRoomKit</string>
-    <string name="callkit_toast_other_party_hung_up">الطرف الآخر أنهى المكالمة</string>
-    <string name="callkit_toast_other_party_declined">الطرف الآخر رفض طلب المكالمة</string>
-    <string name="callkit_toast_other_party_no_response">الطرف الآخر لم يرد</string>
-    <string name="callkit_toast_other_party_busy">الطرف الآخر مشغول</string>
+    <string name="callkit_user_exceed_limit">تدعم هذه المكالمة بحد أقصى 9 مشاركين في نفس الوقت</string>
+    <string name="callkit_toast_other_party_hung_up">لقد قطع الطرف الآخر الاتصال. انتهت المكالمة</string>
+    <string name="callkit_toast_other_party_declined">رفض الطرف الآخر طلب المكالمة الخاص بك</string>
+    <string name="callkit_toast_other_party_no_response">لم يرد الطرف الآخر، يرجى المحاولة مرة أخرى لاحقاً</string>
+    <string name="callkit_toast_other_party_busy">الطرف الآخر في مكالمة أخرى حالياً. يرجى المحاولة مرة أخرى لاحقاً</string>
     <string name="callkit_toast_other_party_cancelled">الطرف الآخر ألغى المكالمة</string>
-    <string name="callkit_toast_you_have_missed_calls">لديك مكالمات لم يرد عليها</string>
+    <string name="callkit_toast_error_call_user_not_exist">المستخدم غير موجود. يرجى التحقق مما إذا كان المستخدم مسجلاً أو إذا تم إدخال أحرف غير صالحة</string>
+    <string name="callkit_toast_error_camera_occupied">الكاميرا مشغولة حالياً بمكالمة نظام</string>
+    <string name="callkit_toast_error_microphone_occupied">الميكروفون مشغول حالياً بمكالمة نظام</string>
+    <string name="callkit_toast_error_call_failed">فشل الانضمام إلى المكالمة</string>
+    <string name="callkit_toast_error_call_self">لا يمكنك إجراء مكالمة مع نفسك</string>
+    <string name="callkit_toast_error_already_in_call">أنت في مكالمة بالفعل ولا يمكنك بدء مكالمة أخرى.</string>
+    <string name="callkit_toast_error_group_call_has_active_call">هذه المجموعة لديها بالفعل مكالمة نشطة</string>
+
 </resources>

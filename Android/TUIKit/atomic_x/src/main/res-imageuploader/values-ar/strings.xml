@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="image_uploader_cancel">إلغاء</string>
+    <string name="image_uploader_camera">الكاميرا</string>
+    <string name="image_uploader_album">الألبوم</string>
+    <string name="image_uploader_done">تم</string>
+</resources>

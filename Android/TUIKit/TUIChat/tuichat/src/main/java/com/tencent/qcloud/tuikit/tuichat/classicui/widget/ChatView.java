@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -57,7 +56,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.MessageTyping;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.CallingMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.classicui.component.noticelayout.NoticeLayout;
 import com.tencent.qcloud.tuikit.tuichat.classicui.interfaces.IChatLayout;
 import com.tencent.qcloud.tuikit.tuichat.classicui.page.TUIBaseChatFragment;
@@ -81,13 +79,10 @@ import com.tencent.qcloud.tuikit.tuichat.presenter.GroupChatPresenter;
 import com.tencent.qcloud.tuikit.tuichat.util.ChatMessageBuilder;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class ChatView extends LinearLayout implements IChatLayout {
     private static final String TAG = "ChatView";
@@ -98,8 +93,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
     protected MessageAdapter mAdapter;
     private ForwardSelectActivityListener mForwardSelectActivityListener;
     private TotalUnreadCountListener unreadCountListener;
-
-    private AnimationDrawable mVolumeAnim;
     private Runnable mTypingRunnable = null;
     private ChatInfo mChatInfo;
     public ChatPresenter.TypingListener mTypingListener = new ChatPresenter.TypingListener() {
@@ -141,10 +134,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
     protected GroupPinnedView groupPinnedView;
     protected FrameLayout mCustomView;
     protected NoticeLayout mGroupApplyLayout;
-    protected View mRecordingGroup;
-    protected ImageView mRecordingIcon;
-    protected TextView mRecordingTips;
-    protected TextView recordCountDownTv;
     private TitleBarLayout mTitleBar;
     private ImageView chatBackgroundView;
     private MessageRecyclerView mMessageRecyclerView;
@@ -158,7 +147,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
     private boolean mJumpNewMessageShow;
     private boolean mJumpGroupAtInfoShow;
     private boolean mClickLastMessageShow;
-    private Timer recordCountDownTimer;
 
     private LinearLayout mForwardLayout;
     private View mForwardOneButton;
@@ -196,10 +184,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
         mInputView.setChatLayout(this);
         boolean enableMainPageInputBar = TUIChatConfigClassic.isShowInputBar();
         mInputView.setVisibility(enableMainPageInputBar ? VISIBLE : GONE);
-        mRecordingGroup = findViewById(R.id.voice_recording_view);
-        mRecordingIcon = findViewById(R.id.recording_icon);
-        mRecordingTips = findViewById(R.id.recording_tips);
-        recordCountDownTv = findViewById(R.id.voice_count_down_tv);
         mGroupApplyLayout = findViewById(R.id.chat_group_apply_layout);
         mNoticeLayout = findViewById(R.id.chat_notice_layout);
         mCustomView = findViewById(R.id.custom_layout);
@@ -848,9 +832,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
             }
 
             @Override
-            public void onReplyMessageClick(TUIMessageBean msg) {
-                replyMessage(msg);
-            }
+            public void onReplyMessageClick(TUIMessageBean msg) {}
 
             @Override
             public void onQuoteMessageClick(TUIMessageBean msg) {
@@ -914,28 +896,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
 
             @Override
             public void onRecordStatusChanged(int status) {
-                switch (status) {
-                    case RECORD_START:
-                        showRecordingAnim();
-                        startCountDown();
-                        break;
-                    case RECORD_STOP:
-                    case RECORD_CANCEL:
-                        stopRecordingAnim();
-                        break;
-                    case RECORD_READY_TO_CANCEL:
-                        showRecordingPauseAnim();
-                        break;
-                    case RECORD_TOO_SHORT:
-                    case RECORD_FAILED:
-                        stopAbnormally(status);
-                        break;
-                    case RECORD_CONTINUE:
-                        showContinueAnim();
-                        break;
-                    default:
-                        break;
-                }
             }
 
             @Override
@@ -968,81 +928,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
                 sendTypingStatusMessage(true);
             }
 
-            private void showRecordingAnim() {
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        AudioPlayer.getInstance().stopPlay();
-                        mRecordingGroup.setVisibility(View.VISIBLE);
-                        mRecordingIcon.setImageResource(R.drawable.recording_volume);
-                        mVolumeAnim = (AnimationDrawable) mRecordingIcon.getDrawable();
-                        mVolumeAnim.start();
-                        mRecordingTips.setTextColor(Color.WHITE);
-                        mRecordingTips.setText(TUIChatService.getAppContext().getString(R.string.down_cancle_send));
-                    }
-                });
-            }
-
-            private void showContinueAnim() {
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mRecordingIcon.setImageResource(R.drawable.recording_volume);
-                        mVolumeAnim = (AnimationDrawable) mRecordingIcon.getDrawable();
-                        mVolumeAnim.start();
-                        mRecordingTips.setTextColor(Color.WHITE);
-                        mRecordingTips.setText(TUIChatService.getAppContext().getString(R.string.down_cancle_send));
-                    }
-                });
-            }
-
-            private void stopRecordingAnim() {
-                stopCountDown();
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mVolumeAnim != null) {
-                            mVolumeAnim.stop();
-                        }
-                        mRecordingGroup.setVisibility(View.GONE);
-                    }
-                });
-            }
-
-            private void stopAbnormally(final int status) {
-                stopCountDown();
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mVolumeAnim != null) {
-                            mVolumeAnim.stop();
-                        }
-                        mRecordingIcon.setImageResource(R.drawable.ic_volume_dialog_length_short);
-                        mRecordingTips.setTextColor(Color.WHITE);
-                        if (status == RECORD_TOO_SHORT) {
-                            mRecordingTips.setText(TUIChatService.getAppContext().getString(R.string.say_time_short));
-                        } else {
-                            mRecordingTips.setText(TUIChatService.getAppContext().getString(R.string.record_fail));
-                        }
-                    }
-                });
-                postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mRecordingGroup.setVisibility(View.GONE);
-                    }
-                }, 500);
-            }
-
-            private void showRecordingPauseAnim() {
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mRecordingIcon.setImageResource(R.drawable.ic_volume_dialog_cancel);
-                        mRecordingTips.setText(TUIChatService.getAppContext().getString(R.string.up_cancle_send));
-                    }
-                });
-            }
         });
         chatInputMoreListener = new ChatInputMoreListener() {
             @Override
@@ -1077,21 +962,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
         }
     }
 
-    private void startCountDown() {
-        stopCountDown();
-        recordCountDownTimer = new Timer();
-        RecordCountDownTask task = new RecordCountDownTask();
-        task.setTextView(recordCountDownTv);
-        recordCountDownTimer.schedule(task, 0, 1000);
-    }
-
-    private void stopCountDown() {
-        if (recordCountDownTimer != null) {
-            recordCountDownTimer.cancel();
-            recordCountDownTimer = null;
-        }
-    }
-
     public boolean isSupportTyping(long time) {
         return presenter.isSupportTyping(time);
     }
@@ -1110,11 +980,7 @@ public class ChatView extends LinearLayout implements IChatLayout {
         getInputLayout().setMessageHandler(new InputView.MessageHandler() {
             @Override
             public void sendMessage(TUIMessageBean msg) {
-                if (msg instanceof ReplyMessageBean) {
-                    ChatView.this.sendReplyMessage(msg, false);
-                } else {
-                    ChatView.this.sendMessage(msg, false);
-                }
+                ChatView.this.sendMessage(msg, false);
             }
 
             @Override
@@ -1203,16 +1069,8 @@ public class ChatView extends LinearLayout implements IChatLayout {
         showForwardTextDialog(text);
     }
 
-    // Reply Message need MessageRootId
-    protected void replyMessage(TUIMessageBean messageBean) {
-        ReplyPreviewBean replyPreviewBean = ChatMessageBuilder.buildReplyPreviewBean(messageBean);
-        mInputView.showReplyPreview(replyPreviewBean);
-    }
-
-    // Quote Message not need MessageRootId
     protected void quoteMessage(TUIMessageBean messageBean) {
         ReplyPreviewBean replyPreviewBean = ChatMessageBuilder.buildReplyPreviewBean(messageBean);
-        replyPreviewBean.setMessageRootID(null);
         mInputView.showReplyPreview(replyPreviewBean);
     }
 
@@ -1432,39 +1290,6 @@ public class ChatView extends LinearLayout implements IChatLayout {
         sendMessage(msg, retry, null);
     }
 
-    public void sendReplyMessage(TUIMessageBean msg, boolean retry) {
-        presenter.sendMessage(msg, retry, false, new IUIKitCallback<TUIMessageBean>() {
-            @Override
-            public void onSuccess(TUIMessageBean data) {
-                ThreadUtils.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        scrollToEnd();
-                    }
-                });
-                presenter.modifyRootMessageToAddReplyInfo((ReplyMessageBean) data, new IUIKitCallback<Void>() {
-                    @Override
-                    public void onError(String module, int errCode, String errMsg) {
-                        TUIChatLog.e(TAG, "modify message failed code = " + errCode + " message = " + errMsg);
-                    }
-                });
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                String toastMsg = errCode + ", " + errMsg;
-                if (errCode == TUIConstants.BuyingFeature.ERR_SDK_INTERFACE_NOT_SUPPORT) {
-                    showNotSupportDialog();
-                    if (msg.isNeedReadReceipt()) {
-                        toastMsg = getResources().getString(R.string.chat_message_read_receipt)
-                            + getResources().getString(com.tencent.qcloud.tuicore.R.string.TUIKitErrorUnsupporInterfaceSuffix);
-                    }
-                }
-                ToastUtil.toastLongMessage(toastMsg);
-            }
-        });
-    }
-
     public void setChatBackground(Drawable drawable) {
         chatBackgroundView.post(() -> {
             int vw = chatBackgroundView.getWidth();
@@ -1618,25 +1443,4 @@ public class ChatView extends LinearLayout implements IChatLayout {
         getContext().startActivity(intent);
     }
 
-    static class RecordCountDownTask extends TimerTask {
-        WeakReference<TextView> textView;
-        int count = 60;
-
-        public void setTextView(TextView textView) {
-            this.textView = new WeakReference<>(textView);
-        }
-
-        @Override
-        public void run() {
-            ThreadUtils.runOnUiThread(() -> {
-                if (count < 0) {
-                    return;
-                }
-                if (textView != null && textView.get() != null) {
-                    textView.get().setText(count + "''");
-                    count--;
-                }
-            });
-        }
-    }
 }

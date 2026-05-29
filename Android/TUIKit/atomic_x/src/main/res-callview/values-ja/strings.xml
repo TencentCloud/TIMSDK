@@ -41,4 +41,6 @@
     <string name="callview_permission_title">%sは%s権限を取得するよう申請します</string>
     <string name="callview_permission_camera_reason">カメラへのアクセス許可が必要で、ビデオ通話、グループビデオ通話などの機能に使用できます。美顔機能を使用する場合は、カメラで撮影された映像から顔の特徴点情報をリアルタイムで収集し、より自然な美しさを提供します。</string>
 
+    <string name="callview_ai_transcriber_empty_hint">AI リアルタイム字幕</string>
+
 </resources>

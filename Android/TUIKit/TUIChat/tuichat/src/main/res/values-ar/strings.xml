@@ -7,6 +7,19 @@
 
     <string name="release_end">إنهاء الإصدار</string>
     <string name="hold_say">اضغط للتحدث</string>
+    <string name="voice_input_edit_text_hint">رسالة أو اضغط...</string>
+    <string name="voice_input_release_send_hint">حرر للإرسال</string>
+    <string name="voice_input_release_transcribe_hint">حرر للتحويل إلى نص</string>
+    <string name="voice_input_release_cancel_hint">حرر للإلغاء</string>
+    <string name="voice_input_cancel">إلغاء</string>
+    <string name="voice_input_transcribe_to_text">إلى نص</string>
+    <string name="voice_input_send_original_voice">إرسال الصوت</string>
+    <string name="voice_input_transcription_empty">لم يتم التعرف على أي نص</string>
+    <string name="voice_input_transcribing">جار تحويل الصوت إلى نص...</string>
+    <string name="voice_input_convert_failed">فشل تحويل الصوت إلى نص</string>
+    <string name="voice_input_auto_stop_countdown">سيتوقف التسجيل بعد %1$d ث</string>
+    <string name="voice_input_audio_too_short">مدة التسجيل الصوتي قصيرة جدًا</string>
+    <string name="voice_input_audio_time_limit_reached">تم الوصول إلى الحد الأقصى لمدة التسجيل الصوتي</string>
 
     <string name="copy_action">نسخ</string>
     <string name="translate_action">ترجمة</string>
@@ -260,7 +273,8 @@
     <string name="chat_message_is_pinned">تم تثبيت الرسالة بالفعل </string>
     <string name="chat_message_is_unpinned">تم إلغاء تثبيت الرسالة بالفعل</string>
 
-    <string name="chat_quote_origin_message_revoked">تم سحب المحتوى المقتبس</string>
+    <string name="chat_quote_origin_message_revoked">تم سحب الرسالة الأصلية</string>
+    <string name="chat_quote_origin_message_deleted">تم حذف الرسالة الأصلية</string>
     <string name="chat_reply_origin_message_revoked">تم سحب محتوى الرد</string>
 
 

@@ -28,7 +28,6 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.R;
-import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.config.classicui.TUIConfigClassic;
 import com.tencent.qcloud.tuikit.timcommon.util.DateTimeUtil;
@@ -558,23 +557,8 @@ public abstract class MessageContentHolder<T extends TUIMessageBean> extends Mes
     }
 
     private void setReplyContent(TUIMessageBean messageBean) {
-        MessageRepliesBean messageRepliesBean = messageBean.getMessageRepliesBean();
-        if (messageRepliesBean != null && messageRepliesBean.getRepliesSize() > 0) {
-            TextView replyNumText = msgReplyDetailLayout.findViewById(R.id.reply_num);
-            replyNumText.setText(String.format(Locale.US, replyNumText.getResources().getString(R.string.chat_reply_num), messageRepliesBean.getRepliesSize()));
-            msgReplyDetailLayout.setVisibility(View.VISIBLE);
-            msgReplyDetailLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onItemClickListener != null) {
-                        onItemClickListener.onReplyDetailClick(messageBean);
-                    }
-                }
-            });
-        } else {
-            msgReplyDetailLayout.setVisibility(View.GONE);
-            msgReplyDetailLayout.setOnClickListener(null);
-        }
+        msgReplyDetailLayout.setVisibility(View.GONE);
+        msgReplyDetailLayout.setOnClickListener(null);
         if (!isReplyDetailMode) {
             messageDetailsTimeTv.setVisibility(View.GONE);
         } else {

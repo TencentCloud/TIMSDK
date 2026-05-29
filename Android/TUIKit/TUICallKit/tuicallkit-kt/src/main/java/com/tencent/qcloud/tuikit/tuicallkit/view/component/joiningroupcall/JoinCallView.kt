@@ -98,7 +98,7 @@ class JoinCallView(context: Context) : FrameLayout(context) {
             imageView.scaleType = ImageView.ScaleType.CENTER_CROP
             imageView.layoutParams = layoutParams
             if (user is CallParticipantInfo) {
-                ImageLoader.load(context, imageView, user.avatarUrl, R.drawable.tuicallkit_ic_avatar)
+                ImageLoader.load(context, imageView, user.avatarURL, R.drawable.tuicallkit_ic_avatar)
             } else {
                 ImageLoader.load(context, imageView, R.drawable.tuicallkit_ic_avatar, R.drawable.tuicallkit_ic_avatar)
             }

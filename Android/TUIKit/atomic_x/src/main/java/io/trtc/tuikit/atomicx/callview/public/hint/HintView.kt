@@ -100,7 +100,7 @@ class HintView(context: Context) : AppCompatTextView(context) {
     }
 
     private fun updateStatusText(): String {
-        val isGroupCall = CallStore.shared.observerState.allParticipants.value.size >= 2
+        val isGroupCall = CallStore.shared.observerState.activeCall.value.inviteeIds.size >= 2
         val self = CallStore.shared.observerState.selfInfo.value.copy()
         if (isGroupCall && CallParticipantStatus.Accept == self.status) {
             visibility = View.GONE
@@ -116,6 +116,7 @@ class HintView(context: Context) : AppCompatTextView(context) {
             text = context.getString(R.string.callview_accept_single)
             postDelayed({
                 isFirstShowAccept = false
+                text = ""
             }, 2000)
         }
         return text.toString()

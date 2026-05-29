@@ -11,7 +11,6 @@ import com.tencent.qcloud.tuicore.TUILogin;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ImageUtil;
-import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonConstants;
 import com.tencent.qcloud.tuikit.timcommon.util.TUIUtil;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
@@ -22,7 +21,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextAtMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
@@ -102,16 +100,12 @@ public class ChatMessageBuilder {
         messageBean.setId(uriID);
         messageBean.setProcessing(true);
         messageBean.setProcessingThumbnail(uri);
-        android.media.MediaMetadataRetriever mmr = new android.media.MediaMetadataRetriever();
         try {
-            mmr.setDataSource(ServiceInitializer.getAppContext(), uri);
-            Bitmap bitmap = mmr.getFrameAtTime();
-
+            Bitmap bitmap = ImageUtil.extractVideoFrame(ServiceInitializer.getAppContext(), uri);
             if (bitmap == null) {
                 TUIChatLog.e(TAG, "buildPlaceholderVideoMessage bitmap is null");
                 return null;
             }
-
             messageBean.setImgWidth(bitmap.getWidth());
             messageBean.setImgHeight(bitmap.getHeight());
         } catch (Exception ex) {
@@ -151,7 +145,7 @@ public class ChatMessageBuilder {
         try {
             mmr.setDataSource(videoPath);
             String sDuration = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION);
-            Bitmap bitmap = mmr.getFrameAtTime();
+            Bitmap bitmap = ImageUtil.extractNonBlackFrame(mmr);
             if (bitmap == null) {
                 TUIChatLog.e(TAG, "buildVideoMessage() bitmap is null");
                 return null;
@@ -318,17 +312,16 @@ public class ChatMessageBuilder {
     }
 
     private static TUIMessageBean buildReplyMessage(V2TIMMessage v2TIMMessage, ReplyPreviewBean previewBean) {
-        Map<String, ReplyPreviewBean> cloudData = new HashMap<>();
-        Gson gson = new Gson();
-        cloudData.put(TIMCommonConstants.MESSAGE_REPLY_KEY, previewBean);
-        v2TIMMessage.setCloudCustomData(gson.toJson(cloudData));
-
-        QuoteMessageBean replyMessageBean;
-        if (TextUtils.isEmpty(previewBean.getMessageRootID())) {
-            replyMessageBean = new QuoteMessageBean(previewBean);
-        } else {
-            replyMessageBean = new ReplyMessageBean(previewBean);
+        TUIMessageBean originMessageBean = previewBean.getOriginalMessageBean();
+        if (originMessageBean == null || originMessageBean.getV2TIMMessage() == null) {
+            return ChatMessageParser.parsePresentMessage(v2TIMMessage);
         }
+        V2TIMMessage quoteMessage = V2TIMManager.getMessageManager().createQuoteMessage(v2TIMMessage, originMessageBean.getV2TIMMessage());
+        if (quoteMessage == null) {
+            return ChatMessageParser.parsePresentMessage(v2TIMMessage);
+        }
+        v2TIMMessage = quoteMessage;
+        QuoteMessageBean replyMessageBean = new QuoteMessageBean(previewBean);
         replyMessageBean.setAbstractEnable(true);
         replyMessageBean.setCommonAttribute(v2TIMMessage);
         replyMessageBean.onProcessMessage(v2TIMMessage);
@@ -337,12 +330,6 @@ public class ChatMessageBuilder {
 
     public static ReplyPreviewBean buildReplyPreviewBean(TUIMessageBean messageBean) {
         ReplyPreviewBean previewBean = new ReplyPreviewBean();
-        if (messageBean instanceof ReplyMessageBean) {
-            String msgRootId = ((ReplyMessageBean) messageBean).getMsgRootId();
-            previewBean.setMessageRootID(msgRootId);
-        } else {
-            previewBean.setMessageRootID(messageBean.getId());
-        }
         String messageAbstract = ChatMessageParser.getReplyMessageAbstract(messageBean);
         previewBean.setOriginalMessageBean(messageBean);
         previewBean.setMessageID(messageBean.getId());

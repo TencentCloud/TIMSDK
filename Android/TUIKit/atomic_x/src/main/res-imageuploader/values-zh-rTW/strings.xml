@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="image_uploader_cancel">取消</string>
+    <string name="image_uploader_camera">拍照</string>
+    <string name="image_uploader_album">相簿</string>
+    <string name="image_uploader_done">完成</string>
+</resources>

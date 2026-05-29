@@ -57,6 +57,7 @@ import com.tencent.qcloud.tuikit.tuichat.bean.GroupApplyInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMemberInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.GroupMessageReadMembersInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.OfflinePushInfo;
+import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.UserStatusBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TipsMessageBean;
@@ -685,6 +686,98 @@ public class ChatProvider {
                 TUIValueCallback.onError(callback, code, desc);
             }
         });
+    }
+
+    private static final int[] CLOUD_QUOTE_C2C_RETRY_COUNTS = {1, 5};
+
+    public void findCloudQuoteMessage(String chatId, boolean isGroup, QuoteMessageBean quoteMessageBean, IUIKitCallback<TUIMessageBean> callback) {
+        if (quoteMessageBean == null || TextUtils.isEmpty(quoteMessageBean.getOriginMsgId())) {
+            TUIChatUtils.callbackOnError(callback, TAG, -1, "invalid quote message");
+            return;
+        }
+        if (isGroup) {
+            if (quoteMessageBean.getOriginMsgSequence() <= 0) {
+                TUIChatUtils.callbackOnError(callback, TAG, -1, "invalid quote sequence");
+                return;
+            }
+            findCloudQuoteMessageByGroupSequence(chatId, quoteMessageBean, callback);
+        } else {
+            if (quoteMessageBean.getOriginMsgTime() <= 0) {
+                TUIChatUtils.callbackOnError(callback, TAG, -1, "invalid quote timestamp");
+                return;
+            }
+            findCloudQuoteMessageByC2CTimestamp(chatId, quoteMessageBean, 0, callback);
+        }
+    }
+
+    private void findCloudQuoteMessageByGroupSequence(String groupId, QuoteMessageBean quoteMessageBean,
+                                                      IUIKitCallback<TUIMessageBean> callback) {
+        V2TIMMessageListGetOption option = new V2TIMMessageListGetOption();
+        option.setGetType(V2TIMMessageListGetOption.V2TIM_GET_CLOUD_OLDER_MSG);
+        option.setGroupID(groupId);
+        option.setCount(1);
+        option.setMessageSeqList(Collections.singletonList(quoteMessageBean.getOriginMsgSequence()));
+        V2TIMManager.getMessageManager().getHistoryMessageList(option, new V2TIMValueCallback<List<V2TIMMessage>>() {
+            @Override
+            public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
+                TUIMessageBean matched = findMatchedQuoteMessage(v2TIMMessages, quoteMessageBean.getOriginMsgId());
+                if (matched != null) {
+                    TUIChatUtils.callbackOnSuccess(callback, matched);
+                } else {
+                    TUIChatUtils.callbackOnError(callback, TAG, -1, "can't find quote message");
+                }
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                TUIChatUtils.callbackOnError(callback, TAG, code, desc);
+            }
+        });
+    }
+
+    private void findCloudQuoteMessageByC2CTimestamp(String userId, QuoteMessageBean quoteMessageBean,
+                                                     int retryStep, IUIKitCallback<TUIMessageBean> callback) {
+        if (retryStep >= CLOUD_QUOTE_C2C_RETRY_COUNTS.length) {
+            TUIChatUtils.callbackOnError(callback, TAG, -1, "can't find quote message");
+            return;
+        }
+        V2TIMMessageListGetOption option = new V2TIMMessageListGetOption();
+        option.setGetType(V2TIMMessageListGetOption.V2TIM_GET_CLOUD_OLDER_MSG);
+        option.setUserID(userId);
+        option.setCount(CLOUD_QUOTE_C2C_RETRY_COUNTS[retryStep]);
+        option.setGetTimeBegin(quoteMessageBean.getOriginMsgTime());
+        option.setGetTimePeriod(1);
+        V2TIMManager.getMessageManager().getHistoryMessageList(option, new V2TIMValueCallback<List<V2TIMMessage>>() {
+            @Override
+            public void onSuccess(List<V2TIMMessage> v2TIMMessages) {
+                TUIMessageBean matched = findMatchedQuoteMessage(v2TIMMessages, quoteMessageBean.getOriginMsgId());
+                if (matched != null) {
+                    TUIChatUtils.callbackOnSuccess(callback, matched);
+                    return;
+                }
+                findCloudQuoteMessageByC2CTimestamp(userId, quoteMessageBean, retryStep + 1, callback);
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                findCloudQuoteMessageByC2CTimestamp(userId, quoteMessageBean, retryStep + 1, callback);
+            }
+        });
+    }
+
+    private TUIMessageBean findMatchedQuoteMessage(List<V2TIMMessage> v2TIMMessages, String originMsgId) {
+        if (v2TIMMessages == null || TextUtils.isEmpty(originMsgId)) {
+            return null;
+        }
+        for (V2TIMMessage v2TIMMessage : v2TIMMessages) {
+            if (v2TIMMessage != null && TextUtils.equals(v2TIMMessage.getMsgID(), originMsgId)) {
+                TUIMessageBean messageBean = ChatMessageParser.parsePresentMessage(v2TIMMessage);
+                if (messageBean != null) {
+                    return messageBean;
+                }
+            }
+        }
+        return null;
     }
 
     public void getGroupMessageBySeq(String chatId, long seq, IUIKitCallback<Pair<List<TUIMessageBean>, Integer>> callback) {

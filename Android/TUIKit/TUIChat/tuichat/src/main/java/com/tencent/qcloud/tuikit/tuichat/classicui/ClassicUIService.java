@@ -44,7 +44,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.LocationMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MessageTypingBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextAtMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
@@ -85,7 +84,6 @@ import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.Ima
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.LocationMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.MergeMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.QuoteMessageHolder;
-import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.ReplyMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.SoundMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.TextMessageHolder;
 import com.tencent.qcloud.tuikit.tuichat.classicui.widget.message.viewholder.TipsMessageHolder;
@@ -147,7 +145,6 @@ public class ClassicUIService implements TUIInitializer, ITUIService, ITUIObject
         addMessageType(TextMessageBean.class, TextMessageHolder.class);
         addMessageType(TipsMessageBean.class, TipsMessageHolder.class, true);
         addMessageType(VideoMessageBean.class, VideoMessageHolder.class);
-        addMessageType(ReplyMessageBean.class, ReplyMessageHolder.class);
         addMessageType(QuoteMessageBean.class, QuoteMessageHolder.class);
         addMessageType(CallingMessageBean.class, CallingMessageHolder.class);
         addMessageType(CallingTipsMessageBean.class, TipsMessageHolder.class, true);

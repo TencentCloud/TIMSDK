@@ -19,9 +19,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import io.trtc.tuikit.atomicx.R
+import io.trtc.tuikit.atomicx.common.imageloader.ImageLoader
+import io.trtc.tuikit.atomicx.common.util.ScreenUtil.dp2px
 import io.trtc.tuikit.atomicx.theme.ThemeStore
-import io.trtc.tuikit.atomicx.widget.utils.DisplayUtil.dp2px
-import io.trtc.tuikit.atomicx.widget.utils.ImageLoader
 import kotlin.math.ceil
 
 class AtomicAvatar @JvmOverloads constructor(
@@ -116,14 +116,16 @@ class AtomicAvatar @JvmOverloads constructor(
 
     private fun parseAttributes(attrs: AttributeSet) {
         val typedArray: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.AtomicAvatar)
-        
+
         try {
-            val sizeOrdinal = typedArray.getInt(R.styleable.AtomicAvatar_avatarSize, AvatarSize.M.ordinal)
+            val sizeOrdinal =
+                typedArray.getInt(R.styleable.AtomicAvatar_avatarSize, AvatarSize.M.ordinal)
             avatarSize = AvatarSize.values()[sizeOrdinal]
-            
-            val shapeOrdinal = typedArray.getInt(R.styleable.AtomicAvatar_avatarShape, AvatarShape.Round.ordinal)
+
+            val shapeOrdinal =
+                typedArray.getInt(R.styleable.AtomicAvatar_avatarShape, AvatarShape.Round.ordinal)
             avatarShape = AvatarShape.values()[shapeOrdinal]
-            
+
         } finally {
             typedArray.recycle()
         }
@@ -195,7 +197,7 @@ class AtomicAvatar @JvmOverloads constructor(
             }
 
             else -> {
-                dp2px(context, avatarSize.sizeDp)
+                dp2px(avatarSize.sizeDp, context.resources.displayMetrics).toInt()
             }
         }
 
@@ -270,13 +272,14 @@ class AtomicAvatar @JvmOverloads constructor(
         return when (avatarShape) {
             AvatarShape.Round -> {
                 val radius = avatarSizePx / 2f
-                val extraPadding = dp2px(context, BADGE_EXTRA_PADDING_DP).toFloat()
+                val extraPadding = dp2px(BADGE_EXTRA_PADDING_DP, context.resources.displayMetrics)
                 val offset = (radius + extraPadding) * SQRT2_OVER_2
                 (radius + offset) to (radius - offset)
             }
 
             AvatarShape.RoundRectangle -> {
-                val borderRadiusPx = dp2px(context, avatarSize.borderRadiusDp).toFloat()
+                val borderRadiusPx =
+                    dp2px(avatarSize.borderRadiusDp, context.resources.displayMetrics)
                 if (avatarBadge is AvatarBadge.Dot) {
                     val offset = borderRadiusPx * (1 - SQRT2_OVER_2)
                     (avatarSizePx - offset) to offset
@@ -313,17 +316,15 @@ class AtomicAvatar @JvmOverloads constructor(
         val sizePx = if (actualAvatarSizePx > 0) {
             actualAvatarSizePx.toFloat()
         } else {
-            dp2px(context, avatarSize.sizeDp).toFloat()
+            dp2px(avatarSize.sizeDp, context.resources.displayMetrics)
         }
 
         val clipProvider = when (avatarShape) {
             AvatarShape.Round -> createRoundClipDrawable(sizePx / 2)
             AvatarShape.RoundRectangle -> createRoundClipDrawable(
-                dp2px(
-                    context,
-                    avatarSize.borderRadiusDp
-                ).toFloat()
+                dp2px(avatarSize.borderRadiusDp, context.resources.displayMetrics)
             )
+
             AvatarShape.Rectangle -> null
         }
 
@@ -340,7 +341,11 @@ class AtomicAvatar @JvmOverloads constructor(
             override fun getOutline(view: View, outline: Outline) {
                 val actualRadius = when (avatarShape) {
                     AvatarShape.Round -> view.width / 2f
-                    AvatarShape.RoundRectangle -> dp2px(context, avatarSize.borderRadiusDp).toFloat()
+                    AvatarShape.RoundRectangle -> dp2px(
+                        avatarSize.borderRadiusDp,
+                        context.resources.displayMetrics
+                    )
+
                     else -> radius
                 }
                 outline.setRoundRect(0, 0, view.width, view.height, actualRadius)
@@ -397,10 +402,11 @@ private class Badge @JvmOverloads constructor(
     private var cachedCornerRadius: Float = 0f
 
     init {
-        cachedDotSize = dp2px(context, DOT_SIZE_DP)
-        cachedTextHeight = dp2px(context, TEXT_HEIGHT_DP)
-        cachedTextPadding = dp2px(context, TEXT_HORIZONTAL_PADDING_DP * 2)
-        cachedCornerRadius = dp2px(context, TEXT_CORNER_RADIUS_DP).toFloat()
+        cachedDotSize = dp2px(DOT_SIZE_DP, context.resources.displayMetrics).toInt()
+        cachedTextHeight = dp2px(TEXT_HEIGHT_DP, context.resources.displayMetrics).toInt()
+        cachedTextPadding =
+            dp2px(TEXT_HORIZONTAL_PADDING_DP * 2, context.resources.displayMetrics).toInt()
+        cachedCornerRadius = dp2px(TEXT_CORNER_RADIUS_DP, context.resources.displayMetrics)
 
         updateColors()
     }

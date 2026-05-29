@@ -14,7 +14,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.VideoView;
-
 import androidx.activity.result.ActivityResultCaller;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,18 +23,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
+import com.tencent.qcloud.tuikit.tuimultimediacore.pick.beans.BaseBean;
 import com.tencent.qcloud.tuikit.tuimultimediacore.pick.beans.BucketBean;
+import com.tencent.qcloud.tuikit.tuimultimediacore.pick.beans.VideoBean;
 import com.tencent.qcloud.tuikit.tuimultimediacore.pick.interfaces.AlbumClickListener;
 import com.tencent.qcloud.tuikit.tuimultimediacore.pick.ui.picker.AlbumGridView;
 import com.tencent.qcloud.tuikit.tuimultimediacore.pick.ui.previewer.SelectedPhotosView;
 import com.tencent.qcloud.tuikit.tuimultimediacore.pick.utils.TUIMultimediaCoreUtil;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.R;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.TUIMultimediaIConfig;
-import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.TUIMultimediaMediaProcessor;
 import com.tencent.qcloud.tuikit.tuimultimediaplugin.common.TUIMultimediaAuthorizationPrompter;
-import com.tencent.qcloud.tuikit.tuimultimediacore.pick.beans.BaseBean;
-import com.tencent.qcloud.tuikit.tuimultimediacore.pick.beans.VideoBean;
-
+import com.tencent.qcloud.tuikit.tuimultimediaplugin.edit.TUIMultimediaMediaProcessor;
 import java.util.List;
 
 public class AlbumPreviewFragment extends DialogFragment {
@@ -123,13 +122,11 @@ public class AlbumPreviewFragment extends DialogFragment {
         fullImageCheckbox = rootView.findViewById(R.id.full_image_checkbox);
         fullImageButton = rootView.findViewById(R.id.full_image_button);
         editButton = rootView.findViewById(R.id.edit_button);
-        if (!TUIMultimediaIConfig.getInstance().isSupportAlbumPickerEdit() ||
-                !TUIMultimediaAuthorizationPrompter.isShowAdvanceFunction()) {
+        if (!TUIMultimediaIConfig.getInstance().isSupportAlbumPickerEdit() || !TUIMultimediaAuthorizationPrompter.isShowAdvanceFunction()) {
             editButton.setVisibility(View.GONE);
         }
 
-        if (!TUIMultimediaIConfig.getInstance().isSupportAlbumPickerTranscodeSelect() ||
-                !TUIMultimediaAuthorizationPrompter.isShowAdvanceFunction()) {
+        if (!TUIMultimediaIConfig.getInstance().isSupportAlbumPickerTranscodeSelect() || !TUIMultimediaAuthorizationPrompter.isShowAdvanceFunction()) {
             fullImageButton.setVisibility(View.GONE);
         }
 
@@ -182,10 +179,7 @@ public class AlbumPreviewFragment extends DialogFragment {
             }
 
             @Override
-            public void onSelectChanged(BaseBean bean) {
-
-            }
-
+            public void onSelectChanged(BaseBean bean) {}
         });
         setFullImageCheckboxState();
         setSelectCheckboxBg();
@@ -233,9 +227,7 @@ public class AlbumPreviewFragment extends DialogFragment {
             }
 
             @Override
-            public void onSelectChanged(BaseBean bean) {
-
-            }
+            public void onSelectChanged(BaseBean bean) {}
         });
         editButton.setOnClickListener((v) -> {
             Context context = getContext();
@@ -409,8 +401,8 @@ public class AlbumPreviewFragment extends DialogFragment {
                     previewImage.setVisibility(View.VISIBLE);
                 }
             });
+            Glide.with(itemView.getContext()).load(bean).signature(new ObjectKey(bean.getFinalUri())).into(previewImage);
             Uri uri = bean.getFinalUri();
-            Glide.with(itemView.getContext()).load(uri).into(previewImage);
             videoView.setVideoURI(uri);
             playButton.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -83,7 +83,10 @@ class AtomicAlertDialog(
             setCanceledOnTouchOutside(config.autoDismiss)
             setOnDismissListener {
                 atomicPopover = null
+                dialogScope?.cancel()
+                dialogScope = null
                 countdownJob?.cancel()
+                countdownJob = null
             }
         }
 

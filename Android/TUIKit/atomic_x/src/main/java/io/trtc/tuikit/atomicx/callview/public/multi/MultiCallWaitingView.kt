@@ -8,10 +8,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.utils.widget.ImageFilterView
 import androidx.core.content.ContextCompat
-import com.trtc.tuikit.common.imageloader.ImageLoader
-import com.trtc.tuikit.common.util.ScreenUtil
 import io.trtc.tuikit.atomicx.R
 import io.trtc.tuikit.atomicx.callview.core.common.utils.CallUtils
+import io.trtc.tuikit.atomicx.common.imageloader.ImageLoader
+import io.trtc.tuikit.atomicx.common.util.ScreenUtil
 import io.trtc.tuikit.atomicxcore.api.call.CallStore
 import io.trtc.tuikit.atomicxcore.api.call.CallParticipantInfo
 import kotlinx.coroutines.MainScope
@@ -56,7 +56,7 @@ class MultiCallWaitingView(context: Context) : LinearLayout(context) {
             CallStore.shared.observerState.allParticipants.collect { participants ->
                 for (participant in participants) {
                     if (CallUtils.isCaller(participant.id)) {
-                        ImageLoader.load(context, imageCallerAvatar, participant.avatarUrl, R.drawable.callview_ic_avatar)
+                        ImageLoader.load(context, imageCallerAvatar, participant.avatarURL, R.drawable.callview_ic_avatar)
                         textWaitingUserName.text = participant.name
                     }
                 }
@@ -101,7 +101,7 @@ class MultiCallWaitingView(context: Context) : LinearLayout(context) {
         imageView.round = 12f
         imageView.scaleType = ImageView.ScaleType.CENTER_CROP
         imageView.layoutParams = layoutParams
-        ImageLoader.load(context, imageView, user.avatarUrl, R.drawable.callview_ic_avatar)
+        ImageLoader.load(context, imageView, user.avatarURL, R.drawable.callview_ic_avatar)
         return imageView
     }
 

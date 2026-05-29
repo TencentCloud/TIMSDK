@@ -30,6 +30,9 @@ android {
         sourceCompatibility javaVersion
         targetCompatibility javaVersion
     }
+    kotlinOptions {
+        jvmTarget = javaVersion
+    }
 }
 
 dependencies {
@@ -52,7 +55,8 @@ dependencies {
     if (projects.contains("engine_source")) {
         api project(':engine_source')
     } else {
-        api rootProject.getProperties().containsKey("atomicxCoreSdk") ? rootProject.ext.atomicxCoreSdk : "io.trtc.uikit:atomicx-core:4.0.0.110"
+        api rootProject.getProperties().containsKey("atomicxCoreSdk") ? rootProject.ext.atomicxCoreSdk : "io.trtc.uikit:atomicx-core:4.1.1.77"
+        api rootProject.getProperties().containsKey("roomEngineSdk") ? rootProject.ext.roomEngineSdk : "io.trtc.uikit:rtc_room_engine:4.1.1.77"
     }
     if (projects.contains("common")) {
         api project(':common')

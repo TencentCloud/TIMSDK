@@ -18,13 +18,14 @@ import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import io.trtc.tuikit.atomicx.R
-import io.trtc.tuikit.atomicx.pictureinpicture.PictureInPictureStore
 import io.trtc.tuikit.atomicx.theme.ThemeStore
 import io.trtc.tuikit.atomicx.theme.tokens.DesignTokenSet
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -39,6 +40,16 @@ open class AtomicPopover(
         PanelGravity.CENTER -> R.style.dialogStyleCenter
     }
 ) {
+    companion object {
+        private val _dismissAllSignal = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+        val dismissAllSignal = _dismissAllSignal.asSharedFlow()
+
+        @JvmStatic
+        fun dismissAll() {
+            _dismissAllSignal.tryEmit(Unit)
+        }
+    }
+
     private val DIALOG_WIDTH_RATIO = 0.80
 
     private val dialogScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
@@ -157,10 +168,8 @@ open class AtomicPopover(
             }
 
             launch {
-                PictureInPictureStore.shared.state.isPictureInPictureMode.collectLatest {
-                    if (it) {
-                        dismiss()
-                    }
+                dismissAllSignal.collectLatest {
+                    dismiss()
                 }
             }
 

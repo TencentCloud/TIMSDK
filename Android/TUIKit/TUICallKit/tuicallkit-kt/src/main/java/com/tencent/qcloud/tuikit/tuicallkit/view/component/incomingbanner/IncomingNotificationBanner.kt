@@ -81,11 +81,11 @@ class IncomingNotificationBanner(context: Context) {
             remoteViews?.setImageViewResource(R.id.btn_accept, R.drawable.tuicallkit_bg_dialing)
         }
 
-        if (participant.avatarUrl.isNullOrEmpty()) {
+        if (participant.avatarURL.isNullOrEmpty()) {
             remoteViews?.setImageViewResource(R.id.img_incoming_avatar, R.drawable.tuicallkit_ic_avatar)
             notificationManager.notify(notificationId, notification)
         } else {
-            val uri = Uri.parse(participant.avatarUrl)
+            val uri = Uri.parse(participant.avatarURL)
 
             Glide.with(context).asBitmap().load(uri)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.tuicallkit_ic_avatar)

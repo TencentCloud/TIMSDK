@@ -41,4 +41,6 @@
     <string name="callview_permission_title">%s يتقدم بطلب الوصول إلى %s</string>
     <string name="callview_permission_camera_reason">يحتاج إلى الوصول إلى كاميراك ، ويمكن استخدامه لوظائف مثل المكالمة الفيديو ، المكالمة الفيديو الجماعية وما إلى ذلك. لتعمل مرشحات الجمال ، سنجمع معلومات الوجه التي يتم التقاطها بكاميراك في الوقت الحقيقي لكشف ملامح وجهك.</string>
 
+    <string name="callview_ai_transcriber_empty_hint">ترجمة فورية بالذكاء الاصطناعي</string>
+
 </resources>

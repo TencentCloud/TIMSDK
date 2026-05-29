@@ -3,8 +3,11 @@
     <string name="callkit_enter_pip_mode_fail_hint">進入畫中畫失敗，請檢查是否開啟權限</string>
     <string name="callkit_invite_audio_call">邀請你語音通話</string>
     <string name="callkit_invite_video_call">邀請你視頻通話</string>
+    <string name="callkit_invite_multi_call">邀請你加入群組通話</string>
     <string name="callkit_group_id_is_empty">群ID為空</string>
     <string name="callkit_group_title_add_user">添加成員</string>
+    <string name="callkit_group_hint_you">(你)</string>
+    <string name="callkit_group_btn_ok">確認</string>
     <string name="callkit_record_call_title">最近通話</string>
     <string name="callkit_record_call_delete">刪除</string>
     <string name="callkit_record_dialog_message">清除所有記錄</string>
@@ -22,20 +25,20 @@
     <string name="callkit_permission_microphone">麥克風</string>
     <string name="callkit_permission_bluetooth">藍牙</string>
     <string name="callkit_permission_separator">、</string>
-    <string name="callkit_permission_tips">請先打開%s權限</string>
+    <string name="callkit_permission_tips">%s 權限未開啟，無法開啟音視頻通話。</string>
     <string name="callkit_permission_title">%s申請獲取%s權限</string>
-    <string name="callkit_permission_camera_reason">需要訪問您的相機權限，開啟後用於視頻通話、多人視頻通話等功能，在您使用美顏功能時，我們會對您實時拍攝的面部的像素信息進行實時智能識別，在識別過程中會實時收集您面部的像素信息，以為您提供更好的美顏效果。</string>
-    <string name="callkit_permission_mic_reason">需要訪問您的麥克風權限，開啟後用於語音通話、多人語音通話、視頻通話、多人視頻通話等功能，並且開啟後錄製的視頻才會有聲音。</string>
+    <string name="callkit_permission_camera_reason">請前往「設置 > %s」中開啟相機權限。</string>
+    <string name="callkit_permission_mic_reason">請前往「設置 > %s」中開啟麥克風權限。</string>
     <string name="callkit_permission_bluetooth_reason">為確保您在音視頻通話中可正常連接藍牙功能進行溝通，我們需要向您申請查找與連接附近設備的權限。</string>
 
-    <string name="callkit_package_not_purchased">您當前未購買音視頻通話能力套餐，請前往 IM 控制台開通免費體驗或加購正式版</string>
-    <string name="callkit_package_not_support">您當前購買的音視頻通話能力套餐不支持該功能，建議您升級套餐類型</string>
+    <string name="callkit_package_not_purchased">此功能需要音視頻通話能力套餐支持，為不影響您的使用，建議您前往騰訊雲·實時音視頻控制台，開通免費體驗或選購正式套餐</string>
+    <string name="callkit_package_not_support">您當前的套餐類型暫不支持此功能，為解鎖更多能力，建議您前往騰訊雲·實時音視頻控制台升級套餐</string>
     <string name="callkit_have_a_new_call">您有一個新的通話</string>
 
     <string name="callkit_error_in_peer_blacklist">發起通話失敗，用戶在黑名單中，禁止發起！</string>
-    <string name="callkit_error_invalid_login">登錄失敗,請重新登錄</string>
+    <string name="callkit_error_invalid_login">發起通話失敗，請檢查登錄狀態後重試</string>
     <string name="callkit_error_parameter_invalid">參數錯誤</string>
-    <string name="callkit_error_request_refused">當前狀態不支持調用</string>
+    <string name="callkit_error_currently_in_a_call">您當前正在通話中，請結束通話後再撥打</string>
     <string name="callkit_error_request_repeated">當前方法正在執行中，請勿重複調用</string>
     <string name="callkit_error_scene_not_support">當前通話場景，不支持該功能</string>
     <string name="callkit_join_group_call">加入</string>
@@ -45,12 +48,18 @@
 
     <string name="callkit_video_call">視頻通話</string>
     <string name="callkit_audio_call">語音通話</string>
-    <string name="callkit_user_exceed_limit">暫支持最多9人通話。如需多人會議，請使用TUIRoomKit</string>
+    <string name="callkit_user_exceed_limit">當前通話最多支持 9 人同時在線</string>
 
-    <string name="callkit_toast_other_party_hung_up">對方已掛斷</string>
-    <string name="callkit_toast_other_party_declined">對方已拒絕通話請求</string>
-    <string name="callkit_toast_other_party_no_response">對方無應答</string>
-    <string name="callkit_toast_other_party_busy">對方忙線中</string>
+    <string name="callkit_toast_other_party_hung_up">對方已掛斷，通話結束</string>
+    <string name="callkit_toast_other_party_declined">對方拒絕了您的通話請求</string>
+    <string name="callkit_toast_other_party_no_response">對方未接聽，請稍後再試</string>
+    <string name="callkit_toast_other_party_busy">對方正在通話中，請稍後再試</string>
     <string name="callkit_toast_other_party_cancelled">對方已取消通話</string>
-    <string name="callkit_toast_you_have_missed_calls">您有未接來電</string>
+    <string name="callkit_toast_error_call_user_not_exist">用戶不存在，請確認該用戶是否已註冊或是否輸入非法字符</string>
+    <string name="callkit_toast_error_camera_occupied">當前攝像頭被系統電話佔用</string>
+    <string name="callkit_toast_error_microphone_occupied">當前麥克風被系統電話佔用</string>
+    <string name="callkit_toast_error_call_failed">加入通話失敗</string>
+    <string name="callkit_toast_error_call_self">無法向自己發起通話</string>
+    <string name="callkit_toast_error_already_in_call">您正在通話中，無法再次發起通話</string>
+    <string name="callkit_toast_error_group_call_has_active_call">該群組已有通話正在進行中</string>
 </resources>

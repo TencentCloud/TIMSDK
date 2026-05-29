@@ -3,7 +3,6 @@ package com.tencent.qcloud.tuikit.tuichat.presenter;
 import android.text.TextUtils;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
-import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.C2CChatInfo;
@@ -16,10 +15,7 @@ import com.tencent.qcloud.tuikit.tuichat.model.ChatProvider;
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class MessageReceiptPresenter {
     public static final int GET_MEMBERS_COUNT = 100;
@@ -68,25 +64,7 @@ public class MessageReceiptPresenter {
     }
 
     public void setMessageReplyBean(TUIMessageBean message, IUIKitCallback<Void> callback) {
-        if (message == null || message.getMessageRepliesBean() == null) {
-            TUIChatUtils.callbackOnSuccess(callback, null);
-            return;
-        }
-        Set<String> userIds = new HashSet<>(message.getAdditionalUserIDList());
-        chatPresenter.getUserBean(userIds, new IUIKitCallback<Map<String, UserBean>>() {
-            @Override
-            public void onSuccess(Map<String, UserBean> data) {
-                for (UserBean userBean : data.values()) {
-                    message.setUserBean(userBean.getUserId(), userBean);
-                }
-                TUIChatUtils.callbackOnSuccess(callback, null);
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                TUIChatUtils.callbackOnError(callback, errCode, errMsg);
-            }
-        });
+        TUIChatUtils.callbackOnSuccess(callback, null);
     }
 
     private void updateMessage(TUIMessageBean messageBean) {

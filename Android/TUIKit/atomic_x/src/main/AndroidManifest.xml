@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="android.permission.CAMERA" />
+    <!--  GITHUB-PUBLISH-REMOVE-BEGIN  -->
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
@@ -15,5 +11,51 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+    <!--  GITHUB-PUBLISH-REMOVE-END  -->
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+
+    <application>
+
+        <provider
+                android:name=".imageuploader.util.ImageUploaderFileProvider"
+                android:authorities="${applicationId}.imageuploader.fileprovider"
+                android:exported="false"
+                android:grantUriPermissions="true">
+            <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/imageuploader_file_paths" />
+        </provider>
+
+        <activity
+            android:name="io.trtc.tuikit.atomicx.common.permission.PermissionActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:theme="@style/CommonActivityTranslucent"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
+
+        <activity
+                android:name=".imageuploader.view.SystemImagePickerActivity"
+                android:exported="false"
+                android:theme="@style/Theme.ImageUploader.Transparent"/>
+
+        <service
+            android:name="io.trtc.tuikit.atomicx.common.foregroundservice.AudioForegroundService"
+            android:exported="false"
+            android:foregroundServiceType="microphone" />
+
+        <service
+            android:name="io.trtc.tuikit.atomicx.common.foregroundservice.VideoForegroundService"
+            android:exported="false"
+            android:foregroundServiceType="camera|microphone" />
+
+        <service
+            android:name="io.trtc.tuikit.atomicx.common.foregroundservice.MediaForegroundService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
+    </application>
 </manifest>

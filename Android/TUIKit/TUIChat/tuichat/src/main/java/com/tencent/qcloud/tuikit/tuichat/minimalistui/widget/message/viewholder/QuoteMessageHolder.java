@@ -86,21 +86,14 @@ public class QuoteMessageHolder extends TextMessageHolder {
         TUIMessageBean replyContentBean = quoteMessageBean.getContentMessageBean();
         String replyContent = replyContentBean.getExtra();
         FaceManager.handlerEmojiText(timeInLineTextLayout.getTextView(), replyContent, false);
-        String senderName = quoteMessageBean.getOriginMsgSender();
         TUIMessageBean originMessage = quoteMessageBean.getOriginMessageBean();
-        if (originMessage != null) {
-            if (originMessage.isRevoked()) {
-                senderNameTv.setVisibility(View.GONE);
-            } else {
-                senderNameTv.setVisibility(View.VISIBLE);
-            }
-            senderName = originMessage.getUserDisplayName();
-        }
-        senderNameTv.setText(senderName + ": ");
+        boolean showSenderName = originMessage != null && !originMessage.isRevoked();
+        String senderName = showSenderName ? originMessage.getUserDisplayName() : "";
+        senderNameTv.setText(showSenderName ? senderName + ": " : "");
         setOnTimeInLineTextClickListener(msg);
         if (quoteMessageBean.isAbstractEnable()) {
             performMsgAbstract(quoteMessageBean);
-            senderNameTv.setVisibility(View.VISIBLE);
+            senderNameTv.setVisibility(showSenderName ? View.VISIBLE : View.GONE);
             quoteContentFrameLayout.setVisibility(View.VISIBLE);
         } else {
             senderNameTv.setVisibility(View.GONE);
@@ -156,12 +149,7 @@ public class QuoteMessageHolder extends TextMessageHolder {
     }
 
     private void performNotFound(TUIReplyQuoteBean quoteMessageBean, QuoteMessageBean replyMessageBean) {
-        String typeStr = ChatMessageParser.getMsgTypeStr(quoteMessageBean.getMessageType());
-        String abstractStr = quoteMessageBean.getDefaultAbstract();
-        if (ChatMessageParser.isFileType(quoteMessageBean.getMessageType())) {
-            abstractStr = "";
-        }
-        performTextMessage(typeStr + abstractStr);
+        performTextMessage(itemView.getResources().getString(R.string.chat_quote_origin_message_deleted));
     }
 
     private void performTextMessage(String text) {

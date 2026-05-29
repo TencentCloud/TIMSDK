@@ -2,13 +2,13 @@ package com.tencent.qcloud.tuikit.tuicallkit
 
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import com.tencent.cloud.tuikit.engine.call.TUICallDefine
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine.Callback
 import com.tencent.qcloud.tuicore.TUIConstants
 import com.tencent.qcloud.tuicore.TUICore
-import com.tencent.qcloud.tuicore.permission.PermissionCallback
-import com.tencent.qcloud.tuicore.permission.PermissionRequester
 import com.tencent.qcloud.tuikit.tuicallkit.common.data.Constants
 import com.tencent.qcloud.tuikit.tuicallkit.common.data.Logger
 import com.tencent.qcloud.tuikit.tuicallkit.common.metrics.KeyMetrics
@@ -24,8 +24,10 @@ import com.tencent.qcloud.tuikit.tuicallkit.view.CallMainActivity
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.incomingbanner.IncomingFloatBanner
 import com.tencent.qcloud.tuikit.tuicallkit.view.component.incomingbanner.IncomingNotificationBanner
 import com.trtc.tuikit.common.ui.floatwindow.FloatWindowManager
-import com.trtc.tuikit.common.util.ToastUtil
+import io.trtc.tuikit.atomicx.common.permission.PermissionCallback
+import io.trtc.tuikit.atomicx.common.permission.PermissionRequester
 import io.trtc.tuikit.atomicx.widget.basicwidget.toast.AtomicToast
+import io.trtc.tuikit.atomicx.widget.basicwidget.toast.AtomicToast.Style
 import io.trtc.tuikit.atomicxcore.api.CompletionHandler
 import io.trtc.tuikit.atomicxcore.api.call.CallEndReason
 import io.trtc.tuikit.atomicxcore.api.call.CallListener
@@ -34,8 +36,7 @@ import io.trtc.tuikit.atomicxcore.api.call.CallParams
 import io.trtc.tuikit.atomicxcore.api.call.CallStore
 import io.trtc.tuikit.atomicxcore.api.call.CallParticipantInfo
 import io.trtc.tuikit.atomicxcore.api.call.CallParticipantStatus
-import io.trtc.tuikit.atomicxcore.api.device.DeviceError
-import io.trtc.tuikit.atomicxcore.api.device.DeviceStore
+import io.trtc.tuikit.atomicxcore.api.login.LoginStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -44,6 +45,7 @@ import kotlinx.coroutines.supervisorScope
 
 class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
     private val context = context.applicationContext ?: context
+    private val mainHandler = Handler(Looper.getMainLooper())
     private var subscribeSelfStateJob: Job? = null
     private val callStatusObserver = object : CallListener() {
         override fun onCallStarted(callId: String, mediaType: CallMediaType) {
@@ -53,23 +55,15 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
         }
         override fun onCallEnded(callId: String, mediaType: CallMediaType, reason: CallEndReason, userId: String) {
             val activeCall = CallStore.shared.observerState.activeCall.value
-            var toastText: String? = null
             val selfInfo = CallStore.shared.observerState.selfInfo.value
             if (activeCall.inviteeIds.size > 1 || activeCall.chatGroupId.isNotEmpty() || selfInfo.id == userId) {
                 return
             }
 
-            when (reason) {
-                CallEndReason.Hangup -> toastText = context.getString(R.string.callkit_toast_other_party_hung_up)
-                CallEndReason.Reject -> toastText = context.getString(R.string.callkit_toast_other_party_declined)
-                CallEndReason.NoResponse -> toastText = context.getString(R.string.callkit_toast_other_party_no_response)
-                CallEndReason.LineBusy -> toastText = context.getString(R.string.callkit_toast_other_party_busy)
-                CallEndReason.Canceled -> toastText = context.getString(R.string.callkit_toast_other_party_cancelled)
-                else -> {}
-            }
-
-            if (toastText != null) {
-                ToastUtil.toastLongMessage(toastText)
+            if (reason == CallEndReason.LineBusy) {
+                mainHandler.post {
+                    AtomicToast.show(context, context.getString(R.string.callkit_toast_other_party_busy), Style.INFO)
+                }
             }
         }
 
@@ -89,10 +83,21 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
     override fun calls(
         userIdList: List<String>, mediaType: CallMediaType, params: CallParams?, completion: CompletionHandler?
     ) {
-        val list = userIdList.toHashSet().toMutableList()
+        val selfStatus = CallStore.shared.observerState.selfInfo.value.status
+        if (selfStatus != CallParticipantStatus.None) {
+            completion?.onFailure(TUICallDefine.ERROR_PARAM_INVALID, "You are currently on a call.")
+            AtomicToast.show(context, context.getString(R.string.callkit_toast_error_already_in_call), Style.ERROR)
+            return
+        }
+        val list = userIdList.distinct().toMutableList()
         if (list.isEmpty()) {
             Logger.e(TAG, "calls failed, userIdList is empty")
             completion?.onFailure(TUICallDefine.ERROR_PARAM_INVALID, "calls failed, userIdList is empty")
+            return
+        }
+        if (list.singleOrNull() == LoginStore.shared.loginState.loginUserInfo.value?.userID) {
+            AtomicToast.show(context, context.getString(R.string.callkit_toast_error_call_self), Style.ERROR)
+            completion?.onFailure(TUICallDefine.ERROR_PARAM_INVALID, "calls failed, you cannot call yourself")
             return
         }
         PermissionRequest.requestPermissions(context, mediaType, object : PermissionCallback() {
@@ -120,8 +125,8 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
     override fun join(callId: String?, completion: CompletionHandler?) {
         val selfStatus = CallStore.shared.observerState.selfInfo.value.status
         if (selfStatus != CallParticipantStatus.None) {
-            completion?.onFailure(TUICallDefine.ERROR_PARAM_INVALID, "you have missed calls")
-            AtomicToast.show(context, context.getString(R.string.callkit_toast_you_have_missed_calls))
+            completion?.onFailure(TUICallDefine.ERROR_PARAM_INVALID, "You are currently on a call.")
+            AtomicToast.show(context, context.getString(R.string.callkit_toast_error_already_in_call), Style.ERROR)
             return
         }
         PermissionRequest.requestPermissions(context, CallMediaType.Video, object : PermissionCallback() {
@@ -217,7 +222,6 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
         subscribeSelfStateJob = CoroutineScope(Dispatchers.Main).launch {
             supervisorScope {
                 launch { observeSelfInfo() }
-                launch { observeCameraStatus() }
             }
         }
     }
@@ -234,14 +238,6 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
                 return@collect
             }
             handleNewCall()
-        }
-    }
-
-    private suspend fun observeCameraStatus() {
-        DeviceStore.shared().deviceState.cameraLastError.collect { error ->
-            if (error == DeviceError.OCCUPIED_ERROR) {
-                DeviceStore.shared().closeLocalCamera()
-            }
         }
     }
 
@@ -346,7 +342,7 @@ class TUICallKitImpl private constructor(context: Context) : TUICallKit() {
                     Logger.w(TAG, "startSmallScreenView, current status: None, ignore")
                     return
                 }
-                caller.avatarUrl = data!![0].avatarUrl
+                caller.avatarURL = data!![0].avatarURL
                 caller.name = data[0].name
 
                 if (view is IncomingFloatBanner) {

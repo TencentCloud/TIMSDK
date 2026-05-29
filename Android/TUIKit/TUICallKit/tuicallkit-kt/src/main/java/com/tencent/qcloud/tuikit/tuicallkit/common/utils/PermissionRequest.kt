@@ -8,8 +8,8 @@ import android.os.Build
 import com.tencent.qcloud.tuicore.TUIConfig
 import com.tencent.qcloud.tuicore.TUIConstants
 import com.tencent.qcloud.tuicore.TUICore
-import com.tencent.qcloud.tuicore.permission.PermissionCallback
-import com.tencent.qcloud.tuicore.permission.PermissionRequester
+import io.trtc.tuikit.atomicx.common.permission.PermissionCallback
+import io.trtc.tuikit.atomicx.common.permission.PermissionRequester
 import com.tencent.qcloud.tuicore.util.TUIBuild
 import com.tencent.qcloud.tuikit.tuicallkit.R
 import io.trtc.tuikit.atomicxcore.api.call.CallMediaType
@@ -17,15 +17,17 @@ import io.trtc.tuikit.atomicxcore.api.call.CallMediaType
 object PermissionRequest {
     fun requestPermissions(context: Context, type: CallMediaType?, callback: PermissionCallback?) {
         val title = StringBuilder().append(context.getString(R.string.callkit_permission_microphone))
+        val applicationInfo = context.applicationInfo
+        val appName = context.packageManager.getApplicationLabel(applicationInfo).toString()
         val reason = StringBuilder()
-        reason.append(getMicrophonePermissionHint(context))
+        reason.append(getMicrophonePermissionHint(context, appName))
 
         val permissionList: MutableList<String> = ArrayList()
         permissionList.add(Manifest.permission.RECORD_AUDIO)
         if (CallMediaType.Video == type) {
             title.append(context.getString(R.string.callkit_permission_separator))
             title.append(context.getString(R.string.callkit_permission_camera))
-            reason.append(getCameraPermissionHint(context))
+            reason.append(getCameraPermissionHint(context, appName))
             permissionList.add(Manifest.permission.CAMERA)
         }
 
@@ -48,40 +50,9 @@ object PermissionRequest {
                 callback?.onDenied()
             }
         }
-        val applicationInfo = context.applicationInfo
-        val appName = context.packageManager.getApplicationLabel(applicationInfo).toString()
         PermissionRequester.newInstance(*permissionList.toTypedArray())
             .title(context.getString(R.string.callkit_permission_title, appName, title))
-            .description(reason.toString())
-            .settingsTip("${context.getString(R.string.callkit_permission_tips, title)} $reason".trimIndent())
-            .callback(permissionCallback)
-            .request()
-    }
-
-    fun requestCameraPermission(context: Context, callback: PermissionCallback?) {
-        if (PermissionRequester.newInstance(Manifest.permission.CAMERA).has()) {
-            callback?.onGranted()
-            return
-        }
-
-        val permissionCallback: PermissionCallback = object : PermissionCallback() {
-            override fun onGranted() {
-                callback?.onGranted()
-            }
-
-            override fun onDenied() {
-                super.onDenied()
-                callback?.onDenied()
-            }
-        }
-
-        val title = context.getString(R.string.callkit_permission_camera)
-        val reason = getCameraPermissionHint(context)
-        val appName = context.packageManager.getApplicationLabel(context.applicationInfo).toString()
-
-        PermissionRequester.newInstance(Manifest.permission.CAMERA)
-            .title(context.getString(R.string.callkit_permission_title, appName, title))
-            .description(reason)
+            .description("${context.getString(R.string.callkit_permission_tips, title)} $reason".trimIndent())
             .settingsTip("${context.getString(R.string.callkit_permission_tips, title)} $reason".trimIndent())
             .callback(permissionCallback)
             .request()
@@ -123,7 +94,7 @@ object PermissionRequest {
             .request()
     }
 
-    private fun getMicrophonePermissionHint(context: Context): String {
+    private fun getMicrophonePermissionHint(context: Context, appName: String): String {
         val microphonePermissionsDescription = TUICore.createObject(
             TUIConstants.Privacy.PermissionsFactory.FACTORY_NAME,
             TUIConstants.Privacy.PermissionsFactory.PermissionsName.MICROPHONE_PERMISSIONS, null
@@ -131,11 +102,11 @@ object PermissionRequest {
         return if (!microphonePermissionsDescription.isNullOrEmpty()) {
             microphonePermissionsDescription
         } else {
-            context.getString(R.string.callkit_permission_mic_reason)
+            context.getString(R.string.callkit_permission_mic_reason, appName)
         }
     }
 
-    private fun getCameraPermissionHint(context: Context): String {
+    private fun getCameraPermissionHint(context: Context, appName: String): String {
         val cameraPermissionsDescription = TUICore.createObject(
             TUIConstants.Privacy.PermissionsFactory.FACTORY_NAME,
             TUIConstants.Privacy.PermissionsFactory.PermissionsName.CAMERA_PERMISSIONS, null
@@ -143,7 +114,7 @@ object PermissionRequest {
         return if (!cameraPermissionsDescription.isNullOrEmpty()) {
             cameraPermissionsDescription
         } else {
-            context.getString(R.string.callkit_permission_camera_reason)
+            context.getString(R.string.callkit_permission_camera_reason, appName)
         }
     }
 

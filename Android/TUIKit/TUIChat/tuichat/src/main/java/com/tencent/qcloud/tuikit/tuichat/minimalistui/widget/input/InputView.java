@@ -1,10 +1,13 @@
 package com.tencent.qcloud.tuikit.tuichat.minimalistui.widget.input;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+
 import io.trtc.tuikit.atomicx.albumpicker.AlbumMedia;
 import android.os.SystemClock;
 import android.text.Editable;
@@ -15,10 +18,10 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,6 +30,8 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LifecycleOwner;
 
@@ -42,8 +47,8 @@ import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.ChatFace;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.dialog.MinimalistToast;
-import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.ChatInputMoreListener;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnFaceInputListener;
 import com.tencent.qcloud.tuikit.timcommon.util.ActivityResultResolver;
@@ -51,6 +56,7 @@ import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.LayoutUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
+import com.tencent.qcloud.tuikit.timcommon.util.keyboard.KeyboardHeightObserver;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
@@ -65,6 +71,8 @@ import com.tencent.qcloud.tuikit.tuichat.component.album.VideoRecorder;
 import com.tencent.qcloud.tuikit.tuichat.component.audio.AudioRecorder;
 import com.tencent.qcloud.tuikit.tuichat.component.face.FaceFragment;
 import com.tencent.qcloud.tuikit.tuichat.component.inputedittext.TIMMentionEditText;
+import com.tencent.qcloud.tuikit.tuichat.component.voiceinput.VoiceInputController;
+import com.tencent.qcloud.tuikit.tuichat.component.voiceinput.VoiceInputStartPolicy;
 import com.tencent.qcloud.tuikit.tuichat.config.GeneralConfig;
 import com.tencent.qcloud.tuikit.tuichat.config.minimalistui.TUIChatConfigMinimalist;
 import com.tencent.qcloud.tuikit.tuichat.minimalistui.interfaces.IChatLayout;
@@ -94,6 +102,8 @@ import java.util.TimerTask;
 
 public class InputView extends LinearLayout implements View.OnClickListener, TextWatcher {
     private static final String TAG = InputView.class.getSimpleName();
+    private static final long KEYBOARD_ANIMATION_DEBOUNCE_MS = 60L;
+    private static final long PANEL_ANIMATION_DURATION_MS = 220L;
 
     protected ImageView faceKeyboardInputButton;
     protected ImageView inputMoreBtn;
@@ -134,6 +144,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     private float mStartRecordX;
     private String mInputContent;
     private OnInputViewListener mOnInputViewListener;
+    private VoiceInputController voiceInputController;
 
     private Map<String, String> atUserInfoMap = new HashMap<>();
     private String displayInputString;
@@ -151,6 +162,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     private TextView quoteTv;
     private ImageView quoteCloseBtn;
     private boolean isShowCustomFace = true;
+    private boolean mIsInsertingEmoji = false;
     private FragmentManager fragmentManager;
     // Input state machine
     private InputMachine inputMachine;
@@ -179,6 +191,21 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     public void setChatInputMoreListener(ChatInputMoreListener chatInputMoreListener) {
         this.chatInputMoreListener = chatInputMoreListener;
     }
+    
+    private KeyboardHeightObserver keyboardHeightObserver;
+    private boolean isKeyboardShowing = false;
+    private boolean isPanelShowing = false;
+    private boolean isSwitchingToPanel = false;
+    private boolean isSwitchingToKeyboard = false;
+    private boolean hasKeyboardHeightChanging = false;
+    private int currentKeyboardHeight = 0;
+    private long lastKeyboardHeightChangingTime = 0L;
+    private int lastAppliedBottomPadding = Integer.MIN_VALUE;
+    private int lastAppliedPanelHeight = Integer.MIN_VALUE;
+    private ValueAnimator panelHeightAnimator;
+    private int lastLoggedAdjustedKeyboardHeight = Integer.MIN_VALUE;
+    private int lastLoggedPanelHeight = Integer.MIN_VALUE;
+    private int lastLoggedBottomPadding = Integer.MIN_VALUE;
 
     private void initViews() {
         inflate(getContext(), R.layout.chat_minimalist_input_layout, this);
@@ -212,12 +239,181 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         mIsSending = false;
         times = 0;
 
+        setupKeyboardHeightObserver();
         init();
+    }
+    
+    private void setupKeyboardHeightObserver() {
+        keyboardHeightObserver = new KeyboardHeightObserver(getActivity());
+        keyboardHeightObserver.setOnKeyboardHeightChangeListener(new KeyboardHeightObserver.OnKeyboardHeightChangeListener() {
+            @Override
+            public void onKeyboardHeightChanged(int height, boolean isVisible) {
+                isKeyboardShowing = isVisible;
+                hasKeyboardHeightChanging = false;
+                currentKeyboardHeight = isVisible ? height : 0;
+                updateInputHintVisibility();
+                long now = SystemClock.uptimeMillis();
+                if (now - lastKeyboardHeightChangingTime > KEYBOARD_ANIMATION_DEBOUNCE_MS) {
+                    updateBottomPaddingForKeyboardHeight(currentKeyboardHeight);
+                }
+
+                if (!hasKeyboardHeightChanging) {
+                    if (!isVisible && isSwitchingToPanel && height == 0) {
+                        isSwitchingToPanel = false;
+                        updateMoreViewHeight(getPanelTargetHeight());
+                    } else if (isVisible && isSwitchingToKeyboard && adjustKeyboardHeight(height) >= getPanelTargetHeight()) {
+                        isSwitchingToKeyboard = false;
+                        hideFace();
+                    }
+                }
+            }
+            
+            @Override
+            public void onKeyboardHeightChanging(int currentHeight) {
+                lastKeyboardHeightChangingTime = SystemClock.uptimeMillis();
+                hasKeyboardHeightChanging = true;
+                currentKeyboardHeight = currentHeight;
+                updateInputHintVisibility();
+                int adjusted = adjustKeyboardHeight(currentHeight);
+                int saved = getPanelTargetHeight();
+                updateBottomPaddingForKeyboardHeight(currentHeight);
+
+                if (isSwitchingToPanel || isSwitchingToKeyboard) {
+                    int savedKeyboardHeight = getPanelTargetHeight();
+                    int adjustedCurrentHeight = adjustKeyboardHeight(currentHeight);
+                    int targetHeight = savedKeyboardHeight - adjustedCurrentHeight;
+                    if (targetHeight < 0) {
+                        targetHeight = 0;
+                    }
+                    if (mInputMoreLayout.getVisibility() != VISIBLE) {
+                        mInputMoreLayout.setVisibility(VISIBLE);
+                    }
+                    updateMoreViewHeight(targetHeight);
+
+                    if (isSwitchingToPanel && adjustedCurrentHeight == 0) {
+                        isSwitchingToPanel = false;
+                        updateMoreViewHeight(savedKeyboardHeight);
+                    } else if (isSwitchingToKeyboard && targetHeight == 0 && adjustedCurrentHeight > 0) {
+                        isSwitchingToKeyboard = false;
+                        hideFace();
+                    }
+                }
+            }
+        });
+        keyboardHeightObserver.start();
+    }
+    
+    private void updateMoreViewHeight() {
+        updateMoreViewHeight(getPanelTargetHeight());
+    }
+    
+    private void updateMoreViewHeight(int height) {
+        if (lastAppliedPanelHeight == height) {
+            return;
+        }
+        lastAppliedPanelHeight = height;
+        ViewGroup.LayoutParams params = mInputMoreLayout.getLayoutParams();
+        params.height = height;
+        mInputMoreLayout.setLayoutParams(params);
+
+    }
+
+    private void updateBottomPaddingForKeyboardHeight(int keyboardHeight) {
+        int bottomPadding = adjustKeyboardHeight(keyboardHeight);
+        if (lastAppliedBottomPadding == bottomPadding) {
+            return;
+        }
+        lastAppliedBottomPadding = bottomPadding;
+        setPadding(getPaddingLeft(), getPaddingTop(), getPaddingRight(), bottomPadding);
+
+    }
+
+    private void cancelPanelHeightAnimator() {
+        if (panelHeightAnimator != null) {
+            panelHeightAnimator.cancel();
+            panelHeightAnimator = null;
+        }
+    }
+
+    private int getPanelHeight() {
+        ViewGroup.LayoutParams params = mInputMoreLayout.getLayoutParams();
+        if (params == null) {
+            return 0;
+        }
+        return Math.max(params.height, 0);
+    }
+
+    private void animatePanelToHeight(int targetHeight, boolean showAfterAnimation) {
+        cancelPanelHeightAnimator();
+        mInputMoreLayout.setVisibility(VISIBLE);
+
+        int startHeight = getPanelHeight();
+        if (startHeight == targetHeight) {
+            if (!showAfterAnimation && targetHeight == 0) {
+                mInputMoreLayout.setVisibility(GONE);
+            }
+            return;
+        }
+
+        panelHeightAnimator = ValueAnimator.ofInt(startHeight, targetHeight);
+        panelHeightAnimator.setDuration(PANEL_ANIMATION_DURATION_MS);
+        panelHeightAnimator.setInterpolator(targetHeight > startHeight ? new DecelerateInterpolator() : new AccelerateInterpolator());
+        panelHeightAnimator.addUpdateListener(animation -> updateMoreViewHeight((Integer) animation.getAnimatedValue()));
+        panelHeightAnimator.addListener(new AnimatorListenerAdapter() {
+            private boolean cancelled;
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                cancelled = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (cancelled) {
+                    return;
+                }
+                if (!showAfterAnimation && targetHeight == 0) {
+                    mInputMoreLayout.setVisibility(GONE);
+                }
+            }
+        });
+        panelHeightAnimator.start();
+    }
+
+    private void hideImeOnly() {
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mTextInput.getWindowToken(), 0);
+    }
+
+    private int adjustKeyboardHeight(int keyboardHeight) {
+        int bottomInset = getBottomInsetForKeyboard();
+        int adjusted = keyboardHeight - bottomInset;
+        return Math.max(adjusted, 0);
+    }
+
+    private int getBottomInsetForKeyboard() {
+        if (keyboardHeightObserver == null || !keyboardHeightObserver.isEdgeToEdge()) {
+            return 0;
+        }
+        WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(this);
+        if (insets == null) {
+            return 0;
+        }
+        return insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
+    }
+
+    private int getPanelTargetHeight() {
+        if (keyboardHeightObserver == null) {
+            return 0;
+        }
+        return adjustKeyboardHeight(keyboardHeightObserver.getKeyboardHeight());
     }
 
     @SuppressLint("ClickableViewAccessibility")
     protected void init() {
         initInputMachine();
+        initVoiceInputController();
+        applyVoiceInputHint();
         fragmentManager = getActivity().getSupportFragmentManager();
         faceKeyboardInputButton.setOnClickListener(this);
         mTextInput.setMaxLines(6);
@@ -232,6 +428,9 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         mTextInput.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (voiceInputController != null && voiceInputController.onTextInputTouch(motionEvent, mTextInput)) {
+                    return true;
+                }
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     if (presenter != null) {
                         presenter.scrollToNewestMessage();
@@ -271,44 +470,9 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         });
 
         voiceBtn.setOnTouchListener(new OnTouchListener() {
-            private boolean readyToCancel = false;
-
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                int action = motionEvent.getAction();
-                TUIChatLog.i(TAG, "mSendAudioButton onTouch action:" + action);
-
-                boolean isRTL = LayoutUtil.isRTL();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        mStartRecordX = motionEvent.getX();
-                        inputMachine.execute(InputAction.AUDIO_CLICKED);
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        readyToCancel = motionEvent.getX() - mStartRecordX < -100;
-                        if (isRTL) {
-                            readyToCancel = motionEvent.getX() - mStartRecordX > 100;
-                        }
-                        if (readyToCancel) {
-                            readyToCancelRecord();
-                        } else {
-                            continueRecord();
-                        }
-
-                        break;
-                    case MotionEvent.ACTION_CANCEL:
-                    case MotionEvent.ACTION_UP:
-                        if (readyToCancel) {
-                            inputMachine.execute(InputAction.CANCEL_RECORD_AUDIO_CLICKED);
-                        } else {
-                            inputMachine.execute(InputAction.AUDIO_CLICKED);
-                        }
-                        break;
-                    default:
-                        break;
-                }
-
-                return false;
+                return voiceInputController != null && voiceInputController.onPressToTalkTouch(motionEvent, voiceBtn);
             }
         });
 
@@ -388,6 +552,18 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         }
     }
 
+    private void sendVoiceInputTextMessage(String text) {
+        if (TextUtils.isEmpty(text) || TextUtils.isEmpty(text.trim())) {
+            return;
+        }
+        if (!checkChatbotFinished()) {
+            return;
+        }
+        if (mMessageHandler != null) {
+            mMessageHandler.sendMessage(ChatMessageBuilder.buildTextMessage(text));
+        }
+    }
+
     private boolean checkChatbotFinished() {
         boolean isFinished = presenter.isChatbotMessageFinished.getValue();
         if (!isFinished) {
@@ -415,6 +591,128 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         String mm = (miss % 3600) / 60 > 9 ? (miss % 3600) / 60 + "" : "0" + (miss % 3600) / 60;
         String ss = (miss % 3600) % 60 > 9 ? (miss % 3600) % 60 + "" : "0" + (miss % 3600) % 60;
         return mm + ":" + ss;
+    }
+
+    private void initVoiceInputController() {
+        voiceInputController = new VoiceInputController(this, new VoiceInputController.Listener() {
+            @Override
+            public boolean canStartRecordFromTextInput() {
+                return VoiceInputStartPolicy.canStartFromTextInput(
+                    isKeyboardShowing || currentKeyboardHeight > 0,
+                    false,
+                    mInputMoreLayout != null && mInputMoreLayout.getVisibility() == VISIBLE && getPanelHeight() > 0,
+                    !TextUtils.isEmpty(mTextInput.getText())
+                );
+            }
+
+            @Override
+            public void onTextInputTap() {
+                if (presenter != null) {
+                    presenter.scrollToNewestMessage();
+                }
+                inputMachine.execute(InputAction.INPUT_CLICKED);
+            }
+
+            @Override
+            public void onBeforeRecordFromTextInput() {
+                resetInput();
+            }
+
+            @Override
+            public void onSendAudio(String filePath, int durationMs) {
+                sendAudioMessage(filePath, durationMs);
+            }
+
+            @Override
+            public void onSendText(String text) {
+                sendVoiceInputTextMessage(text);
+            }
+
+            @Override
+            public void onRecordStart() {
+                if (mChatInputHandler != null) {
+                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_START);
+                }
+            }
+
+            @Override
+            public void onRecordReadyToCancel() {
+                if (mChatInputHandler != null) {
+                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_READY_TO_CANCEL);
+                }
+            }
+
+            @Override
+            public void onRecordContinue() {
+                if (mChatInputHandler != null) {
+                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_CONTINUE);
+                }
+            }
+
+            @Override
+            public void onRecordReadyToTranscribe() {
+                if (mChatInputHandler != null) {
+                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_CONTINUE);
+                }
+            }
+
+            @Override
+            public void onRecordCancel() {
+                if (mChatInputHandler != null) {
+                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_CANCEL);
+                }
+                resetVoiceView();
+            }
+
+            @Override
+            public void onRecordTooShort() {
+                if (mChatInputHandler != null) {
+                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_TOO_SHORT);
+                }
+                resetVoiceView();
+            }
+
+            @Override
+            public void onRecordStop() {
+                if (mChatInputHandler != null) {
+                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_STOP);
+                }
+                resetVoiceView();
+            }
+
+            @Override
+            public void onRecordFailed() {
+                if (mChatInputHandler != null) {
+                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_FAILED);
+                }
+                resetVoiceView();
+            }
+        });
+    }
+
+    private void applyVoiceInputHint() {
+        mTextInput.setHint(R.string.voice_input_edit_text_hint);
+        updateInputHintVisibility();
+    }
+
+    private void updateInputHintVisibility() {
+        boolean panelShowing = isPanelShowing
+            && mInputMoreLayout != null
+            && mInputMoreLayout.getVisibility() == VISIBLE
+            && getPanelHeight() > 0;
+        boolean moreDialogShowing = mInputMoreFragment != null && mInputMoreFragment.getDialog() != null && mInputMoreFragment.getDialog().isShowing();
+        boolean shouldHideHint = isKeyboardShowing || currentKeyboardHeight > 0 || panelShowing || moreDialogShowing
+                || isSwitchingToPanel || isSwitchingToKeyboard;
+        CharSequence nextHint = shouldHideHint ? "" : getResources().getString(R.string.voice_input_edit_text_hint);
+        if (!TextUtils.equals(mTextInput.getHint(), nextHint)) {
+            mTextInput.setHint(nextHint);
+        }
+    }
+
+    private void hideInputHint() {
+        if (!TextUtils.isEmpty(mTextInput.getHint())) {
+            mTextInput.setHint("");
+        }
     }
 
     public void addInputText(String name, String id) {
@@ -538,6 +836,12 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
         if (mChatInputHandler != null) {
             mChatInputHandler.onUserTyping(false, V2TIMManager.getInstance().getServerTime());
+        }
+        if (keyboardHeightObserver != null) {
+            keyboardHeightObserver.stop();
+        }
+        if (voiceInputController != null) {
+            voiceInputController.dismiss();
         }
     }
 
@@ -869,15 +1173,24 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     }
 
     private void showSoftInputAndHideFace() {
-        showSoftInputAndThen(this::hideFace);
+        hideInputHint();
+        cancelPanelHeightAnimator();
+        isSwitchingToPanel = false;
+        boolean panelVisible = mInputMoreLayout.getVisibility() == VISIBLE && getPanelHeight() > 0;
+        if (isPanelShowing && panelVisible) {
+            isSwitchingToKeyboard = true;
+        } else {
+            isSwitchingToKeyboard = false;
+            isPanelShowing = false;
+            updateMoreViewHeight(0);
+            mInputMoreLayout.setVisibility(GONE);
+        }
         faceKeyboardInputButton.setImageResource(R.drawable.chat_minimalist_input_face_icon);
+        showSoftInputAndThen(null);
     }
 
     private void hideSoftInputAndShowFace() {
         showFace();
-        hideSoftInput();
-        mTextInput.requestFocus();
-        faceKeyboardInputButton.setImageResource(R.drawable.chat_input_keyboard);
     }
 
     @Override
@@ -900,32 +1213,24 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     }
 
     public void showSoftInputAndThen(Callback callback) {
+        hideInputHint();
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+
         mTextInput.requestFocus();
         imm.showSoftInput(mTextInput, 0);
+        
+        if (callback != null) {
+            callback.onCall();
+        }
+        
         postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (callback != null) {
-                    callback.onCall();
+                if (mChatInputHandler != null) {
+                    mChatInputHandler.onInputAreaClick();
                 }
-                Context context = getContext();
-                if (context instanceof Activity) {
-                    Window window = ((Activity) context).getWindow();
-                    if (window != null) {
-                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                    }
-                }
-                postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mChatInputHandler != null) {
-                            mChatInputHandler.onInputAreaClick();
-                        }
-                    }
-                }, 100);
             }
-        }, 180);
+        }, 100);
     }
 
     public void showSoftInput() {
@@ -938,13 +1243,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         mTextInput.clearFocus();
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mTextInput.getWindowToken(), 0);
-        Context context = getContext();
-        if (context instanceof Activity) {
-            Window window = ((Activity) context).getWindow();
-            if (window != null) {
-                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
-            }
-        }
+        updateInputHintVisibility();
     }
 
     public void onEmptyClick() {
@@ -961,6 +1260,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     private void showFace() {
         TUIChatLog.i(TAG, "showFaceViewGroup");
+        hideInputHint();
         if (faceFragment == null) {
             faceFragment = new FaceFragment();
             faceFragment.setTabIndicatorColor(getResources().getColor(R.color.chat_bubble_other_color));
@@ -968,9 +1268,9 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 @Override
                 public void onEmojiClicked(String emojiKey) {
                     int index = mTextInput.getSelectionStart();
-                    Editable editable = mTextInput.getText();
-                    editable.insert(index, emojiKey);
-                    FaceManager.handlerEmojiText(mTextInput, editable, true);
+                    mIsInsertingEmoji = true;
+                    FaceManager.insertEmoji(mTextInput, emojiKey, index);
+                    mIsInsertingEmoji = false;
                 }
 
                 @Override
@@ -990,11 +1290,32 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 }
             });
         }
-        hideSoftInput();
+
+        cancelPanelHeightAnimator();
+        isPanelShowing = true;
+        isSwitchingToKeyboard = false;
         faceKeyboardInputButton.setImageResource(R.drawable.chat_input_keyboard);
         mTextInput.requestFocus();
+
+        if (fragmentManager == null) {
+            fragmentManager = getActivity().getSupportFragmentManager();
+        }
+        try {
+            fragmentManager.beginTransaction().replace(R.id.more_groups, faceFragment).commitNowAllowingStateLoss();
+        } catch (Throwable ignored) {
+            fragmentManager.beginTransaction().replace(R.id.more_groups, faceFragment).commitAllowingStateLoss();
+        }
+
+        boolean imeShowingOrAnimating = currentKeyboardHeight > 0 || isKeyboardShowing;
+        updateMoreViewHeight(0);
         mInputMoreLayout.setVisibility(VISIBLE);
-        fragmentManager.beginTransaction().replace(R.id.more_groups, faceFragment).commitAllowingStateLoss();
+        if (imeShowingOrAnimating) {
+            isSwitchingToPanel = true;
+            hideImeOnly();
+        } else {
+            isSwitchingToPanel = false;
+            animatePanelToHeight(getPanelTargetHeight(), true);
+        }
         if (mChatInputHandler != null) {
             postDelayed(new Runnable() {
                 @Override
@@ -1014,17 +1335,36 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     }
 
     private void hideFace() {
-        mInputMoreLayout.setVisibility(GONE);
+        cancelPanelHeightAnimator();
+        isPanelShowing = false;
+        isSwitchingToPanel = false;
+        isSwitchingToKeyboard = false;
         faceKeyboardInputButton.setImageResource(R.drawable.chat_minimalist_input_face_icon);
+
+        boolean imeShowingOrAnimating = currentKeyboardHeight > 0 || isKeyboardShowing;
+        boolean panelVisible = mInputMoreLayout.getVisibility() == VISIBLE && getPanelHeight() > 0;
+        if (!imeShowingOrAnimating && panelVisible) {
+            animatePanelToHeight(0, false);
+        } else {
+            updateMoreViewHeight(0);
+            mInputMoreLayout.setVisibility(GONE);
+        }
+        updateInputHintVisibility();
     }
 
     private void resetInput() {
+        cancelPanelHeightAnimator();
+        isPanelShowing = false;
+        isSwitchingToPanel = false;
+        isSwitchingToKeyboard = false;
         if (mInputMoreFragment != null) {
             mInputMoreFragment.dismiss();
         }
+        updateMoreViewHeight(0);
         mInputMoreLayout.setVisibility(GONE);
         faceKeyboardInputButton.setImageResource(R.drawable.chat_minimalist_input_face_icon);
         hideSoftInput();
+        updateInputHintVisibility();
     }
 
     private void stopAudioRecord() {
@@ -1225,7 +1565,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                     mChatInputHandler.onInputAreaClick();
                 }
             }
-            if (!TextUtils.equals(mInputContent, mTextInput.getText().toString())) {
+            if (!mIsInsertingEmoji && !TextUtils.equals(mInputContent, mTextInput.getText().toString())) {
                 FaceManager.handlerEmojiText(mTextInput, mTextInput.getText(), true);
             }
         }
@@ -1254,8 +1594,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             Gson gson = new Gson();
             Map<String, String> draftMap = new HashMap<>();
             draftMap.put("content", draftText);
-            draftMap.put("reply", gson.toJson(replyPreviewBean));
-            draftMap.put("reply_message_sender_name", replyPreviewBean.getMessageSenderName());
+            draftMap.put("quotedMessageID", replyPreviewBean.getMessageID());
             draftText = gson.toJson(draftMap);
         }
         if (presenter != null) {
@@ -1289,15 +1628,24 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 try {
                     draftJsonMap = gson.fromJson(draftInfo.getDraftText(), HashMap.class);
                     if (draftJsonMap != null) {
-                        content = (String) draftJsonMap.get("content");
-                        String draftStr = (String) draftJsonMap.get("reply");
-                        ReplyPreviewBean bean = gson.fromJson(draftStr, ReplyPreviewBean.class);
-                        if (bean != null) {
-                            Object replyMessageSenderName = draftJsonMap.get("reply_message_sender_name");
-                            if (replyMessageSenderName instanceof String) {
-                                bean.setMessageSenderName((String) replyMessageSenderName);
+                        Object contentObj = draftJsonMap.get("content");
+                        if (contentObj instanceof String) {
+                            content = (String) contentObj;
+                        }
+                        Object quotedMessageIDObj = draftJsonMap.get("quotedMessageID");
+                        if (quotedMessageIDObj instanceof String && presenter != null) {
+                            String quotedMessageID = (String) quotedMessageIDObj;
+                            if (!TextUtils.isEmpty(quotedMessageID)) {
+                                ChatInfo draftChatInfo = chatInfo;
+                                presenter.findMessage(quotedMessageID, new IUIKitCallback<TUIMessageBean>() {
+                                    @Override
+                                    public void onSuccess(TUIMessageBean data) {
+                                        if (data != null && mChatInfo == draftChatInfo && ViewCompat.isAttachedToWindow(InputView.this)) {
+                                            showReplyPreview(ChatMessageBuilder.buildReplyPreviewBean(data));
+                                        }
+                                    }
+                                });
                             }
-                            showReplyPreview(bean);
                         }
                     }
                 } catch (JsonSyntaxException e) {
@@ -1525,20 +1873,11 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         String replyMessageAbstract = previewBean.getMessageAbstract();
         String msgTypeStr = ChatMessageParser.getMsgTypeStr(previewBean.getMessageType());
         // If replying to a text message, the middle part of the file name is displayed in abbreviated form
-        if (previewBean.isReplyMessage()) {
-            CharSequence text = msgTypeStr + " " + replyMessageAbstract;
-            text = FaceManager.emojiJudge(text);
-            isReplyModel = true;
-            replyTv.setText(text);
-            replyUserNameTv.setText(previewBean.getMessageSenderName());
-            replyPreviewBar.setVisibility(View.VISIBLE);
-        } else {
-            CharSequence text = previewBean.getMessageSenderName() + " : " + msgTypeStr + " " + replyMessageAbstract;
-            text = FaceManager.emojiJudge(text);
-            isQuoteModel = true;
-            quoteTv.setText(text);
-            quotePreviewBar.setVisibility(View.VISIBLE);
-        }
+        CharSequence text = previewBean.getMessageSenderName() + " : " + msgTypeStr + " " + replyMessageAbstract;
+        text = FaceManager.emojiJudge(text);
+        isQuoteModel = true;
+        quoteTv.setText(text);
+        quotePreviewBar.setVisibility(View.VISIBLE);
 
         if (previewBean.getOriginalMessageBean() instanceof FileMessageBean) {
             replyTv.setEllipsize(TextUtils.TruncateAt.MIDDLE);
@@ -1565,12 +1904,14 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     private void showInputMoreLayout() {
         TUIChatLog.i(TAG, "showInputMoreLayout");
+        hideInputHint();
         if (fragmentManager == null) {
             fragmentManager = getActivity().getSupportFragmentManager();
         }
         if (mInputMoreFragment == null) {
             mInputMoreFragment = new InputMoreDialogFragment();
         }
+        mInputMoreFragment.setOnDismissCallback(this::updateInputHintVisibility);
 
         assembleActions();
         mInputMoreFragment.setActions(mInputMoreActionList);

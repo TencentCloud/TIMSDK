@@ -23,6 +23,17 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageView
+        android:id="@+id/iv_beauty"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:visibility="gone"
+        android:src="@drawable/tuicallkit_ic_beauty"
+        android:layout_marginBottom="38dp"
+        android:layout_marginStart="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
         android:id="@+id/image_float_icon"
         android:layout_width="24dp"
         android:layout_height="24dp"
@@ -44,5 +55,30 @@
         app:layout_constraintTop_toTopOf="@+id/image_float_icon"
         app:layout_constraintBottom_toBottomOf="@+id/image_float_icon"
         tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_call_end_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/tuicallkit_bg_incoming_view"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="2"
+        android:maxWidth="280dp"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
+        android:textColor="@color/callkit_color_white"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        tools:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

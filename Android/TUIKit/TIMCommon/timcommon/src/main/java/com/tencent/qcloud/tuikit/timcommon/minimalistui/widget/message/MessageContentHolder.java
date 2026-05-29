@@ -27,7 +27,6 @@ import com.tencent.qcloud.tuicore.TUIConstants;
 import com.tencent.qcloud.tuicore.TUICore;
 import com.tencent.qcloud.tuicore.TUIThemeManager;
 import com.tencent.qcloud.tuikit.timcommon.R;
-import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.UnreadCountTextView;
 import com.tencent.qcloud.tuikit.timcommon.config.minimalistui.TUIConfigMinimalist;
@@ -653,22 +652,8 @@ public abstract class MessageContentHolder extends MessageBaseHolder {
     }
 
     private void setReplyContent(TUIMessageBean messageBean) {
-        MessageRepliesBean messageRepliesBean = messageBean.getMessageRepliesBean();
-        if (messageRepliesBean != null && messageRepliesBean.getRepliesSize() > 0) {
-            extraInfoArea.setVisibility(View.VISIBLE);
-            replyPreviewView.setVisibility(View.VISIBLE);
-            replyPreviewView.setMessageRepliesBean(messageRepliesBean);
-            replyPreviewView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onItemClickListener != null) {
-                        onItemClickListener.onReplyDetailClick(messageBean);
-                    }
-                }
-            });
-        } else {
-            replyPreviewView.setVisibility(View.GONE);
-        }
+        replyPreviewView.setVisibility(View.GONE);
+        replyPreviewView.setOnClickListener(null);
     }
 
     private void setReactContent(TUIMessageBean messageBean) {

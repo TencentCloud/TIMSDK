@@ -32,7 +32,6 @@ import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.CustomLinearLayoutManager;
 import com.tencent.qcloud.tuikit.timcommon.component.RoundCornerImageView;
 import com.tencent.qcloud.tuikit.timcommon.component.dialog.TUIKitDialog;
-import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.component.scroller.CenteredSmoothScroller;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnChatPopActionClickListener;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnItemClickListener;
@@ -43,7 +42,6 @@ import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
 import com.tencent.qcloud.tuikit.tuichat.bean.ChatInfo;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
@@ -293,7 +291,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         final ChatPopActivity.ChatPopMenuAction forwardAction = createForwardAction(msg);
         final ChatPopActivity.ChatPopMenuAction multiSelectAction = createMultiSelectAction(msg, textIsAllSelected);
         final ChatPopActivity.ChatPopMenuAction quoteAction = createQuoteAction(msg, textIsAllSelected);
-        final ChatPopActivity.ChatPopMenuAction replyAction = createReplyAction(msg, textIsAllSelected);
         final ChatPopActivity.ChatPopMenuAction revokeAction = createRevokeAction(msg, textIsAllSelected);
         final ChatPopActivity.ChatPopMenuAction deleteAction = createDeleteAction(msg, textIsAllSelected);
         final ChatPopActivity.ChatPopMenuAction infoAction = createInfoAction(msg, textIsAllSelected);
@@ -303,7 +300,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         addActionIfEnabled(
             multiSelectAction, TUIChatConfigMinimalist.isEnableSelect() && getChatInfo().isPopMenuEnableMultiSelect() && !msg.hasRiskContent(), 8000);
         addActionIfEnabled(quoteAction, TUIChatConfigMinimalist.isEnableQuote() && getChatInfo().isPopMenuEnableQuote() && !msg.hasRiskContent(), 7000);
-        addActionIfEnabled(replyAction, TUIChatConfigMinimalist.isEnableReply() && getChatInfo().isPopMenuEnableReply() && !msg.hasRiskContent(), 6000);
         addActionIfEnabled(revokeAction, TUIChatConfigMinimalist.isEnableRecall() && getChatInfo().isPopMenuEnableRevoke(), 5000);
         addActionIfEnabled(deleteAction, TUIChatConfigMinimalist.isEnableDelete() && getChatInfo().isPopMenuEnableDelete(), 4000);
         addActionIfEnabled(groupPinAction, TUIChatConfigMinimalist.isEnablePin() && getChatInfo().isPopMenuEnablePin(), 3000);
@@ -380,18 +376,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
         action.setActionName(getContext().getString(R.string.quote_button));
         action.setActionIcon(R.drawable.chat_minimalist_pop_menu_quote);
         action.setActionClickListener(() -> mOnPopActionClickListener.onQuoteMessageClick(msg));
-        return action;
-    }
-
-    private ChatPopActivity.ChatPopMenuAction createReplyAction(TUIMessageBean msg, boolean textIsAllSelected) {
-        if (!textIsAllSelected || msg.getStatus() == TUIMessageBean.MSG_STATUS_SEND_FAIL) {
-            return null;
-        }
-
-        ChatPopActivity.ChatPopMenuAction action = new ChatPopActivity.ChatPopMenuAction();
-        action.setActionName(getContext().getString(R.string.reply_button));
-        action.setActionIcon(R.drawable.chat_minimalist_pop_menu_reply);
-        action.setActionClickListener(() -> mOnPopActionClickListener.onReplyMessageClick(msg));
         return action;
     }
 
@@ -683,17 +667,13 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
                 if (TUIChatUtils.chatEventOnMessageClicked(view, messageBean)) {
                     return;
                 }
-                if (messageBean instanceof ReplyMessageBean) {
-                    showRootMessageReplyDetail(((ReplyMessageBean) messageBean).getMsgRootId());
-                } else if (messageBean instanceof QuoteMessageBean) {
+                if (messageBean instanceof QuoteMessageBean) {
                     presenter.locateQuoteOriginMessage((QuoteMessageBean) messageBean);
                 }
             }
 
             @Override
-            public void onReplyDetailClick(TUIMessageBean messageBean) {
-                showRootMessageReplyDetail(messageBean);
-            }
+            public void onReplyDetailClick(TUIMessageBean messageBean) {}
 
             @Override
             public void onSendFailBtnClick(View view, TUIMessageBean messageInfo) {
@@ -723,37 +703,6 @@ public class MessageRecyclerView extends RecyclerView implements IMessageRecycle
                 if (mOnItemClickListener != null && messageBean.isSelf()) {
                     mOnItemClickListener.onMessageReadStatusClick(view, messageBean);
                 }
-            }
-        });
-    }
-
-    private void showRootMessageReplyDetail(TUIMessageBean messageBean) {
-        ChatReplyDialogFragment replyDialogFragment = new ChatReplyDialogFragment();
-        replyDialogFragment.setOriginMessage(messageBean);
-        replyDialogFragment.setChatInfo(presenter.getChatInfo());
-        replyDialogFragment.show(getActivity().getSupportFragmentManager(), "reply");
-    }
-
-    private void showRootMessageReplyDetail(String rootMessageId) {
-        if (presenter.getChatInfo() == null) {
-            return;
-        }
-        presenter.findMessage(rootMessageId, new IUIKitCallback<TUIMessageBean>() {
-            @Override
-            public void onSuccess(TUIMessageBean data) {
-                if (data.getStatus() == TUIMessageBean.MSG_STATUS_REVOKE) {
-                    ToastUtil.toastShortMessage(getContext().getString(R.string.locate_origin_msg_failed_tip));
-                    return;
-                }
-                ChatReplyDialogFragment replyDialogFragment = new ChatReplyDialogFragment();
-                replyDialogFragment.setOriginMessage(data);
-                replyDialogFragment.setChatInfo(presenter.getChatInfo());
-                replyDialogFragment.show(getActivity().getSupportFragmentManager(), "reply");
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastShortMessage(getContext().getString(R.string.locate_origin_msg_failed_tip));
             }
         });
     }

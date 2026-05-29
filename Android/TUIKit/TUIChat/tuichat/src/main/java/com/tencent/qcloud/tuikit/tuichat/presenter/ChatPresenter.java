@@ -23,7 +23,6 @@ import com.tencent.qcloud.tuicore.interfaces.TUIValueCallback;
 import com.tencent.qcloud.tuicore.push.OfflinePushExtInfo;
 import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.MessageReceiptInfo;
-import com.tencent.qcloud.tuikit.timcommon.bean.MessageRepliesBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.UserBean;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
@@ -51,7 +50,6 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.ImageMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.MergeMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.QuoteMessageBean;
-import com.tencent.qcloud.tuikit.tuichat.bean.message.ReplyMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.SoundMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.VideoMessageBean;
@@ -82,6 +80,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class ChatPresenter {
     private static final String TAG = ChatPresenter.class.getSimpleName();
@@ -628,7 +627,10 @@ public abstract class ChatPresenter {
         for (TUIMessageBean messageBean : data) {
             if (messageBean instanceof QuoteMessageBean) {
                 quoteMessageList.add((QuoteMessageBean) messageBean);
-                msgIdList.add(((QuoteMessageBean) messageBean).getOriginMsgId());
+                String originMsgID = ((QuoteMessageBean) messageBean).getOriginMsgId();
+                if (!TextUtils.isEmpty(originMsgID)) {
+                    msgIdList.add(originMsgID);
+                }
             }
         }
         Set<TUIMessageBean> updateSet = new HashSet<>();
@@ -653,9 +655,7 @@ public abstract class ChatPresenter {
             @Override
             public void run() {
                 if (msgIdList.isEmpty()) {
-                    setQuoteMessageAbstractEnable();
-                    setOriginMessageBean();
-                    latch.countDown();
+                    completeQuoteMessageProcess();
                     return;
                 }
 
@@ -663,25 +663,49 @@ public abstract class ChatPresenter {
                     @Override
                     public void onSuccess(List<TUIMessageBean> originData) {
                         List<TUIMessageBean> presentData = new ArrayList<>();
-                        for (TUIMessageBean messageBean : originData) {
-                            if (messageBean != null && messageBean.getV2TIMMessage().getStatus() != V2TIMMessage.V2TIM_MSG_STATUS_HAS_DELETED) {
-                                presentData.add(messageBean);
+                        if (originData != null) {
+                            for (TUIMessageBean messageBean : originData) {
+                                if (messageBean != null && messageBean.getV2TIMMessage().getStatus() != V2TIMMessage.V2TIM_MSG_STATUS_HAS_DELETED) {
+                                    presentData.add(messageBean);
+                                }
                             }
                         }
-                        setQuoteMessageAbstractEnable();
-                        originMessageBeans.addAll(presentData);
-                        setOriginMessageBean();
-                        latch.countDown();
+                        completeQuoteMessageProcess(presentData);
                     }
 
                     @Override
                     public void onError(String module, int errCode, String errMsg) {
-                        setQuoteMessageAbstractEnable();
-                        setOriginMessageBean();
-                        latch.countDown();
+                        completeQuoteMessageProcess(null);
                     }
 
                 });
+            }
+
+            private void completeQuoteMessageProcess(List<TUIMessageBean> presentData) {
+                if (presentData != null) {
+                    originMessageBeans.addAll(presentData);
+                }
+                List<QuoteMessageBean> needCloudFetchList = getQuoteMessagesWithoutOrigin(quoteMessageList, originMessageBeans);
+                findCloudQuoteOriginMessages(needCloudFetchList, new IUIKitCallback<List<TUIMessageBean>>() {
+                    @Override
+                    public void onSuccess(List<TUIMessageBean> cloudData) {
+                        if (cloudData != null) {
+                            originMessageBeans.addAll(cloudData);
+                        }
+                        completeQuoteMessageProcess();
+                    }
+
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
+                        completeQuoteMessageProcess();
+                    }
+                });
+            }
+
+            private void completeQuoteMessageProcess() {
+                setQuoteMessageAbstractEnable();
+                setOriginMessageBean();
+                latch.countDown();
             }
 
             private void setOriginMessageBean() {
@@ -766,6 +790,61 @@ public abstract class ChatPresenter {
             }
         };
         ThreadUtils.execute(mergeRunnable);
+    }
+
+    private List<QuoteMessageBean> getQuoteMessagesWithoutOrigin(List<QuoteMessageBean> quoteMessageList, List<TUIMessageBean> originMessageBeans) {
+        Set<String> foundOriginMessageIds = new HashSet<>();
+        for (TUIMessageBean originMessageBean : originMessageBeans) {
+            if (originMessageBean != null && !TextUtils.isEmpty(originMessageBean.getId())) {
+                foundOriginMessageIds.add(originMessageBean.getId());
+            }
+        }
+
+        List<QuoteMessageBean> needCloudFetchList = new ArrayList<>();
+        for (QuoteMessageBean quoteMessageBean : quoteMessageList) {
+            if (quoteMessageBean.getOriginMessageBean() == null && !TextUtils.isEmpty(quoteMessageBean.getOriginMsgId())
+                && !foundOriginMessageIds.contains(quoteMessageBean.getOriginMsgId())) {
+                needCloudFetchList.add(quoteMessageBean);
+            }
+        }
+        return needCloudFetchList;
+    }
+
+    private void findCloudQuoteOriginMessages(List<QuoteMessageBean> quoteMessageList, IUIKitCallback<List<TUIMessageBean>> callback) {
+        if (quoteMessageList == null || quoteMessageList.isEmpty()) {
+            TUIChatUtils.callbackOnSuccess(callback, new ArrayList<>());
+            return;
+        }
+        if (getChatInfo() == null || TextUtils.isEmpty(getChatInfo().getId())) {
+            TUIChatUtils.callbackOnError(callback, TAG, -1, "invalid chat info");
+            return;
+        }
+        List<TUIMessageBean> cloudOriginMessageBeans = new CopyOnWriteArrayList<>();
+        AtomicInteger remainingCount = new AtomicInteger(quoteMessageList.size());
+        boolean isGroup = getChatInfo() instanceof GroupChatInfo;
+        String chatId = getChatInfo().getId();
+        for (QuoteMessageBean quoteMessageBean : quoteMessageList) {
+            provider.findCloudQuoteMessage(chatId, isGroup, quoteMessageBean, new IUIKitCallback<TUIMessageBean>() {
+                @Override
+                public void onSuccess(TUIMessageBean data) {
+                    if (data != null) {
+                        cloudOriginMessageBeans.add(data);
+                    }
+                    callbackIfCloudFindFinished();
+                }
+
+                @Override
+                public void onError(String module, int errCode, String errMsg) {
+                    callbackIfCloudFindFinished();
+                }
+
+                private void callbackIfCloudFindFinished() {
+                    if (remainingCount.decrementAndGet() == 0) {
+                        TUIChatUtils.callbackOnSuccess(callback, cloudOriginMessageBeans);
+                    }
+                }
+            });
+        }
     }
 
     protected void addMessageToUI(TUIMessageBean messageInfo, boolean scrollToEnd) {
@@ -1521,14 +1600,6 @@ public abstract class ChatPresenter {
         provider.revokeMessage(message, new IUIKitCallback<Void>() {
             @Override
             public void onSuccess(Void data) {
-                if (message instanceof ReplyMessageBean) {
-                    modifyRootMessageToRemoveReplyInfo((ReplyMessageBean) message, new IUIKitCallback<Void>() {
-                        @Override
-                        public void onError(String module, int errCode, String errMsg) {
-                            ToastUtil.toastShortMessage("modify message failed code = " + errCode + " message = " + errMsg);
-                        }
-                    });
-                }
             }
 
             @Override
@@ -1977,93 +2048,6 @@ public abstract class ChatPresenter {
                 updateAdapter(IMessageRecyclerView.DATA_CHANGE_TYPE_UPDATE, messageBean);
             }
         });
-    }
-
-    public void modifyRootMessageToRemoveReplyInfo(ReplyMessageBean replyMessageBean, IUIKitCallback<Void> callback) {
-        String messageRootId = replyMessageBean.getMsgRootId();
-        findMessage(messageRootId, new IUIKitCallback<TUIMessageBean>() {
-            @Override
-            public void onSuccess(TUIMessageBean data) {
-                modifyRootMessageToRemoveReplyInfo(data, replyMessageBean);
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                TUIChatUtils.callbackOnError(callback, errCode, errMsg);
-            }
-        });
-    }
-
-    private void modifyRootMessageToRemoveReplyInfo(TUIMessageBean rootMessage, ReplyMessageBean replyMessage) {
-        IUIKitCallback<TUIMessageBean> callback = new IUIKitCallback<TUIMessageBean>() {
-            @Override
-            public void onSuccess(TUIMessageBean data) {
-                // do nothing, when modifyRootMessage successfully ,you can receive onRecvMessageModified callback in TUIChatService.java
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastShortMessage("modifyRootMessageRemoveReply failed code=" + errCode + " msg=" + errMsg);
-            }
-        };
-        ChatModifyMessageHelper.ModifyMessageTask task = new ChatModifyMessageHelper.ModifyMessageTask(rootMessage, callback) {
-            @Override
-            public TUIMessageBean packageMessage(TUIMessageBean originMessage) {
-                MessageRepliesBean repliesBean = originMessage.getMessageRepliesBean();
-                if (repliesBean == null) {
-                    return originMessage;
-                }
-                repliesBean.removeReplyMessage(replyMessage.getId());
-                originMessage.setMessageRepliesBean(repliesBean);
-                return originMessage;
-            }
-        };
-        ChatModifyMessageHelper.enqueueTask(task);
-    }
-
-    public void modifyRootMessageToAddReplyInfo(ReplyMessageBean replyMessageBean, IUIKitCallback<Void> callback) {
-        String messageRootId = replyMessageBean.getMsgRootId();
-        findMessage(messageRootId, new IUIKitCallback<TUIMessageBean>() {
-            @Override
-            public void onSuccess(TUIMessageBean data) {
-                modifyRootMessageToAddReplyInfo(data, replyMessageBean);
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                TUIChatUtils.callbackOnError(callback, errCode, errMsg);
-            }
-        });
-    }
-
-    private void modifyRootMessageToAddReplyInfo(TUIMessageBean rootMessage, ReplyMessageBean replyMessage) {
-        IUIKitCallback<TUIMessageBean> callback = new IUIKitCallback<TUIMessageBean>() {
-            @Override
-            public void onSuccess(TUIMessageBean data) {
-                // do nothing, when modifyRootMessage successfully ,you can receive onRecvMessageModified callback in TUIChatService.java
-                Map<String, Object> param = new HashMap<>();
-                param.put(TUIConstants.TUIChat.CHAT_ID, rootMessage.getGroupId());
-                TUICore.notifyEvent(TUIConstants.TUIChat.EVENT_KEY_MESSAGE_EVENT, TUIConstants.TUIChat.EVENT_SUB_KEY_REPLY_MESSAGE_SUCCESS, param);
-            }
-
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                ToastUtil.toastShortMessage("modifyRootMessageAddReply failed code=" + errCode + " msg=" + errMsg);
-            }
-        };
-        ChatModifyMessageHelper.ModifyMessageTask task = new ChatModifyMessageHelper.ModifyMessageTask(rootMessage, callback) {
-            @Override
-            public TUIMessageBean packageMessage(TUIMessageBean originMessage) {
-                MessageRepliesBean repliesBean = originMessage.getMessageRepliesBean();
-                if (repliesBean == null) {
-                    repliesBean = new MessageRepliesBean();
-                }
-                repliesBean.addReplyMessage(replyMessage.getId(), replyMessage.getContentMessageBean().getExtra(), replyMessage.getSender());
-                originMessage.setMessageRepliesBean(repliesBean);
-                return originMessage;
-            }
-        };
-        ChatModifyMessageHelper.enqueueTask(task);
     }
 
     public void getChatName(String chatID, IUIKitCallback<String> callback) {}

@@ -8,13 +8,13 @@ import androidx.core.content.ContextCompat
 import com.tencent.cloud.tuikit.engine.call.TUICallEngine
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine
 import com.tencent.qcloud.tuicore.permission.PermissionCallback
-import com.trtc.tuikit.common.imageloader.ImageLoader
 import io.trtc.tuikit.atomicx.R
 import io.trtc.tuikit.atomicx.callview.core.common.Constants.BLUR_LEVEL_CLOSE
 import io.trtc.tuikit.atomicx.callview.core.common.Constants.BLUR_LEVEL_HIGH
 import io.trtc.tuikit.atomicx.callview.core.common.utils.Logger
 import io.trtc.tuikit.atomicx.callview.core.common.utils.PermissionRequest
 import io.trtc.tuikit.atomicx.callview.core.common.widget.ControlButton
+import io.trtc.tuikit.atomicx.common.imageloader.ImageLoader
 import io.trtc.tuikit.atomicxcore.api.call.CallStore
 import io.trtc.tuikit.atomicxcore.api.device.DeviceStatus
 import io.trtc.tuikit.atomicxcore.api.device.DeviceStore

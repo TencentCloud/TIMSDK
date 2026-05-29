@@ -98,16 +98,11 @@ class IncomingFloatBanner(context: Context) : RelativeLayout(context) {
         imageReject = layoutView.findViewById(R.id.btn_float_decline)
         imageAccept = layoutView.findViewById(R.id.btn_float_accept)
 
-        ImageLoader.load(appContext, imageFloatAvatar, caller.avatarUrl, R.drawable.tuicallkit_ic_avatar)
+        ImageLoader.load(appContext, imageFloatAvatar, caller.avatarURL, R.drawable.tuicallkit_ic_avatar)
         textFloatTitle.text = caller.name
 
         val mediaType = CallStore.shared.observerState.activeCall.value.mediaType
-        textFloatDescription.text =
-            if (mediaType == CallMediaType.Video) {
-                appContext.resources.getString(R.string.callkit_invite_video_call)
-            } else {
-                appContext.resources.getString(R.string.callkit_invite_audio_call)
-            }
+        textFloatDescription.text = getTextDescription()
 
         imageReject.setOnClickListener {
             CallManager.instance.reject(null)
@@ -167,6 +162,18 @@ class IncomingFloatBanner(context: Context) : RelativeLayout(context) {
             windowLayoutParams.format = PixelFormat.TRANSPARENT
             return windowLayoutParams
         }
+
+    private fun getTextDescription(): String {
+        val activeCall = CallStore.shared.observerState.activeCall.value
+        return when {
+            activeCall.inviteeIds.size > 1 || activeCall.chatGroupId.isNotEmpty() ->
+                appContext.getString(R.string.callkit_invite_multi_call)
+            activeCall.mediaType == CallMediaType.Video ->
+                appContext.getString(R.string.callkit_invite_video_call)
+            else ->
+                appContext.getString(R.string.callkit_invite_audio_call)
+        }
+    }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)

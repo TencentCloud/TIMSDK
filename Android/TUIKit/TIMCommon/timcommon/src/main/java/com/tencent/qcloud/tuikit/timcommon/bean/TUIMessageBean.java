@@ -13,7 +13,6 @@ import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonConstants;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -45,7 +44,6 @@ public abstract class TUIMessageBean implements Serializable {
     private boolean hasRiskContent = false;
     private int messageSource = 0;
     private MessageReceiptInfo messageReceiptInfo;
-    private MessageRepliesBean messageRepliesBean;
     private boolean hasReaction = false;
     private Map<String, UserBean> userBeanMap = new LinkedHashMap<>();
     private boolean isSending = false;
@@ -76,15 +74,6 @@ public abstract class TUIMessageBean implements Serializable {
 
     public void setEnableForward(boolean enableForward) {
         isEnableForward = enableForward;
-    }
-
-    public MessageRepliesBean getMessageRepliesBean() {
-        return messageRepliesBean;
-    }
-
-    public void setMessageRepliesBean(MessageRepliesBean messageRepliesBean) {
-        this.messageRepliesBean = messageRepliesBean;
-        MessageBuilder.mergeCloudCustomData(this, TIMCommonConstants.MESSAGE_REPLIES_KEY, messageRepliesBean);
     }
 
     public void setMessageReceiptInfo(MessageReceiptInfo messageReceiptInfo) {
@@ -136,8 +125,6 @@ public abstract class TUIMessageBean implements Serializable {
                 }
             }
         }
-
-        messageRepliesBean = MessageParser.parseMessageReplies(this);
     }
 
     public boolean isPeerRead() {
@@ -414,17 +401,6 @@ public abstract class TUIMessageBean implements Serializable {
 
     public void setUserBean(String userID, UserBean userBean) {
         userBeanMap.put(userID, userBean);
-        if (messageRepliesBean != null) {
-            List<MessageRepliesBean.ReplyBean> replyBeanList = messageRepliesBean.getReplies();
-            if (replyBeanList != null && !replyBeanList.isEmpty()) {
-                for (MessageRepliesBean.ReplyBean replyBean : replyBeanList) {
-                    if (userBean != null && TextUtils.equals(replyBean.getMessageSender(), userID)) {
-                        replyBean.setSenderFaceUrl(userBean.getFaceUrl());
-                        replyBean.setSenderShowName(userBean.getDisplayName());
-                    }
-                }
-            }
-        }
     }
 
     public UserBean getUserBean(String userID) {
@@ -440,15 +416,7 @@ public abstract class TUIMessageBean implements Serializable {
     }
 
     public Set<String> getAdditionalUserIDList() {
-        Set<String> userIdSet = new HashSet<>();
-        MessageRepliesBean messageRepliesBean = getMessageRepliesBean();
-        if (messageRepliesBean != null && messageRepliesBean.getRepliesSize() > 0) {
-            List<MessageRepliesBean.ReplyBean> replyBeanList = messageRepliesBean.getReplies();
-            for (MessageRepliesBean.ReplyBean replyBean : replyBeanList) {
-                userIdSet.add(replyBean.getMessageSender());
-            }
-        }
-        return userIdSet;
+        return new HashSet<>();
     }
 
     public void setProcessing(boolean processing) {

@@ -9,4 +9,5 @@
     <color name="callview_button_bg_red">#E6594C</color>
     <color name="callview_record_text_green">#12B969</color>
     <color name="callview_color_bg_float_view">#FFBBBBBB</color>
+    <color name="callview_color_text_hint">#80FFFFFF</color>
 </resources>

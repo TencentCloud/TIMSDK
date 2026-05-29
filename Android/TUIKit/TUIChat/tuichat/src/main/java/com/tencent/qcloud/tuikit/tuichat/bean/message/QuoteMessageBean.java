@@ -1,5 +1,6 @@
 package com.tencent.qcloud.tuikit.tuichat.bean.message;
 
+import android.text.TextUtils;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIReplyQuoteBean;
@@ -22,9 +23,11 @@ public class QuoteMessageBean extends TUIMessageBean {
     private TUIMessageBean originMessageBean;
 
     private final String originMsgId;
-    private final String originMsgAbstract;
-    private final String originMsgSender;
-    private final int originMsgType;
+    private String originMsgAbstract;
+    private String originMsgSender;
+    private int originMsgType;
+    private final long originMsgTime;
+    private final long originMsgSequence;
     private final int version;
 
     private boolean abstractEnable = false;
@@ -36,6 +39,8 @@ public class QuoteMessageBean extends TUIMessageBean {
         originMsgAbstract = replyPreviewBean.getMessageAbstract();
         originMsgSender = replyPreviewBean.getMessageSender();
         originMsgType = replyPreviewBean.getMessageType();
+        originMsgTime = replyPreviewBean.getMessageTime();
+        originMsgSequence = replyPreviewBean.getMessageSequence();
         version = replyPreviewBean.getVersion();
         originMessageBean = replyPreviewBean.getOriginalMessageBean();
     }
@@ -91,6 +96,15 @@ public class QuoteMessageBean extends TUIMessageBean {
 
     public void setOriginMessageBean(TUIMessageBean originMessageBean) {
         this.originMessageBean = originMessageBean;
+        if (originMessageBean != null) {
+            if (TextUtils.isEmpty(originMsgSender)) {
+                originMsgSender = originMessageBean.getSender();
+            }
+            if (TextUtils.isEmpty(originMsgAbstract)) {
+                originMsgAbstract = ChatMessageParser.getReplyMessageAbstract(originMessageBean);
+            }
+            originMsgType = originMessageBean.getMsgType();
+        }
         generateReplyQuoteBean();
     }
 
@@ -107,10 +121,16 @@ public class QuoteMessageBean extends TUIMessageBean {
     }
 
     public String getOriginMsgAbstract() {
+        if (TextUtils.isEmpty(originMsgAbstract)) {
+            return "";
+        }
         return originMsgAbstract;
     }
 
     public String getOriginMsgSender() {
+        if (TextUtils.isEmpty(originMsgSender)) {
+            return "";
+        }
         UserBean userBean = getUserBean(originMsgSender);
         if (userBean != null) {
              return userBean.getDisplayName();
@@ -120,6 +140,14 @@ public class QuoteMessageBean extends TUIMessageBean {
 
     public int getOriginMsgType() {
         return originMsgType;
+    }
+
+    public long getOriginMsgTime() {
+        return originMsgTime;
+    }
+
+    public long getOriginMsgSequence() {
+        return originMsgSequence;
     }
 
     public int getVersion() {
@@ -141,7 +169,9 @@ public class QuoteMessageBean extends TUIMessageBean {
     @Override
     public Set<String> getAdditionalUserIDList() {
         Set<String>  userIDList = super.getAdditionalUserIDList();
-        userIDList.add(originMsgSender);
+        if (!TextUtils.isEmpty(originMsgSender)) {
+            userIDList.add(originMsgSender);
+        }
         return userIDList;
     }
 

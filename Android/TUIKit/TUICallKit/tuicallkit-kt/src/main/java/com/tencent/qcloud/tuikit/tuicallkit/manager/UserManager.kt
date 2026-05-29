@@ -31,7 +31,7 @@ class UserManager {
                     if (name != null) {
                         user.name = name
                     }
-                    user.avatarUrl = userInfo.avatar
+                    user.avatarURL = userInfo.avatar
                     userList.add(user)
                 }
                 callback?.onSuccess(userList)

@@ -1,9 +1,13 @@
 package com.tencent.qcloud.tuikit.tuichat.classicui.widget.input;
 
-import android.app.Activity;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+
 import io.trtc.tuikit.atomicx.albumpicker.AlbumMedia;
 import android.os.SystemClock;
 import android.text.Editable;
@@ -14,9 +18,9 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,9 +28,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.google.gson.Gson;
@@ -41,12 +46,14 @@ import com.tencent.qcloud.tuicore.util.ToastUtil;
 import com.tencent.qcloud.tuikit.timcommon.bean.ChatFace;
 import com.tencent.qcloud.tuikit.timcommon.bean.TUIMessageBean;
 import com.tencent.qcloud.tuikit.timcommon.component.face.FaceManager;
+import com.tencent.qcloud.tuikit.timcommon.component.interfaces.IUIKitCallback;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.ChatInputMoreListener;
 import com.tencent.qcloud.tuikit.timcommon.interfaces.OnFaceInputListener;
 import com.tencent.qcloud.tuikit.timcommon.util.ActivityResultResolver;
 import com.tencent.qcloud.tuikit.timcommon.util.FileUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.TIMCommonUtil;
 import com.tencent.qcloud.tuikit.timcommon.util.ThreadUtils;
+import com.tencent.qcloud.tuikit.timcommon.util.keyboard.KeyboardHeightObserver;
 import com.tencent.qcloud.tuikit.tuichat.R;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatConstants;
 import com.tencent.qcloud.tuikit.tuichat.TUIChatService;
@@ -57,12 +64,13 @@ import com.tencent.qcloud.tuikit.tuichat.bean.InputMoreItem;
 import com.tencent.qcloud.tuikit.tuichat.bean.ReplyPreviewBean;
 import com.tencent.qcloud.tuikit.tuichat.bean.message.FileMessageBean;
 import com.tencent.qcloud.tuikit.tuichat.classicui.interfaces.IChatLayout;
-import com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.inputmore.InputMoreFragment;
+import com.tencent.qcloud.tuikit.tuichat.classicui.widget.input.inputmore.InputMoreLayout;
 import com.tencent.qcloud.tuikit.tuichat.component.album.AlbumPicker;
 import com.tencent.qcloud.tuikit.tuichat.component.album.VideoRecorder;
-import com.tencent.qcloud.tuikit.tuichat.component.audio.AudioRecorder;
-import com.tencent.qcloud.tuikit.tuichat.component.face.FaceFragment;
+import com.tencent.qcloud.tuikit.tuichat.component.face.FaceView;
 import com.tencent.qcloud.tuikit.tuichat.component.inputedittext.TIMMentionEditText;
+import com.tencent.qcloud.tuikit.tuichat.component.voiceinput.VoiceInputController;
+import com.tencent.qcloud.tuikit.tuichat.component.voiceinput.VoiceInputStartPolicy;
 import com.tencent.qcloud.tuikit.tuichat.config.GeneralConfig;
 import com.tencent.qcloud.tuikit.tuichat.config.classicui.TUIChatConfigClassic;
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter;
@@ -85,6 +93,8 @@ import java.util.Map;
 
 public class InputView extends LinearLayout implements View.OnClickListener, TextWatcher {
     private static final String TAG = InputView.class.getSimpleName();
+    private static final long KEYBOARD_ANIMATION_DEBOUNCE_MS = 60L;
+    private static final long PANEL_ANIMATION_DURATION_MS = 220L;
 
     private static final int STATE_NONE_INPUT = -1;
     private static final int STATE_SOFT_INPUT = 0;
@@ -139,18 +149,17 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     protected ChatInfo mChatInfo;
     protected List<InputMoreItem> mInputMoreActionList = new ArrayList<>();
 
-    private FaceFragment mFaceFragment;
+    private FaceView mFaceView;
+    private InputMoreLayout mInputMoreLayout;
     private ChatInputHandler mChatInputHandler;
     private MessageHandler mMessageHandler;
-    private FragmentManager mFragmentManager;
-    private InputMoreFragment mInputMoreFragment;
     private IChatLayout mChatLayout;
     private boolean mSendEnable;
     private int mCurrentState;
     private int mLastMsgLineCount;
-    private float mStartRecordY;
     private String mInputContent;
     private OnInputViewListener mOnInputViewListener;
+    private VoiceInputController voiceInputController;
 
     private Map<String, String> atUserInfoMap = new HashMap<>();
     private String displayInputString;
@@ -167,6 +176,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     private TextView quoteTv;
     private ImageView quoteCloseBtn;
     private boolean isShowCustomFace = true;
+    private boolean mIsInsertingEmoji = false;
     private ChatInputMoreListener chatInputMoreListener;
 
     public InputView(Context context) {
@@ -187,6 +197,21 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     public void setPresenter(ChatPresenter presenter) {
         this.presenter = presenter;
     }
+
+    private KeyboardHeightObserver keyboardHeightObserver;
+    private boolean isKeyboardShowing = false;
+    private boolean isPanelShowing = false;
+    private boolean isSwitchingToPanel = false;
+    private boolean isSwitchingToKeyboard = false;
+    private boolean hasKeyboardHeightChanging = false;
+    private int currentKeyboardHeight = 0;
+    private long lastKeyboardHeightChangingTime = 0L;
+    private int lastAppliedBottomPadding = Integer.MIN_VALUE;
+    private int lastAppliedPanelHeight = Integer.MIN_VALUE;
+    private ValueAnimator panelHeightAnimator;
+    private int lastLoggedAdjustedKeyboardHeight = Integer.MIN_VALUE;
+    private int lastLoggedPanelHeight = Integer.MIN_VALUE;
+    private int lastLoggedBottomPadding = Integer.MIN_VALUE;
 
     private void initViews() {
         mActivity = (FragmentActivity) getContext();
@@ -230,10 +255,253 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
         mIsSending = false;
 
+        setupKeyboardHeightObserver();
         init();
+    }
+    
+    private void setupKeyboardHeightObserver() {
+        keyboardHeightObserver = new KeyboardHeightObserver(mActivity);
+        keyboardHeightObserver.setOnKeyboardHeightChangeListener(new KeyboardHeightObserver.OnKeyboardHeightChangeListener() {
+            @Override
+            public void onKeyboardHeightChanged(int height, boolean isVisible) {
+                isKeyboardShowing = isVisible;
+                hasKeyboardHeightChanging = false;
+                currentKeyboardHeight = isVisible ? height : 0;
+                updateInputHintVisibility();
+                long now = SystemClock.uptimeMillis();
+                if (now - lastKeyboardHeightChangingTime > KEYBOARD_ANIMATION_DEBOUNCE_MS) {
+                    updateBottomPaddingForKeyboardHeight(currentKeyboardHeight);
+                }
+
+                if (!hasKeyboardHeightChanging) {
+                    if (!isVisible && isSwitchingToPanel && height == 0) {
+                        isSwitchingToPanel = false;
+                        updateMoreViewHeight(getPanelTargetHeight());
+                    } else if (isVisible && isSwitchingToKeyboard && adjustKeyboardHeight(height) >= getPanelTargetHeight()) {
+                        isSwitchingToKeyboard = false;
+                        hideInputMoreLayout();
+                    }
+                }
+            }
+            
+            @Override
+            public void onKeyboardHeightChanging(int currentHeight) {
+                lastKeyboardHeightChangingTime = SystemClock.uptimeMillis();
+                hasKeyboardHeightChanging = true;
+                currentKeyboardHeight = currentHeight;
+                updateInputHintVisibility();
+                int adjusted = adjustKeyboardHeight(currentHeight);
+                int saved = getPanelTargetHeight();
+                updateBottomPaddingForKeyboardHeight(currentHeight);
+
+                if (isSwitchingToPanel || isSwitchingToKeyboard) {
+                    int savedKeyboardHeight = getPanelTargetHeight();
+                    int adjustedCurrentHeight = adjustKeyboardHeight(currentHeight);
+                    int targetHeight = savedKeyboardHeight - adjustedCurrentHeight;
+                    if (targetHeight < 0) {
+                        targetHeight = 0;
+                    }
+                    updateMoreViewHeight(targetHeight);
+                    if (isSwitchingToPanel && adjustedCurrentHeight == 0) {
+                        isSwitchingToPanel = false;
+                        updateMoreViewHeight(savedKeyboardHeight);
+                    } else if (isSwitchingToKeyboard && targetHeight == 0 && adjustedCurrentHeight > 0) {
+                        isSwitchingToKeyboard = false;
+                        hideInputMoreLayout();
+                    }
+                }
+            }
+        });
+        keyboardHeightObserver.start();
+    }
+    
+    private void updateMoreViewHeight() {
+        updateMoreViewHeight(getPanelTargetHeight());
+    }
+    
+    private void updateMoreViewHeight(int height) {
+        if (lastAppliedPanelHeight == height) {
+            return;
+        }
+        lastAppliedPanelHeight = height;
+        ViewGroup.LayoutParams params = mInputMoreView.getLayoutParams();
+        params.height = height;
+        mInputMoreView.setLayoutParams(params);
+
+    }
+
+    private void updateBottomPaddingForKeyboardHeight(int keyboardHeight) {
+        int bottomPadding = adjustKeyboardHeight(keyboardHeight);
+        if (lastAppliedBottomPadding == bottomPadding) {
+            return;
+        }
+        lastAppliedBottomPadding = bottomPadding;
+        setPadding(getPaddingLeft(), getPaddingTop(), getPaddingRight(), bottomPadding);
+
+    }
+
+    private void cancelPanelHeightAnimator() {
+        if (panelHeightAnimator != null) {
+            panelHeightAnimator.cancel();
+            panelHeightAnimator = null;
+        }
+    }
+
+    private int getPanelHeight() {
+        ViewGroup.LayoutParams params = mInputMoreView.getLayoutParams();
+        if (params == null) {
+            return 0;
+        }
+        return Math.max(params.height, 0);
+    }
+
+    private void animatePanelToHeight(int targetHeight, boolean showAfterAnimation) {
+        cancelPanelHeightAnimator();
+        mInputMoreView.setVisibility(VISIBLE);
+
+        int startHeight = getPanelHeight();
+        if (startHeight == targetHeight) {
+            if (!showAfterAnimation && targetHeight == 0) {
+                hideInputMoreLayout();
+            }
+            return;
+        }
+
+        panelHeightAnimator = ValueAnimator.ofInt(startHeight, targetHeight);
+        panelHeightAnimator.setDuration(PANEL_ANIMATION_DURATION_MS);
+        panelHeightAnimator.setInterpolator(targetHeight > startHeight ? new DecelerateInterpolator() : new AccelerateInterpolator());
+        panelHeightAnimator.addUpdateListener(animation -> updateMoreViewHeight((Integer) animation.getAnimatedValue()));
+        panelHeightAnimator.addListener(new AnimatorListenerAdapter() {
+            private boolean cancelled;
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                cancelled = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (cancelled) {
+                    return;
+                }
+                if (!showAfterAnimation && targetHeight == 0) {
+                    hideInputMoreLayout();
+                }
+            }
+        });
+        panelHeightAnimator.start();
+    }
+
+    private void hideImeOnly() {
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mTextInput.getWindowToken(), 0);
+    }
+
+    private int adjustKeyboardHeight(int keyboardHeight) {
+        int bottomInset = getBottomInsetForKeyboard();
+        int adjusted = keyboardHeight - bottomInset;
+        return Math.max(adjusted, 0);
+    }
+
+    private int getBottomInsetForKeyboard() {
+        if (keyboardHeightObserver == null || !keyboardHeightObserver.isEdgeToEdge()) {
+            return 0;
+        }
+        WindowInsetsCompat insets = ViewCompat.getRootWindowInsets(this);
+        if (insets == null) {
+            return 0;
+        }
+        return insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
+    }
+
+    private int getPanelTargetHeight() {
+        if (keyboardHeightObserver == null) {
+            return 0;
+        }
+        return adjustKeyboardHeight(keyboardHeightObserver.getKeyboardHeight());
+    }
+    
+    private void showPanelView(View panelView) {
+        if (mInputMoreView instanceof ViewGroup) {
+            ViewGroup container = (ViewGroup) mInputMoreView;
+            container.removeAllViews();
+            if (panelView.getParent() != null) {
+                ((ViewGroup) panelView.getParent()).removeView(panelView);
+            }
+            container.addView(panelView, new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            ));
+            mInputMoreView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void switchPanelViewWithFade(View panelView) {
+        if (!(mInputMoreView instanceof ViewGroup)) {
+            showPanelView(panelView);
+            return;
+        }
+        ViewGroup container = (ViewGroup) mInputMoreView;
+
+        // Ensure we don't accumulate multiple children if user taps quickly.
+        while (container.getChildCount() > 1) {
+            View child = container.getChildAt(0);
+            child.animate().cancel();
+            child.setAlpha(1f);
+            container.removeViewAt(0);
+        }
+
+        View oldView = container.getChildCount() > 0 ? container.getChildAt(0) : null;
+        if (oldView == panelView) {
+            mInputMoreView.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        if (oldView != null) {
+            oldView.animate().cancel();
+            oldView.setAlpha(1f);
+        }
+        panelView.animate().cancel();
+        panelView.setAlpha(1f);
+
+        if (panelView.getParent() != null) {
+            ((ViewGroup) panelView.getParent()).removeView(panelView);
+        }
+
+        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        );
+
+        if (oldView == null) {
+            container.removeAllViews();
+            container.addView(panelView, lp);
+            mInputMoreView.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        // Cross-fade between panel contents without changing the panel container height (no slide-from-bottom).
+        container.addView(panelView, lp);
+        panelView.bringToFront();
+        panelView.setAlpha(0f);
+        mInputMoreView.setVisibility(View.VISIBLE);
+
+        long duration = 120;
+        panelView.animate().alpha(1f).setDuration(duration).setListener(null).start();
+        oldView.animate().alpha(0f).setDuration(duration).withEndAction(() -> {
+            try {
+                container.removeView(oldView);
+            } catch (Throwable ignored) {
+                // ignore
+            }
+            oldView.setAlpha(1f);
+            panelView.setAlpha(1f);
+        }).start();
     }
 
     protected void init() {
+        initVoiceInputController();
+        applyAtomicxInputTint();
         mAudioInputSwitchButton.setOnClickListener(this);
         mEmojiInputButton.setOnClickListener(this);
         mMoreInputButton.setOnClickListener(this);
@@ -242,6 +510,9 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         mTextInput.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (voiceInputController != null && voiceInputController.onTextInputTouch(motionEvent, mTextInput)) {
+                    return true;
+                }
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     if (presenter != null) {
                         presenter.scrollToNewestMessage();
@@ -281,39 +552,9 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         });
 
         mSendAudioButton.setOnTouchListener(new OnTouchListener() {
-            private boolean readyToCancel = false;
-
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        mStartRecordY = motionEvent.getY();
-                        startRecordAudio();
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        if (motionEvent.getY() - mStartRecordY < -100) {
-                            readyToCancel = true;
-                            readyToCancelRecordAudio();
-                        } else {
-                            if (readyToCancel) {
-                                continueRecordAudio();
-                            }
-                            readyToCancel = false;
-                        }
-                        break;
-                    case MotionEvent.ACTION_CANCEL:
-                    case MotionEvent.ACTION_UP:
-                        if (readyToCancel) {
-                            cancelRecordAudio();
-                        } else {
-                            stopRecordAudio();
-                        }
-                        break;
-                    default:
-                        break;
-                }
-
-                return false;
+                return voiceInputController != null && voiceInputController.onPressToTalkTouch(motionEvent, mSendAudioButton);
             }
         });
 
@@ -342,6 +583,137 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 exitReply();
             }
         });
+    }
+
+    private void initVoiceInputController() {
+        voiceInputController = new VoiceInputController(this, new VoiceInputController.Listener() {
+            @Override
+            public boolean canStartRecordFromTextInput() {
+                return VoiceInputStartPolicy.canStartFromTextInput(
+                    isKeyboardShowing || currentKeyboardHeight > 0,
+                    mCurrentState == STATE_FACE_INPUT,
+                    mCurrentState == STATE_ACTION_INPUT || (mInputMoreView != null && mInputMoreView.getVisibility() == VISIBLE && getPanelHeight() > 0),
+                    !TextUtils.isEmpty(mTextInput.getText())
+                );
+            }
+
+            @Override
+            public void onTextInputTap() {
+                if (presenter != null) {
+                    presenter.scrollToNewestMessage();
+                }
+                showSoftInput();
+            }
+
+            @Override
+            public void onBeforeRecordFromTextInput() {
+                hideSoftInput();
+                hideInputMoreLayout();
+            }
+
+            @Override
+            public void onSendAudio(String filePath, int durationMs) {
+                sendAudioMessage(filePath, durationMs);
+            }
+
+            @Override
+            public void onSendText(String text) {
+                sendVoiceInputTextMessage(text);
+            }
+
+            @Override
+            public void onRecordStart() {
+                if (mChatInputHandler != null) {
+                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_START);
+                }
+                mSendAudioButton.setText(TUIChatService.getAppContext().getString(R.string.release_end));
+            }
+
+            @Override
+            public void onRecordReadyToCancel() {
+                if (mChatInputHandler != null) {
+                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_READY_TO_CANCEL);
+                }
+            }
+
+            @Override
+            public void onRecordContinue() {
+                if (mChatInputHandler != null) {
+                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_CONTINUE);
+                }
+            }
+
+            @Override
+            public void onRecordReadyToTranscribe() {
+                if (mChatInputHandler != null) {
+                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_CONTINUE);
+                }
+            }
+
+            @Override
+            public void onRecordCancel() {
+                if (mChatInputHandler != null) {
+                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_CANCEL);
+                }
+                mSendAudioButton.setText(TUIChatService.getAppContext().getString(R.string.hold_say));
+            }
+
+            @Override
+            public void onRecordTooShort() {
+                if (mChatInputHandler != null) {
+                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_TOO_SHORT);
+                }
+                mSendAudioButton.setText(TUIChatService.getAppContext().getString(R.string.hold_say));
+            }
+
+            @Override
+            public void onRecordStop() {
+                if (mChatInputHandler != null) {
+                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_STOP);
+                }
+                mSendAudioButton.setText(TUIChatService.getAppContext().getString(R.string.hold_say));
+            }
+
+            @Override
+            public void onRecordFailed() {
+                if (mChatInputHandler != null) {
+                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_FAILED);
+                }
+                mSendAudioButton.setText(TUIChatService.getAppContext().getString(R.string.hold_say));
+            }
+        });
+    }
+
+    private void applyAtomicxInputTint() {
+        GradientDrawable background = new GradientDrawable();
+        background.setColor(0xFFF2F3F5);
+        background.setCornerRadius(dpToPx(4));
+        mTextInput.setBackground(background);
+        mTextInput.setHint(R.string.voice_input_edit_text_hint);
+        mTextInput.setHintTextColor(0x66000000);
+        updateInputHintVisibility();
+    }
+
+    private int dpToPx(int value) {
+        return (int) (value * getResources().getDisplayMetrics().density);
+    }
+
+    private void updateInputHintVisibility() {
+        boolean panelShowing = isPanelShowing
+            && mInputMoreView != null
+            && mInputMoreView.getVisibility() == VISIBLE
+            && getPanelHeight() > 0;
+        boolean shouldHideHint = isKeyboardShowing || currentKeyboardHeight > 0 || panelShowing || isSwitchingToPanel || isSwitchingToKeyboard;
+        CharSequence nextHint = shouldHideHint ? "" : getResources().getString(R.string.voice_input_edit_text_hint);
+        if (!TextUtils.equals(mTextInput.getHint(), nextHint)) {
+            mTextInput.setHint(nextHint);
+        }
+    }
+
+    private void hideInputHint() {
+        if (!TextUtils.isEmpty(mTextInput.getHint())) {
+            mTextInput.setHint("");
+        }
     }
 
     public void addInputText(String name, String id) {
@@ -398,78 +770,10 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         }
     }
 
-    private void startRecordAudio() {
-        AudioRecorder.startRecord(new AudioRecorder.AudioRecorderCallback() {
-            @Override
-            public void onStarted() {
-                if (mChatInputHandler != null) {
-                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_START);
-                }
-                mSendAudioButton.setText(TUIChatService.getAppContext().getString(R.string.release_end));
-            }
-
-            @Override
-            public void onFailed(int errorCode, String errorMessage) {
-                if (errorCode == AudioRecorder.ERROR_CODE_MIC_IS_BEING_USED || errorCode == TUIConstants.TUICalling.ERROR_STATUS_IN_CALL) {
-                    ToastUtil.toastLongMessage(TUIChatService.getAppContext().getString(R.string.chat_mic_is_being_used_cant_record));
-                } else {
-                    ToastUtil.toastLongMessage(TUIChatService.getAppContext().getString(R.string.chat_record_audio_failed));
-                }
-                TUIChatLog.e(TAG, "record audio failed, errorCode " + errorCode + ", errorMessage " + errorMessage);
-                if (mChatInputHandler != null) {
-                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_FAILED);
-                }
-                mSendAudioButton.setText(TUIChatService.getAppContext().getString(R.string.hold_say));
-            }
-
-            @Override
-            public void onFinished(String outputPath) {
-                int duration = AudioRecorder.getDuration(outputPath);
-                mSendAudioButton.setText(TUIChatService.getAppContext().getString(R.string.hold_say));
-                if (duration < 1000) {
-                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_TOO_SHORT);
-                    return;
-                }
-                if (mChatInputHandler != null) {
-                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_STOP);
-                }
-                sendAudioMessage(outputPath, duration);
-            }
-
-            @Override
-            public void onCanceled() {
-                if (mChatInputHandler != null) {
-                    mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_CANCEL);
-                }
-                mSendAudioButton.setText(TUIChatService.getAppContext().getString(R.string.hold_say));
-            }
-        });
-    }
-
     private void sendAudioMessage(String outputPath, int duration) {
         if (mMessageHandler != null) {
             mMessageHandler.sendMessage(ChatMessageBuilder.buildAudioMessage(outputPath, duration));
         }
-    }
-
-    private void readyToCancelRecordAudio() {
-        if (mChatInputHandler != null) {
-            mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_READY_TO_CANCEL);
-        }
-    }
-
-    private void continueRecordAudio() {
-        if (mChatInputHandler != null) {
-            mChatInputHandler.onRecordStatusChanged(ChatInputHandler.RECORD_CONTINUE);
-        }
-    }
-
-    private void cancelRecordAudio() {
-        AudioRecorder.cancelRecord();
-    }
-
-    private void stopRecordAudio() {
-        AudioRecorder.stopRecord();
     }
 
     public void updateInputText(ArrayList<String> names, ArrayList<String> ids) {
@@ -566,11 +870,23 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         if (mChatInputHandler != null) {
             mChatInputHandler.onUserTyping(false, V2TIMManager.getInstance().getServerTime());
         }
+        if (keyboardHeightObserver != null) {
+            keyboardHeightObserver.stop();
+        }
+        if (voiceInputController != null) {
+            voiceInputController.dismiss();
+        }
+        
+        if (mInputMoreView instanceof ViewGroup) {
+            ((ViewGroup) mInputMoreView).removeAllViews();
+        }
+        mFaceView = null;
+        mInputMoreLayout = null;
     }
 
     protected void startSendPhoto() {
         TUIChatLog.i(TAG, "startSendPhoto");
-        AlbumPicker.getInstance().pickMedia(mInputMoreFragment.getActivity(), new AlbumPickerListener() {
+        AlbumPicker.getInstance().pickMedia(mActivity, new AlbumPickerListener() {
             @Override
             public void onPickConfirm(List<AlbumMedia> pickedAlbumMedias, String textMessage) {
                 for (AlbumMedia media : pickedAlbumMedias) {
@@ -620,7 +936,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     protected void takePhoto() {
         TUIChatLog.i(TAG, "takePhoto");
 
-        VideoRecorder.openCamera(mInputMoreFragment, new TUIValueCallback<Uri>() {
+        VideoRecorder.openCamera(mActivity, new TUIValueCallback<Uri>() {
 
             @Override
             public void onSuccess(Uri uri) {
@@ -637,7 +953,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     protected void recordVideo() {
         TUIChatLog.i(TAG, "openVideoRecord");
 
-        VideoRecorder.openVideoRecorder(mInputMoreFragment, new TUIValueCallback<Uri>() {
+        VideoRecorder.openVideoRecorder(mActivity, new TUIValueCallback<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 sendPhotoVideoMessage(uri);
@@ -652,7 +968,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     protected void startSendFile() {
         TUIChatLog.i(TAG, "startSendFile");
-        ActivityResultResolver.getSingleContent(mInputMoreFragment.getActivity(), ActivityResultResolver.CONTENT_TYPE_ALL, new TUIValueCallback<Uri>() {
+        ActivityResultResolver.getSingleContent(mActivity, ActivityResultResolver.CONTENT_TYPE_ALL, new TUIValueCallback<Uri>() {
             @Override
             public void onSuccess(Uri data) {
                 if (data == null) {
@@ -739,15 +1055,15 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 showFaceViewGroup();
             }
         } else if (view.getId() == R.id.more_btn) {
-            hideSoftInput();
             if (mMoreInputEvent instanceof View.OnClickListener) {
+                hideImeOnly();
                 ((View.OnClickListener) mMoreInputEvent).onClick(view);
-            } else if (mMoreInputEvent instanceof BaseInputFragment) {
-                showCustomInputMoreFragment();
+            } else if (mMoreInputEvent instanceof View) {
+                showCustomInputMoreView();
             } else {
                 if (mCurrentState == STATE_ACTION_INPUT) {
                     mCurrentState = STATE_NONE_INPUT;
-                    mInputMoreView.setVisibility(View.VISIBLE);
+                    hideInputMoreLayout();
                 } else {
                     showInputMoreLayout();
                     mCurrentState = STATE_ACTION_INPUT;
@@ -796,38 +1112,43 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         }
     }
 
+    private void sendVoiceInputTextMessage(String text) {
+        if (TextUtils.isEmpty(text) || TextUtils.isEmpty(text.trim())) {
+            return;
+        }
+        if (mMessageHandler != null) {
+            mMessageHandler.sendMessage(ChatMessageBuilder.buildTextMessage(text));
+        }
+    }
+
     public void showSoftInput() {
         TUIChatLog.i(TAG, "showSoftInput");
+        hideInputHint();
+        cancelPanelHeightAnimator();
+        isSwitchingToPanel = false;
+        if (mInputMoreView.getVisibility() == VISIBLE && getPanelHeight() > 0) {
+            isSwitchingToKeyboard = true;
+        } else {
+            isSwitchingToKeyboard = false;
+        }
         mCurrentState = STATE_SOFT_INPUT;
+        mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
+        mEmojiInputButton.setImageResource(R.drawable.chat_input_face);
+        mSendAudioButton.setVisibility(GONE);
+        mTextInput.setVisibility(VISIBLE);
+        
         mTextInput.requestFocus();
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(mTextInput, 0);
-        ThreadUtils.postOnUiThreadDelayed(new Runnable() {
+        
+        postDelayed(new Runnable() {
             @Override
             public void run() {
-                hideInputMoreLayout();
-                mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
-                mEmojiInputButton.setImageResource(R.drawable.chat_input_face);
-                mSendAudioButton.setVisibility(GONE);
-                mTextInput.setVisibility(VISIBLE);
-                Context context = getContext();
-                if (context instanceof Activity) {
-                    Window window = ((Activity) context).getWindow();
-                    if (window != null) {
-                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                    }
+                if (mChatInputHandler != null) {
+                    mChatInputHandler.onInputAreaClick();
                 }
-
-                postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mChatInputHandler != null) {
-                            mChatInputHandler.onInputAreaClick();
-                        }
-                    }
-                }, 100);
             }
-        }, 180);
+        }, 100);
     }
 
     public void hideSoftInput() {
@@ -835,23 +1156,29 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         mTextInput.clearFocus();
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mTextInput.getWindowToken(), 0);
-        Context context = getContext();
-        if (context instanceof Activity) {
-            Window window = ((Activity) context).getWindow();
-            if (window != null) {
-                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
-            }
-        }
+        updateInputHintVisibility();
     }
 
     public void onEmptyClick() {
         hideSoftInput();
         mCurrentState = STATE_SOFT_INPUT;
-        hideInputMoreLayout();
         mEmojiInputButton.setImageResource(R.drawable.action_face_selector);
         mAudioInputSwitchButton.setImageResource(R.drawable.action_audio_selector);
         mSendAudioButton.setVisibility(GONE);
         mTextInput.setVisibility(VISIBLE);
+
+        boolean imeShowingOrAnimating = currentKeyboardHeight > 0 || isKeyboardShowing;
+        boolean panelVisible = isPanelShowing
+            && mInputMoreView != null
+            && mInputMoreView.getVisibility() == VISIBLE
+            && getPanelHeight() > 0;
+        if (!imeShowingOrAnimating && panelVisible && !isSwitchingToPanel && !isSwitchingToKeyboard) {
+            isPanelShowing = false;
+            animatePanelToHeight(0, false);
+        } else {
+            hideInputMoreLayout();
+        }
+        updateInputHintVisibility();
     }
 
     public void disableShowCustomFace(boolean disable) {
@@ -860,43 +1187,67 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
 
     private void showFaceViewGroup() {
         TUIChatLog.i(TAG, "showFaceViewGroup");
-        if (mFragmentManager == null) {
-            mFragmentManager = mActivity.getSupportFragmentManager();
+        hideInputHint();
+        
+        if (mFaceView == null) {
+            mFaceView = new FaceView(getContext(), isShowCustomFace);
+            mFaceView.setBackgroundColor(getResources().getColor(R.color.tuichat_face_view_bg));
+            mFaceView.setOnFaceInputListener(new OnFaceInputListener() {
+                @Override
+                public void onDeleteClicked() {
+                    mTextInput.getInputConnection().sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
+                }
+
+                @Override
+                public void onEmojiClicked(String emojiKey) {
+                    int index = mTextInput.getSelectionStart();
+                    mIsInsertingEmoji = true;
+                    FaceManager.insertEmoji(mTextInput, emojiKey, index);
+                    mIsInsertingEmoji = false;
+                }
+
+                @Override
+                public void onSendClicked() {
+                    sendTextMessage();
+                }
+
+                @Override
+                public void onFaceClicked(ChatFace face) {
+                    TUIMessageBean messageBean = ChatMessageBuilder.buildFaceMessage(face.getFaceGroup().getGroupID(), face.getFaceKey());
+                    mMessageHandler.sendMessage(messageBean);
+                }
+            });
         }
-        if (mFaceFragment == null) {
-            mFaceFragment = new FaceFragment();
-        }
-        hideSoftInput();
-        mInputMoreView.setVisibility(View.VISIBLE);
+        
+        cancelPanelHeightAnimator();
         mTextInput.requestFocus();
-        mFaceFragment.setShowCustomFace(isShowCustomFace);
-        mFaceFragment.setBackgroundColor(getResources().getColor(R.color.tuichat_face_view_bg));
-        mFaceFragment.setListener(new OnFaceInputListener() {
-            @Override
-            public void onDeleteClicked() {
-                mTextInput.getInputConnection().sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
-            }
 
-            @Override
-            public void onEmojiClicked(String emojiKey) {
-                int index = mTextInput.getSelectionStart();
-                Editable editable = mTextInput.getText();
-                editable.insert(index, emojiKey);
-                FaceManager.handlerEmojiText(mTextInput, editable, true);
-            }
+        boolean imeShowingOrAnimating = currentKeyboardHeight > 0 || isKeyboardShowing;
+        boolean canSwitchContentOnly = !imeShowingOrAnimating
+            && isPanelShowing
+            && mInputMoreView != null
+            && mInputMoreView.getVisibility() == VISIBLE
+            && !isSwitchingToPanel
+            && !isSwitchingToKeyboard
+            && getPanelHeight() > 0;
 
-            @Override
-            public void onSendClicked() {
-                sendTextMessage();
-            }
-
-            @Override
-            public void onFaceClicked(ChatFace face) {
-                TUIMessageBean messageBean = ChatMessageBuilder.buildFaceMessage(face.getFaceGroup().getGroupID(), face.getFaceKey());
-                mMessageHandler.sendMessage(messageBean);
-            }
-        });
-        mFragmentManager.beginTransaction().replace(R.id.more_groups, mFaceFragment).commitAllowingStateLoss();
+        isPanelShowing = true;
+        isSwitchingToKeyboard = false;
+        if (canSwitchContentOnly) {
+            isSwitchingToPanel = false;
+            updateMoreViewHeight(getPanelTargetHeight());
+            switchPanelViewWithFade(mFaceView);
+        } else if (imeShowingOrAnimating) {
+            isSwitchingToPanel = true;
+            updateMoreViewHeight(0);
+            showPanelView(mFaceView);
+            hideImeOnly();
+        } else {
+            isSwitchingToPanel = false;
+            updateMoreViewHeight(0);
+            showPanelView(mFaceView);
+            animatePanelToHeight(getPanelTargetHeight(), true);
+        }
         if (mChatInputHandler != null) {
             postDelayed(new Runnable() {
                 @Override
@@ -907,39 +1258,90 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         }
     }
 
-    private void showCustomInputMoreFragment() {
-        TUIChatLog.i(TAG, "showCustomInputMoreFragment");
-        if (mFragmentManager == null) {
-            mFragmentManager = mActivity.getSupportFragmentManager();
-        }
-        BaseInputFragment fragment = (BaseInputFragment) mMoreInputEvent;
-        hideSoftInput();
-        mInputMoreView.setVisibility(View.VISIBLE);
-        mFragmentManager.beginTransaction().replace(R.id.more_groups, fragment).commitAllowingStateLoss();
-        if (mChatInputHandler != null) {
-            postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mChatInputHandler.onInputAreaClick();
-                }
-            }, 100);
+    private void showCustomInputMoreView() {
+        TUIChatLog.i(TAG, "showCustomInputMoreView");
+        hideInputHint();
+        
+        if (mMoreInputEvent instanceof View) {
+            cancelPanelHeightAnimator();
+            View customView = (View) mMoreInputEvent;
+
+            boolean imeShowingOrAnimating = currentKeyboardHeight > 0 || isKeyboardShowing;
+            boolean canSwitchContentOnly = !imeShowingOrAnimating
+                && isPanelShowing
+                && mInputMoreView != null
+                && mInputMoreView.getVisibility() == VISIBLE
+                && !isSwitchingToPanel
+                && !isSwitchingToKeyboard
+                && getPanelHeight() > 0;
+
+            isPanelShowing = true;
+            isSwitchingToKeyboard = false;
+            if (canSwitchContentOnly) {
+                isSwitchingToPanel = false;
+                updateMoreViewHeight(getPanelTargetHeight());
+                switchPanelViewWithFade(customView);
+            } else if (imeShowingOrAnimating) {
+                isSwitchingToPanel = true;
+                updateMoreViewHeight(0);
+                showPanelView(customView);
+                hideImeOnly();
+            } else {
+                isSwitchingToPanel = false;
+                updateMoreViewHeight(0);
+                showPanelView(customView);
+                animatePanelToHeight(getPanelTargetHeight(), true);
+            }
+            if (mChatInputHandler != null) {
+                postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mChatInputHandler.onInputAreaClick();
+                    }
+                }, 100);
+            }
         }
     }
 
     private void showInputMoreLayout() {
         TUIChatLog.i(TAG, "showInputMoreLayout");
-        if (mFragmentManager == null) {
-            mFragmentManager = mActivity.getSupportFragmentManager();
+        hideInputHint();
+        
+        if (mInputMoreLayout == null) {
+            mInputMoreLayout = new InputMoreLayout(getContext());
         }
-        if (mInputMoreFragment == null) {
-            mInputMoreFragment = new InputMoreFragment();
-        }
-
+        
         assembleActions();
-        mInputMoreFragment.setActions(mInputMoreActionList);
-        hideSoftInput();
-        mInputMoreView.setVisibility(View.VISIBLE);
-        mFragmentManager.beginTransaction().replace(R.id.more_groups, mInputMoreFragment).commitAllowingStateLoss();
+        mInputMoreLayout.init(mInputMoreActionList);
+        
+        cancelPanelHeightAnimator();
+
+        boolean imeShowingOrAnimating = currentKeyboardHeight > 0 || isKeyboardShowing;
+        boolean canSwitchContentOnly = !imeShowingOrAnimating
+            && isPanelShowing
+            && mInputMoreView != null
+            && mInputMoreView.getVisibility() == VISIBLE
+            && !isSwitchingToPanel
+            && !isSwitchingToKeyboard
+            && getPanelHeight() > 0;
+
+        isPanelShowing = true;
+        isSwitchingToKeyboard = false;
+        if (canSwitchContentOnly) {
+            isSwitchingToPanel = false;
+            updateMoreViewHeight(getPanelTargetHeight());
+            switchPanelViewWithFade(mInputMoreLayout);
+        } else if (imeShowingOrAnimating) {
+            isSwitchingToPanel = true;
+            updateMoreViewHeight(0);
+            showPanelView(mInputMoreLayout);
+            hideImeOnly();
+        } else {
+            isSwitchingToPanel = false;
+            updateMoreViewHeight(0);
+            showPanelView(mInputMoreLayout);
+            animatePanelToHeight(getPanelTargetHeight(), true);
+        }
         if (mChatInputHandler != null) {
             postDelayed(new Runnable() {
                 @Override
@@ -951,7 +1353,16 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
     }
 
     private void hideInputMoreLayout() {
+        cancelPanelHeightAnimator();
+        isPanelShowing = false;
+        isSwitchingToPanel = false;
+        isSwitchingToKeyboard = false;
+        updateMoreViewHeight(0);
         mInputMoreView.setVisibility(View.GONE);
+        if (mInputMoreView instanceof ViewGroup) {
+            ((ViewGroup) mInputMoreView).removeAllViews();
+        }
+        updateInputHintVisibility();
     }
 
     @Override
@@ -981,7 +1392,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                     mChatInputHandler.onInputAreaClick();
                 }
             }
-            if (!TextUtils.equals(mInputContent, mTextInput.getText().toString())) {
+            if (!mIsInsertingEmoji && !TextUtils.equals(mInputContent, mTextInput.getText().toString())) {
                 FaceManager.handlerEmojiText(mTextInput, mTextInput.getText(), true);
             }
         }
@@ -1010,8 +1421,7 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
             Gson gson = new Gson();
             Map<String, String> draftMap = new HashMap<>();
             draftMap.put("content", draftText);
-            draftMap.put("reply", gson.toJson(replyPreviewBean));
-            draftMap.put("reply_message_sender_name", replyPreviewBean.getMessageSenderName());
+            draftMap.put("quotedMessageID", replyPreviewBean.getMessageID());
             draftText = gson.toJson(draftMap);
         }
         if (presenter != null) {
@@ -1045,15 +1455,24 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
                 try {
                     draftJsonMap = gson.fromJson(draftInfo.getDraftText(), HashMap.class);
                     if (draftJsonMap != null) {
-                        content = (String) draftJsonMap.get("content");
-                        String draftStr = (String) draftJsonMap.get("reply");
-                        ReplyPreviewBean bean = gson.fromJson(draftStr, ReplyPreviewBean.class);
-                        if (bean != null) {
-                            Object replyMessageSenderName = draftJsonMap.get("reply_message_sender_name");
-                            if (replyMessageSenderName instanceof String) {
-                                bean.setMessageSenderName((String) replyMessageSenderName);
+                        Object contentObj = draftJsonMap.get("content");
+                        if (contentObj instanceof String) {
+                            content = (String) contentObj;
+                        }
+                        Object quotedMessageIDObj = draftJsonMap.get("quotedMessageID");
+                        if (quotedMessageIDObj instanceof String && presenter != null) {
+                            String quotedMessageID = (String) quotedMessageIDObj;
+                            if (!TextUtils.isEmpty(quotedMessageID)) {
+                                ChatInfo draftChatInfo = chatInfo;
+                                presenter.findMessage(quotedMessageID, new IUIKitCallback<TUIMessageBean>() {
+                                    @Override
+                                    public void onSuccess(TUIMessageBean data) {
+                                        if (data != null && mChatInfo == draftChatInfo && ViewCompat.isAttachedToWindow(InputView.this)) {
+                                            showReplyPreview(ChatMessageBuilder.buildReplyPreviewBean(data));
+                                        }
+                                    }
+                                });
                             }
-                            showReplyPreview(bean);
                         }
                     }
                 } catch (JsonSyntaxException e) {
@@ -1268,8 +1687,8 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         }
     }
 
-    public void replaceMoreInput(BaseInputFragment fragment) {
-        mMoreInputEvent = fragment;
+    public void replaceMoreInput(View customView) {
+        mMoreInputEvent = customView;
     }
 
     public void replaceMoreInput(OnClickListener listener) {
@@ -1307,15 +1726,9 @@ public class InputView extends LinearLayout implements View.OnClickListener, Tex
         CharSequence text = previewBean.getMessageSenderName() + " : " + msgTypeStr + " " + replyMessageAbstract;
         text = FaceManager.emojiJudge(text);
         // If replying to a text message, the middle part of the file name is displayed in abbreviated form
-        if (previewBean.isReplyMessage()) {
-            isReplyModel = true;
-            replyTv.setText(text);
-            replyPreviewBar.setVisibility(View.VISIBLE);
-        } else {
-            isQuoteModel = true;
-            quoteTv.setText(text);
-            quotePreviewBar.setVisibility(View.VISIBLE);
-        }
+        isQuoteModel = true;
+        quoteTv.setText(text);
+        quotePreviewBar.setVisibility(View.VISIBLE);
 
         if (previewBean.getOriginalMessageBean() instanceof FileMessageBean) {
             replyTv.setEllipsize(TextUtils.TruncateAt.MIDDLE);

@@ -6,8 +6,8 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.constraintlayout.utils.widget.ImageFilterView
 import androidx.core.content.ContextCompat
-import com.trtc.tuikit.common.imageloader.ImageLoader
 import io.trtc.tuikit.atomicx.R
+import io.trtc.tuikit.atomicx.common.imageloader.ImageLoader
 import io.trtc.tuikit.atomicxcore.api.call.CallStore
 
 class AudioAndVideoCalleeWaitingView(context: Context) : RelativeLayout(context) {

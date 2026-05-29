@@ -1,10 +1,14 @@
 package com.tencent.qcloud.tuikit.tuicallkit.manager
 
 import android.content.Context
+import android.util.Log
 import com.tencent.cloud.tuikit.engine.call.TUICallDefine
 import com.tencent.cloud.tuikit.engine.call.TUICallEngine
 import com.tencent.cloud.tuikit.engine.common.TUICommonDefine
 import com.tencent.imsdk.BaseConstants
+import com.tencent.imsdk.v2.V2TIMManager
+import com.tencent.imsdk.v2.V2TIMValueCallback
+import com.tencent.liteav.TXLiteAVCode
 import com.tencent.qcloud.tuicore.TUIConfig
 import com.tencent.qcloud.tuicore.util.ErrorMessageConverter
 import com.tencent.qcloud.tuicore.util.SPUtils
@@ -18,6 +22,7 @@ import com.tencent.qcloud.tuikit.tuicallkit.state.ViewState
 import com.tencent.trtc.TRTCCloud
 import com.trtc.tuikit.common.foregroundservice.AudioForegroundService
 import com.trtc.tuikit.common.foregroundservice.VideoForegroundService
+import io.trtc.tuikit.atomicx.widget.basicwidget.toast.AtomicToast
 import io.trtc.tuikit.atomicxcore.api.CompletionHandler
 import io.trtc.tuikit.atomicxcore.api.ai.AITranscriberStore
 import io.trtc.tuikit.atomicxcore.api.ai.SourceLanguage
@@ -45,13 +50,8 @@ class CallManager private constructor(context: Context) {
         completion: CompletionHandler?
     ) {
         Logger.i(TAG, "calls, userIdList: $userIdList, mediaType: $mediaType, params: $params")
-        if (userIdList.isEmpty()) {
-            Logger.e(TAG, "calls failed, userIdList is empty")
-            completion?.onFailure(TUICallDefine.ERROR_PARAM_INVALID, "calls failed, userIdList is empty")
-            return
-        }
         if (userIdList.size >= Constants.MAX_USER) {
-            ToastUtil.toastLongMessage(context.getString(R.string.callkit_user_exceed_limit))
+            AtomicToast.show(context, context.getString(R.string.callkit_user_exceed_limit), AtomicToast.Style.ERROR)
             Logger.e(TAG, "calls failed, exceeding max user number: 9")
             completion?.onFailure(TUICallDefine.ERROR_PARAM_INVALID, "calls failed, exceeding max user number")
             return
@@ -66,7 +66,7 @@ class CallManager private constructor(context: Context) {
             override fun onFailure(code: Int, desc: String) {
                 Logger.e(TAG, "calls failed, errCode: $code, errMsg: $desc")
                 val errMessage: String = convertErrorMsg(code, desc)
-                ToastUtil.toastLongMessage(errMessage)
+                AtomicToast.show(context, errMessage, AtomicToast.Style.ERROR)
                 completion?.onFailure(code, errMessage)
             }
         })
@@ -139,7 +139,7 @@ class CallManager private constructor(context: Context) {
             }
 
             override fun onFailure(code: Int, desc: String) {
-                Logger.e(TAG, "reject failed, errorCode: $code, errMsg: $desc")
+                Logger.e(TAG, "hangup failed, errorCode: $code, errMsg: $desc")
                 completion?.onFailure(code, desc)
             }
         })
@@ -280,7 +280,14 @@ class CallManager private constructor(context: Context) {
             sourceLanguage = SourceLanguage.CHINESE_ENGLISH,
             translationLanguages = mutableListOf(TranslationLanguage.ENGLISH)
         )
-        AITranscriberStore.shared.startRealtimeTranscriber(transcriberConfig, null)
+        AITranscriberStore.shared.startRealtimeTranscriber(transcriberConfig, object : CompletionHandler {
+            override fun onSuccess() {
+                observerTranscriber()
+            }
+
+            override fun onFailure(code: Int, desc: String) {
+            }
+        })
         closeVAD()
     }
 
@@ -317,6 +324,20 @@ class CallManager private constructor(context: Context) {
         TRTCCloud.sharedInstance(context).callExperimentalAPI(closeObj.toString())
     }
 
+    private fun observerTranscriber() {
+        val param = JSONObject().apply {
+            put("UIComponentType", 1402)
+        }.toString()
+        V2TIMManager.getInstance()
+            .callExperimentalAPI("reportTUIFeatureUsage", param, object : V2TIMValueCallback<Any> {
+                override fun onSuccess(t: Any?) {
+                }
+                override fun onError(code: Int, desc: String?) {
+                    Log.e(TAG, "reportFeatureUsage failed: $code $desc")
+                }
+            })
+    }
+
     private fun convertErrorMsg(errorCode: Int, errMsg: String): String {
         if (errorCode == BaseConstants.ERR_SVR_MSG_IN_PEER_BLACKLIST) {
             return context.getString(R.string.callkit_error_in_peer_blacklist)
@@ -335,9 +356,13 @@ class CallManager private constructor(context: Context) {
         map[TUICallDefine.ERROR_PACKAGE_NOT_SUPPORTED] = context.getString(R.string.callkit_package_not_support)
         map[TUICallDefine.ERROR_INIT_FAIL] = context.getString(R.string.callkit_error_invalid_login)
         map[TUICallDefine.ERROR_PARAM_INVALID] = context.getString(R.string.callkit_error_parameter_invalid)
-        map[TUICallDefine.ERROR_REQUEST_REFUSED] = context.getString(R.string.callkit_error_request_refused)
+        map[TUICallDefine.ERROR_REQUEST_REFUSED] = context.getString(R.string.callkit_error_currently_in_a_call)
         map[TUICallDefine.ERROR_REQUEST_REPEATED] = context.getString(R.string.callkit_error_request_repeated)
         map[TUICallDefine.ERROR_SCENE_NOT_SUPPORTED] = context.getString(R.string.callkit_error_scene_not_support)
+        // todo: 待补充 6017 、-3301 对应错误码后删除
+        map[BaseConstants.ERR_INVALID_PARAMETERS] = context.getString(R.string.callkit_toast_error_call_user_not_exist)
+        map[TXLiteAVCode.ERR_TRTC_ENTER_ROOM_FAILED] = context.getString(R.string.callkit_toast_error_call_failed)
+        map[ERR_SVR_GROUP_HAS_ACTIVE_CALL] = context.getString(R.string.callkit_toast_error_group_call_has_active_call)
         return map
     }
 
@@ -390,6 +415,7 @@ class CallManager private constructor(context: Context) {
 
     companion object {
         private const val TAG = "CallManager"
+        private const val ERR_SVR_GROUP_HAS_ACTIVE_CALL = 101012
         val instance: CallManager = CallManager(TUIConfig.getAppContext())
         private const val BLUR_LEVEL_HIGH = 3
         private const val BLUR_LEVEL_CLOSE = 0

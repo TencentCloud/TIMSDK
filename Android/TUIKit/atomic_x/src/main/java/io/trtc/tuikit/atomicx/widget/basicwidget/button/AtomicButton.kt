@@ -1,7 +1,6 @@
 package io.trtc.tuikit.atomicx.widget.basicwidget.button
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.Typeface
@@ -20,10 +19,10 @@ import androidx.annotation.ColorInt
 import androidx.core.content.withStyledAttributes
 import androidx.core.graphics.drawable.DrawableCompat
 import io.trtc.tuikit.atomicx.R
+import io.trtc.tuikit.atomicx.common.util.ScreenUtil.dp2px
 import io.trtc.tuikit.atomicx.theme.Theme
 import io.trtc.tuikit.atomicx.theme.ThemeStore
 import io.trtc.tuikit.atomicx.theme.tokens.DesignTokenSet
-import io.trtc.tuikit.atomicx.widget.utils.DisplayUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -59,9 +58,14 @@ enum class ButtonSize(
     M(40f, 80f, 20f),
     L(48f, 96f, 20f);
 
-    fun getHeightPx(context: Context): Int = DisplayUtil.dp2px(context, heightDp)
-    fun getMinWidthPx(context: Context): Int = DisplayUtil.dp2px(context, minWidthDp)
-    fun getIconSizePx(context: Context): Int = DisplayUtil.dp2px(context, iconSizeDp)
+    fun getHeightPx(context: Context): Int =
+        dp2px(heightDp, context.resources.displayMetrics).toInt()
+
+    fun getMinWidthPx(context: Context): Int =
+        dp2px(minWidthDp, context.resources.displayMetrics).toInt()
+
+    fun getIconSizePx(context: Context): Int =
+        dp2px(iconSizeDp, context.resources.displayMetrics).toInt()
 }
 
 class AtomicButton @JvmOverloads constructor(
@@ -241,12 +245,15 @@ class AtomicButton @JvmOverloads constructor(
             MeasureSpec.EXACTLY -> {
                 widthSize
             }
+
             MeasureSpec.AT_MOST -> {
                 maxOf(measuredWidth, minWidthPx).coerceAtMost(widthSize)
             }
+
             MeasureSpec.UNSPECIFIED -> {
                 maxOf(measuredWidth, minWidthPx)
             }
+
             else -> measuredWidth
         }
         setMeasuredDimension(finalWidth, heightPx)
@@ -261,17 +268,20 @@ class AtomicButton @JvmOverloads constructor(
             MotionEvent.ACTION_DOWN -> {
                 isPressed = true
             }
+
             MotionEvent.ACTION_MOVE -> {
                 val isInside = event.x >= 0 && event.x <= width &&
-                        event.y >= 0 && event.y <= height
+                               event.y >= 0 && event.y <= height
                 isPressed = isInside
             }
+
             MotionEvent.ACTION_UP -> {
                 if (isPressed) {
                     isPressed = false
                     performClick()
                 }
             }
+
             MotionEvent.ACTION_CANCEL -> {
                 isPressed = false
             }
@@ -348,7 +358,7 @@ class AtomicButton @JvmOverloads constructor(
         if (currentBackground is GradientDrawable) {
             currentBackground.setColor(newConfig.backgroundColor)
             currentBackground.setStroke(
-                DisplayUtil.dp2px(context, newConfig.borderWidth),
+                dp2px(newConfig.borderWidth, context.resources.displayMetrics).toInt(),
                 newConfig.borderColor
             )
         }
@@ -357,8 +367,8 @@ class AtomicButton @JvmOverloads constructor(
     private fun updateIcon(@ColorInt tintColor: Int = textView.currentTextColor) {
         val icon = iconDrawable
         val iconSizeDp = size.iconSizeDp
-        val iconSizePx = DisplayUtil.dp2px(context, iconSizeDp)
-        val iconPadding = DisplayUtil.dp2px(context, ICON_PADDING_DP)
+        val iconSizePx = dp2px(iconSizeDp, context.resources.displayMetrics).toInt()
+        val iconPadding = dp2px(ICON_PADDING_DP, context.resources.displayMetrics).toInt()
 
         if (icon == null || iconPosition == ButtonIconPosition.NONE) {
             iconView.visibility = View.GONE
@@ -374,7 +384,7 @@ class AtomicButton @JvmOverloads constructor(
         iconView.setImageDrawable(wrappedIcon)
 
         val iconLayoutParams = iconView.layoutParams as? LinearLayout.LayoutParams
-            ?: LinearLayout.LayoutParams(iconSizePx, iconSizePx)
+                               ?: LinearLayout.LayoutParams(iconSizePx, iconSizePx)
 
         iconLayoutParams.width = iconSizePx
         iconLayoutParams.height = iconSizePx
@@ -521,6 +531,7 @@ class AtomicButton @JvmOverloads constructor(
                         ButtonColorType.SECONDARY -> {
                             colors.textColorButton
                         }
+
                         ButtonColorType.PRIMARY,
                         ButtonColorType.DANGER -> {
                             currentPrimaryColor
@@ -564,8 +575,8 @@ class AtomicButton @JvmOverloads constructor(
         tokens: DesignTokenSet,
         config: ButtonDesignConfig,
     ): Drawable {
-        val cornerRadiusPx = DisplayUtil.dp2px(context, config.cornerRadiusDp).toFloat()
-        val borderWidthPx = DisplayUtil.dp2px(context, config.borderWidth)
+        val cornerRadiusPx = dp2px(config.cornerRadiusDp, context.resources.displayMetrics)
+        val borderWidthPx = dp2px(config.borderWidth, context.resources.displayMetrics).toInt()
 
         val backgroundDrawable = GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE

@@ -13,7 +13,7 @@ class GlobalState private constructor() {
     var enableFloatWindow: Boolean = true
     var enableIncomingBanner: Boolean = false
     var enableVirtualBackground: Boolean = false
-    var enableAITranscriber: Boolean = false
+    var enableAITranscriber: Boolean = true
     var orientation = Constants.Orientation.Portrait
     var enableForceUseV2API = false
     var disableControlButtonSet: MutableSet<Constants.ControlButton> = CopyOnWriteArraySet()

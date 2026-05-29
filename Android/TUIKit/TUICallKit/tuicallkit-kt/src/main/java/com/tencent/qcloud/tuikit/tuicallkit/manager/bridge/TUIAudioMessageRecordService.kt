@@ -15,13 +15,13 @@ import com.tencent.qcloud.tuicore.TUICore
 import com.tencent.qcloud.tuicore.interfaces.ITUINotification
 import com.tencent.qcloud.tuicore.interfaces.ITUIService
 import com.tencent.qcloud.tuicore.interfaces.TUIServiceCallback
-import com.tencent.qcloud.tuicore.permission.PermissionCallback
 import com.tencent.qcloud.tuicore.util.TUIBuild
 import com.tencent.qcloud.tuikit.tuicallkit.common.data.Logger
 import com.tencent.qcloud.tuikit.tuicallkit.common.utils.PermissionRequest
 import com.tencent.trtc.TRTCCloud
 import com.tencent.trtc.TRTCCloudDef
 import com.tencent.trtc.TRTCCloudListener
+import io.trtc.tuikit.atomicx.common.permission.PermissionCallback
 import io.trtc.tuikit.atomicxcore.api.call.CallMediaType
 import io.trtc.tuikit.atomicxcore.api.call.CallStore
 import io.trtc.tuikit.atomicxcore.api.call.CallParticipantStatus

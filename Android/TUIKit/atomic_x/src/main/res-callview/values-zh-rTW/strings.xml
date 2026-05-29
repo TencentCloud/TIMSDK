@@ -40,4 +40,6 @@
     <string name="callview_permission_tips">請先打開%s權限</string>
     <string name="callview_permission_title">%s申請獲取%s權限</string>
     <string name="callview_permission_camera_reason">需要訪問您的相機權限，開啟後用於視頻通話、多人視頻通話等功能，在您使用美顏功能時，我們會對您實時拍攝的面部的像素信息進行實時智能識別，在識別過程中會實時收集您面部的像素信息，以為您提供更好的美顏效果。</string>
+
+    <string name="callview_ai_transcriber_empty_hint">AI 實時字幕</string>
 </resources>

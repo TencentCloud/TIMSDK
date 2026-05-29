@@ -21,11 +21,6 @@
             android:screenOrientation="portrait" />
         <!-- **************** Classic UI Start **************** -->
         <activity
-            android:name="com.tencent.qcloud.tuikit.tuichat.classicui.page.MessageReplyDetailActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden"
-            android:theme="@style/CommonAppCompatTheme"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="com.tencent.qcloud.tuikit.tuichat.classicui.page.TUIForwardChatActivity"
             android:theme="@style/CommonAppCompatTheme"
             android:screenOrientation="portrait" />
