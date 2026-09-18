@@ -17,6 +17,16 @@ English | [简体中文](./版本历史.md)
 - Fixed anomalies on HarmonyOS related to local operations on streaming messages, conversation filtering, and friend verification enums.
 - Improved overall SDK stability.
 
+## 9.0.7652 @2026.05.29 - Enhanced Version
+### SDK
+- Support for the Saudi Arabian site.
+- Added support for message quoting functionality.
+- Push notifications now support FCM delivery.
+- Fixed compatibility issues with streaming message versions.
+- Resolved an issue on Android where the msgElement field was empty when performing local operations on streaming messages.
+- Fixed an intermittent file upload failure on Android.
+- Optimized SDK stability.
+
 ## 8.9.7511 @2026.02.10 - Enhanced Version
 ### SDK
 - Added streaming message capability
