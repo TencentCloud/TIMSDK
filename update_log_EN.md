@@ -1,6 +1,22 @@
 English | [简体中文](./版本历史.md)
 
 # TIMSDK
+## 9.1.7818 @2026.09.18 - Enhanced Version
+### SDK
+- Streaming messages now support TTS.
+- Streaming messages now support local search, forwarding, retrieval by message type, and search.
+- Rich media upload and download for messages now supports IPv6 networks.
+- Live Activity on iOS now supports push-to-start remote launch.
+- Fixed an issue where setting cloudCustomData in streaming message segments had no effect.
+- Fixed an issue where content was lost when resending a merged message after a send failure.
+- Fixed an issue where rich media file upload or download failed under unknown network types.
+- Fixed a sync anomaly after modifying cloudCustomData in the pre-send callback.
+- Fixed an issue where, after a group owner recalled a group member's message, the last message in the conversation list lacked the recaller's nickname.
+- Fixed an issue where unread counts from muted group conversations were included in the total unread count after the group was disbanded.
+- Fixed an issue on Mac where initialization failed under an IPv6-only network without triggering a reconnection.
+- Fixed anomalies on HarmonyOS related to local operations on streaming messages, conversation filtering, and friend verification enums.
+- Improved overall SDK stability.
+
 ## 8.9.7511 @2026.02.10 - Enhanced Version
 ### SDK
 - Added streaming message capability
