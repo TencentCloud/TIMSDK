@@ -49,4 +49,4 @@ dependencies {
 
 如果您需要更详细的集成指引，请 [查看完整的集成文档](https://cloud.tencent.com/document/product/269/75283)。
 
-此外，我们还提供了 C 接口和 C++ 接口的 SDK，您可以从这里下载：[下载 C API 版本](https://im.sdk.qcloud.com/download/plus/9.1.7818/cross_platform/ImSDK_Android_C_9.1.7818.zip)、[下载 C++ API 版本](https://im.sdk.qcloud.com/download/plus/9.1.7818/cross_platform/ImSDK_Android_CPP_9.1.7818.zip)。
+此外，我们还提供了 C 接口和 C++ 接口的 SDK，您可以从这里下载：[下载 C API 版本](https://im.sdk.qcloud.com/download/plus/9.1.7818/cross_platform/ImSDK_Android_C_9.1.7818.zip)、[下载 C++ API 版本](https://im.sdk.qcloud.com/download/plus/9.1.7818/cross_platform/ImSDK_Android_CPP_9.1.7818.zip)。 
