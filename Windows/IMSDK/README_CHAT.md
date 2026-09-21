@@ -1,8 +1,8 @@
-# Chat SDK 9.0.7652（Windows）
+# Chat SDK 9.1.7818（Windows）
 
 ## Download Chat SDK
 
-[Download ImSDK_Windows Edition](https://im.sdk.qcloud.com/download/plus/9.0.7652/cross_platform/ImSDK_Windows_9.0.7652.zip)
+[Download ImSDK_Windows Edition](https://im.sdk.qcloud.com/download/plus/9.1.7818/cross_platform/ImSDK_Windows_9.1.7818.zip)
 
 Note: The SDK supports two types of APIs: C and C++. It is strongly recommended that you choose one type of API and avoid mixing it with the other type of API.
 
