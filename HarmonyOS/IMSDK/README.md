@@ -1,5 +1,5 @@
-# IM SDK 9.0.7662（HarmonyOS）
+# IM SDK 9.1.7818（HarmonyOS）
 
 ## 下载 IM SDK
 
-[下载 imsdk.har 版本](https://im.sdk.qcloud.com/download/plus/9.0.7662/imsdk-ohos-9.0.7662.zip)，如果您需要更详细的集成指引，请 [查看完整的集成文档](https://cloud.tencent.com/document/product/269/103558)。
+[下载 imsdk.har 版本](https://im.sdk.qcloud.com/download/plus/9.1.7818/imsdk-ohos-9.1.7818.zip)，如果您需要更详细的集成指引，请 [查看完整的集成文档](https://cloud.tencent.com/document/product/269/103558)。
