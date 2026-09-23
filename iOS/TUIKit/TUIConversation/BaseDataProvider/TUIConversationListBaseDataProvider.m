@@ -166,6 +166,9 @@
         }
 
         TUIConversationCellData *cellData = [self cellDataForConversation:conv];
+        if (cellData == nil) {
+            return;
+        }
         if ([self.markHideMap objectForKey:cellData.conversationID]) {
             if (![TUIConversationCellData isMarkedByHideType:conv.markList]) {
                 [self.markHideMap removeObjectForKey:cellData.conversationID];
