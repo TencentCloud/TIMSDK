@@ -1,6 +1,15 @@
 English | [简体中文](./版本历史.md)
 
 # TIMSDK
+## 9.1.7822 @2026.10.14 - Enhanced Version
+### SDK
+- Support real-time streaming ASR.
+- Fixed a crash when reading Map on the JNI layer on Android.
+- Fixed an issue where modifying the CloudCustomData field always failed when the streaming message body exceeded 12 KB.
+- Fixed an issue where conversation list avatars and nicknames displayed abnormally when logging in and pulling the conversation list after a cold start under offline or weak network conditions.
+- Fixed conversation sorting disorder in certain scenarios.
+- Fixed Android native crashes (present in 9.0.7652 and many versions over the past year).
+
 ## 9.1.7818 @2026.09.18 - Enhanced Version
 ### SDK
 - Streaming messages now support TTS.
