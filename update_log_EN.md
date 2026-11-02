@@ -1,6 +1,10 @@
 English | [简体中文](./版本历史.md)
 
 # TIMSDK
+## 9.1.7824 @2026.11.02 - Enhanced Version
+### SDK
+update version 9.1.7824
+
 ## 9.1.7822 @2026.10.14 - Enhanced Version
 ### SDK
 - Support real-time streaming ASR.
