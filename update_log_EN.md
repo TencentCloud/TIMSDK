@@ -1,6 +1,11 @@
 English | [简体中文](./版本历史.md)
 
 # TIMSDK
+## 9.1.7834 @2026.11.13 - Enhanced Version
+### SDK
+- Fixed an issue where the search time range was ignored when searchCursor was passed to searchCloudMessages for paginated searches within a specified conversation.
+- Fixed other known issues.
+
 ## 9.1.7824 @2026.11.02 - Enhanced Version
 ### SDK
 update version 9.1.7824
